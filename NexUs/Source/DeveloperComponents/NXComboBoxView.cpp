@@ -2,21 +2,16 @@
 
 #include <QMouseEvent>
 
-NXComboBoxView::NXComboBoxView(QWidget* parent)
+NXComboBoxView::NXComboBoxView(QWidget *parent)
     : QListView(parent)
 {
 }
 
-NXComboBoxView::~NXComboBoxView()
-{
-}
+NXComboBoxView::~NXComboBoxView() { }
 
-void NXComboBoxView::mousePressEvent(QMouseEvent* event)
+void NXComboBoxView::mousePressEvent(QMouseEvent *event)
 {
-    QModelIndex index = indexAt(event->pos());
-    if (index.isValid())
-    {
-        Q_EMIT itemPressed(index);
-    }
-    event->ignore();
+  QModelIndex index = indexAt(event->pos());
+  if (index.isValid()) { Q_EMIT itemPressed(index); }
+  event->ignore();
 }

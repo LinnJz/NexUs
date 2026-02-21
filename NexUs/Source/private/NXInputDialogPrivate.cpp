@@ -3,18 +3,16 @@
 #include "NXInputDialog.h"
 #include "NXMaskWidget.h"
 
-NXInputDialogPrivate::NXInputDialogPrivate(QObject* parent)
-    : QObject{parent}
+NXInputDialogPrivate::NXInputDialogPrivate(QObject *parent)
+    : QObject { parent }
 {
 }
 
-NXInputDialogPrivate::~NXInputDialogPrivate()
-{
-}
+NXInputDialogPrivate::~NXInputDialogPrivate() { }
 
 void NXInputDialogPrivate::_doCloseAnimation(bool isAccept)
 {
-    Q_Q(NXInputDialog);
-    _maskWidget->doMaskAnimation(0);
-    isAccept ? q->accept() : q->reject();
+  Q_Q(NXInputDialog);
+  _maskWidget->doMaskAnimation(0);
+  isAccept ? q->accept() : q->reject();
 }

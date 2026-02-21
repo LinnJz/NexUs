@@ -1,46 +1,32 @@
 ﻿#include "NXSuggestModel.h"
 
-NXSuggestModel::NXSuggestModel(QObject* parent)
-    : QAbstractListModel{parent}
+NXSuggestModel::NXSuggestModel(QObject *parent)
+    : QAbstractListModel { parent }
 {
 }
 
-NXSuggestModel::~NXSuggestModel()
-{
-}
+NXSuggestModel::~NXSuggestModel() { }
 
 int NXSuggestModel::rowCount(const QModelIndex& parent) const
 {
-    Q_UNUSED(parent)
-    return _suggestionVector.count();
+  Q_UNUSED(parent)
+  return _suggestionVector.count();
 }
 
-QVariant NXSuggestModel::data(const QModelIndex& index, int role) const
+QVariant NXSuggestModel::data(const QModelIndex& index, int role) const { return QVariant(); }
+
+void NXSuggestModel::setSearchSuggestion(QList<NXSuggestion *> suggestionVector)
 {
-    return QVariant();
+  if (suggestionVector.count() == 0) { return; }
+  beginResetModel();
+  _suggestionVector = suggestionVector;
+  endResetModel();
 }
 
-void NXSuggestModel::setSearchSuggestion(QList<NXSuggestion*> suggestionVector)
-{
-    if (suggestionVector.count() == 0)
-    {
-        return;
-    }
-    beginResetModel();
-    _suggestionVector = suggestionVector;
-    endResetModel();
-}
+void NXSuggestModel::clearSearchNode() { this->_suggestionVector.clear(); }
 
-void NXSuggestModel::clearSearchNode()
+NXSuggestion *NXSuggestModel::getSearchSuggestion(int row)
 {
-    this->_suggestionVector.clear();
-}
-
-NXSuggestion* NXSuggestModel::getSearchSuggestion(int row)
-{
-    if (row >= _suggestionVector.count())
-    {
-        return nullptr;
-    }
-    return _suggestionVector[row];
+  if (row >= _suggestionVector.count()) { return nullptr; }
+  return _suggestionVector[row];
 }

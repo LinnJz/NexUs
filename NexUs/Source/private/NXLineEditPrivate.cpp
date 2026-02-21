@@ -4,45 +4,38 @@
 #include "NXLineEdit.h"
 #include "NXTheme.h"
 
-NXLineEditPrivate::NXLineEditPrivate(QObject* parent)
-    : QObject{parent}
+NXLineEditPrivate::NXLineEditPrivate(QObject *parent)
+    : QObject { parent }
 {
 }
 
-NXLineEditPrivate::~NXLineEditPrivate()
-{
-}
+NXLineEditPrivate::~NXLineEditPrivate() { }
 
 void NXLineEditPrivate::onWMWindowClickedEvent(QVariantMap data)
 {
-    Q_Q(NXLineEdit);
-    NXAppBarType::WMMouseActionType actionType = data.value("WMClickType").value<NXAppBarType::WMMouseActionType>();
-    if (actionType == NXAppBarType::WMLBUTTONDOWN)
+  Q_Q(NXLineEdit);
+  NXAppBarType::WMMouseActionType actionType = data.value("WMClickType").value<NXAppBarType::WMMouseActionType>();
+  if (actionType == NXAppBarType::WMLBUTTONDOWN)
+  {
+    if (q->hasSelectedText() && q->hasFocus()) { q->clearFocus(); }
+  }
+  else if (actionType == NXAppBarType::WMLBUTTONUP || actionType == NXAppBarType::WMNCLBUTTONDOWN)
+  {
+    if (NXApplication::containsCursorToItem(q) || (actionType == NXAppBarType::WMLBUTTONUP && q->hasSelectedText()))
     {
-        if (q->hasSelectedText() && q->hasFocus())
-        {
-            q->clearFocus();
-        }
+      return;
     }
-    else if (actionType == NXAppBarType::WMLBUTTONUP || actionType == NXAppBarType::WMNCLBUTTONDOWN)
-    {
-        if (NXApplication::containsCursorToItem(q) || (actionType == NXAppBarType::WMLBUTTONUP && q->hasSelectedText()))
-        {
-            return;
-        }
-        if (q->hasFocus())
-        {
-            q->clearFocus();
-        }
-    }
+    if (q->hasFocus()) { q->clearFocus(); }
+  }
 }
 
 void NXLineEditPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
 {
-    Q_Q(NXLineEdit);
-    _themeMode = themeMode;
-    QPalette palette = q->palette();
-    palette.setColor(QPalette::Text, NXThemeColor(_themeMode, BasicText));
-    palette.setColor(QPalette::PlaceholderText, _themeMode == NXThemeType::Light ? QColor(0x00, 0x00, 0x00, 128) : QColor(0xBA, 0xBA, 0xBA));
-    q->setPalette(palette);
+  Q_Q(NXLineEdit);
+  _themeMode       = themeMode;
+  QPalette palette = q->palette();
+  palette.setColor(QPalette::Text, NXThemeColor(_themeMode, BasicText));
+  palette.setColor(QPalette::PlaceholderText,
+                   _themeMode == NXThemeType::Light ? QColor(0x00, 0x00, 0x00, 128) : QColor(0xBA, 0xBA, 0xBA));
+  q->setPalette(palette);
 }

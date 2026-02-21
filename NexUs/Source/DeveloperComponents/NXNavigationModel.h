@@ -6,48 +6,55 @@
 
 #include "NXDef.h"
 class NXNavigationNode;
+
 class NXNavigationModel : public QAbstractItemModel
 {
-    Q_OBJECT
-    Q_PRIVATE_CREATE(NXNavigationNode*, SelectedNode)
-    Q_PRIVATE_CREATE(NXNavigationNode*, SelectedExpandedNode)
+  Q_OBJECT
+  Q_PRIVATE_CREATE(NXNavigationNode *, SelectedNode)
+  Q_PRIVATE_CREATE(NXNavigationNode *, SelectedExpandedNode)
 
 public:
-    explicit NXNavigationModel(QObject* parent = nullptr);
-    ~NXNavigationModel();
-    QModelIndex parent(const QModelIndex& child) const override;
-    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-    int columnCount(const QModelIndex& parent = QModelIndex()) const override;
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    Qt::ItemFlags flags(const QModelIndex& index) const override;
- 
-    NXNodeOperateResult addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome);
-    NXNodeOperateResult addExpanderNode(const QString& expanderTitle, const QString& targetExpanderKey, NXIconType::IconName awesome);
-    NXNodeOperateResult addPageNode(const QString& pageTitle, NXIconType::IconName awesome);
-    NXNodeOperateResult addPageNode(const QString& pageTitle, const QString& targetExpanderKey, NXIconType::IconName awesome);
-    NXNodeOperateResult addPageNode(const QString& pageTitle, int keyPoints, NXIconType::IconName awesome);
-    NXNodeOperateResult addPageNode(const QString& pageTitle, const QString& targetExpanderKey, int keyPoints, NXIconType::IconName awesome);
-    QStringList removeNavigationNode(const QString& nodeKey);
+  explicit NXNavigationModel(QObject *parent = nullptr);
+  ~NXNavigationModel();
+  QModelIndex parent(const QModelIndex& child) const override;
+  QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
+  int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+  int columnCount(const QModelIndex& parent = QModelIndex()) const override;
+  QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+  Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    const NXNavigationNode* getRootNode() const;
-    NXNavigationNode* getNavigationNode(const QString& nodeKey) const;
-    QList<NXNavigationNode*> getRootExpanderNodes() const;
-    QList<NXNavigationNode*> getRootExpandedNodes() const;
+  NXNodeOperateResult addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome);
+  NXNodeOperateResult
+  addExpanderNode(const QString& expanderTitle, const QString& targetExpanderKey, NXIconType::IconName awesome);
+  NXNodeOperateResult addPageNode(const QString& pageTitle, NXIconType::IconName awesome);
+  NXNodeOperateResult
+  addPageNode(const QString& pageTitle, const QString& targetExpanderKey, NXIconType::IconName awesome);
+  NXNodeOperateResult addPageNode(const QString& pageTitle, int keyPoints, NXIconType::IconName awesome);
+  NXNodeOperateResult
+  addPageNode(const QString& pageTitle, const QString& targetExpanderKey, int keyPoints, NXIconType::IconName awesome);
+  QStringList removeNavigationNode(const QString& nodeKey);
 
-    virtual Qt::DropActions supportedDropActions() const override;
-    virtual Qt::DropActions supportedDragActions() const override;
-    virtual QStringList mimeTypes() const override;
-    virtual QMimeData* mimeData(const QModelIndexList& indexes) const override;
-    virtual bool canDropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent) const override;
-    virtual bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent) override;
+  const NXNavigationNode *getRootNode() const;
+  NXNavigationNode *getNavigationNode(const QString& nodeKey) const;
+  QList<NXNavigationNode *> getRootExpanderNodes() const;
+  QList<NXNavigationNode *> getRootExpandedNodes() const;
 
-    bool swapNodes(const QString& nodeKey1, const QString& nodeKey2);
+  virtual Qt::DropActions supportedDropActions() const override;
+  virtual Qt::DropActions supportedDragActions() const override;
+  virtual QStringList mimeTypes() const override;
+  virtual QMimeData *mimeData(const QModelIndexList& indexes) const override;
+  virtual bool canDropMimeData(
+      const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex& parent) const override;
+  virtual bool
+  dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex& parent) override;
+
+  bool swapNodes(const QString& nodeKey1, const QString& nodeKey2);
 Q_SIGNALS:
-    void mineDataDropped(const QMimeData* data, const QModelIndex& draggedIndex, const QModelIndex& targetIndex);
+  void mineDataDropped(const QMimeData *data, const QModelIndex& draggedIndex, const QModelIndex& targetIndex);
+
 private:
-    QMap<QString, NXNavigationNode*> _nodesMap;
-    NXNavigationNode* _rootNode{nullptr};
+  QMap<QString, NXNavigationNode *> _nodesMap;
+  NXNavigationNode *_rootNode { nullptr };
 };
 
 #endif // NXNAVIGATIONMODEL_H

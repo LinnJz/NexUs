@@ -2,21 +2,20 @@
 
 #include "NXText.h"
 #include "NXTheme.h"
-NXTextPrivate::NXTextPrivate(QObject* parent)
-    : QObject{parent}
+
+NXTextPrivate::NXTextPrivate(QObject *parent)
+    : QObject { parent }
 {
 }
 
-NXTextPrivate::~NXTextPrivate()
-{
-}
+NXTextPrivate::~NXTextPrivate() { }
 
 void NXTextPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
 {
-    Q_Q(NXText);
-    _themeMode = themeMode;
-    QPalette palette = q->palette();
-    palette.setColor(QPalette::WindowText, NXThemeColor(_themeMode, BasicText));
-    q->setPalette(palette);
+  Q_Q(NXText);
+  _themeMode       = themeMode;
+  QPalette palette = q->palette();
+  palette.setColor(QPalette::WindowText, NXThemeColor(_themeMode, BasicText));
+  q->setPalette(palette);
 }
 

@@ -1,10 +1,8 @@
 ﻿#include "NXInteractiveCardPrivate.h"
 
 NXInteractiveCardPrivate::NXInteractiveCardPrivate(QObject *parent)
-    : QObject{parent}
-{}
-
-NXInteractiveCardPrivate::~NXInteractiveCardPrivate()
+    : QObject { parent }
 {
-
 }
+
+NXInteractiveCardPrivate::~NXInteractiveCardPrivate() { }

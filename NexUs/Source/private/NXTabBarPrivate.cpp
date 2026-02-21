@@ -1,10 +1,8 @@
 ﻿#include "NXTabBarPrivate.h"
 
-NXTabBarPrivate::NXTabBarPrivate(QObject* parent)
-    : QObject{parent}
+NXTabBarPrivate::NXTabBarPrivate(QObject *parent)
+    : QObject { parent }
 {
 }
 
-NXTabBarPrivate::~NXTabBarPrivate()
-{
-}
+NXTabBarPrivate::~NXTabBarPrivate() { }

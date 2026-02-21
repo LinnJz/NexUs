@@ -5,10 +5,11 @@
 
 class T_UpdateWidget : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
+
 public:
-    explicit T_UpdateWidget(QWidget* parent = nullptr);
-    ~T_UpdateWidget();
+  explicit T_UpdateWidget(QWidget *parent = nullptr);
+  ~T_UpdateWidget();
 };
 
 #endif // T_UPDATEWIDGET_H

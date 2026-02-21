@@ -1,18 +1,16 @@
-﻿#include "NXDrawerAreaPrivate.h"
-#include "NXDrawerArea.h"
+﻿#include "NXDrawerArea.h"
+#include "NXDrawerAreaPrivate.h"
 
-NXDrawerAreaPrivate::NXDrawerAreaPrivate(QObject* parent)
+NXDrawerAreaPrivate::NXDrawerAreaPrivate(QObject *parent)
     : QObject(parent)
 {
 }
 
-NXDrawerAreaPrivate::~NXDrawerAreaPrivate()
-{
-}
+NXDrawerAreaPrivate::~NXDrawerAreaPrivate() { }
 
 void NXDrawerAreaPrivate::onDrawerHeaderClicked(bool isExpand)
 {
-    Q_Q(NXDrawerArea);
-    _drawerContainer->doDrawerAnimation(isExpand);
-    Q_EMIT q->expandStateChanged(isExpand);
+  Q_Q(NXDrawerArea);
+  _drawerContainer->doDrawerAnimation(isExpand);
+  Q_EMIT q->expandStateChanged(isExpand);
 }

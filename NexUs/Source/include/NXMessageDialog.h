@@ -7,26 +7,27 @@
 #include "NXProperty.h"
 
 class NXMessageDialogPrivate;
+
 class NX_EXPORT NXMessageDialog : public QWidget
 {
-    Q_OBJECT
-    Q_Q_CREATE(NXMessageDialog)
-    Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
-    Q_PROPERTY_CREATE_Q_H(QString, Title)
-    Q_PROPERTY_CREATE_Q_H(QString, Content)
-    Q_PROPERTY_CREATE_Q_H(int, TitlePixelSize)
-    Q_PROPERTY_CREATE_Q_H(int, ContentPixelSize)
+  Q_OBJECT
+  Q_Q_CREATE(NXMessageDialog)
+  Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
+  Q_PROPERTY_CREATE_Q_H(QString, Title)
+  Q_PROPERTY_CREATE_Q_H(QString, Content)
+  Q_PROPERTY_CREATE_Q_H(int, TitlePixelSize)
+  Q_PROPERTY_CREATE_Q_H(int, ContentPixelSize)
 
 public:
-    explicit NXMessageDialog(QWidget* parent = nullptr);
-    ~NXMessageDialog();
+  explicit NXMessageDialog(QWidget *parent = nullptr);
+  ~NXMessageDialog();
 
 Q_SIGNALS:
-    void confirmed();
-    void cancelled();
+  void confirmed();
+  void cancelled();
 
 protected:
-    void paintEvent(QPaintEvent* event) override;
+  void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // NXMESSAGEDIALOG_H

@@ -22,41 +22,41 @@ class NXContentDialog;
 
 class MainWindow : public NXWindow
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget* parent = nullptr);
-    ~MainWindow() override;
+  explicit MainWindow(QWidget *parent = nullptr);
+  ~MainWindow() override;
 
-    void initWindow();
-    void initEdgeLayout();
-    void initContent();
+  void initWindow();
+  void initEdgeLayout();
+  void initContent();
 
 protected:
-    virtual void mouseReleaseEvent(QMouseEvent* event);
+  virtual void mouseReleaseEvent(QMouseEvent *event);
 
 private:
-    NXContentDialog* _closeDialog{nullptr};
-    NXSuggestBox* _windowSuggestBox{nullptr};
-    T_Home* _homePage{nullptr};
+  NXContentDialog *_closeDialog { nullptr };
+  NXSuggestBox *_windowSuggestBox { nullptr };
+  T_Home *_homePage { nullptr };
 #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
-    T_NXScreen* _elaScreenPage{nullptr};
+  T_NXScreen *_elaScreenPage { nullptr };
 #endif
-    T_Icon* _iconPage{nullptr};
-    T_BaseComponents* _baseComponentsPage{nullptr};
-    T_Graphics* _graphicsPage{nullptr};
-    T_Navigation* _navigationPage{nullptr};
-    T_Popup* _popupPage{nullptr};
-    T_Card* _cardPage{nullptr};
-    T_ListView* _listViewPage{nullptr};
-    T_TableView* _tableViewPage{nullptr};
-    T_TableWidget* _tableWidgetPage{nullptr};
-    T_TreeView* _treeViewPage{nullptr};
-    T_About* _aboutPage{nullptr};
-    T_Setting* _settingPage{nullptr};
-    QString _rootKey{""};
-    QString _viewKey{""};
-    QString _aboutKey{""};
-    QString _settingKey{""};
+  T_Icon *_iconPage { nullptr };
+  T_BaseComponents *_baseComponentsPage { nullptr };
+  T_Graphics *_graphicsPage { nullptr };
+  T_Navigation *_navigationPage { nullptr };
+  T_Popup *_popupPage { nullptr };
+  T_Card *_cardPage { nullptr };
+  T_ListView *_listViewPage { nullptr };
+  T_TableView *_tableViewPage { nullptr };
+  T_TableWidget *_tableWidgetPage { nullptr };
+  T_TreeView *_treeViewPage { nullptr };
+  T_About *_aboutPage { nullptr };
+  T_Setting *_settingPage { nullptr };
+  QString _rootKey { "" };
+  QString _viewKey { "" };
+  QString _aboutKey { "" };
+  QString _settingKey { "" };
 };
 #endif // MAINWINDOW_H

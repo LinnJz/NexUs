@@ -6,11 +6,10 @@
 #include <QPropertyAnimation>
 
 #include "NXMenu.h"
-NXMenuPrivate::NXMenuPrivate(QObject* parent)
-    : QObject{parent}
+
+NXMenuPrivate::NXMenuPrivate(QObject *parent)
+    : QObject { parent }
 {
 }
 
-NXMenuPrivate::~NXMenuPrivate()
-{
-}
+NXMenuPrivate::~NXMenuPrivate() { }

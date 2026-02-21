@@ -1,19 +1,15 @@
 ﻿#include "NXTableViewPrivate.h"
 
-NXTableViewPrivate::NXTableViewPrivate(QObject* parent)
-    : QObject{parent}
+NXTableViewPrivate::NXTableViewPrivate(QObject *parent)
+    : QObject { parent }
 {
 }
 
-NXTableViewPrivate::~NXTableViewPrivate()
+NXTableViewPrivate::~NXTableViewPrivate() { }
+
+NXModelIndexWidgetPrivate::NXModelIndexWidgetPrivate(QObject *parent)
+    : QObject { parent }
 {
 }
 
-NXModelIndexWidgetPrivate::NXModelIndexWidgetPrivate(QObject* parent)
-    : QObject{ parent }
-{
-}
-
-NXModelIndexWidgetPrivate::~NXModelIndexWidgetPrivate()
-{
-}
+NXModelIndexWidgetPrivate::~NXModelIndexWidgetPrivate() { }

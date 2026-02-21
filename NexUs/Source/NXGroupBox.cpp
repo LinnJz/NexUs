@@ -6,43 +6,41 @@
 #include "NXTheme.h"
 #include "private/NXGroupBoxPrivate.h"
 
-NXGroupBox::NXGroupBox(QWidget* parent)
-    : QGroupBox(parent), d_ptr(new NXGroupBoxPrivate())
+NXGroupBox::NXGroupBox(QWidget *parent)
+    : QGroupBox(parent)
+    , d_ptr(new NXGroupBoxPrivate())
 {
-    Q_D(NXGroupBox);
-    d->q_ptr = this;
+  Q_D(NXGroupBox);
+  d->q_ptr = this;
 
-    setMouseTracking(true);
-    setObjectName("NXGroupBox");
+  setMouseTracking(true);
+  setObjectName("NXGroupBox");
 
-    QFont font = this->font();
-    font.setPixelSize(15);
-    setFont(font);
+  QFont font = this->font();
+  font.setPixelSize(15);
+  setFont(font);
 
-    setStyle(new NXGroupBoxStyle(style()));
-    d->onThemeChanged(nxTheme->getThemeMode());
-    connect(nxTheme, &NXTheme::themeModeChanged, d, &NXGroupBoxPrivate::onThemeChanged);
+  setStyle(new NXGroupBoxStyle(style()));
+  d->onThemeChanged(nxTheme->getThemeMode());
+  connect(nxTheme, &NXTheme::themeModeChanged, d, &NXGroupBoxPrivate::onThemeChanged);
 }
 
-NXGroupBox::NXGroupBox(const QString& title, QWidget* parent)
+NXGroupBox::NXGroupBox(const QString& title, QWidget *parent)
     : NXGroupBox(parent)
 {
-    setTitle(title);
+  setTitle(title);
 }
 
-NXGroupBox::~NXGroupBox()
-{
-    delete this->style();
-}
+NXGroupBox::~NXGroupBox() { delete this->style(); }
 
-void NXGroupBox::paintEvent(QPaintEvent* event)
+void NXGroupBox::paintEvent(QPaintEvent *event)
 {
-    Q_D(NXGroupBox);
-    if (palette().color(QPalette::WindowText) != NXThemeColor(d->_themeMode, BasicText))
-    {
-        d->onThemeChanged(d->_themeMode);
-    }
-    QGroupBox::paintEvent(event);
+  Q_D(NXGroupBox);
+  if (palette().color(QPalette::WindowText) != NXThemeColor(d->_themeMode, BasicText))
+  {
+    d->onThemeChanged(d->_themeMode);
+  }
+  QGroupBox::paintEvent(event);
 }
 
 Q_PROPERTY_CREATE_Q_CPP(NXGroupBox, int, BorderRadius)

@@ -7,22 +7,21 @@
 
 class NXMultiSelectComboBoxDelegate : public QStyledItemDelegate
 {
-    Q_OBJECT
-public:
-    explicit NXMultiSelectComboBoxDelegate(QObject* parent = nullptr);
-    ~NXMultiSelectComboBoxDelegate();
+  Q_OBJECT
 
-    void setItemSelection(const QList<bool>& selection);
+public:
+  explicit NXMultiSelectComboBoxDelegate(QObject *parent = nullptr);
+  ~NXMultiSelectComboBoxDelegate();
+
+  void setItemSelection(const QList<bool>& selection);
 
 protected:
-    void paint(QPainter* painter, const QStyleOptionViewItem& option,
-               const QModelIndex& index) const override;
-    QSize sizeHint(const QStyleOptionViewItem& option,
-                   const QModelIndex& index) const override;
+  void paint(QPainter *painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+  QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
-    NXThemeType::ThemeMode _themeMode;
-    QList<bool> _itemSelection;
+  NXThemeType::ThemeMode _themeMode;
+  QList<bool> _itemSelection;
 };
 
 #endif // NXMULTISELECTCOMBOBOXDELEGATE_H

@@ -1,10 +1,8 @@
 ﻿#include "NXProgressRingPrivate.h"
 
-NXProgressRingPrivate::NXProgressRingPrivate(QObject* parent)
+NXProgressRingPrivate::NXProgressRingPrivate(QObject *parent)
     : QObject(parent)
 {
 }
 
-NXProgressRingPrivate::~NXProgressRingPrivate()
-{
-}
+NXProgressRingPrivate::~NXProgressRingPrivate() { }

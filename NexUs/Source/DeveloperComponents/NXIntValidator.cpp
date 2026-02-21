@@ -1,86 +1,63 @@
 ﻿#include "NXIntValidator.h"
 
-NXIntValidator::NXIntValidator(QObject* parent)
-    : QIntValidator{parent}
+NXIntValidator::NXIntValidator(QObject *parent)
+    : QIntValidator { parent }
 {
-    _pIsHexMode = false;
+  _pIsHexMode = false;
 }
 
-NXIntValidator::NXIntValidator(int bottom, int top, QObject* parent)
-    : QIntValidator{bottom, top, parent}
+NXIntValidator::NXIntValidator(int bottom, int top, QObject *parent)
+    : QIntValidator { bottom, top, parent }
 {
-    _pIsHexMode = false;
+  _pIsHexMode = false;
 }
 
-NXIntValidator::~NXIntValidator()
-{
-}
+NXIntValidator::~NXIntValidator() { }
 
 QValidator::State NXIntValidator::validate(QString& input, int& pos) const
 {
-    QString inputCopy = input;
-    if (_pIsHexMode)
+  QString inputCopy = input;
+  if (_pIsHexMode)
+  {
+    inputCopy.remove("#");
+    if (!inputCopy.isEmpty())
     {
-        inputCopy.remove("#");
-        if (!inputCopy.isEmpty())
-        {
-            bool isInt = false;
-            int value = inputCopy.toInt(&isInt, 16);
-            if (!isInt)
-            {
-                return QValidator::Invalid;
-            }
-            if (value < bottom() || value > top())
-            {
-                return QValidator::Invalid;
-            }
-            int topLength = QString::number(top(), 16).length();
-            if (inputCopy.length() > topLength)
-            {
-                return QValidator::Invalid;
-            }
-        }
-        inputCopy.prepend("#");
+      bool isInt = false;
+      int value  = inputCopy.toInt(&isInt, 16);
+      if (!isInt) { return QValidator::Invalid; }
+      if (value < bottom() || value > top()) { return QValidator::Invalid; }
+      int topLength = QString::number(top(), 16).length();
+      if (inputCopy.length() > topLength) { return QValidator::Invalid; }
     }
-    else
-    {
-        if (input.isEmpty())
-        {
-            return QValidator::Intermediate;
-        }
-        bool isInt = false;
-        int value = inputCopy.toInt(&isInt);
-        if (!isInt)
-        {
-            return QValidator::Invalid;
-        }
-        if (value < bottom() || value > top())
-        {
-            return QValidator::Invalid;
-        }
-    }
-    input = inputCopy;
-    return QValidator::Acceptable;
+    inputCopy.prepend("#");
+  }
+  else
+  {
+    if (input.isEmpty()) { return QValidator::Intermediate; }
+    bool isInt = false;
+    int value  = inputCopy.toInt(&isInt);
+    if (!isInt) { return QValidator::Invalid; }
+    if (value < bottom() || value > top()) { return QValidator::Invalid; }
+  }
+  input = inputCopy;
+  return QValidator::Acceptable;
 }
 
 void NXIntValidator::fixup(QString& input) const
 {
-    if (_pIsHexMode)
-    {
-        QString inputComplete = _completeInput(input, QString::number(top(), 16).length());
-        input = QString("#") + inputComplete;
-    }
-    else
-    {
-        input = QString::number(bottom());
-    }
+  if (_pIsHexMode)
+  {
+    QString inputComplete = _completeInput(input, QString::number(top(), 16).length());
+    input                 = QString("#") + inputComplete;
+  }
+  else
+  {
+    input = QString::number(bottom());
+  }
 }
 
 QString NXIntValidator::_completeInput(QString input, int length) const
 {
-    while (input.length() < length)
-    {
-        input.prepend("0");
-    }
-    return input;
+  while (input.length() < length) { input.prepend("0"); }
+  return input;
 }

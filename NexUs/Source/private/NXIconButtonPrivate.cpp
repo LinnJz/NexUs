@@ -1,10 +1,8 @@
 ﻿#include "NXIconButtonPrivate.h"
 
 NXIconButtonPrivate::NXIconButtonPrivate(QObject *parent)
-    : QObject{parent}
-{}
-
-NXIconButtonPrivate::~NXIconButtonPrivate()
+    : QObject { parent }
 {
-
 }
+
+NXIconButtonPrivate::~NXIconButtonPrivate() { }
