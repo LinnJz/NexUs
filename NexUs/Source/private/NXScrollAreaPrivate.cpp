@@ -2,11 +2,9 @@
 
 #include "NXScrollArea.h"
 
-NXScrollAreaPrivate::NXScrollAreaPrivate(QObject* parent)
-    : QObject{parent}
+NXScrollAreaPrivate::NXScrollAreaPrivate(QObject *parent)
+    : QObject { parent }
 {
 }
 
-NXScrollAreaPrivate::~NXScrollAreaPrivate()
-{
-}
+NXScrollAreaPrivate::~NXScrollAreaPrivate() { }

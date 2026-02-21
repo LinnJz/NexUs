@@ -1,112 +1,89 @@
 ﻿#include "NXBreadcrumbBarModel.h"
 
-NXBreadcrumbBarModel::NXBreadcrumbBarModel(QObject* parent)
-    : QAbstractListModel{parent}
+NXBreadcrumbBarModel::NXBreadcrumbBarModel(QObject *parent)
+    : QAbstractListModel { parent }
 {
 }
 
-NXBreadcrumbBarModel::~NXBreadcrumbBarModel()
-{
-}
+NXBreadcrumbBarModel::~NXBreadcrumbBarModel() { }
 
 int NXBreadcrumbBarModel::rowCount(const QModelIndex& parent) const
 {
-    if (!_breadcrumbList.isEmpty())
-    {
-        return _breadcrumbList.count() * 2 - 1;
-    }
-    return 0;
+  if (!_breadcrumbList.isEmpty()) { return _breadcrumbList.count() * 2 - 1; }
+  return 0;
 }
 
 QVariant NXBreadcrumbBarModel::data(const QModelIndex& index, int role) const
 {
-    if (role == Qt::DisplayRole)
+  if (role == Qt::DisplayRole)
+  {
+    if (index.row() % 2 == 0) { return _breadcrumbList[index.row() / 2]; }
+    else
     {
-        if (index.row() % 2 == 0)
-        {
-            return _breadcrumbList[index.row() / 2];
-        }
-        else
-        {
-            return ">";
-        }
+      return ">";
     }
-    else if (role == Qt::UserRole)
+  }
+  else if (role == Qt::UserRole)
+  {
+    if (index.row() == _breadcrumbList.count() * 2 - 2 || index.row() == _breadcrumbList.count() * 2 - 3)
     {
-        if (index.row() == _breadcrumbList.count() * 2 - 2 || index.row() == _breadcrumbList.count() * 2 - 3)
-        {
-            return QString("LastBreadcrumb");
-        }
+      return QString("LastBreadcrumb");
     }
-    return QVariant();
+  }
+  return QVariant();
 }
 
 void NXBreadcrumbBarModel::appendBreadcrumb(const QString& breadcrumb)
 {
-    if (!breadcrumb.isEmpty())
+  if (!breadcrumb.isEmpty())
+  {
+    if (_breadcrumbList.count() && _breadcrumbList.last() == breadcrumb) { return; }
+    if (_breadcrumbList.count() >= 2 && _breadcrumbList[_breadcrumbList.count() - 2] == breadcrumb)
     {
-        if (_breadcrumbList.count() && _breadcrumbList.last() == breadcrumb)
-        {
-            return;
-        }
-        if (_breadcrumbList.count() >= 2 && _breadcrumbList[_breadcrumbList.count() - 2] == breadcrumb)
-        {
-            beginResetModel();
-            _breadcrumbList.removeLast();
-            endResetModel();
-            return;
-        }
-        beginResetModel();
-        _breadcrumbList.append(breadcrumb);
-        endResetModel();
+      beginResetModel();
+      _breadcrumbList.removeLast();
+      endResetModel();
+      return;
     }
+    beginResetModel();
+    _breadcrumbList.append(breadcrumb);
+    endResetModel();
+  }
 }
 
 void NXBreadcrumbBarModel::removeBreadcrumb(const QString& breadcrumb)
 {
-    if (_breadcrumbList.contains(breadcrumb))
-    {
-        beginResetModel();
-        _breadcrumbList.removeAt(_breadcrumbList.lastIndexOf(breadcrumb));
-        endResetModel();
-    }
+  if (_breadcrumbList.contains(breadcrumb))
+  {
+    beginResetModel();
+    _breadcrumbList.removeAt(_breadcrumbList.lastIndexOf(breadcrumb));
+    endResetModel();
+  }
 }
 
 void NXBreadcrumbBarModel::removeBreadcrumb(int index)
 {
-    if (index >= _breadcrumbList.count())
-    {
-        return;
-    }
-    beginResetModel();
+  if (index >= _breadcrumbList.count()) { return; }
+  beginResetModel();
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    _breadcrumbList.remove(index, _breadcrumbList.count() - index);
+  _breadcrumbList.remove(index, _breadcrumbList.count() - index);
 #else
-    for (int i = _breadcrumbList.count() - 1; i >= 0; i--)
-    {
-        if (i < index)
-        {
-            break;
-        }
-        _breadcrumbList.removeAt(i);
-    }
+  for (int i = _breadcrumbList.count() - 1; i >= 0; i--)
+  {
+    if (i < index) { break; }
+    _breadcrumbList.removeAt(i);
+  }
 #endif
-    endResetModel();
+  endResetModel();
 }
 
 void NXBreadcrumbBarModel::setBreadcrumbList(QStringList breadcrumbList)
 {
-    beginResetModel();
-    this->_breadcrumbList = breadcrumbList;
-    endResetModel();
+  beginResetModel();
+  this->_breadcrumbList = breadcrumbList;
+  endResetModel();
 }
 
-int NXBreadcrumbBarModel::getBreadcrumbListCount()
-{
-    return _breadcrumbList.count();
-}
+int NXBreadcrumbBarModel::getBreadcrumbListCount() { return _breadcrumbList.count(); }
 
-QStringList NXBreadcrumbBarModel::getBreadcrumbList()
-{
-    return _breadcrumbList;
-}
+QStringList NXBreadcrumbBarModel::getBreadcrumbList() { return _breadcrumbList; }

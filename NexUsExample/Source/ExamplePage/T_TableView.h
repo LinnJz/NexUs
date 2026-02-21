@@ -4,15 +4,16 @@
 #include "T_BasePage.h"
 
 class NXTableView;
+
 class T_TableView : public T_BasePage
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    Q_INVOKABLE explicit T_TableView(QWidget* parent = nullptr);
-    ~T_TableView();
+  Q_INVOKABLE explicit T_TableView(QWidget *parent = nullptr);
+  ~T_TableView();
 
 private:
-    NXTableView* _tableView{nullptr};
+  NXTableView *_tableView { nullptr };
 };
 
 #endif // T_TABLEVIEW_H

@@ -1,29 +1,34 @@
-﻿#include "NXCalendarPickerContainer.h"
-
-#include <QPainter>
+﻿#include <QPainter>
+#include "NXCalendarPickerContainer.h"
 
 #include "NXTheme.h"
-NXCalendarPickerContainer::NXCalendarPickerContainer(QWidget* parent)
-    : QWidget{parent}
+
+NXCalendarPickerContainer::NXCalendarPickerContainer(QWidget *parent)
+    : QWidget { parent }
 {
-    setWindowFlags(Qt::FramelessWindowHint | Qt::Popup | Qt::NoDropShadowWindowHint);
-    setAttribute(Qt::WA_TranslucentBackground);
-    setContentsMargins(0, 0, 0, 0);
-    setObjectName("NXCalendarPickerContainer");
-    setStyleSheet("#NXCalendarPickerContainer{background-color:transparent}");
-    _themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  setWindowFlags(Qt::FramelessWindowHint | Qt::Popup | Qt::NoDropShadowWindowHint);
+  setAttribute(Qt::WA_TranslucentBackground);
+  setContentsMargins(0, 0, 0, 0);
+  setObjectName("NXCalendarPickerContainer");
+  setStyleSheet("#NXCalendarPickerContainer{background-color:transparent}");
+  _themeMode = nxTheme->getThemeMode();
+  connect(nxTheme,
+          &NXTheme::themeModeChanged,
+          this,
+          [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+    update();
+  });
 }
 
-NXCalendarPickerContainer::~NXCalendarPickerContainer()
-{
-}
+NXCalendarPickerContainer::~NXCalendarPickerContainer() { }
 
-void NXCalendarPickerContainer::paintEvent(QPaintEvent* event)
+void NXCalendarPickerContainer::paintEvent(QPaintEvent *event)
 {
-    QPainter painter(this);
-    painter.save();
-    painter.setRenderHints(QPainter::Antialiasing);
-    nxTheme->drawEffectShadow(&painter, rect(), 6, 5);
-    painter.restore();
+  QPainter painter(this);
+  painter.save();
+  painter.setRenderHints(QPainter::Antialiasing);
+  nxTheme->drawEffectShadow(&painter, rect(), 6, 5);
+  painter.restore();
 }

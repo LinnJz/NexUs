@@ -4,20 +4,21 @@
 #include <QIntValidator>
 
 #include "NXProperty.h"
+
 class NXIntValidator : public QIntValidator
 {
-    Q_OBJECT
-    Q_PRIVATE_CREATE(bool, IsHexMode)
+  Q_OBJECT
+  Q_PRIVATE_CREATE(bool, IsHexMode)
 public:
-    explicit NXIntValidator(QObject* parent = nullptr);
-    explicit NXIntValidator(int bottom, int top, QObject* parent = nullptr);
-    ~NXIntValidator();
+  explicit NXIntValidator(QObject *parent = nullptr);
+  explicit NXIntValidator(int bottom, int top, QObject *parent = nullptr);
+  ~NXIntValidator();
 
-    QValidator::State validate(QString& input, int& pos) const override;
-    void fixup(QString& input) const override;
+  QValidator::State validate(QString& input, int& pos) const override;
+  void fixup(QString& input) const override;
 
 private:
-    QString _completeInput(QString input, int length) const;
+  QString _completeInput(QString input, int length) const;
 };
 
 #endif // NXINTVALIDATOR_H

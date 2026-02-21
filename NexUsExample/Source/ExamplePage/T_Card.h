@@ -6,17 +6,18 @@
 class NXLCDNumber;
 class NXPromotionCard;
 class NXPromotionView;
+
 class T_Card : public T_BasePage
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    Q_INVOKABLE explicit T_Card(QWidget* parent = nullptr);
-    ~T_Card();
+  Q_INVOKABLE explicit T_Card(QWidget *parent = nullptr);
+  ~T_Card();
 
 private:
-    NXLCDNumber* _lcdNumber{nullptr};
-    NXPromotionCard* _promotionCard{nullptr};
-    NXPromotionView* _promotionView{nullptr};
+  NXLCDNumber *_lcdNumber { nullptr };
+  NXPromotionCard *_promotionCard { nullptr };
+  NXPromotionView *_promotionView { nullptr };
 };
 
 #endif // T_CARD_H

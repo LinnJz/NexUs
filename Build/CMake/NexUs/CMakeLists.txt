@@ -51,12 +51,63 @@ if (MINGW)
     set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
 endif ()
 if (MSVC)
+    set(PRIVATE_MSVC_COMPILE_GENERAL_OPTIONS
+        # /ifcOutput ${CMAKE_BINARY_DIR}/  # Generate interface definition file
+        /permissive-
+        # C++20 Modules Support
+        /experimental:module  # Enable module support (MSVC 2019 16.8+)
+        # /std:c++latest        # Use latest C++ standard for modules
+        /Zc:wchar_t           # wchar_t as a primitive type
+        /Zc:forScope          # for loop range consistency
+        /Zc:inline            # Remove unused functions
+        /W4                   # Warning Level 4
+        /WX-                  # Treat warnings as errors, "WX" will not compile, due to the way the standard library's internal code is written
+        /Zp8                  # 8-byte alignment
+        /GF                   # Enable string pool
+        /Gd                   # __cdecl calling convention
+        /fp:precise           
+        /FC                   # Full Path Diagnosis
+        # BUG
+        # If the settings, we cannot use coroutines and what Microsoft officially describes may not be consistent.
+        # /await:strict         # Enable cooperative routine support, can use "/await", VS 2026 should replace it as "/await:strict"
+        /openmp:experimental  # OpenMP support
+        /errorReport:prompt   # Error Reporting Mode
+        /diagnostics:column   # Diagnostic Information Format
+        /Gm-                  # Disable minimal rebuild
+        # https://learn.microsoft.com/zh-cn/cpp/build/reference/arch-x64?view=msvc-170
+        /arch:AVX2            # Enable AVX2 instruction set
+    )
+    set(PUBLIC_MSVC_COMPILE_GENERAL_OPTIONS
+        /utf-8                # character set
+        /Zc:__cplusplus       # Correctly set the __cplusplus macroX
+        /Zc:preprocessor
+        /MP                   # Multiprocessor Compilation
+        /sdl                  # SDL checks
+        /EHsc                 # C Exception Handling
+        /nologo
+    )
+    target_compile_options(${PROJECT_NAME} PUBLIC ${PUBLIC_MSVC_COMPILE_GENERAL_OPTIONS})
+    target_compile_options(${PROJECT_NAME} PRIVATE ${PRIVATE_MSVC_COMPILE_GENERAL_OPTIONS})
     target_compile_options(${PROJECT_NAME} PRIVATE
-        "$<$<CONFIG:Debug>:/ZI>"
-        "$<$<CONFIG:Debug>:/Od>"
-        "$<$<CONFIG:Release>:/O2>"
-        "$<$<CONFIG:RelWithDebInfo>:/Zi>"
-        "$<$<CONFIG:RelWithDebInfo>:/O2>"
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Debug>>:/JMC>"    # Just My Code debugging
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Debug>>:/ZI>"     # Edit and Continue
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Debug>>:/Od>"     # Disable optimization
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Debug>>:/RTC1>"   # Runtime error checks
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/O2>"    # Maximize speed
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/Ob2>"   # Inline any suitable function
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/GL>"    # Whole program optimization
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/GS>"    # Buffer security check
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/Qpar>"  # Auto-parallelization
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/Gy>"    # Function-level linking
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/Oi>"    # Intrinsic functions
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/O2>" 
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/Ob1>"
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/Zi>" 
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/GL>" 
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/GS>" 
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/Qpar>"
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/Gy>" 
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/Oi>" 
         "$<$<CONFIG:MinSizeRel>:/Zi>"
         "$<$<CONFIG:MinSizeRel>:/O1>"
     )
@@ -64,6 +115,8 @@ if (MSVC)
     target_link_options(${PROJECT_NAME} PRIVATE
         "$<$<CONFIG:Debug>:/DEBUG>"
         "$<$<CONFIG:RelWithDebInfo>:/DEBUG:FULL>"
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/LTCG>"
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/LTCG>"
         "$<$<CONFIG:Release>:/DEBUG:NONE>"
         "$<$<CONFIG:MinSizeRel>:/DEBUG:FASTLINK>"
     )

@@ -4,12 +4,13 @@
 #include <QStatusBar>
 
 #include "NXProperty.h"
+
 class NX_EXPORT NXStatusBar : public QStatusBar
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit NXStatusBar(QWidget* parent = nullptr);
-    ~NXStatusBar() override;
+  explicit NXStatusBar(QWidget *parent = nullptr);
+  ~NXStatusBar() override;
 };
 
 #endif // NXSTATUSBAR_H

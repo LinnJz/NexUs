@@ -2,11 +2,9 @@
 
 #include "NXWidget.h"
 
-NXWidgetPrivate::NXWidgetPrivate(QObject* parent)
-    : QObject{parent}
+NXWidgetPrivate::NXWidgetPrivate(QObject *parent)
+    : QObject { parent }
 {
 }
 
-NXWidgetPrivate::~NXWidgetPrivate()
-{
-}
+NXWidgetPrivate::~NXWidgetPrivate() { }

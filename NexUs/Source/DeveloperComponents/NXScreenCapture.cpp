@@ -3,277 +3,248 @@
 #include <QDebug>
 #include <mach/mach_time.h>
 
-#include <ScreenCaptureKit/ScreenCaptureKit.h>
-#include <Foundation/Foundation.h>
 #include <ApplicationServices/ApplicationServices.h>
+#include <Foundation/Foundation.h>
+#include <ScreenCaptureKit/ScreenCaptureKit.h>
 
 class NXScreenCapture::Private
 {
 public:
-    CGDirectDisplayID displayId{0};
-    QList<CGDirectDisplayID> displayIds;
-    SCDisplay* scDisplay{nil};
-    NSArray<SCDisplay*>* scDisplays{nil};
+  CGDirectDisplayID displayId { 0 };
+  QList<CGDirectDisplayID> displayIds;
+  SCDisplay *scDisplay { nil };
+  NSArray<SCDisplay *> *scDisplays { nil };
 };
 
-NXScreenCapture::NXScreenCapture(QObject* parent)
+NXScreenCapture::NXScreenCapture(QObject *parent)
     : QObject(parent)
     , d(new Private)
 {
-    _pIsInitSuccess = false;
-    _pIsGrabActive = false;
-    _pGrabFrameRate = 60;
-    _pIsGrabStoped = true;
-    _pIsGrabCenter = false;
+  _pIsInitSuccess = false;
+  _pIsGrabActive  = false;
+  _pGrabFrameRate = 60;
+  _pIsGrabStoped  = true;
+  _pIsGrabCenter  = false;
 }
 
 NXScreenCapture::~NXScreenCapture()
 {
-    releaseInterface();
-    delete d;
+  releaseInterface();
+  delete d;
 }
 
 bool NXScreenCapture::initialize(int displayID)
 {
-    _pIsInitSuccess = false;
-    _pDisplayID = displayID;
-    releaseInterface();
+  _pIsInitSuccess = false;
+  _pDisplayID     = displayID;
+  releaseInterface();
 
-    __block bool success = false;
-    __block NSError* error = nil;
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+  __block bool success           = false;
+  __block NSError *error         = nil;
+  dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
-    [SCShareableContent getShareableContentWithCompletionHandler:^(SCShareableContent* content, NSError* err) {
-        if (err) {
-            error = err;
-            dispatch_semaphore_signal(semaphore);
-            return;
-        }
-
-        if (content.displays.count == 0) {
-            dispatch_semaphore_signal(semaphore);
-            return;
-        }
-
-        d->scDisplays = [content.displays retain];
-        success = true;
-        dispatch_semaphore_signal(semaphore);
-    }];
-
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    dispatch_release(semaphore);
-
-    if (!success || d->scDisplays == nil || d->scDisplays.count == 0) {
-        _pLastError = error ? QString::fromNSString(error.localizedDescription) : "No active displays found";
-        qDebug() << _pLastError;
-        return false;
+  [SCShareableContent getShareableContentWithCompletionHandler:^(SCShareableContent *content, NSError *err) {
+    if (err)
+    {
+      error = err;
+      dispatch_semaphore_signal(semaphore);
+      return;
     }
 
-    _pDisplayList.clear();
-    for (NSUInteger i = 0; i < d->scDisplays.count; i++) {
-        SCDisplay* display = d->scDisplays[i];
-        QString displayName = QString("Display %1 (%2x%3)")
-                                  .arg(i + 1)
-                                  .arg(display.width)
-                                  .arg(display.height);
-        if (!_pDisplayList.contains(displayName)) {
-            _pDisplayList.append(displayName);
-        }
+    if (content.displays.count == 0)
+    {
+      dispatch_semaphore_signal(semaphore);
+      return;
     }
 
-    if (displayID < 0 || displayID >= static_cast<int>(d->scDisplays.count)) {
-        _pLastError = "Invalid display ID";
-        qDebug() << _pLastError;
-        return false;
-    }
+    d->scDisplays = [content.displays retain];
+    success       = true;
+    dispatch_semaphore_signal(semaphore);
+  }];
 
-    d->scDisplay = d->scDisplays[displayID];
-    d->displayId = d->scDisplay.displayID;
-    _displayWidth = static_cast<int>(d->scDisplay.width);
-    _displayHeight = static_cast<int>(d->scDisplay.height);
+  dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+  dispatch_release(semaphore);
 
-    _pIsInitSuccess = true;
-    return true;
+  if (!success || d->scDisplays == nil || d->scDisplays.count == 0)
+  {
+    _pLastError = error ? QString::fromNSString(error.localizedDescription) : "No active displays found";
+    qDebug() << _pLastError;
+    return false;
+  }
+
+  _pDisplayList.clear();
+  for (NSUInteger i = 0; i < d->scDisplays.count; i++)
+  {
+    SCDisplay *display  = d->scDisplays[i];
+    QString displayName = QString("Display %1 (%2x%3)").arg(i + 1).arg(display.width).arg(display.height);
+    if (!_pDisplayList.contains(displayName)) { _pDisplayList.append(displayName); }
+  }
+
+  if (displayID < 0 || displayID >= static_cast<int>(d->scDisplays.count))
+  {
+    _pLastError = "Invalid display ID";
+    qDebug() << _pLastError;
+    return false;
+  }
+
+  d->scDisplay   = d->scDisplays[displayID];
+  d->displayId   = d->scDisplay.displayID;
+  _displayWidth  = static_cast<int>(d->scDisplay.width);
+  _displayHeight = static_cast<int>(d->scDisplay.height);
+
+  _pIsInitSuccess = true;
+  return true;
 }
 
 static QImage cgImageToQImage(CGImageRef cgImage)
 {
-    if (!cgImage)
-    {
-        return QImage();
-    }
+  if (!cgImage) { return QImage(); }
 
-    size_t width = CGImageGetWidth(cgImage);
-    size_t height = CGImageGetHeight(cgImage);
+  size_t width  = CGImageGetWidth(cgImage);
+  size_t height = CGImageGetHeight(cgImage);
 
-    QImage image(static_cast<int>(width), static_cast<int>(height), QImage::Format_ARGB32);
+  QImage image(static_cast<int>(width), static_cast<int>(height), QImage::Format_ARGB32);
 
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context = CGBitmapContextCreate(
-        image.bits(),
-        width,
-        height,
-        8,
-        image.bytesPerLine(),
-        colorSpace,
-        kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Host);
+  CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+  CGContextRef context       = CGBitmapContextCreate(image.bits(),
+                                               width,
+                                               height,
+                                               8,
+                                               image.bytesPerLine(),
+                                               colorSpace,
+                                               kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Host);
 
-    CGContextDrawImage(context, CGRectMake(0, 0, width, height), cgImage);
+  CGContextDrawImage(context, CGRectMake(0, 0, width, height), cgImage);
 
-    CGContextRelease(context);
-    CGColorSpaceRelease(colorSpace);
+  CGContextRelease(context);
+  CGColorSpaceRelease(colorSpace);
 
-    return image;
+  return image;
 }
 
-static CGImageRef captureDisplayUsingScreenCaptureKit(SCDisplay* display)
+static CGImageRef captureDisplayUsingScreenCaptureKit(SCDisplay *display)
 {
-    if (!display) {
-        return nullptr;
-    }
+  if (!display) { return nullptr; }
 
-    __block CGImageRef capturedImage = nullptr;
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+  __block CGImageRef capturedImage = nullptr;
+  dispatch_semaphore_t semaphore   = dispatch_semaphore_create(0);
 
-    SCContentFilter* filter = [[SCContentFilter alloc] initWithDisplay:display excludingWindows:@[]];
-    SCStreamConfiguration* config = [[SCStreamConfiguration alloc] init];
+  SCContentFilter *filter       = [[SCContentFilter alloc] initWithDisplay:display excludingWindows:@[]];
+  SCStreamConfiguration *config = [[SCStreamConfiguration alloc] init];
 
-    [SCScreenshotManager captureImageWithFilter:filter
-                                  configuration:config
-                              completionHandler:^(CGImageRef sampleBuffer, NSError* error) {
-        if (sampleBuffer && !error) {
-            capturedImage = CGImageRetain(sampleBuffer);
-        }
-        dispatch_semaphore_signal(semaphore);
-    }];
+  [SCScreenshotManager captureImageWithFilter:filter
+                                configuration:config
+                            completionHandler:^(CGImageRef sampleBuffer, NSError *error) {
+                              if (sampleBuffer && !error) { capturedImage = CGImageRetain(sampleBuffer); }
+                              dispatch_semaphore_signal(semaphore);
+                            }];
 
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    dispatch_release(semaphore);
+  dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+  dispatch_release(semaphore);
 
-    [filter release];
-    [config release];
+  [filter release];
+  [config release];
 
-    return capturedImage;
+  return capturedImage;
 }
 
 QImage NXScreenCapture::getGrabImage() const
 {
-    if (!_pIsInitSuccess || !d->scDisplay)
-    {
-        return QImage();
-    }
+  if (!_pIsInitSuccess || !d->scDisplay) { return QImage(); }
 
-    CGImageRef cgImage = captureDisplayUsingScreenCaptureKit(d->scDisplay);
-    if (!cgImage)
-    {
-        return QImage();
-    }
+  CGImageRef cgImage = captureDisplayUsingScreenCaptureKit(d->scDisplay);
+  if (!cgImage) { return QImage(); }
 
-    QImage image = cgImageToQImage(cgImage);
-    CGImageRelease(cgImage);
+  QImage image = cgImageToQImage(cgImage);
+  CGImageRelease(cgImage);
 
-    if (_pIsGrabCenter)
-    {
-        return image.copy(QRect((_displayWidth - _pGrabArea.width()) / 2,
-                                (_displayHeight - _pGrabArea.height()) / 2,
-                                _pGrabArea.width(),
-                                _pGrabArea.height()));
-    }
-    else if (!_pGrabArea.isEmpty())
-    {
-        return image.copy(_pGrabArea);
-    }
-    return image;
+  if (_pIsGrabCenter)
+  {
+    return image.copy(QRect((_displayWidth - _pGrabArea.width()) / 2,
+                            (_displayHeight - _pGrabArea.height()) / 2,
+                            _pGrabArea.width(),
+                            _pGrabArea.height()));
+  }
+  else if (!_pGrabArea.isEmpty()) { return image.copy(_pGrabArea); }
+  return image;
 }
 
 void NXScreenCapture::onGrabScreen()
 {
-    if (!_pIsInitSuccess || !d->scDisplay)
+  if (!_pIsInitSuccess || !d->scDisplay)
+  {
+    setIsGrabStoped(true);
+    return;
+  }
+
+  _pIsGrabStoped = false;
+
+  while (_pIsGrabActive)
+  {
+    _grabTimer.start();
+
+    CGImageRef cgImage = captureDisplayUsingScreenCaptureKit(d->scDisplay);
+    if (cgImage)
     {
-        setIsGrabStoped(true);
-        return;
-    }
+      _lastImage = cgImageToQImage(cgImage);
+      CGImageRelease(cgImage);
 
-    _pIsGrabStoped = false;
-
-    while (_pIsGrabActive)
-    {
-        _grabTimer.start();
-
-        CGImageRef cgImage = captureDisplayUsingScreenCaptureKit(d->scDisplay);
-        if (cgImage)
+      if (!_lastImage.isNull())
+      {
+        QImage outputImage;
+        if (_pIsGrabCenter)
         {
-            _lastImage = cgImageToQImage(cgImage);
-            CGImageRelease(cgImage);
-
-            if (!_lastImage.isNull())
-            {
-                QImage outputImage;
-                if (_pIsGrabCenter)
-                {
-                    outputImage = _lastImage.copy(
-                        QRect((_displayWidth - _pGrabArea.width()) / 2,
-                              (_displayHeight - _pGrabArea.height()) / 2,
-                              _pGrabArea.width(),
-                              _pGrabArea.height()));
-                }
-                else if (!_pGrabArea.isEmpty())
-                {
-                    outputImage = _lastImage.copy(_pGrabArea);
-                }
-                else
-                {
-                    outputImage = _lastImage;
-                }
-                Q_EMIT grabScreenOver(std::move(outputImage));
-            }
+          outputImage = _lastImage.copy(QRect((_displayWidth - _pGrabArea.width()) / 2,
+                                              (_displayHeight - _pGrabArea.height()) / 2,
+                                              _pGrabArea.width(),
+                                              _pGrabArea.height()));
         }
-
-        if (_lastGrabTime == 0)
-        {
-            _lastGrabTime = _grabTimer.elapsed();
-        }
+        else if (!_pGrabArea.isEmpty()) { outputImage = _lastImage.copy(_pGrabArea); }
         else
         {
-            _lastGrabTime = (_grabTimer.elapsed() + _lastGrabTime) / 2;
+          outputImage = _lastImage;
         }
-        _cpuSleepTime = (1000 - _lastGrabTime * _pGrabFrameRate) / _pGrabFrameRate;
-        cpuSleep(_cpuSleepTime * 1000);
+        Q_EMIT grabScreenOver(std::move(outputImage));
+      }
     }
 
-    setIsGrabStoped(true);
+    if (_lastGrabTime == 0) { _lastGrabTime = _grabTimer.elapsed(); }
+    else
+    {
+      _lastGrabTime = (_grabTimer.elapsed() + _lastGrabTime) / 2;
+    }
+    _cpuSleepTime = (1000 - _lastGrabTime * _pGrabFrameRate) / _pGrabFrameRate;
+    cpuSleep(_cpuSleepTime * 1000);
+  }
+
+  setIsGrabStoped(true);
 }
 
 void NXScreenCapture::releaseInterface()
 {
-    if (d->scDisplays) {
-        [d->scDisplays release];
-        d->scDisplays = nil;
-    }
-    d->scDisplay = nil;
-    d->displayId = 0;
-    d->displayIds.clear();
+  if (d->scDisplays)
+  {
+    [d->scDisplays release];
+    d->scDisplays = nil;
+  }
+  d->scDisplay = nil;
+  d->displayId = 0;
+  d->displayIds.clear();
 }
 
 void NXScreenCapture::cpuSleep(qint64 usec)
 {
-    if (usec <= 0)
-    {
-        return;
-    }
-    mach_timebase_info_data_t timebase;
-    mach_timebase_info(&timebase);
-    uint64_t start = mach_absolute_time();
-    uint64_t end;
-    uint64_t elapsed;
-    while (true)
-    {
-        end = mach_absolute_time();
-        elapsed = (end - start) * timebase.numer / timebase.denom / 1000;
-        if (static_cast<qint64>(elapsed) > usec)
-        {
-            break;
-        }
-    }
+  if (usec <= 0) { return; }
+  mach_timebase_info_data_t timebase;
+  mach_timebase_info(&timebase);
+  uint64_t start = mach_absolute_time();
+  uint64_t end;
+  uint64_t elapsed;
+  while (true)
+  {
+    end     = mach_absolute_time();
+    elapsed = (end - start) * timebase.numer / timebase.denom / 1000;
+    if (static_cast<qint64>(elapsed) > usec) { break; }
+  }
 }
 #endif

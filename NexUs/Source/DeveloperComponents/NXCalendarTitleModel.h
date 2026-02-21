@@ -5,14 +5,14 @@
 
 class NXCalendarTitleModel : public QAbstractListModel
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit NXCalendarTitleModel(QObject* parent = nullptr);
-    ~NXCalendarTitleModel();
+  explicit NXCalendarTitleModel(QObject *parent = nullptr);
+  ~NXCalendarTitleModel();
 
 protected:
-    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-    virtual QVariant data(const QModelIndex& index, int role) const override;
+  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+  virtual QVariant data(const QModelIndex& index, int role) const override;
 };
 
 #endif // NXCALENDARTITLEMODEL_H

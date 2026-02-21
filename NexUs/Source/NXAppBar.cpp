@@ -3,9 +3,9 @@
 #include <QApplication>
 #include <QDebug>
 
+#include "DeveloperComponents/NXWinShadowHelper.h"
 #include "NXText.h"
 #include "NXToolButton.h"
-#include "DeveloperComponents/NXWinShadowHelper.h"
 
 #ifndef Q_OS_WIN
 #include <QDateTime>
@@ -30,900 +30,807 @@ Q_PROPERTY_CREATE_Q_CPP(NXAppBar, bool, IsStayTop)
 Q_PROPERTY_CREATE_Q_CPP(NXAppBar, bool, IsDefaultClosed)
 Q_PROPERTY_CREATE_Q_CPP(NXAppBar, bool, IsOnlyAllowMinAndClose)
 
-NXAppBar::NXAppBar(QWidget* parent)
-    : QWidget{ parent }, d_ptr(new NXAppBarPrivate())
+NXAppBar::NXAppBar(QWidget *parent)
+    : QWidget { parent }
+    , d_ptr(new NXAppBarPrivate())
 {
-    Q_D(NXAppBar);
-    d->_buttonFlags = NXAppBarType::RouteBackButtonHint | NXAppBarType::RouteForwardButtonHint | NXAppBarType::StayTopButtonHint | NXAppBarType::ThemeChangeButtonHint | NXAppBarType::MinimizeButtonHint | NXAppBarType::MaximizeButtonHint | NXAppBarType::CloseButtonHint;
-    window()->setAttribute(Qt::WA_Mapped);
-    d->_pAppBarHeight = 45;
-    setFixedHeight(d->_pAppBarHeight);
-    window()->setContentsMargins(0, this->height(), 0, 0);
-    d->q_ptr = this;
-    d->_pIsStayTop = false;
-    d->_pIsFixedSize = false;
-    d->_pIsDefaultClosed = true;
-    d->_pIsOnlyAllowMinAndClose = false;
-    d->_pCustomMenu = nullptr;
-    window()->installEventFilter(this);
+  Q_D(NXAppBar);
+  d->_buttonFlags = NXAppBarType::RouteBackButtonHint | NXAppBarType::RouteForwardButtonHint |
+                    NXAppBarType::StayTopButtonHint | NXAppBarType::ThemeChangeButtonHint |
+                    NXAppBarType::MinimizeButtonHint | NXAppBarType::MaximizeButtonHint | NXAppBarType::CloseButtonHint;
+  window()->setAttribute(Qt::WA_Mapped);
+  d->_pAppBarHeight = 45;
+  setFixedHeight(d->_pAppBarHeight);
+  window()->setContentsMargins(0, this->height(), 0, 0);
+  d->q_ptr                    = this;
+  d->_pIsStayTop              = false;
+  d->_pIsFixedSize            = false;
+  d->_pIsDefaultClosed        = true;
+  d->_pIsOnlyAllowMinAndClose = false;
+  d->_pCustomMenu             = nullptr;
+  window()->installEventFilter(this);
 #ifdef Q_OS_WIN
-    if (!nxWinHelper->getIsWinVersionGreater10())
-    {
-        d->_win7Margins = 8;
-    }
+  if (!nxWinHelper->getIsWinVersionGreater10()) { d->_win7Margins = 8; }
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
-    window()->setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
+  window()->setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
 #endif
 #else
-    window()->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint | Qt::WindowSystemMenuHint | Qt::WindowFullscreenButtonHint | Qt::WindowSystemMenuHint);
+  window()->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint |
+                           Qt::WindowCloseButtonHint | Qt::WindowSystemMenuHint | Qt::WindowFullscreenButtonHint |
+                           Qt::WindowSystemMenuHint);
 #endif
-    setMouseTracking(true);
-    setObjectName("NXAppBar");
-    setStyleSheet("#NXAppBar{background-color:transparent;}");
-    d->_routeBackButton = new NXToolButton(this);
-    d->_routeBackButton->setNXIcon(NXIconType::ArrowLeft);
-    d->_routeBackButton->setFixedSize(35, 30);
-    d->_routeBackButton->setEnabled(false);
-    // 路由跳转
-    connect(d->_routeBackButton, &NXIconButton::clicked, this, &NXAppBar::routeBackButtonClicked);
+  setMouseTracking(true);
+  setObjectName("NXAppBar");
+  setStyleSheet("#NXAppBar{background-color:transparent;}");
+  d->_routeBackButton = new NXToolButton(this);
+  d->_routeBackButton->setNXIcon(NXIconType::ArrowLeft);
+  d->_routeBackButton->setFixedSize(35, 30);
+  d->_routeBackButton->setEnabled(false);
+  // 路由跳转
+  connect(d->_routeBackButton, &NXIconButton::clicked, this, &NXAppBar::routeBackButtonClicked);
 
-    d->_routeForwardButton = new NXToolButton(this);
-    d->_routeForwardButton->setNXIcon(NXIconType::ArrowRight);
-    d->_routeForwardButton->setFixedSize(35, 30);
-    d->_routeForwardButton->setEnabled(false);
-    connect(d->_routeForwardButton, &NXToolButton::clicked, this, &NXAppBar::routeForwardButtonClicked);
+  d->_routeForwardButton = new NXToolButton(this);
+  d->_routeForwardButton->setNXIcon(NXIconType::ArrowRight);
+  d->_routeForwardButton->setFixedSize(35, 30);
+  d->_routeForwardButton->setEnabled(false);
+  connect(d->_routeForwardButton, &NXToolButton::clicked, this, &NXAppBar::routeForwardButtonClicked);
 
-    // 导航栏展开按钮
-    d->_navigationButton = new NXToolButton(this);
-    d->_navigationButton->setNXIcon(NXIconType::Bars);
-    d->_navigationButton->setFixedSize(40, 30);
-    d->_navigationButton->setObjectName("NavigationButton");
-    d->_navigationButton->setVisible(false);
-    // 展开导航栏
-    connect(d->_navigationButton, &NXToolButton::clicked, this, &NXAppBar::navigationButtonClicked);
+  // 导航栏展开按钮
+  d->_navigationButton = new NXToolButton(this);
+  d->_navigationButton->setNXIcon(NXIconType::Bars);
+  d->_navigationButton->setFixedSize(40, 30);
+  d->_navigationButton->setObjectName("NavigationButton");
+  d->_navigationButton->setVisible(false);
+  // 展开导航栏
+  connect(d->_navigationButton, &NXToolButton::clicked, this, &NXAppBar::navigationButtonClicked);
 
-    // 设置置顶
-    d->_stayTopButton = new NXToolButton(this);
-    d->_stayTopButton->setNXIcon(NXIconType::Thumbtack, 45);
-    d->_stayTopButton->setFixedSize(40, 30);
-    connect(d->_stayTopButton, &NXToolButton::clicked, this, [=]() {
-        this->setIsStayTop(!this->getIsStayTop());
-        });
-    connect(this, &NXAppBar::pIsStayTopChanged, d, &NXAppBarPrivate::onStayTopButtonClicked);
+  // 设置置顶
+  d->_stayTopButton = new NXToolButton(this);
+  d->_stayTopButton->setNXIcon(NXIconType::Thumbtack, 45);
+  d->_stayTopButton->setFixedSize(40, 30);
+  connect(d->_stayTopButton, &NXToolButton::clicked, this, [=]() { this->setIsStayTop(!this->getIsStayTop()); });
+  connect(this, &NXAppBar::pIsStayTopChanged, d, &NXAppBarPrivate::onStayTopButtonClicked);
 
-    //图标
-    d->_iconLabel = new QLabel(this);
-    d->_iconLabelLayout = d->_createVLayout(d->_iconLabel);
-    if (parent->windowIcon().isNull())
-    {
-        d->_iconLabel->setVisible(false);
-    }
-    else
-    {
-        d->_iconLabel->setPixmap(parent->windowIcon().pixmap(18, 18));
-        d->_iconLabelLayout->setContentsMargins(10, 0, 0, 0);
-    }
-    connect(parent, &QWidget::windowIconChanged, this, [=](const QIcon& icon) {
-        d->_iconLabel->setPixmap(icon.pixmap(18, 18));
-        d->_iconLabel->setVisible(!icon.isNull());
-        d->_iconLabelLayout->setContentsMargins(icon.isNull() ? 0 : 10, 0, 0, 0);
-        });
+  // 图标
+  d->_iconLabel       = new QLabel(this);
+  d->_iconLabelLayout = d->_createVLayout(d->_iconLabel);
+  if (parent->windowIcon().isNull()) { d->_iconLabel->setVisible(false); }
+  else
+  {
+    d->_iconLabel->setPixmap(parent->windowIcon().pixmap(18, 18));
+    d->_iconLabelLayout->setContentsMargins(10, 0, 0, 0);
+  }
+  connect(parent,
+          &QWidget::windowIconChanged,
+          this,
+          [=](const QIcon& icon)
+  {
+    d->_iconLabel->setPixmap(icon.pixmap(18, 18));
+    d->_iconLabel->setVisible(!icon.isNull());
+    d->_iconLabelLayout->setContentsMargins(icon.isNull() ? 0 : 10, 0, 0, 0);
+  });
 
-    //标题
-    d->_titleLabel = new NXText(this);
-    d->_titleLabel->setIsWrapAnywhere(false);
-    d->_titleLabel->setTextPixelSize(13);
-    d->_titleLabelLayout = d->_createVLayout(d->_titleLabel);
-    if (parent->windowTitle().isEmpty())
-    {
-        d->_titleLabel->setVisible(false);
-    }
-    else
-    {
-        d->_titleLabel->setText(parent->windowTitle());
-        d->_titleLabelLayout->setContentsMargins(10, 0, 0, 0);
-    }
-    connect(parent, &QWidget::windowTitleChanged, this, [=](const QString& title) {
-        d->_titleLabel->setText(title);
-        d->_titleLabel->setVisible(!title.isEmpty());
-        d->_titleLabelLayout->setContentsMargins(title.isEmpty() ? 0 : 10, 0, 0, 0);
-        });
+  // 标题
+  d->_titleLabel = new NXText(this);
+  d->_titleLabel->setIsWrapAnywhere(false);
+  d->_titleLabel->setTextPixelSize(13);
+  d->_titleLabelLayout = d->_createVLayout(d->_titleLabel);
+  if (parent->windowTitle().isEmpty()) { d->_titleLabel->setVisible(false); }
+  else
+  {
+    d->_titleLabel->setText(parent->windowTitle());
+    d->_titleLabelLayout->setContentsMargins(10, 0, 0, 0);
+  }
+  connect(parent,
+          &QWidget::windowTitleChanged,
+          this,
+          [=](const QString& title)
+  {
+    d->_titleLabel->setText(title);
+    d->_titleLabel->setVisible(!title.isEmpty());
+    d->_titleLabelLayout->setContentsMargins(title.isEmpty() ? 0 : 10, 0, 0, 0);
+  });
 
-    // 主题变更
-    d->_themeChangeButton = new NXToolButton(this);
-    d->_themeChangeButton->setNXIcon(NXIconType::MoonStars);
-    d->_themeChangeButton->setFixedSize(40, 30);
-    connect(d->_themeChangeButton, &NXToolButton::clicked, this, &NXAppBar::themeChangeButtonClicked);
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
-        d->_onThemeModeChange(themeMode);
-        });
+  // 主题变更
+  d->_themeChangeButton = new NXToolButton(this);
+  d->_themeChangeButton->setNXIcon(NXIconType::MoonStars);
+  d->_themeChangeButton->setFixedSize(40, 30);
+  connect(d->_themeChangeButton, &NXToolButton::clicked, this, &NXAppBar::themeChangeButtonClicked);
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
+    d->_onThemeModeChange(themeMode);
+  });
 
-    d->_minButton = new NXToolButton(this);
-    d->_minButton->setNXIcon(NXIconType::Dash);
-    d->_minButton->setFixedSize(40, 30);
-    connect(d->_minButton, &NXToolButton::clicked, d, &NXAppBarPrivate::onMinButtonClicked);
-    d->_maxButton = new NXToolButton(this);
-    d->_maxButton->setIconSize(QSize(18, 18));
-    d->_maxButton->setNXIcon(NXIconType::Square);
-    d->_maxButton->setFixedSize(40, 30);
-    connect(d->_maxButton, &NXToolButton::clicked, d, &NXAppBarPrivate::onMaxButtonClicked);
-    d->_closeButton = new NXIconButton(NXIconType::Xmark, 18, 40, 30, this);
-    d->_closeButton->setLightHoverColor(QColor(0xE8, 0x11, 0x23));
-    d->_closeButton->setDarkHoverColor(QColor(0xE8, 0x11, 0x23));
-    d->_closeButton->setLightHoverIconColor(Qt::white);
-    d->_closeButton->setDarkHoverIconColor(Qt::white);
-    connect(d->_closeButton, &NXIconButton::clicked, d, &NXAppBarPrivate::onCloseButtonClicked);
+  d->_minButton = new NXToolButton(this);
+  d->_minButton->setNXIcon(NXIconType::Dash);
+  d->_minButton->setFixedSize(40, 30);
+  connect(d->_minButton, &NXToolButton::clicked, d, &NXAppBarPrivate::onMinButtonClicked);
+  d->_maxButton = new NXToolButton(this);
+  d->_maxButton->setIconSize(QSize(18, 18));
+  d->_maxButton->setNXIcon(NXIconType::Square);
+  d->_maxButton->setFixedSize(40, 30);
+  connect(d->_maxButton, &NXToolButton::clicked, d, &NXAppBarPrivate::onMaxButtonClicked);
+  d->_closeButton = new NXIconButton(NXIconType::Xmark, 18, 40, 30, this);
+  d->_closeButton->setLightHoverColor(QColor(0xE8, 0x11, 0x23));
+  d->_closeButton->setDarkHoverColor(QColor(0xE8, 0x11, 0x23));
+  d->_closeButton->setLightHoverIconColor(Qt::white);
+  d->_closeButton->setDarkHoverIconColor(Qt::white);
+  connect(d->_closeButton, &NXIconButton::clicked, d, &NXAppBarPrivate::onCloseButtonClicked);
 
-    d->_mainLayout = new QHBoxLayout(this);
-    d->_mainLayout->setContentsMargins(0, 0, 0, 0);
-    d->_mainLayout->setSpacing(0);
-    QHBoxLayout* leftLayout = new QHBoxLayout();
-    leftLayout->setSpacing(0);
-    leftLayout->setContentsMargins(0, 0, 0, 0);
-    leftLayout->setAlignment(Qt::AlignLeft);
-    leftLayout->addLayout(d->_createVLayout(d->_routeBackButton));
-    leftLayout->addLayout(d->_createVLayout(d->_routeForwardButton));
-    leftLayout->addLayout(d->_createVLayout(d->_navigationButton));
-    leftLayout->addLayout(d->_iconLabelLayout);
-    leftLayout->addLayout(d->_titleLabelLayout);
-    d->_mainLayout->addLayout(leftLayout);
+  d->_mainLayout = new QHBoxLayout(this);
+  d->_mainLayout->setContentsMargins(0, 0, 0, 0);
+  d->_mainLayout->setSpacing(0);
+  QHBoxLayout *leftLayout = new QHBoxLayout();
+  leftLayout->setSpacing(0);
+  leftLayout->setContentsMargins(0, 0, 0, 0);
+  leftLayout->setAlignment(Qt::AlignLeft);
+  leftLayout->addLayout(d->_createVLayout(d->_routeBackButton));
+  leftLayout->addLayout(d->_createVLayout(d->_routeForwardButton));
+  leftLayout->addLayout(d->_createVLayout(d->_navigationButton));
+  leftLayout->addLayout(d->_iconLabelLayout);
+  leftLayout->addLayout(d->_titleLabelLayout);
+  d->_mainLayout->addLayout(leftLayout);
 
-    auto leftAreaWidget = new QWidget(this);
-    leftAreaWidget->setVisible(false);
-    auto middleAreaWidget = new QWidget(this);
-    middleAreaWidget->setVisible(false);
-    auto rightAreaWidget = new QWidget(this);
-    rightAreaWidget->setVisible(false);
-    d->_customAreaWidgetList[0] = leftAreaWidget;
-    d->_customAreaWidgetList[1] = middleAreaWidget;
-    d->_customAreaWidgetList[2] = rightAreaWidget;
-    d->_mainLayout->addWidget(leftAreaWidget);
-    d->_mainLayout->addWidget(middleAreaWidget);
-    d->_mainLayout->addWidget(rightAreaWidget);
+  auto leftAreaWidget = new QWidget(this);
+  leftAreaWidget->setVisible(false);
+  auto middleAreaWidget = new QWidget(this);
+  middleAreaWidget->setVisible(false);
+  auto rightAreaWidget = new QWidget(this);
+  rightAreaWidget->setVisible(false);
+  d->_customAreaWidgetList[0] = leftAreaWidget;
+  d->_customAreaWidgetList[1] = middleAreaWidget;
+  d->_customAreaWidgetList[2] = rightAreaWidget;
+  d->_mainLayout->addWidget(leftAreaWidget);
+  d->_mainLayout->addWidget(middleAreaWidget);
+  d->_mainLayout->addWidget(rightAreaWidget);
 
-    QHBoxLayout* rightLayout = new QHBoxLayout();
-    rightLayout->setSpacing(0);
-    rightLayout->setContentsMargins(0, 0, 0, 0);
-    rightLayout->setAlignment(Qt::AlignRight);
-    rightLayout->addLayout(d->_createVLayout(d->_stayTopButton));
-    rightLayout->addLayout(d->_createVLayout(d->_themeChangeButton));
-    rightLayout->addLayout(d->_createVLayout(d->_minButton));
-    rightLayout->addLayout(d->_createVLayout(d->_maxButton));
-    rightLayout->addLayout(d->_createVLayout(d->_closeButton));
-    d->_mainLayout->addLayout(rightLayout);
+  QHBoxLayout *rightLayout = new QHBoxLayout();
+  rightLayout->setSpacing(0);
+  rightLayout->setContentsMargins(0, 0, 0, 0);
+  rightLayout->setAlignment(Qt::AlignRight);
+  rightLayout->addLayout(d->_createVLayout(d->_stayTopButton));
+  rightLayout->addLayout(d->_createVLayout(d->_themeChangeButton));
+  rightLayout->addLayout(d->_createVLayout(d->_minButton));
+  rightLayout->addLayout(d->_createVLayout(d->_maxButton));
+  rightLayout->addLayout(d->_createVLayout(d->_closeButton));
+  d->_mainLayout->addLayout(rightLayout);
 
-    d->_clientWidgetList.append(d->_routeBackButton);
-    d->_clientWidgetList.append(d->_routeForwardButton);
-    d->_clientWidgetList.append(d->_navigationButton);
-    d->_clientWidgetList.append(d->_stayTopButton);
-    d->_clientWidgetList.append(d->_themeChangeButton);
-    d->_clientWidgetList.append(d->_minButton);
-    d->_clientWidgetList.append(d->_maxButton);
-    d->_clientWidgetList.append(d->_closeButton);
+  d->_clientWidgetList.append(d->_routeBackButton);
+  d->_clientWidgetList.append(d->_routeForwardButton);
+  d->_clientWidgetList.append(d->_navigationButton);
+  d->_clientWidgetList.append(d->_stayTopButton);
+  d->_clientWidgetList.append(d->_themeChangeButton);
+  d->_clientWidgetList.append(d->_minButton);
+  d->_clientWidgetList.append(d->_maxButton);
+  d->_clientWidgetList.append(d->_closeButton);
 
 #ifdef Q_OS_WIN
-    for (int i = 0; i < qApp->screens().count(); i++)
+  for (int i = 0; i < qApp->screens().count(); i++)
+  {
+    connect(qApp->screens().at(i),
+            &QScreen::logicalDotsPerInchChanged,
+            this,
+            [=]
     {
-        connect(qApp->screens().at(i), &QScreen::logicalDotsPerInchChanged, this, [=] {
-            if (d->_pIsFixedSize)
-            {
-                HWND hwnd = (HWND)(d->_currentWinID);
-                SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_FRAMECHANGED);
-            }
-            });
-    }
-    //主屏幕变更处理
-    connect(qApp, &QApplication::primaryScreenChanged, this, [=]() {
-        HWND hwnd = (HWND)(d->_currentWinID);
-        ::SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
-        ::RedrawWindow(hwnd, nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW);
-        });
-    d->_lastScreen = qApp->screenAt(window()->geometry().center());
+      if (d->_pIsFixedSize)
+      {
+        HWND hwnd = (HWND) (d->_currentWinID);
+        SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_FRAMECHANGED);
+      }
+    });
+  }
+  // 主屏幕变更处理
+  connect(qApp,
+          &QApplication::primaryScreenChanged,
+          this,
+          [=]()
+  {
+    HWND hwnd = (HWND) (d->_currentWinID);
+    ::SetWindowPos(
+        hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+    ::RedrawWindow(hwnd, nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW);
+  });
+  d->_lastScreen = qApp->screenAt(window()->geometry().center());
 #endif
 
-    d->_themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
-        d->_themeMode = themeMode;
-        update();
-        });
+  d->_themeMode = nxTheme->getThemeMode();
+  connect(nxTheme,
+          &NXTheme::themeModeChanged,
+          this,
+          [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+    update();
+  });
 }
 
-NXAppBar::~NXAppBar()
-{
-}
+NXAppBar::~NXAppBar() { }
 
 void NXAppBar::setAppBarHeight(int height)
 {
-    Q_D(NXAppBar);
-    d->_pAppBarHeight = height;
-    setFixedHeight(d->_pAppBarHeight);
-    window()->setContentsMargins(0, this->height(), 0, 0);
-    Q_EMIT pAppBarHeightChanged();
+  Q_D(NXAppBar);
+  d->_pAppBarHeight = height;
+  setFixedHeight(d->_pAppBarHeight);
+  window()->setContentsMargins(0, this->height(), 0, 0);
+  Q_EMIT pAppBarHeightChanged();
 }
 
 int NXAppBar::getAppBarHeight() const
 {
-    Q_D(const NXAppBar);
-    return d->_pAppBarHeight;
+  Q_D(const NXAppBar);
+  return d->_pAppBarHeight;
 }
 
-void NXAppBar::setCustomWidget(NXAppBarType::CustomArea customArea, QWidget* widget, QObject* hitTestObject, const QString& hitTestFunctionName)
+void NXAppBar::setCustomWidget(NXAppBarType::CustomArea customArea,
+                               QWidget *widget,
+                               QObject *hitTestObject,
+                               const QString& hitTestFunctionName)
 {
-    Q_D(NXAppBar);
-    if (!widget || widget == this)
-    {
-        return;
-    }
-    widget->setMinimumHeight(0);
-    widget->setMaximumHeight(height());
-    widget->setParent(this);
-    int customAreaIndex = (int)customArea - 1;
-    d->_mainLayout->removeWidget(d->_customAreaWidgetList[customAreaIndex]);
-    d->_mainLayout->insertWidget(customAreaIndex + 1, widget);
-    d->_customAreaWidgetList[customAreaIndex] = widget;
-    d->_customAreaHitTestObjectList[customAreaIndex] = hitTestObject;
-    d->_customAreaHitTestFunctionNameList[customAreaIndex] = hitTestFunctionName;
-    Q_EMIT customWidgetChanged();
+  Q_D(NXAppBar);
+  if (!widget || widget == this) { return; }
+  widget->setMinimumHeight(0);
+  widget->setMaximumHeight(height());
+  widget->setParent(this);
+  int customAreaIndex = (int) customArea - 1;
+  d->_mainLayout->removeWidget(d->_customAreaWidgetList[customAreaIndex]);
+  d->_mainLayout->insertWidget(customAreaIndex + 1, widget);
+  d->_customAreaWidgetList[customAreaIndex]              = widget;
+  d->_customAreaHitTestObjectList[customAreaIndex]       = hitTestObject;
+  d->_customAreaHitTestFunctionNameList[customAreaIndex] = hitTestFunctionName;
+  Q_EMIT customWidgetChanged();
 }
 
-QWidget* NXAppBar::getCustomWidget(NXAppBarType::CustomArea customArea) const
+QWidget *NXAppBar::getCustomWidget(NXAppBarType::CustomArea customArea) const
 {
-    Q_D(const NXAppBar);
-    int customAreaIndex = (int)customArea - 1;
-    return d->_customAreaWidgetList[customAreaIndex];
+  Q_D(const NXAppBar);
+  int customAreaIndex = (int) customArea - 1;
+  return d->_customAreaWidgetList[customAreaIndex];
 }
 
-void NXAppBar::setCustomMenu(QMenu* customMenu)
+void NXAppBar::setCustomMenu(QMenu *customMenu)
 {
-    Q_D(NXAppBar);
-    d->_pCustomMenu = customMenu;
-    Q_EMIT customMenuChanged();
+  Q_D(NXAppBar);
+  d->_pCustomMenu = customMenu;
+  Q_EMIT customMenuChanged();
 }
 
-QMenu* NXAppBar::getCustomMenu() const
+QMenu *NXAppBar::getCustomMenu() const
 {
-    Q_D(const NXAppBar);
-    return d->_pCustomMenu;
+  Q_D(const NXAppBar);
+  return d->_pCustomMenu;
 }
 
 void NXAppBar::setIsFixedSize(bool isFixedSize)
 {
-    Q_D(NXAppBar);
-    d->_pIsFixedSize = isFixedSize;
+  Q_D(NXAppBar);
+  d->_pIsFixedSize = isFixedSize;
 #ifdef Q_OS_WIN
-    HWND hwnd = (HWND)d->_currentWinID;
-    DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
-    if (d->_pIsFixedSize)
-    {
-        //切换DPI处理
-        style &= ~WS_THICKFRAME;
-        ::SetWindowLongPtr(hwnd, GWL_STYLE, style);
-    }
-    else
-    {
-        ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX | WS_THICKFRAME);
-    }
+  HWND hwnd   = (HWND) d->_currentWinID;
+  DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
+  if (d->_pIsFixedSize)
+  {
+    // 切换DPI处理
+    style &= ~WS_THICKFRAME;
+    ::SetWindowLongPtr(hwnd, GWL_STYLE, style);
+  }
+  else
+  {
+    ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX | WS_THICKFRAME);
+  }
 #else
-    bool isVisible = window()->isVisible();
-    window()->setWindowFlags((window()->windowFlags()) | Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
-    if (!isFixedSize)
-    {
-        window()->setWindowFlag(Qt::WindowMaximizeButtonHint);
-    }
-    if (isVisible)
-    {
-        window()->show();
-    }
+  bool isVisible = window()->isVisible();
+  window()->setWindowFlags((window()->windowFlags()) | Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint |
+                           Qt::WindowCloseButtonHint);
+  if (!isFixedSize) { window()->setWindowFlag(Qt::WindowMaximizeButtonHint); }
+  if (isVisible) { window()->show(); }
 #endif
-    Q_EMIT pIsFixedSizeChanged();
+  Q_EMIT pIsFixedSizeChanged();
 }
 
 bool NXAppBar::getIsFixedSize() const
 {
-    Q_D(const NXAppBar);
-    return d->_pIsFixedSize;
+  Q_D(const NXAppBar);
+  return d->_pIsFixedSize;
 }
 
 void NXAppBar::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable)
 {
-    Q_D(NXAppBar);
-    if (isEnable)
-    {
-        setWindowButtonFlags(d->_buttonFlags | buttonFlag);
-    }
-    else
-    {
-        setWindowButtonFlags(d->_buttonFlags & ~buttonFlag);
-    }
+  Q_D(NXAppBar);
+  if (isEnable) { setWindowButtonFlags(d->_buttonFlags | buttonFlag); }
+  else
+  {
+    setWindowButtonFlags(d->_buttonFlags & ~buttonFlag);
+  }
 }
 
 void NXAppBar::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags)
 {
-    Q_D(NXAppBar);
-    d->_buttonFlags = buttonFlags;
-    if (d->_buttonFlags.testFlag(NXAppBarType::NoneButtonHint))
-    {
-        d->_routeBackButton->setVisible(false);
-        d->_routeForwardButton->setVisible(false);
-        d->_navigationButton->setVisible(false);
-        d->_stayTopButton->setVisible(false);
-        d->_themeChangeButton->setVisible(false);
-        d->_minButton->setVisible(false);
-        d->_maxButton->setVisible(false);
-        d->_closeButton->setVisible(false);
-    }
-    else
-    {
-        d->_routeBackButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::RouteBackButtonHint));
-        d->_routeForwardButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::RouteForwardButtonHint));
-        d->_navigationButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::NavigationButtonHint));
-        d->_stayTopButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::StayTopButtonHint));
-        d->_themeChangeButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::ThemeChangeButtonHint));
-        d->_minButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::MinimizeButtonHint));
-        d->_maxButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::MaximizeButtonHint));
-        d->_closeButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::CloseButtonHint));
-    }
+  Q_D(NXAppBar);
+  d->_buttonFlags = buttonFlags;
+  if (d->_buttonFlags.testFlag(NXAppBarType::NoneButtonHint))
+  {
+    d->_routeBackButton->setVisible(false);
+    d->_routeForwardButton->setVisible(false);
+    d->_navigationButton->setVisible(false);
+    d->_stayTopButton->setVisible(false);
+    d->_themeChangeButton->setVisible(false);
+    d->_minButton->setVisible(false);
+    d->_maxButton->setVisible(false);
+    d->_closeButton->setVisible(false);
+  }
+  else
+  {
+    d->_routeBackButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::RouteBackButtonHint));
+    d->_routeForwardButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::RouteForwardButtonHint));
+    d->_navigationButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::NavigationButtonHint));
+    d->_stayTopButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::StayTopButtonHint));
+    d->_themeChangeButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::ThemeChangeButtonHint));
+    d->_minButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::MinimizeButtonHint));
+    d->_maxButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::MaximizeButtonHint));
+    d->_closeButton->setVisible(d->_buttonFlags.testFlag(NXAppBarType::CloseButtonHint));
+  }
 }
 
-NXAppBarType::ButtonFlags NXAppBar::getWindowButtonFlags() const
-{
-    return d_ptr->_buttonFlags;
-}
+NXAppBarType::ButtonFlags NXAppBar::getWindowButtonFlags() const { return d_ptr->_buttonFlags; }
 
 void NXAppBar::setRouteBackButtonEnable(bool isEnable)
 {
-    Q_D(NXAppBar);
-    d->_routeBackButton->setEnabled(isEnable);
+  Q_D(NXAppBar);
+  d->_routeBackButton->setEnabled(isEnable);
 }
 
 void NXAppBar::setRouteForwardButtonEnable(bool isEnable)
 {
-    Q_D(NXAppBar);
-    d->_routeForwardButton->setEnabled(isEnable);
+  Q_D(NXAppBar);
+  d->_routeForwardButton->setEnabled(isEnable);
 }
 
 void NXAppBar::closeWindow()
 {
-    Q_D(NXAppBar);
-    QPropertyAnimation* closeOpacityAnimation = new QPropertyAnimation(window(), "windowOpacity");
-    connect(closeOpacityAnimation, &QPropertyAnimation::finished, this, [=]() {
-        window()->close();
-        });
-    closeOpacityAnimation->setStartValue(1);
-    closeOpacityAnimation->setEndValue(0);
-    closeOpacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    closeOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    if (window()->isMaximized() || window()->isFullScreen() || d->_pIsFixedSize)
-    {
-        return;
-    }
-    QPropertyAnimation* geometryAnimation = new QPropertyAnimation(window(), "geometry");
-    QRect geometry = window()->geometry();
-    geometryAnimation->setStartValue(geometry);
-    qreal targetWidth = (geometry.width() - d->_lastMinTrackWidth) * 0.7 + d->_lastMinTrackWidth;
-    qreal targetHeight = (geometry.height() - window()->minimumHeight()) * 0.7 + window()->minimumHeight();
-    geometryAnimation->setEndValue(QRectF(geometry.center().x() - targetWidth / 2, geometry.center().y() - targetHeight / 2, targetWidth, targetHeight));
-    geometryAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    geometryAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+  Q_D(NXAppBar);
+  QPropertyAnimation *closeOpacityAnimation = new QPropertyAnimation(window(), "windowOpacity");
+  connect(closeOpacityAnimation, &QPropertyAnimation::finished, this, [=]() { window()->close(); });
+  closeOpacityAnimation->setStartValue(1);
+  closeOpacityAnimation->setEndValue(0);
+  closeOpacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
+  closeOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+  if (window()->isMaximized() || window()->isFullScreen() || d->_pIsFixedSize) { return; }
+  QPropertyAnimation *geometryAnimation = new QPropertyAnimation(window(), "geometry");
+  QRect geometry                        = window()->geometry();
+  geometryAnimation->setStartValue(geometry);
+  qreal targetWidth  = (geometry.width() - d->_lastMinTrackWidth) * 0.7 + d->_lastMinTrackWidth;
+  qreal targetHeight = (geometry.height() - window()->minimumHeight()) * 0.7 + window()->minimumHeight();
+  geometryAnimation->setEndValue(QRectF(
+      geometry.center().x() - targetWidth / 2, geometry.center().y() - targetHeight / 2, targetWidth, targetHeight));
+  geometryAnimation->setEasingCurve(QEasingCurve::InOutSine);
+  geometryAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 #ifdef Q_OS_WIN
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-int NXAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, qintptr* result)
+int NXAppBar::takeOverNativeEvent(const QByteArray& eventType, void *message, qintptr *result)
 #else
-int NXAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, long* result)
+int NXAppBar::takeOverNativeEvent(const QByteArray& eventType, void *message, long *result)
 #endif
 {
-    Q_D(NXAppBar);
-    if ((eventType != "windows_generic_MSG") || !message)
+  Q_D(NXAppBar);
+  if ((eventType != "windows_generic_MSG") || !message) { return 0; }
+  const auto msg  = static_cast<const MSG *>(message);
+  const HWND hwnd = msg->hwnd;
+  if (!hwnd || !msg) { return 0; }
+  d->_currentWinID    = (qint64) hwnd;
+  const UINT uMsg     = msg->message;
+  const WPARAM wParam = msg->wParam;
+  const LPARAM lParam = msg->lParam;
+  switch (uMsg)
+  {
+    case WM_WINDOWPOSCHANGING :
     {
-        return 0;
-    }
-    const auto msg = static_cast<const MSG*>(message);
-    const HWND hwnd = msg->hwnd;
-    if (!hwnd || !msg)
-    {
-        return 0;
-    }
-    d->_currentWinID = (qint64)hwnd;
-    const UINT uMsg = msg->message;
-    const WPARAM wParam = msg->wParam;
-    const LPARAM lParam = msg->lParam;
-    switch (uMsg)
-    {
-    case WM_WINDOWPOSCHANGING:
-    {
-        WINDOWPOS* wp = reinterpret_cast<WINDOWPOS*>(lParam);
-        if (wp != nullptr && (wp->flags & SWP_NOSIZE) == 0)
-        {
-            wp->flags |= SWP_NOCOPYBITS;
-            *result = ::DefWindowProcW(hwnd, uMsg, wParam, lParam);
-            return 1;
-        }
-        return 0;
-    }
-    case WM_NCPAINT:
-    {
-        if (!nxWinHelper->getIsCompositionEnabled())
-        {
-            *result = FALSE;
-            return 1;
-        }
-        else
-        {
-            return -1;
-        }
-    }
-    case WM_NCACTIVATE:
-    {
-        if (nxWinHelper->getIsCompositionEnabled())
-        {
-            *result = ::DefWindowProcW(hwnd, WM_NCACTIVATE, wParam, -1);
-        }
-        else
-        {
-            *result = TRUE;
-        }
+      WINDOWPOS *wp = reinterpret_cast<WINDOWPOS *>(lParam);
+      if (wp != nullptr && (wp->flags & SWP_NOSIZE) == 0)
+      {
+        wp->flags |= SWP_NOCOPYBITS;
+        *result = ::DefWindowProcW(hwnd, uMsg, wParam, lParam);
         return 1;
+      }
+      return 0;
     }
-    case WM_SIZE:
+    case WM_NCPAINT :
     {
-        if (wParam == SIZE_RESTORED)
-        {
-            d->_changeMaxButtonAwesome(false);
-        }
-        else if (wParam == SIZE_MAXIMIZED)
-        {
-            d->_changeMaxButtonAwesome(true);
-        }
-        return 0;
+      if (!nxWinHelper->getIsCompositionEnabled())
+      {
+        *result = FALSE;
+        return 1;
+      }
+      else
+      {
+        return -1;
+      }
+    }
+    case WM_NCACTIVATE :
+    {
+      if (nxWinHelper->getIsCompositionEnabled()) { *result = ::DefWindowProcW(hwnd, WM_NCACTIVATE, wParam, -1); }
+      else
+      {
+        *result = TRUE;
+      }
+      return 1;
+    }
+    case WM_SIZE :
+    {
+      if (wParam == SIZE_RESTORED) { d->_changeMaxButtonAwesome(false); }
+      else if (wParam == SIZE_MAXIMIZED) { d->_changeMaxButtonAwesome(true); }
+      return 0;
     }
 #if QT_VERSION <= QT_VERSION_CHECK(6, 0, 0)
-    case WM_SHOWWINDOW:
+    case WM_SHOWWINDOW :
     {
-        if (wParam == FALSE)
-        {
-            return 0;
-        }
-        RECT windowRect{};
-        ::GetWindowRect(hwnd, &windowRect);
-        int windowWidth = windowRect.right - windowRect.left;
-        int windowHeight = windowRect.bottom - windowRect.top;
-        static UINT swpFlags = SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED | SWP_NOACTIVATE;
-        ::SetWindowPos(hwnd, nullptr, 0, 0, windowWidth + 1, windowHeight, swpFlags);
-        ::SetWindowPos(hwnd, nullptr, 0, 0, windowWidth, windowHeight, swpFlags);
-        return -1;
+      if (wParam == FALSE) { return 0; }
+      RECT windowRect {};
+      ::GetWindowRect(hwnd, &windowRect);
+      int windowWidth      = windowRect.right - windowRect.left;
+      int windowHeight     = windowRect.bottom - windowRect.top;
+      static UINT swpFlags = SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED | SWP_NOACTIVATE;
+      ::SetWindowPos(hwnd, nullptr, 0, 0, windowWidth + 1, windowHeight, swpFlags);
+      ::SetWindowPos(hwnd, nullptr, 0, 0, windowWidth, windowHeight, swpFlags);
+      return -1;
     }
 #endif
-    case WM_NCCALCSIZE:
+    case WM_NCCALCSIZE :
     {
-        if (wParam == FALSE)
-        {
-            return 0;
-        }
+      if (wParam == FALSE) { return 0; }
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
-        if (::IsZoomed(hwnd))
-        {
-            this->move(7, 7);
-            window()->setContentsMargins(8, 8 + height(), 8, 8);
-        }
-        else
-        {
-            this->move(0, 0);
-            window()->setContentsMargins(0, height(), 0, 0);
-        }
-        *result = 0;
-        return 1;
+      if (::IsZoomed(hwnd))
+      {
+        this->move(7, 7);
+        window()->setContentsMargins(8, 8 + height(), 8, 8);
+      }
+      else
+      {
+        this->move(0, 0);
+        window()->setContentsMargins(0, height(), 0, 0);
+      }
+      *result = 0;
+      return 1;
 #else
-        RECT* clientRect = &((NCCALCSIZE_PARAMS*)(lParam))->rgrc[0];
-        if (nxWinHelper->getIsWinVersionGreater10())
+      RECT *clientRect = &((NCCALCSIZE_PARAMS *) (lParam))->rgrc[0];
+      if (nxWinHelper->getIsWinVersionGreater10())
+      {
+        const LONG originTop        = clientRect->top;
+        const LRESULT hitTestResult = ::DefWindowProcW(hwnd, WM_NCCALCSIZE, wParam, lParam);
+        if ((hitTestResult != HTERROR) && (hitTestResult != HTNOWHERE))
         {
-            const LONG originTop = clientRect->top;
-            const LRESULT hitTestResult = ::DefWindowProcW(hwnd, WM_NCCALCSIZE, wParam, lParam);
-            if ((hitTestResult != HTERROR) && (hitTestResult != HTNOWHERE))
-            {
-                *result = static_cast<long>(hitTestResult);
-                return 1;
-            }
-            clientRect->top = originTop;
+          *result = static_cast<long>(hitTestResult);
+          return 1;
         }
-        if (::IsZoomed(hwnd))
-        {
+        clientRect->top = originTop;
+      }
+      if (::IsZoomed(hwnd))
+      {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-            auto geometry = window()->screen()->geometry();
+        auto geometry = window()->screen()->geometry();
 #else
-            QScreen* screen = qApp->screenAt(window()->geometry().center());
-            QRect geometry;
-            if (!screen)
-            {
-                screen = qApp->screenAt(QCursor::pos());
-            }
-            geometry = screen->geometry();
+        QScreen *screen = qApp->screenAt(window()->geometry().center());
+        QRect geometry;
+        if (!screen) { screen = qApp->screenAt(QCursor::pos()); }
+        geometry = screen->geometry();
 #endif
-            clientRect->top = geometry.top();
-            if (!nxWinHelper->getIsWinVersionGreater10())
-            {
-                quint32 borderThickness = nxWinHelper->getResizeBorderThickness(hwnd);
-                clientRect->left = geometry.left();
-                clientRect->bottom -= borderThickness;
-                clientRect->right -= borderThickness;
-            }
+        clientRect->top = geometry.top();
+        if (!nxWinHelper->getIsWinVersionGreater10())
+        {
+          quint32 borderThickness = nxWinHelper->getResizeBorderThickness(hwnd);
+          clientRect->left        = geometry.left();
+          clientRect->bottom -= borderThickness;
+          clientRect->right -= borderThickness;
         }
-        *result = WVR_REDRAW;
-        return 1;
+      }
+      *result = WVR_REDRAW;
+      return 1;
 #endif
     }
-    case WM_MOVE:
+    case WM_MOVE :
     {
-        QScreen* currentScreen = qApp->screenAt(window()->geometry().center());
-        if (currentScreen && currentScreen != d->_lastScreen)
+      QScreen *currentScreen = qApp->screenAt(window()->geometry().center());
+      if (currentScreen && currentScreen != d->_lastScreen)
+      {
+        if (d->_lastScreen)
         {
-            if (d->_lastScreen)
-            {
-                ::SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
-                ::RedrawWindow(hwnd, nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW);
-            }
-            d->_lastScreen = currentScreen;
+          ::SetWindowPos(
+              hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+          ::RedrawWindow(hwnd, nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW);
         }
-        break;
+        d->_lastScreen = currentScreen;
+      }
+      break;
     }
-    case WM_NCHITTEST:
+    case WM_NCHITTEST :
     {
-        if (d->_containsCursorToItem(d->_maxButton))
+      if (d->_containsCursorToItem(d->_maxButton))
+      {
+        if (*result == HTNOWHERE)
         {
-            if (*result == HTNOWHERE)
-            {
-                if (!d->_isHoverMaxButton)
-                {
-                    d->_isHoverMaxButton = true;
-                    d->_maxButton->setIsSelected(true);
-                    d->_maxButton->update();
-                }
-                *result = HTZOOM;
-            }
-            return 1;
-        }
-        else
-        {
-            if (d->_isHoverMaxButton)
-            {
-                d->_isHoverMaxButton = false;
-                d->_maxButton->setIsSelected(false);
-                d->_maxButton->update();
-            }
-        }
-        POINT nativeLocalPos{ GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-        ::ScreenToClient(hwnd, &nativeLocalPos);
-        RECT clientRect{ 0, 0, 0, 0 };
-        ::GetClientRect(hwnd, &clientRect);
-        auto clientWidth = clientRect.right - clientRect.left;
-        auto clientHeight = clientRect.bottom - clientRect.top;
-        bool left = nativeLocalPos.x < d->_win7Margins;
-        bool right = nativeLocalPos.x > clientWidth - d->_win7Margins;
-        bool top = nativeLocalPos.y < d->_margins;
-        bool bottom = nativeLocalPos.y > clientHeight - d->_win7Margins;
-        *result = HTNOWHERE;
-        if (!d->_pIsOnlyAllowMinAndClose && !d->_pIsFixedSize && !window()->isFullScreen() && !window()->isMaximized())
-        {
-            if (left && top)
-            {
-                *result = HTTOPLEFT;
-            }
-            else if (left && bottom)
-            {
-                *result = HTBOTTOMLEFT;
-            }
-            else if (right && top)
-            {
-                *result = HTTOPRIGHT;
-            }
-            else if (right && bottom)
-            {
-                *result = HTBOTTOMRIGHT;
-            }
-            else if (left)
-            {
-                *result = HTLEFT;
-            }
-            else if (right)
-            {
-                *result = HTRIGHT;
-            }
-            else if (top)
-            {
-                *result = HTTOP;
-            }
-            else if (bottom)
-            {
-                *result = HTBOTTOM;
-            }
-        }
-        if (0 != *result)
-        {
-            return 1;
-        }
-        if (d->_containsCursorToItem(this) && !window()->isFullScreen())
-        {
-            *result = HTCAPTION;
-            return 1;
-        }
-        *result = HTCLIENT;
-        return 1;
-    }
-    case WM_GETMINMAXINFO:
-    {
-        MINMAXINFO* minmaxInfo = reinterpret_cast<MINMAXINFO*>(lParam);
-        RECT rect;
-        SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
-        d->_lastMinTrackWidth = d->_calculateMinimumWidth();
-        minmaxInfo->ptMinTrackSize.x = d->_lastMinTrackWidth * qApp->devicePixelRatio();
-        minmaxInfo->ptMinTrackSize.y = parentWidget()->minimumHeight() * qApp->devicePixelRatio();
-        minmaxInfo->ptMaxPosition.x = rect.left;
-        minmaxInfo->ptMaxPosition.y = rect.top;
-        return 1;
-    }
-    case WM_LBUTTONDBLCLK:
-    {
-        QVariantMap postData;
-        postData.insert("WMClickType", NXAppBarType::WMLBUTTONDBLCLK);
-        NXEventBus::getInstance()->post("WMWindowClicked", postData);
-        return 0;
-    }
-    case WM_LBUTTONDOWN:
-    {
-        QVariantMap postData;
-        postData.insert("WMClickType", NXAppBarType::WMLBUTTONDOWN);
-        NXEventBus::getInstance()->post("WMWindowClicked", postData);
-        return 0;
-    }
-    case WM_LBUTTONUP:
-    {
-        QVariantMap postData;
-        postData.insert("WMClickType", NXAppBarType::WMLBUTTONUP);
-        NXEventBus::getInstance()->post("WMWindowClicked", postData);
-        return 0;
-    }
-    case WM_NCLBUTTONDOWN:
-    {
-        QVariantMap postData;
-        postData.insert("WMClickType", NXAppBarType::WMNCLBUTTONDOWN);
-        NXEventBus::getInstance()->post("WMWindowClicked", postData);
-        if (d->_containsCursorToItem(d->_maxButton) || d->_pIsOnlyAllowMinAndClose)
-        {
-            return 1;
-        }
-        break;
-    }
-    case WM_NCLBUTTONUP:
-    {
-        QVariantMap postData;
-        postData.insert("WMClickType", NXAppBarType::WMNCLBUTTONDOWN);
-        NXEventBus::getInstance()->post("WMWindowClicked", postData);
-        if (d->_containsCursorToItem(d->_maxButton) && !d->_pIsOnlyAllowMinAndClose)
-        {
-            d->onMaxButtonClicked();
-            return 1;
-        }
-        break;
-    }
-    case WM_NCLBUTTONDBLCLK:
-    {
-        if (!d->_pIsOnlyAllowMinAndClose && !d->_pIsFixedSize)
-        {
-            return 0;
+          if (!d->_isHoverMaxButton)
+          {
+            d->_isHoverMaxButton = true;
+            d->_maxButton->setIsSelected(true);
+            d->_maxButton->update();
+          }
+          *result = HTZOOM;
         }
         return 1;
-    }
-    case WM_NCRBUTTONDOWN:
-    {
-        if (wParam == HTCAPTION && !d->_pIsOnlyAllowMinAndClose)
+      }
+      else
+      {
+        if (d->_isHoverMaxButton)
         {
-            d->_showAppBarMenu(QCursor::pos());
+          d->_isHoverMaxButton = false;
+          d->_maxButton->setIsSelected(false);
+          d->_maxButton->update();
         }
-        break;
+      }
+      POINT nativeLocalPos { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+      ::ScreenToClient(hwnd, &nativeLocalPos);
+      RECT clientRect { 0, 0, 0, 0 };
+      ::GetClientRect(hwnd, &clientRect);
+      auto clientWidth  = clientRect.right - clientRect.left;
+      auto clientHeight = clientRect.bottom - clientRect.top;
+      bool left         = nativeLocalPos.x < d->_win7Margins;
+      bool right        = nativeLocalPos.x > clientWidth - d->_win7Margins;
+      bool top          = nativeLocalPos.y < d->_margins;
+      bool bottom       = nativeLocalPos.y > clientHeight - d->_win7Margins;
+      *result           = HTNOWHERE;
+      if (!d->_pIsOnlyAllowMinAndClose && !d->_pIsFixedSize && !window()->isFullScreen() && !window()->isMaximized())
+      {
+        if (left && top) { *result = HTTOPLEFT; }
+        else if (left && bottom) { *result = HTBOTTOMLEFT; }
+        else if (right && top) { *result = HTTOPRIGHT; }
+        else if (right && bottom) { *result = HTBOTTOMRIGHT; }
+        else if (left) { *result = HTLEFT; }
+        else if (right) { *result = HTRIGHT; }
+        else if (top) { *result = HTTOP; }
+        else if (bottom) { *result = HTBOTTOM; }
+      }
+      if (0 != *result) { return 1; }
+      if (d->_containsCursorToItem(this) && !window()->isFullScreen())
+      {
+        *result = HTCAPTION;
+        return 1;
+      }
+      *result = HTCLIENT;
+      return 1;
     }
-    case WM_KEYDOWN:
-    case WM_SYSKEYDOWN:
+    case WM_GETMINMAXINFO :
     {
-        if ((GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_SPACE) & 0x8000) && !d->_pIsOnlyAllowMinAndClose)
-        {
-            auto pos = window()->geometry().topLeft();
-            d->_showAppBarMenu(QPoint(pos.x(), pos.y() + this->height()));
-        }
-        break;
+      MINMAXINFO *minmaxInfo = reinterpret_cast<MINMAXINFO *>(lParam);
+      RECT rect;
+      SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
+      d->_lastMinTrackWidth        = d->_calculateMinimumWidth();
+      minmaxInfo->ptMinTrackSize.x = d->_lastMinTrackWidth * qApp->devicePixelRatio();
+      minmaxInfo->ptMinTrackSize.y = parentWidget()->minimumHeight() * qApp->devicePixelRatio();
+      minmaxInfo->ptMaxPosition.x  = rect.left;
+      minmaxInfo->ptMaxPosition.y  = rect.top;
+      return 1;
     }
+    case WM_LBUTTONDBLCLK :
+    {
+      QVariantMap postData;
+      postData.insert("WMClickType", NXAppBarType::WMLBUTTONDBLCLK);
+      NXEventBus::getInstance()->post("WMWindowClicked", postData);
+      return 0;
     }
-    return -1;
+    case WM_LBUTTONDOWN :
+    {
+      QVariantMap postData;
+      postData.insert("WMClickType", NXAppBarType::WMLBUTTONDOWN);
+      NXEventBus::getInstance()->post("WMWindowClicked", postData);
+      return 0;
+    }
+    case WM_LBUTTONUP :
+    {
+      QVariantMap postData;
+      postData.insert("WMClickType", NXAppBarType::WMLBUTTONUP);
+      NXEventBus::getInstance()->post("WMWindowClicked", postData);
+      return 0;
+    }
+    case WM_NCLBUTTONDOWN :
+    {
+      QVariantMap postData;
+      postData.insert("WMClickType", NXAppBarType::WMNCLBUTTONDOWN);
+      NXEventBus::getInstance()->post("WMWindowClicked", postData);
+      if (d->_containsCursorToItem(d->_maxButton) || d->_pIsOnlyAllowMinAndClose) { return 1; }
+      break;
+    }
+    case WM_NCLBUTTONUP :
+    {
+      QVariantMap postData;
+      postData.insert("WMClickType", NXAppBarType::WMNCLBUTTONDOWN);
+      NXEventBus::getInstance()->post("WMWindowClicked", postData);
+      if (d->_containsCursorToItem(d->_maxButton) && !d->_pIsOnlyAllowMinAndClose)
+      {
+        d->onMaxButtonClicked();
+        return 1;
+      }
+      break;
+    }
+    case WM_NCLBUTTONDBLCLK :
+    {
+      if (!d->_pIsOnlyAllowMinAndClose && !d->_pIsFixedSize) { return 0; }
+      return 1;
+    }
+    case WM_NCRBUTTONDOWN :
+    {
+      if (wParam == HTCAPTION && !d->_pIsOnlyAllowMinAndClose) { d->_showAppBarMenu(QCursor::pos()); }
+      break;
+    }
+    case WM_KEYDOWN :
+    case WM_SYSKEYDOWN :
+    {
+      if ((GetAsyncKeyState(VK_MENU) & 0x80'00) && (GetAsyncKeyState(VK_SPACE) & 0x80'00) &&
+          !d->_pIsOnlyAllowMinAndClose)
+      {
+        auto pos = window()->geometry().topLeft();
+        d->_showAppBarMenu(QPoint(pos.x(), pos.y() + this->height()));
+      }
+      break;
+    }
+  }
+  return -1;
 }
 #endif
 
-bool NXAppBar::eventFilter(QObject* obj, QEvent* event)
+bool NXAppBar::eventFilter(QObject *obj, QEvent *event)
 {
-    Q_D(NXAppBar);
-    switch (event->type())
+  Q_D(NXAppBar);
+  switch (event->type())
+  {
+    case QEvent::Resize :
     {
-    case QEvent::Resize:
-    {
-        QSize size = parentWidget()->size();
+      QSize size = parentWidget()->size();
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
-        if (::IsZoomed((HWND)d->_currentWinID))
-        {
-            this->resize(size.width() - 14, this->height());
-        }
-        else
-        {
-            this->resize(size.width(), this->height());
-        }
-#else
+      if (::IsZoomed((HWND) d->_currentWinID)) { this->resize(size.width() - 14, this->height()); }
+      else
+      {
         this->resize(size.width(), this->height());
+      }
+#else
+      this->resize(size.width(), this->height());
 #endif
-        break;
+      break;
     }
 #ifdef Q_OS_WIN
-    case QEvent::Show:
+    case QEvent::Show :
     {
-        if (!d->_pIsFixedSize && !d->_pIsOnlyAllowMinAndClose)
-        {
-            HWND hwnd = (HWND)d->_currentWinID;
-            DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
-            style &= ~WS_SYSMENU;
-            ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX | WS_THICKFRAME);
-            if (!nxWinHelper->getIsWinVersionGreater10())
-            {
-                SetClassLong(hwnd, GCL_STYLE, GetClassLong(hwnd, GCL_STYLE) | CS_DROPSHADOW);
-            }
-        }
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
-        HWND hwnd = (HWND)d->_currentWinID;
-        NXWinShadowHelper::getInstance()->setWindowShadow(d->_currentWinID);
+      if (!d->_pIsFixedSize && !d->_pIsOnlyAllowMinAndClose)
+      {
+        HWND hwnd   = (HWND) d->_currentWinID;
         DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
-        bool hasCaption = (style & WS_CAPTION) == WS_CAPTION;
-        if (!hasCaption)
+        style &= ~WS_SYSMENU;
+        ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX | WS_THICKFRAME);
+        if (!nxWinHelper->getIsWinVersionGreater10())
         {
-            ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_CAPTION);
+          SetClassLong(hwnd, GCL_STYLE, GetClassLong(hwnd, GCL_STYLE) | CS_DROPSHADOW);
         }
+      }
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
+      HWND hwnd = (HWND) d->_currentWinID;
+      NXWinShadowHelper::getInstance()->setWindowShadow(d->_currentWinID);
+      DWORD style     = ::GetWindowLongPtr(hwnd, GWL_STYLE);
+      bool hasCaption = (style & WS_CAPTION) == WS_CAPTION;
+      if (!hasCaption) { ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_CAPTION); }
 #endif
-        break;
+      break;
     }
 #endif
-    case QEvent::Close:
+    case QEvent::Close :
     {
-        QCloseEvent* closeEvent = dynamic_cast<QCloseEvent*>(event);
-        if (!d->_pIsDefaultClosed && closeEvent->spontaneous())
-        {
-            event->ignore();
-            if (window()->isMinimized())
-            {
-                window()->showNormal();
-            }
-            d->onCloseButtonClicked();
-            return true;
-        }
-        else
-        {
-            break;
-        }
+      QCloseEvent *closeEvent = dynamic_cast<QCloseEvent *>(event);
+      if (!d->_pIsDefaultClosed && closeEvent->spontaneous())
+      {
+        event->ignore();
+        if (window()->isMinimized()) { window()->showNormal(); }
+        d->onCloseButtonClicked();
+        return true;
+      }
+      else
+      {
+        break;
+      }
     }
 #ifndef Q_OS_WIN
-    case QEvent::MouseButtonPress:
+    case QEvent::MouseButtonPress :
     {
-        if (d->_edges != 0)
+      if (d->_edges != 0)
+      {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+        if (mouseEvent->button() == Qt::LeftButton)
         {
-            QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-            if (mouseEvent->button() == Qt::LeftButton)
-            {
-                d->_updateCursor(d->_edges);
-                window()->windowHandle()->startSystemResize(Qt::Edges(d->_edges));
-            }
+          d->_updateCursor(d->_edges);
+          window()->windowHandle()->startSystemResize(Qt::Edges(d->_edges));
         }
-        else
-        {
-            if (d->_containsCursorToItem(this))
-            {
-                qint64 clickTimer = QDateTime::currentMSecsSinceEpoch();
-                qint64 offset = clickTimer - d->_clickTimer;
-                d->_clickTimer = clickTimer;
-                if (offset > 300)
-                {
-                    window()->windowHandle()->startSystemMove();
-                }
-            }
-        }
-        break;
-    }
-    case QEvent::MouseButtonDblClick:
-    {
+      }
+      else
+      {
         if (d->_containsCursorToItem(this))
         {
-            if (window()->isMaximized())
-            {
-                window()->showNormal();
-            }
-            else
-            {
-                window()->showMaximized();
-            }
+          qint64 clickTimer = QDateTime::currentMSecsSinceEpoch();
+          qint64 offset     = clickTimer - d->_clickTimer;
+          d->_clickTimer    = clickTimer;
+          if (offset > 300) { window()->windowHandle()->startSystemMove(); }
         }
-        break;
+      }
+      break;
     }
-    case QEvent::MouseButtonRelease:
+    case QEvent::MouseButtonDblClick :
     {
-        d->_edges = 0;
-        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-        if (mouseEvent->button() == Qt::RightButton)
+      if (d->_containsCursorToItem(this))
+      {
+        if (window()->isMaximized()) { window()->showNormal(); }
+        else
         {
-            d->_showAppBarMenu(QCursor::pos());
+          window()->showMaximized();
         }
-        break;
+      }
+      break;
     }
-    case QEvent::HoverMove:
+    case QEvent::MouseButtonRelease :
     {
-        if (window()->isMaximized() || window()->isFullScreen())
-        {
-            break;
-        }
-        if (d->_pIsFixedSize)
-        {
-            break;
-        }
-        QHoverEvent* mouseEvent = static_cast<QHoverEvent*>(event);
-        QPoint p =
+      d->_edges               = 0;
+      QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+      if (mouseEvent->button() == Qt::RightButton) { d->_showAppBarMenu(QCursor::pos()); }
+      break;
+    }
+    case QEvent::HoverMove :
+    {
+      if (window()->isMaximized() || window()->isFullScreen()) { break; }
+      if (d->_pIsFixedSize) { break; }
+      QHoverEvent *mouseEvent = static_cast<QHoverEvent *>(event);
+      QPoint p =
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-            mouseEvent->pos();
+          mouseEvent->pos();
 #else
-            mouseEvent->position().toPoint();
+          mouseEvent->position().toPoint();
 #endif
-        if (p.x() >= d->_margins && p.x() <= (window()->width() - d->_margins) && p.y() >= d->_margins && p.y() <= (window()->height() - d->_margins))
+      if (p.x() >= d->_margins && p.x() <= (window()->width() - d->_margins) && p.y() >= d->_margins &&
+          p.y() <= (window()->height() - d->_margins))
+      {
+        if (d->_edges != 0)
         {
-            if (d->_edges != 0)
-            {
-                d->_edges = 0;
-                d->_updateCursor(d->_edges);
-            }
-            break;
+          d->_edges = 0;
+          d->_updateCursor(d->_edges);
         }
-        d->_edges = 0;
-        if (p.x() < d->_margins)
-        {
-            d->_edges |= Qt::LeftEdge;
-        }
-        if (p.x() > (window()->width() - d->_margins))
-        {
-            d->_edges |= Qt::RightEdge;
-        }
-        if (p.y() < d->_margins)
-        {
-            d->_edges |= Qt::TopEdge;
-        }
-        if (p.y() > (window()->height() - d->_margins))
-        {
-            d->_edges |= Qt::BottomEdge;
-        }
-        d->_updateCursor(d->_edges);
         break;
+      }
+      d->_edges = 0;
+      if (p.x() < d->_margins) { d->_edges |= Qt::LeftEdge; }
+      if (p.x() > (window()->width() - d->_margins)) { d->_edges |= Qt::RightEdge; }
+      if (p.y() < d->_margins) { d->_edges |= Qt::TopEdge; }
+      if (p.y() > (window()->height() - d->_margins)) { d->_edges |= Qt::BottomEdge; }
+      d->_updateCursor(d->_edges);
+      break;
     }
 #endif
-    default:
+    default :
     {
-        break;
+      break;
     }
-    }
-    return QObject::eventFilter(obj, event);
+  }
+  return QObject::eventFilter(obj, event);
 }
 
 #ifdef Q_OS_WIN
-void NXAppBar::paintEvent(QPaintEvent* event)
+void NXAppBar::paintEvent(QPaintEvent *event)
 {
-    if (nxWinHelper->getIsWinVersionGreater10() && !nxWinHelper->getIsWinVersionGreater11())
-    {
-        Q_D(NXAppBar);
-        QPainter painter(this);
-        painter.save();
-        painter.setRenderHints(QPainter::Antialiasing);
-        auto borderWidth = nxWinHelper->getSystemMetricsForDpi((HWND)d->_currentWinID, SM_CXBORDER);
-        painter.setPen(QPen(window()->isActiveWindow() ? NXThemeColor(d->_themeMode, Win10BorderActive) : NXThemeColor(d->_themeMode, Win10BorderInactive), borderWidth));
-        painter.drawLine(QPoint(0, 0), QPoint(window()->width(), 0));
-        painter.restore();
-    }
+  if (nxWinHelper->getIsWinVersionGreater10() && !nxWinHelper->getIsWinVersionGreater11())
+  {
+    Q_D(NXAppBar);
+    QPainter painter(this);
+    painter.save();
+    painter.setRenderHints(QPainter::Antialiasing);
+    auto borderWidth = nxWinHelper->getSystemMetricsForDpi((HWND) d->_currentWinID, SM_CXBORDER);
+    painter.setPen(QPen(window()->isActiveWindow() ? NXThemeColor(d->_themeMode, Win10BorderActive)
+                                                   : NXThemeColor(d->_themeMode, Win10BorderInactive),
+                        borderWidth));
+    painter.drawLine(QPoint(0, 0), QPoint(window()->width(), 0));
+    painter.restore();
+  }
 }
 #endif

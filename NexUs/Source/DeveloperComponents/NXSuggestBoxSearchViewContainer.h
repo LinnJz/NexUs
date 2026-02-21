@@ -4,18 +4,19 @@
 #include <QWidget>
 
 #include "NXDef.h"
+
 class NXSuggestBoxSearchViewContainer : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit NXSuggestBoxSearchViewContainer(QWidget* parent = nullptr);
-    ~NXSuggestBoxSearchViewContainer();
+  explicit NXSuggestBoxSearchViewContainer(QWidget *parent = nullptr);
+  ~NXSuggestBoxSearchViewContainer();
 
 protected:
-    virtual void paintEvent(QPaintEvent* event) override;
+  virtual void paintEvent(QPaintEvent *event) override;
 
 private:
-    NXThemeType::ThemeMode _themeMode;
+  NXThemeType::ThemeMode _themeMode;
 };
 
 #endif // NXSUGGESTBOXSEARCHVIEWCONTAINER_H

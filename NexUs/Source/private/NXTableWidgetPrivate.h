@@ -10,14 +10,14 @@ class NXTableWidgetStyle;
 
 class NXTableWidgetPrivate : public QObject
 {
-    Q_OBJECT
-    Q_D_CREATE(NXTableWidget)
+  Q_OBJECT
+  Q_D_CREATE(NXTableWidget)
 public:
-    explicit NXTableWidgetPrivate(QObject* parent = nullptr);
-    ~NXTableWidgetPrivate();
+  explicit NXTableWidgetPrivate(QObject *parent = nullptr);
+  ~NXTableWidgetPrivate();
 
 private:
-    NXTableWidgetStyle* _tableWidgetStyle{nullptr};
+  NXTableWidgetStyle *_tableWidgetStyle { nullptr };
 };
 
 #endif // NXTABLEWIDGETPRIVATE_H

@@ -3,17 +3,21 @@
 #include <QProxyStyle>
 
 #include "NXDef.h"
+
 class NXLCDNumberStyle : public QProxyStyle
 {
-    Q_OBJECT
-    Q_PRIVATE_CREATE(bool, IsTransparent)
+  Q_OBJECT
+  Q_PRIVATE_CREATE(bool, IsTransparent)
 public:
-    explicit NXLCDNumberStyle(QStyle* style = nullptr);
-    ~NXLCDNumberStyle() override;
-    void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
+  explicit NXLCDNumberStyle(QStyle *style = nullptr);
+  ~NXLCDNumberStyle() override;
+  void drawControl(ControlElement element,
+                   const QStyleOption *option,
+                   QPainter *painter,
+                   const QWidget *widget = nullptr) const override;
 
 private:
-    NXThemeType::ThemeMode _themeMode;
+  NXThemeType::ThemeMode _themeMode;
 };
 
-#endif //NEXUS_NXLCDNUMBERSTYLE_H
+#endif // NEXUS_NXLCDNUMBERSTYLE_H

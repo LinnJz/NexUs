@@ -5,10 +5,10 @@
 
 class T_About : public NXDialog
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit T_About(QWidget* parent = nullptr);
-    ~T_About();
+  explicit T_About(QWidget *parent = nullptr);
+  ~T_About();
 };
 
 #endif // T_ABOUT_H

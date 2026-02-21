@@ -4,18 +4,19 @@
 #include <QWidget>
 
 #include "NXDef.h"
+
 class NXCalendarPickerContainer : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit NXCalendarPickerContainer(QWidget* parent = nullptr);
-    ~NXCalendarPickerContainer();
+  explicit NXCalendarPickerContainer(QWidget *parent = nullptr);
+  ~NXCalendarPickerContainer();
 
 protected:
-    virtual void paintEvent(QPaintEvent* event) override;
+  virtual void paintEvent(QPaintEvent *event) override;
 
 private:
-    NXThemeType::ThemeMode _themeMode;
+  NXThemeType::ThemeMode _themeMode;
 };
 
 #endif // NXCALENDARPICKERCONTAINER_H

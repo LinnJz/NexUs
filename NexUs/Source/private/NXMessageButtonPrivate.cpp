@@ -2,44 +2,43 @@
 
 #include <QPalette>
 
-#include "NXMessageButton.h"
 #include "NXMessageBar.h"
-NXMessageButtonPrivate::NXMessageButtonPrivate(QObject* parent)
-    : QObject{parent}
+#include "NXMessageButton.h"
+
+NXMessageButtonPrivate::NXMessageButtonPrivate(QObject *parent)
+    : QObject { parent }
 {
 }
 
-NXMessageButtonPrivate::~NXMessageButtonPrivate()
-{
-}
+NXMessageButtonPrivate::~NXMessageButtonPrivate() { }
 
 void NXMessageButtonPrivate::_showMessage()
 {
-    switch (_pMessageMode)
+  switch (_pMessageMode)
+  {
+    case NXMessageBarType::Success :
     {
-    case NXMessageBarType::Success:
+      NXMessageBar::success(_pPositionPolicy, _pBarTitle, _pBarText, _pDisplayMsec, _pMessageTargetWidget);
+      break;
+    }
+    case NXMessageBarType::Warning :
     {
-        NXMessageBar::success(_pPositionPolicy, _pBarTitle, _pBarText, _pDisplayMsec, _pMessageTargetWidget);
-        break;
+      NXMessageBar::warning(_pPositionPolicy, _pBarTitle, _pBarText, _pDisplayMsec, _pMessageTargetWidget);
+      break;
     }
-    case NXMessageBarType::Warning:
+    case NXMessageBarType::Information :
     {
-        NXMessageBar::warning(_pPositionPolicy, _pBarTitle, _pBarText, _pDisplayMsec, _pMessageTargetWidget);
-        break;
+      NXMessageBar::information(_pPositionPolicy, _pBarTitle, _pBarText, _pDisplayMsec, _pMessageTargetWidget);
+      break;
     }
-    case NXMessageBarType::Information:
+    case NXMessageBarType::Error :
     {
-        NXMessageBar::information(_pPositionPolicy, _pBarTitle, _pBarText, _pDisplayMsec, _pMessageTargetWidget);
-        break;
+      NXMessageBar::error(_pPositionPolicy, _pBarTitle, _pBarText, _pDisplayMsec, _pMessageTargetWidget);
+      break;
     }
-    case NXMessageBarType::Error:
+    default :
     {
-        NXMessageBar::error(_pPositionPolicy, _pBarTitle, _pBarText, _pDisplayMsec, _pMessageTargetWidget);
-        break;
+      break;
     }
-    default:
-    {
-        break;
-    }
-    }
+  }
 }

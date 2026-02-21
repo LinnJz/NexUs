@@ -9,28 +9,29 @@
 #include "NXDef.h"
 #include "NXProperty.h"
 class NXReminderCard;
+
 class NXReminderCardPrivate : public QObject
 {
-    Q_OBJECT
-    Q_D_CREATE(NXReminderCard)
-	Q_PROPERTY_CREATE_D(QString, Title);
-	Q_PROPERTY_CREATE_D(QString, SubTitle);
-	Q_PROPERTY_CREATE_D(QPixmap, CardPixmap);
-	Q_PROPERTY_CREATE_D(QSize, CardPixmapSize);
-	Q_PROPERTY_CREATE_D(int, BorderRadius)
-	Q_PROPERTY_CREATE_D(int, TitlePixelSize);
-	Q_PROPERTY_CREATE_D(int, SubTitlePixelSize);
-	Q_PROPERTY_CREATE_D(int, TitleSpacing);
-    Q_PROPERTY_CREATE_D(int, CardPixmapBorderRadius)
-    Q_PROPERTY_CREATE_D(NXCardPixType::PixMode, CardPixMode);
+  Q_OBJECT
+  Q_D_CREATE(NXReminderCard)
+  Q_PROPERTY_CREATE_D(QString, Title);
+  Q_PROPERTY_CREATE_D(QString, SubTitle);
+  Q_PROPERTY_CREATE_D(QPixmap, CardPixmap);
+  Q_PROPERTY_CREATE_D(QSize, CardPixmapSize);
+  Q_PROPERTY_CREATE_D(int, BorderRadius)
+  Q_PROPERTY_CREATE_D(int, TitlePixelSize);
+  Q_PROPERTY_CREATE_D(int, SubTitlePixelSize);
+  Q_PROPERTY_CREATE_D(int, TitleSpacing);
+  Q_PROPERTY_CREATE_D(int, CardPixmapBorderRadius)
+  Q_PROPERTY_CREATE_D(NXCardPixType::PixMode, CardPixMode);
 
 public:
-    explicit NXReminderCardPrivate(QObject* parent = nullptr);
-    ~NXReminderCardPrivate();
+  explicit NXReminderCardPrivate(QObject *parent = nullptr);
+  ~NXReminderCardPrivate();
 
 private:
-    int _shadowBorderWidth{6};
-    NXThemeType::ThemeMode _themeMode;
+  int _shadowBorderWidth { 6 };
+  NXThemeType::ThemeMode _themeMode;
 };
 
 #endif // NXREMINDERCARDPRIVATE_H

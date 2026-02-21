@@ -13,91 +13,87 @@
 #include "NXLog.h"
 Q_GLOBAL_STATIC(QMutex, messageLogMutex)
 Q_GLOBAL_STATIC(QString, logFileNameTime)
-NXLogPrivate::NXLogPrivate(QObject* parent)
-    : QObject{parent}
+
+NXLogPrivate::NXLogPrivate(QObject *parent)
+    : QObject { parent }
 {
 }
 
-NXLogPrivate::~NXLogPrivate()
-{
-}
+NXLogPrivate::~NXLogPrivate() { }
 
 void NXLogPrivate::_messageLogHander(QtMsgType type, const QMessageLogContext& ctx, const QString& msg)
 {
-    if (type > QtCriticalMsg)
+  if (type > QtCriticalMsg) { return; }
+  QString logInfo;
+  QString logTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+  switch (type)
+  {
+    case QtDebugMsg :
     {
-        return;
+      logInfo =
+          QString("[信息-%1](函数: %2 , 行数: %3) -> %4").arg(logTime, ctx.function, QString::number(ctx.line), msg);
+      break;
     }
-    QString logInfo;
-    QString logTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
-    switch (type)
+    case QtWarningMsg :
     {
-    case QtDebugMsg:
-    {
-        logInfo = QString("[信息-%1](函数: %2 , 行数: %3) -> %4").arg(logTime, ctx.function, QString::number(ctx.line), msg);
-        break;
+      logInfo =
+          QString("[警告-%1](函数: %2 , 行数: %3) -> %4").arg(logTime, ctx.function, QString::number(ctx.line), msg);
+      break;
     }
-    case QtWarningMsg:
+    case QtCriticalMsg :
     {
-        logInfo = QString("[警告-%1](函数: %2 , 行数: %3) -> %4").arg(logTime, ctx.function, QString::number(ctx.line), msg);
-        break;
+      logInfo =
+          QString("[错误-%1](函数: %2 , 行数: %3) -> %4").arg(logTime, ctx.function, QString::number(ctx.line), msg);
+      break;
     }
-    case QtCriticalMsg:
+    default :
     {
-        logInfo = QString("[错误-%1](函数: %2 , 行数: %3) -> %4").arg(logTime, ctx.function, QString::number(ctx.line), msg);
-        break;
+      qCritical("发生致命错误！");
+      break;
     }
-    default:
-    {
-        qCritical("发生致命错误！");
-        break;
-    }
-    }
-    qDebug() << logInfo;
-    NXLog* log = NXLog::getInstance();
-    Q_EMIT log->logMessage(logInfo);
-    messageLogMutex->lock();
-    QFile logfile;
-    if (log->getIsLogFileNameWithTime())
-    {
-        logfile.setFileName(log->getLogSavePath() + "\\" + log->getLogFileName() + *logFileNameTime + ".txt");
-    }
-    else
-    {
-        logfile.setFileName(log->getLogSavePath() + "\\" + log->getLogFileName() + ".txt");
-    }
-    if (logfile.open(QIODevice::WriteOnly | QIODevice::Append))
-    {
-        QTextStream logFileStream(&logfile);
+  }
+  qDebug() << logInfo;
+  NXLog *log = NXLog::getInstance();
+  Q_EMIT log->logMessage(logInfo);
+  messageLogMutex->lock();
+  QFile logfile;
+  if (log->getIsLogFileNameWithTime())
+  {
+    logfile.setFileName(log->getLogSavePath() + "\\" + log->getLogFileName() + *logFileNameTime + ".txt");
+  }
+  else
+  {
+    logfile.setFileName(log->getLogSavePath() + "\\" + log->getLogFileName() + ".txt");
+  }
+  if (logfile.open(QIODevice::WriteOnly | QIODevice::Append))
+  {
+    QTextStream logFileStream(&logfile);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-        logFileStream << logInfo << Qt::endl;
+    logFileStream << logInfo << Qt::endl;
 #else
-        logFileStream << logInfo << endl;
+    logFileStream << logInfo << endl;
 #endif
-        logfile.close();
-    }
-    messageLogMutex->unlock();
+    logfile.close();
+  }
+  messageLogMutex->unlock();
 }
 
 void NXLogPrivate::_clearLogFile()
 {
-    if (_pIsLogFileNameWithTime)
+  if (_pIsLogFileNameWithTime)
+  {
+    QString logTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh-mm-ss");
+    logTime.prepend("_");
+    logTime.replace(" ", "_");
+    logFileNameTime->clear();
+    logFileNameTime->append(logTime);
+  }
+  else
+  {
+    QFile file(_pLogSavePath + "\\" + _pLogFileName + ".txt");
+    if (file.exists())
     {
-        QString logTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh-mm-ss");
-        logTime.prepend("_");
-        logTime.replace(" ", "_");
-        logFileNameTime->clear();
-        logFileNameTime->append(logTime);
+      if (file.open(QIODevice::WriteOnly | QIODevice::Text | QFile::Truncate)) { file.close(); }
     }
-    else
-    {
-        QFile file(_pLogSavePath + "\\" + _pLogFileName + ".txt");
-        if (file.exists())
-        {
-            if (file.open(QIODevice::WriteOnly | QIODevice::Text | QFile::Truncate))
-            {
-                file.close();
-            }
-        }
-    }
+  }
 }

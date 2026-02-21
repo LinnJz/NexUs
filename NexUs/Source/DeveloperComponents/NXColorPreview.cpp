@@ -4,28 +4,27 @@
 #include <QPainterPath>
 
 #include "NXTheme.h"
-NXColorPreview::NXColorPreview(QWidget* parent)
-    : QWidget{parent}
+
+NXColorPreview::NXColorPreview(QWidget *parent)
+    : QWidget { parent }
 {
-    setFixedSize(50, 260);
-    _pThemeMode = nxTheme->getThemeMode();
+  setFixedSize(50, 260);
+  _pThemeMode = nxTheme->getThemeMode();
 }
 
-NXColorPreview::~NXColorPreview()
-{
-}
+NXColorPreview::~NXColorPreview() { }
 
-void NXColorPreview::paintEvent(QPaintEvent* event)
+void NXColorPreview::paintEvent(QPaintEvent *event)
 {
-    int penWidth = 3;
-    int borderRadius = 5;
-    QPainter painter(this);
-    painter.save();
-    painter.setRenderHint(QPainter::Antialiasing);
-    QRect viewRect = rect();
-    viewRect.adjust(penWidth, penWidth, -penWidth, -penWidth);
-    painter.setPen(QPen(NXThemeColor(_pThemeMode, BasicBorder), penWidth));
-    painter.setBrush(_pBaseColor);
-    painter.drawRoundedRect(viewRect, borderRadius, borderRadius);
-    painter.restore();
+  int penWidth     = 3;
+  int borderRadius = 5;
+  QPainter painter(this);
+  painter.save();
+  painter.setRenderHint(QPainter::Antialiasing);
+  QRect viewRect = rect();
+  viewRect.adjust(penWidth, penWidth, -penWidth, -penWidth);
+  painter.setPen(QPen(NXThemeColor(_pThemeMode, BasicBorder), penWidth));
+  painter.setBrush(_pBaseColor);
+  painter.drawRoundedRect(viewRect, borderRadius, borderRadius);
+  painter.restore();
 }

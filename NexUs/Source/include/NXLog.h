@@ -3,31 +3,33 @@
 
 #include <QObject>
 
-#include "singleton.h"
+#include "LinnSingleton.h"
 #include "NXProperty.h"
 
+#pragma push_macro("Q_DISABLE_COPY")
+#undef Q_DISABLE_COPY
+#define Q_DISABLE_COPY(Class)
+
 class NXLogPrivate;
+
 class NX_EXPORT NXLog : public QObject
 {
-#pragma push_macro("DISABLE_COPY")
-#undef DISABLE_COPY
-#define DISABLE_COPY(Class)
-    SINGLETON_CREATE_H(NXLog)
-#pragma pop_macro("DISABLE_COPY")
-    Q_OBJECT
-    Q_Q_CREATE(NXLog)
-    Q_PROPERTY_CREATE_Q_H(QString, LogSavePath)
-    Q_PROPERTY_CREATE_Q_H(QString, LogFileName)
-    Q_PROPERTY_CREATE_Q_H(bool, IsLogFileNameWithTime)
+  Q_OBJECT
+  Q_Q_CREATE(NXLog)
+  Q_PROPERTY_CREATE_Q_H(QString, LogSavePath)
+  Q_PROPERTY_CREATE_Q_H(QString, LogFileName)
+  Q_PROPERTY_CREATE_Q_H(bool, IsLogFileNameWithTime)
+  LINN_SINGLETON_CREATE(LINN_SINGLETON_UNIQUE(NXLog))
 
 private:
-    explicit NXLog(QObject* parent = nullptr);
-    ~NXLog();
+  explicit NXLog(QObject *parent = nullptr);
+  ~NXLog();
 
 public:
-    void initMessageLog(bool isEnable);
+  void initMessageLog(bool isEnable);
 Q_SIGNALS:
-    void logMessage(const QString& log);
+  void logMessage(const QString& log);
 };
 
+#pragma pop_macro("Q_DISABLE_COPY")
 #endif // NXLOG_H

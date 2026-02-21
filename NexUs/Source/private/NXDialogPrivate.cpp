@@ -1,10 +1,8 @@
 ﻿#include "NXDialogPrivate.h"
 
-NXDialogPrivate::NXDialogPrivate(QObject* parent)
+NXDialogPrivate::NXDialogPrivate(QObject *parent)
     : QObject(parent)
 {
 }
 
-NXDialogPrivate::~NXDialogPrivate()
-{
-}
+NXDialogPrivate::~NXDialogPrivate() { }

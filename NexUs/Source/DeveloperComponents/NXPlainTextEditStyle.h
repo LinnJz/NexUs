@@ -4,17 +4,21 @@
 #include <QProxyStyle>
 
 #include "NXDef.h"
+
 class NXPlainTextEditStyle : public QProxyStyle
 {
-    Q_OBJECT
-    Q_PROPERTY_CREATE(qreal, ExpandMarkWidth)
+  Q_OBJECT
+  Q_PROPERTY_CREATE(qreal, ExpandMarkWidth)
 public:
-    explicit NXPlainTextEditStyle(QStyle* style = nullptr);
-    ~NXPlainTextEditStyle() override;
-    void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
+  explicit NXPlainTextEditStyle(QStyle *style = nullptr);
+  ~NXPlainTextEditStyle() override;
+  void drawControl(ControlElement element,
+                   const QStyleOption *option,
+                   QPainter *painter,
+                   const QWidget *widget = nullptr) const override;
 
 private:
-    NXThemeType::ThemeMode _themeMode;
+  NXThemeType::ThemeMode _themeMode;
 };
 
 #endif // NXPLAINTEXTEDITSTYLE_H

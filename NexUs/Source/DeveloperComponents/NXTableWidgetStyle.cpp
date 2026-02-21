@@ -7,278 +7,276 @@
 #include "NXTableWidget.h"
 #include "NXTheme.h"
 
-NXTableWidgetStyle::NXTableWidgetStyle(QStyle* style)
+NXTableWidgetStyle::NXTableWidgetStyle(QStyle *style)
 {
-    _pItemHeight = 35;
-    _pHeaderMargin = 6;
-    _pCurrentHoverRow = -1;
-    _pIsTransparent = false;
-    _themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
-        _themeMode = themeMode;
-    });
+  _pItemHeight      = 35;
+  _pHeaderMargin    = 6;
+  _pCurrentHoverRow = -1;
+  _pIsTransparent   = false;
+  _themeMode        = nxTheme->getThemeMode();
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
-NXTableWidgetStyle::~NXTableWidgetStyle()
+NXTableWidgetStyle::~NXTableWidgetStyle() { }
+
+void NXTableWidgetStyle::drawPrimitive(PrimitiveElement element,
+                                       const QStyleOption *option,
+                                       QPainter *painter,
+                                       const QWidget *widget) const
 {
-}
-
-void NXTableWidgetStyle::drawPrimitive(PrimitiveElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget) const
-{
-    switch (element)
+  switch (element)
+  {
+    case QStyle::PE_PanelItemViewItem :
     {
-    case QStyle::PE_PanelItemViewItem:
-    {
-        if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
-        {
-            const NXTableWidget* tableWidget = dynamic_cast<const NXTableWidget*>(widget);
-            if (!tableWidget)
-            {
-                return;
-            }
+      if (const QStyleOptionViewItem *vopt = qstyleoption_cast<const QStyleOptionViewItem *>(option))
+      {
+        const NXTableWidget *tableWidget = dynamic_cast<const NXTableWidget *>(widget);
+        if (!tableWidget) { return; }
 
-            QVariant backgroundData = vopt->index.data(Qt::BackgroundRole);
-            bool hasCustomBackground = backgroundData.isValid();
+        QVariant backgroundData  = vopt->index.data(Qt::BackgroundRole);
+        bool hasCustomBackground = backgroundData.isValid();
 
-            painter->save();
-            painter->setRenderHint(QPainter::Antialiasing);
-            painter->setPen(Qt::NoPen);
-
-            if (hasCustomBackground)
-            {
-                QBrush customBrush = backgroundData.value<QBrush>();
-                painter->setBrush(customBrush);
-                painter->drawRect(vopt->rect);
-            }
-
-            QAbstractItemView::SelectionBehavior selectionBehavior = tableWidget->selectionBehavior();
-            if (selectionBehavior == QAbstractItemView::SelectRows)
-            {
-                if (vopt->index.row() == _pCurrentHoverRow && !hasCustomBackground)
-                {
-                    painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
-                    painter->drawRect(vopt->rect);
-                }
-            }
-            else
-            {
-                if ((vopt->state.testFlag(QStyle::State_Selected) || vopt->state.testFlag(QStyle::State_MouseOver)) && !hasCustomBackground)
-                {
-                    painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
-                    painter->drawRect(vopt->rect);
-                }
-            }
-            painter->restore();
-        }
-        return;
-    }
-    case QStyle::PE_PanelItemViewRow:
-    {
-        if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
-        {
-            QVariant backgroundData = vopt->index.data(Qt::BackgroundRole);
-            bool hasCustomBackground = backgroundData.isValid();
-
-            if (hasCustomBackground)
-            {
-                return;
-            }
-
-            painter->save();
-            painter->setRenderHint(QPainter::Antialiasing);
-            QRect itemRect = vopt->rect;
-            painter->setPen(Qt::NoPen);
-
-            if (vopt->state & QStyle::State_Selected)
-            {
-                painter->setBrush(NXThemeColor(_themeMode, BasicSelectedAlpha));
-                painter->drawRect(itemRect);
-            }
-            else
-            {
-                if (vopt->features.testFlag(QStyleOptionViewItem::Alternate))
-                {
-                    painter->setBrush(NXThemeColor(_themeMode, BasicAlternating));
-                    painter->drawRect(vopt->rect);
-                }
-            }
-            painter->restore();
-        }
-        return;
-    }
-    case QStyle::PE_Widget:
-    {
-        return;
-    }
-    default:
-    {
-        break;
-    }
-    }
-    QProxyStyle::drawPrimitive(element, option, painter, widget);
-}
-
-void NXTableWidgetStyle::drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget) const
-{
-    switch (element)
-    {
-    case QStyle::CE_ShapedFrame:
-    {
-        if (!_pIsTransparent)
-        {
-            QRect frameRect = option->rect;
-            frameRect.adjust(1, 1, -1, -1);
-            painter->save();
-            painter->setRenderHints(QPainter::Antialiasing);
-            painter->setPen(NXThemeColor(_themeMode, PopupBorder));
-            painter->setBrush(NXThemeColor(_themeMode, BasicBaseAlpha));
-            painter->drawRoundedRect(frameRect, 3, 3);
-            painter->restore();
-        }
-        return;
-    }
-    case QStyle::CE_HeaderLabel:
-    {
-        if (const QStyleOptionHeader* hopt = qstyleoption_cast<const QStyleOptionHeader*>(option))
-        {
-            QRect headerRect = option->rect;
-            painter->save();
-            painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
-            if (!hopt->text.isEmpty())
-            {
-                painter->setPen(NXThemeColor(_themeMode, BasicText));
-                painter->drawText(headerRect, hopt->textAlignment, hopt->text);
-            }
-            painter->restore();
-        }
-        return;
-    }
-    case QStyle::CE_HeaderSection:
-    {
         painter->save();
-        painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
+        painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(NXThemeColor(_themeMode, BasicBaseDeepAlpha));
-        painter->drawRect(option->rect);
-        if (option->state.testFlag(QStyle::State_Sunken))
+
+        if (hasCustomBackground)
         {
-            painter->setBrush(NXThemeColor(_themeMode, BasicPressAlpha));
+          QBrush customBrush = backgroundData.value<QBrush>();
+          painter->setBrush(customBrush);
+          painter->drawRect(vopt->rect);
+        }
+
+        QAbstractItemView::SelectionBehavior selectionBehavior = tableWidget->selectionBehavior();
+        if (selectionBehavior == QAbstractItemView::SelectRows)
+        {
+          if (vopt->index.row() == _pCurrentHoverRow && !hasCustomBackground)
+          {
+            painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
+            painter->drawRect(vopt->rect);
+          }
         }
         else
         {
-            if (option->state.testFlag(QStyle::State_MouseOver))
-            {
-                painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
-            }
+          if ((vopt->state.testFlag(QStyle::State_Selected) || vopt->state.testFlag(QStyle::State_MouseOver)) &&
+              !hasCustomBackground)
+          {
+            painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
+            painter->drawRect(vopt->rect);
+          }
         }
-        painter->drawRect(option->rect);
         painter->restore();
-        return;
+      }
+      return;
     }
-    case QStyle::CE_HeaderEmptyArea:
+    case QStyle::PE_PanelItemViewRow :
     {
+      if (const QStyleOptionViewItem *vopt = qstyleoption_cast<const QStyleOptionViewItem *>(option))
+      {
+        QVariant backgroundData  = vopt->index.data(Qt::BackgroundRole);
+        bool hasCustomBackground = backgroundData.isValid();
+
+        if (hasCustomBackground) { return; }
+
+        painter->save();
+        painter->setRenderHint(QPainter::Antialiasing);
+        QRect itemRect = vopt->rect;
+        painter->setPen(Qt::NoPen);
+
+        if (vopt->state & QStyle::State_Selected)
+        {
+          painter->setBrush(NXThemeColor(_themeMode, BasicSelectedAlpha));
+          painter->drawRect(itemRect);
+        }
+        else
+        {
+          if (vopt->features.testFlag(QStyleOptionViewItem::Alternate))
+          {
+            painter->setBrush(NXThemeColor(_themeMode, BasicAlternating));
+            painter->drawRect(vopt->rect);
+          }
+        }
+        painter->restore();
+      }
+      return;
+    }
+    case QStyle::PE_Widget :
+    {
+      return;
+    }
+    default :
+    {
+      break;
+    }
+  }
+  QProxyStyle::drawPrimitive(element, option, painter, widget);
+}
+
+void NXTableWidgetStyle::drawControl(ControlElement element,
+                                     const QStyleOption *option,
+                                     QPainter *painter,
+                                     const QWidget *widget) const
+{
+  switch (element)
+  {
+    case QStyle::CE_ShapedFrame :
+    {
+      if (!_pIsTransparent)
+      {
         QRect frameRect = option->rect;
+        frameRect.adjust(1, 1, -1, -1);
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing);
-        painter->setPen(Qt::NoPen);
-        painter->setBrush(NXThemeColor(_themeMode, BasicBaseDeep));
-        painter->drawRect(frameRect);
+        painter->setPen(NXThemeColor(_themeMode, PopupBorder));
+        painter->setBrush(NXThemeColor(_themeMode, BasicBaseAlpha));
+        painter->drawRoundedRect(frameRect, 3, 3);
         painter->restore();
-        return;
+      }
+      return;
     }
-    case QStyle::CE_ItemViewItem:
+    case QStyle::CE_HeaderLabel :
     {
-        if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
+      if (const QStyleOptionHeader *hopt = qstyleoption_cast<const QStyleOptionHeader *>(option))
+      {
+        QRect headerRect = option->rect;
+        painter->save();
+        painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
+        if (!hopt->text.isEmpty())
         {
-            const NXTableWidget* tableWidget = dynamic_cast<const NXTableWidget*>(widget);
-            if (!tableWidget)
-            {
-                return;
-            }
-            this->drawPrimitive(QStyle::PE_PanelItemViewItem, option, painter, widget);
-            QAbstractItemView::SelectionBehavior selectionBehavior = tableWidget->selectionBehavior();
-            QRect itemRect = option->rect;
-            painter->save();
-            painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
-            QRect iconRect = proxy()->subElementRect(SE_ItemViewItemDecoration, vopt, widget);
-            QRect textRect = proxy()->subElementRect(SE_ItemViewItemText, vopt, widget);
-            if (vopt->index.column() == 0)
-            {
-                iconRect.adjust(_horizontalPadding, 0, _horizontalPadding, 0);
-                textRect.adjust(_horizontalPadding, 0, 0, 0);
-            }
-            if (!vopt->icon.isNull())
-            {
-                QIcon::Mode mode = QIcon::Normal;
-                QIcon::State state = vopt->state & QStyle::State_Open ? QIcon::On : QIcon::Off;
-                vopt->icon.paint(painter, iconRect, vopt->decorationAlignment, mode, state);
-            }
-            if (!vopt->text.isEmpty())
-            {
-                QVariant foregroundData = vopt->index.data(Qt::ForegroundRole);
-                if (foregroundData.isValid())
-                {
-                    QBrush foregroundBrush = foregroundData.value<QBrush>();
-                    painter->setPen(foregroundBrush.color());
-                }
-                else
-                {
-                    painter->setPen(NXThemeColor(_themeMode, BasicText));
-                }
-                painter->drawText(textRect, vopt->displayAlignment, vopt->text);
-            }
-            int heightOffset = itemRect.height() / 4;
-            painter->setPen(Qt::NoPen);
-            painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
-            if (vopt->state.testFlag(QStyle::State_Selected))
-            {
-                if (selectionBehavior == QAbstractItemView::SelectRows && vopt->index.column() == 0)
-                {
-                    painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
-                }
-            }
-            painter->restore();
+          painter->setPen(NXThemeColor(_themeMode, BasicText));
+          painter->drawText(headerRect, hopt->textAlignment, hopt->text);
         }
-        return;
+        painter->restore();
+      }
+      return;
     }
-    default:
+    case QStyle::CE_HeaderSection :
     {
-        break;
+      painter->save();
+      painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
+      painter->setPen(Qt::NoPen);
+      painter->setBrush(NXThemeColor(_themeMode, BasicBaseDeepAlpha));
+      painter->drawRect(option->rect);
+      if (option->state.testFlag(QStyle::State_Sunken))
+      {
+        painter->setBrush(NXThemeColor(_themeMode, BasicPressAlpha));
+      }
+      else
+      {
+        if (option->state.testFlag(QStyle::State_MouseOver))
+        {
+          painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
+        }
+      }
+      painter->drawRect(option->rect);
+      painter->restore();
+      return;
     }
+    case QStyle::CE_HeaderEmptyArea :
+    {
+      QRect frameRect = option->rect;
+      painter->save();
+      painter->setRenderHints(QPainter::Antialiasing);
+      painter->setPen(Qt::NoPen);
+      painter->setBrush(NXThemeColor(_themeMode, BasicBaseDeep));
+      painter->drawRect(frameRect);
+      painter->restore();
+      return;
     }
-    QProxyStyle::drawControl(element, option, painter, widget);
+    case QStyle::CE_ItemViewItem :
+    {
+      if (const QStyleOptionViewItem *vopt = qstyleoption_cast<const QStyleOptionViewItem *>(option))
+      {
+        const NXTableWidget *tableWidget = dynamic_cast<const NXTableWidget *>(widget);
+        if (!tableWidget) { return; }
+        this->drawPrimitive(QStyle::PE_PanelItemViewItem, option, painter, widget);
+        QAbstractItemView::SelectionBehavior selectionBehavior = tableWidget->selectionBehavior();
+        QRect itemRect                                         = option->rect;
+        painter->save();
+        painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
+        QRect iconRect = proxy()->subElementRect(SE_ItemViewItemDecoration, vopt, widget);
+        QRect textRect = proxy()->subElementRect(SE_ItemViewItemText, vopt, widget);
+        if (vopt->index.column() == 0)
+        {
+          iconRect.adjust(_horizontalPadding, 0, _horizontalPadding, 0);
+          textRect.adjust(_horizontalPadding, 0, 0, 0);
+        }
+        if (!vopt->icon.isNull())
+        {
+          QIcon::Mode mode   = QIcon::Normal;
+          QIcon::State state = vopt->state & QStyle::State_Open ? QIcon::On : QIcon::Off;
+          vopt->icon.paint(painter, iconRect, vopt->decorationAlignment, mode, state);
+        }
+        if (!vopt->text.isEmpty())
+        {
+          QVariant foregroundData = vopt->index.data(Qt::ForegroundRole);
+          if (foregroundData.isValid())
+          {
+            QBrush foregroundBrush = foregroundData.value<QBrush>();
+            painter->setPen(foregroundBrush.color());
+          }
+          else
+          {
+            painter->setPen(NXThemeColor(_themeMode, BasicText));
+          }
+          painter->drawText(textRect, vopt->displayAlignment, vopt->text);
+        }
+        int heightOffset = itemRect.height() / 4;
+        painter->setPen(Qt::NoPen);
+        painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
+        if (vopt->state.testFlag(QStyle::State_Selected))
+        {
+          if (selectionBehavior == QAbstractItemView::SelectRows && vopt->index.column() == 0)
+          {
+            painter->drawRoundedRect(
+                QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
+          }
+        }
+        painter->restore();
+      }
+      return;
+    }
+    default :
+    {
+      break;
+    }
+  }
+  QProxyStyle::drawControl(element, option, painter, widget);
 }
 
-QSize NXTableWidgetStyle::sizeFromContents(ContentsType type, const QStyleOption* option, const QSize& size, const QWidget* widget) const
+QSize NXTableWidgetStyle::sizeFromContents(ContentsType type,
+                                           const QStyleOption *option,
+                                           const QSize& size,
+                                           const QWidget *widget) const
 {
-    switch (type)
+  switch (type)
+  {
+    case QStyle::CT_ItemViewItem :
     {
-    case QStyle::CT_ItemViewItem:
+      QSize itemSize = QProxyStyle::sizeFromContents(type, option, size, widget);
+      itemSize.setHeight(_pItemHeight);
+      return itemSize;
+    }
+    default :
     {
-        QSize itemSize = QProxyStyle::sizeFromContents(type, option, size, widget);
-        itemSize.setHeight(_pItemHeight);
-        return itemSize;
+      break;
     }
-    default:
-    {
-        break;
-    }
-    }
-    return QProxyStyle::sizeFromContents(type, option, size, widget);
+  }
+  return QProxyStyle::sizeFromContents(type, option, size, widget);
 }
 
-int NXTableWidgetStyle::pixelMetric(PixelMetric metric, const QStyleOption* option, const QWidget* widget) const
+int NXTableWidgetStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
-    switch (metric)
+  switch (metric)
+  {
+    case QStyle::PM_HeaderMargin :
     {
-    case QStyle::PM_HeaderMargin:
+      return _pHeaderMargin;
+    }
+    default :
     {
-        return _pHeaderMargin;
+      break;
     }
-    default:
-    {
-        break;
-    }
-    }
-    return QProxyStyle::pixelMetric(metric, option, widget);
+  }
+  return QProxyStyle::pixelMetric(metric, option, widget);
 }

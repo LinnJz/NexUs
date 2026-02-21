@@ -1,82 +1,108 @@
 ﻿#include "NXToolTipPrivate.h"
 
 #include <QEvent>
+#include <QCursor>
 #include <QPropertyAnimation>
-#include <QTimer>
 
 #include "NXToolTip.h"
-NXToolTipPrivate::NXToolTipPrivate(QObject* parent)
-    : QObject{parent}
+
+NXToolTipPrivate::NXToolTipPrivate(QObject *parent)
+    : QObject(parent)
+    , _showTimer(new QTimer(this))
+    , _hideTimer(new QTimer(this))
+    , _autoHideTimer(new QTimer(this))
 {
-    _pOpacity = 1;
-    _pOffSetX = 10;
-    _pOffSetY = 0;
+  _showTimer->setSingleShot(true);
+  _hideTimer->setSingleShot(true);
+  _autoHideTimer->setSingleShot(true);
+
+  connect(_showTimer, &QTimer::timeout, this, &NXToolTipPrivate::onShowTimeout);
+  connect(_hideTimer, &QTimer::timeout, this, &NXToolTipPrivate::onHideTimeout);
+  connect(_autoHideTimer, &QTimer::timeout, this, &NXToolTipPrivate::onAutoHideTimeout);
 }
 
 NXToolTipPrivate::~NXToolTipPrivate()
 {
 }
 
-bool NXToolTipPrivate::eventFilter(QObject* watched, QEvent* event)
+bool NXToolTipPrivate::eventFilter(QObject *watched, QEvent *event)
 {
-    Q_Q(NXToolTip);
-    switch (event->type())
+  Q_Q(NXToolTip);
+  switch (event->type())
+  {
+    case QEvent::Enter :
     {
-    case QEvent::Enter:
+      _hideTimer->stop();
+      _autoHideTimer->stop();
+      if (!q->isVisible()) { _showTimer->start(_pShowDelayMsec); }
+      break;
+    }
+    case QEvent::Leave :
     {
-        QTimer::singleShot(_pShowDelayMsec, this, [=]() {
-            _doShowAnimation();
-        });
-        if (_pDisplayMsec > -1)
-        {
-            QTimer::singleShot(_pDisplayMsec, this, [=]() {
-                q->hide();
-            });
-        }
-        break;
+      _showTimer->stop();
+      _autoHideTimer->stop();
+      _hideTimer->start(_pHideDelayMsec);
+      break;
     }
-    case QEvent::Leave:
+    case QEvent::HoverMove :
+    case QEvent::MouseMove :
     {
-        QTimer::singleShot(_pHideDelayMsec, this, [=]() {
-            q->hide();
-        });
-        break;
+      if (_pIsMoveEnabled) { _updatePos(); }
+      break;
     }
-    case QEvent::HoverMove:
-    case QEvent::MouseMove:
-    {
-        _updatePos(_pos);
-        break;
-    }
-    default:
-    {
-        break;
-    }
-    }
-    return QObject::eventFilter(watched, event);
+    default : break;
+  }
+  return QObject::eventFilter(watched, event);
+}
+
+void NXToolTipPrivate::onShowTimeout()
+{
+  _doShowAnimation();
+}
+
+void NXToolTipPrivate::onHideTimeout()
+{
+  Q_Q(NXToolTip);
+  q->hide();
+  _stopAllTimers();
+}
+
+void NXToolTipPrivate::onAutoHideTimeout()
+{
+  Q_Q(NXToolTip);
+  q->hide();
+  _stopAllTimers();
 }
 
 void NXToolTipPrivate::_doShowAnimation()
 {
-    Q_Q(NXToolTip);
-    QPoint cursorPoint = QCursor::pos();
-    q->move(cursorPoint.x() + _pOffSetX, cursorPoint.y() + _pOffSetY);
-    q->show();
-    QPropertyAnimation* showAnimation = new QPropertyAnimation(q, "windowOpacity");
-    showAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    showAnimation->setDuration(250);
-    showAnimation->setStartValue(0);
-    showAnimation->setEndValue(1);
-    showAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+  Q_Q(NXToolTip);
+  QPoint cursorPoint = QCursor::pos();
+  q->move(cursorPoint.x() + _pOffSetX, cursorPoint.y() + _pOffSetY);
+  q->show();
+  QPropertyAnimation *showAnimation = new QPropertyAnimation(q, "windowOpacity");
+  showAnimation->setEasingCurve(QEasingCurve::InOutSine);
+  showAnimation->setDuration(250);
+  showAnimation->setStartValue(0);
+  showAnimation->setEndValue(1);
+  showAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+
+  if (_pDisplayMsec > 0) { _autoHideTimer->start(_pDisplayMsec); }
 }
 
-void NXToolTipPrivate::_updatePos(const QPoint& pos)
+void NXToolTipPrivate::_updatePos()
 {
-    Q_Q(NXToolTip);
-    _pos = pos;
-    if (q->isVisible())
-    {
-        QPoint cursorPoint = QCursor::pos();
-        q->move(_pos.x() + _pOffSetX, _pos.y() + _pOffSetY);
-    }
+  Q_Q(NXToolTip);
+  if (q->isVisible())
+  {
+    QPoint cursorPoint = QCursor::pos();
+    q->move(cursorPoint.x() + _pOffSetX, cursorPoint.y() + _pOffSetY);
+  }
+}
+
+void NXToolTipPrivate::_stopAllTimers()
+{
+  _showTimer->stop();
+  _hideTimer->stop();
+  _autoHideTimer->stop();
 }

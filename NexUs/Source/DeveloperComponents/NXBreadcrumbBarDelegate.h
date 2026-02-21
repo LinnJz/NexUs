@@ -5,19 +5,20 @@
 #include <QStyledItemDelegate>
 
 #include "NXDef.h"
+
 class NXBreadcrumbBarDelegate : public QStyledItemDelegate
 {
-    Q_OBJECT
-    Q_PRIVATE_CREATE(QModelIndex, PressIndex)
+  Q_OBJECT
+  Q_PRIVATE_CREATE(QModelIndex, PressIndex)
 public:
-    explicit NXBreadcrumbBarDelegate(QObject* parent = nullptr);
-    ~NXBreadcrumbBarDelegate();
+  explicit NXBreadcrumbBarDelegate(QObject *parent = nullptr);
+  ~NXBreadcrumbBarDelegate();
 
 protected:
-    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+  void paint(QPainter *painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
-    NXThemeType::ThemeMode _themeMode;
+  NXThemeType::ThemeMode _themeMode;
 };
 
 #endif // NXBREADCRUMBBARDELEGATE_H

@@ -8,18 +8,19 @@
 class NXProgressBarStyle;
 class QPropertyAnimation;
 class NXProgressBar;
+
 class NXProgressBarPrivate : public QObject
 {
-    Q_OBJECT
-    Q_D_CREATE(NXProgressBar)
+  Q_OBJECT
+  Q_D_CREATE(NXProgressBar)
 public:
-    explicit NXProgressBarPrivate(QObject* parent = nullptr);
-    ~NXProgressBarPrivate();
+  explicit NXProgressBarPrivate(QObject *parent = nullptr);
+  ~NXProgressBarPrivate();
 
 private:
-    bool _isBusyAnimation{false};
-    NXProgressBarStyle* _style{nullptr};
-    QPropertyAnimation* _busyAnimation{nullptr};
+  bool _isBusyAnimation { false };
+  NXProgressBarStyle *_style { nullptr };
+  QPropertyAnimation *_busyAnimation { nullptr };
 };
 
 #endif // NXPROGRESSBARPRIVATE_H

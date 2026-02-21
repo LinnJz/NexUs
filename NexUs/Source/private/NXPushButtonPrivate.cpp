@@ -2,11 +2,9 @@
 
 #include "NXPushButton.h"
 
-NXPushButtonPrivate::NXPushButtonPrivate(QObject* parent)
-    : QObject{parent}
+NXPushButtonPrivate::NXPushButtonPrivate(QObject *parent)
+    : QObject { parent }
 {
 }
 
-NXPushButtonPrivate::~NXPushButtonPrivate()
-{
-}
+NXPushButtonPrivate::~NXPushButtonPrivate() { }

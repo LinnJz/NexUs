@@ -5,24 +5,28 @@
 
 #include "NXDef.h"
 class NXNavigationNode;
+
 class NXFooterModel : public QAbstractListModel
 {
-    Q_OBJECT
-    Q_PRIVATE_CREATE(NXNavigationNode*, SelectedNode)
+  Q_OBJECT
+  Q_PRIVATE_CREATE(NXNavigationNode *, SelectedNode)
 public:
-    explicit NXFooterModel(QObject* parent = nullptr);
-    ~NXFooterModel();
-    NXNodeOperateResult addFooterNode(const QString& footerTitle, bool isHasFooterPage, int keyPoints = 0, NXIconType::IconName awesome = NXIconType::None);
-    int getFooterNodeCount() const;
-    NXNavigationNode* getNavigationNode(const QString& footerKey);
-    void removeNavigationNode(const QString& footerKey);
+  explicit NXFooterModel(QObject *parent = nullptr);
+  ~NXFooterModel();
+  NXNodeOperateResult addFooterNode(const QString& footerTitle,
+                                    bool isHasFooterPage,
+                                    int keyPoints                = 0,
+                                    NXIconType::IconName awesome = NXIconType::None);
+  int getFooterNodeCount() const;
+  NXNavigationNode *getNavigationNode(const QString& footerKey);
+  void removeNavigationNode(const QString& footerKey);
 
 protected:
-    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-    QVariant data(const QModelIndex& index, int role) const override;
+  int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+  QVariant data(const QModelIndex& index, int role) const override;
 
 private:
-    QList<NXNavigationNode*> _footerNodeList;
+  QList<NXNavigationNode *> _footerNodeList;
 };
 
 #endif // NXFOOTERMODEL_H

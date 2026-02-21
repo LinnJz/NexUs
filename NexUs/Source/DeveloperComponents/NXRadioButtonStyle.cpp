@@ -5,100 +5,104 @@
 #include <QStyleOption>
 
 #include "NXTheme.h"
-NXRadioButtonStyle::NXRadioButtonStyle(QStyle* style)
+
+NXRadioButtonStyle::NXRadioButtonStyle(QStyle *style)
 {
-    _themeMode = nxTheme->getThemeMode();
-    connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  _themeMode = nxTheme->getThemeMode();
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
-NXRadioButtonStyle::~NXRadioButtonStyle()
-{
-}
+NXRadioButtonStyle::~NXRadioButtonStyle() { }
 
-void NXRadioButtonStyle::drawPrimitive(PrimitiveElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget) const
+void NXRadioButtonStyle::drawPrimitive(PrimitiveElement element,
+                                       const QStyleOption *option,
+                                       QPainter *painter,
+                                       const QWidget *widget) const
 {
-    switch (element)
+  switch (element)
+  {
+    case PE_IndicatorRadioButton :
     {
-    case PE_IndicatorRadioButton:
-    {
-        const QStyleOptionButton* bopt = qstyleoption_cast<const QStyleOptionButton*>(option);
-        if (!bopt)
+      const QStyleOptionButton *bopt = qstyleoption_cast<const QStyleOptionButton *>(option);
+      if (!bopt) { break; }
+      QRect buttonRect = bopt->rect;
+      buttonRect.adjust(1, 1, -1, -1);
+      painter->save();
+      painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+
+      if (bopt->state & QStyle::State_Off)
+      {
+        painter->setPen(QPen(NXThemeColor(_themeMode, BasicBorder), 1.5));
+        if (bopt->state & QStyle::State_MouseOver) { painter->setBrush(NXThemeColor(_themeMode, BasicHover)); }
+        else
         {
-            break;
+          painter->setBrush(NXThemeColor(_themeMode, BasicBase));
         }
-        QRect buttonRect = bopt->rect;
-        buttonRect.adjust(1, 1, -1, -1);
-        painter->save();
-        painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-
-        if (bopt->state & QStyle::State_Off)
+        painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), 8.5, 8.5);
+      }
+      else
+      {
+        painter->setPen(Qt::NoPen);
+        // 外圆形
+        painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
+        painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1),
+                             buttonRect.width() / 2,
+                             buttonRect.width() / 2);
+        // 内圆形
+        painter->setBrush(NXThemeColor(_themeMode, BasicTextInvert));
+        if (bopt->state & QStyle::State_Sunken)
         {
-            painter->setPen(QPen(NXThemeColor(_themeMode, BasicBorder), 1.5));
-            if (bopt->state & QStyle::State_MouseOver)
-            {
-                painter->setBrush(NXThemeColor(_themeMode, BasicHover));
-            }
-            else
-            {
-                painter->setBrush(NXThemeColor(_themeMode, BasicBase));
-            }
-            painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), 8.5, 8.5);
+          if (bopt->state & QStyle::State_MouseOver)
+          {
+            painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1),
+                                 buttonRect.width() / 4.5,
+                                 buttonRect.width() / 4.5);
+          }
         }
         else
         {
-            painter->setPen(Qt::NoPen);
-            // 外圆形
-            painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
-            painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), buttonRect.width() / 2, buttonRect.width() / 2);
-            // 内圆形
-            painter->setBrush(NXThemeColor(_themeMode, BasicTextInvert));
-            if (bopt->state & QStyle::State_Sunken)
-            {
-                if (bopt->state & QStyle::State_MouseOver)
-                {
-                    painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), buttonRect.width() / 4.5, buttonRect.width() / 4.5);
-                }
-            }
-            else
-            {
-                if (bopt->state & QStyle::State_MouseOver)
-                {
-                    painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), buttonRect.width() / 3.5, buttonRect.width() / 3.5);
-                }
-                else
-                {
-                    painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), buttonRect.width() / 4, buttonRect.width() / 4);
-                }
-            }
+          if (bopt->state & QStyle::State_MouseOver)
+          {
+            painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1),
+                                 buttonRect.width() / 3.5,
+                                 buttonRect.width() / 3.5);
+          }
+          else
+          {
+            painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1),
+                                 buttonRect.width() / 4,
+                                 buttonRect.width() / 4);
+          }
         }
-        painter->restore();
-        return;
+      }
+      painter->restore();
+      return;
     }
-    default:
+    default :
     {
-        break;
+      break;
     }
-    }
+  }
 
-    QProxyStyle::drawPrimitive(element, option, painter, widget);
+  QProxyStyle::drawPrimitive(element, option, painter, widget);
 }
 
-int NXRadioButtonStyle::pixelMetric(PixelMetric metric, const QStyleOption* option, const QWidget* widget) const
+int NXRadioButtonStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
-    switch (metric)
+  switch (metric)
+  {
+    case QStyle::PM_ExclusiveIndicatorWidth :
     {
-    case QStyle::PM_ExclusiveIndicatorWidth:
+      return 20;
+    }
+    case QStyle::PM_ExclusiveIndicatorHeight :
     {
-        return 20;
+      return 20;
     }
-    case QStyle::PM_ExclusiveIndicatorHeight:
+    default :
     {
-        return 20;
+      break;
     }
-    default:
-    {
-        break;
-    }
-    }
-    return QProxyStyle::pixelMetric(metric, option, widget);
+  }
+  return QProxyStyle::pixelMetric(metric, option, widget);
 }
