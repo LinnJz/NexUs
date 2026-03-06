@@ -17,7 +17,6 @@
 NXApplicationPrivate::NXApplicationPrivate(QObject *parent)
     : QObject { parent }
 {
-  connect(qApp, &QApplication::paletteChanged, this, &NXApplicationPrivate::onSystemPaletteChanged);
 }
 
 NXApplicationPrivate::~NXApplicationPrivate() { }
@@ -86,6 +85,11 @@ bool NXApplicationPrivate::eventFilter(QObject *watched, QEvent *event)
   {
     QWidget *widget = qobject_cast<QWidget *>(watched);
     if (widget) { _micaWidgetList.removeOne(widget); }
+    break;
+  }
+  case QEvent::ApplicationPaletteChange :
+  {
+    onSystemPaletteChanged();
     break;
   }
   default :

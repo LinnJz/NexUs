@@ -93,7 +93,6 @@ private:
   void _smoothScrollNavigationView(const QModelIndex& index);
   void _doComponentAnimation(NXNavigationType::NavigationDisplayMode displayMode, bool isAnimation);
   void _handleNavigationExpandState(bool isSave);
-  void _handleUserButtonLayout(bool isCompact);
   // void _handleMaximalToCompactLayout();
   // void _handleCompactToMaximalLayout();
   void _resetLayout();

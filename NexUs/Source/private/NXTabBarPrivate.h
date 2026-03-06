@@ -5,7 +5,6 @@
 #include <QObject>
 #include <QPixmap>
 #include "NXProperty.h"
-
 class NXTabBar;
 class NXTabBarStyle;
 class QTabBarPrivate;

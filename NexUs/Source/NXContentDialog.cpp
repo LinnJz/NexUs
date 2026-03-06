@@ -45,9 +45,8 @@ NXContentDialog::NXContentDialog(QWidget *parent)
           this,
           [=]()
   {
-    Q_EMIT leftButtonClicked();
-    onLeftButtonClicked();
-    d->_doCloseAnimation(false);
+    Q_EMIT buttonClicked(ButtonType::LeftButton);
+    doneWithAnimation(getButtonDoneCode(ButtonType::LeftButton));
   });
   d->_leftButton->setMinimumSize(0, 0);
   d->_leftButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
@@ -59,8 +58,8 @@ NXContentDialog::NXContentDialog(QWidget *parent)
           this,
           [=]()
   {
-    Q_EMIT middleButtonClicked();
-    onMiddleButtonClicked();
+    Q_EMIT buttonClicked(ButtonType::MiddleButton);
+    doneWithAnimation(getButtonDoneCode(ButtonType::MiddleButton));
   });
   d->_middleButton->setMinimumSize(0, 0);
   d->_middleButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
@@ -72,9 +71,8 @@ NXContentDialog::NXContentDialog(QWidget *parent)
           this,
           [=]()
   {
-    Q_EMIT rightButtonClicked();
-    onRightButtonClicked();
-    d->_doCloseAnimation(true);
+    Q_EMIT buttonClicked(ButtonType::RightButton);
+    doneWithAnimation(getButtonDoneCode(ButtonType::RightButton));
   });
   d->_rightButton->setLightDefaultColor(NXThemeColor(NXThemeType::Light, PrimaryNormal));
   d->_rightButton->setLightHoverColor(NXThemeColor(NXThemeType::Light, PrimaryHover));
@@ -105,10 +103,10 @@ NXContentDialog::NXContentDialog(QWidget *parent)
   d->_mainLayout->setContentsMargins(0, 0, 0, 0);
   d->_buttonWidget = new QWidget(this);
   d->_buttonWidget->setFixedHeight(60);
-  QHBoxLayout *buttonLayout = new QHBoxLayout(d->_buttonWidget);
-  buttonLayout->addWidget(d->_leftButton);
-  buttonLayout->addWidget(d->_middleButton);
-  buttonLayout->addWidget(d->_rightButton);
+  d->_buttonLayout = new QHBoxLayout(d->_buttonWidget);
+  d->_buttonLayout->addWidget(d->_leftButton);
+  d->_buttonLayout->addWidget(d->_middleButton);
+  d->_buttonLayout->addWidget(d->_rightButton);
   d->_mainLayout->addWidget(d->_centralWidget);
   d->_mainLayout->addWidget(d->_buttonWidget);
 
@@ -123,96 +121,103 @@ NXContentDialog::~NXContentDialog()
   d->_maskWidget->deleteLater();
 }
 
-void NXContentDialog::onLeftButtonClicked() { }
-
-void NXContentDialog::onMiddleButtonClicked() { }
-
-void NXContentDialog::onRightButtonClicked() { }
-
 void NXContentDialog::setCentralWidget(QWidget *centralWidget)
 {
   Q_D(NXContentDialog);
-  d->_mainLayout->takeAt(0);
-  d->_mainLayout->takeAt(0);
-  delete d->_centralWidget;
+  if (!centralWidget || centralWidget == d->_centralWidget) { return; }
+
+  centralWidget->setParent(this);
+
+  if (d->_centralWidget)
+  {
+    d->_mainLayout->removeWidget(d->_centralWidget);
+    delete d->_centralWidget;
+    d->_centralWidget = nullptr;
+  }
+
   d->_centralWidget = centralWidget;
-  d->_mainLayout->addWidget(centralWidget);
-  d->_mainLayout->addWidget(d->_buttonWidget);
+  d->_mainLayout->insertWidget(0, d->_centralWidget);
 }
 
-void NXContentDialog::setLeftButtonText(const QString& text)
-{
-  Q_D(NXContentDialog);
-  d->_leftButton->setText(text);
-}
+NXPushButton *NXContentDialog::leftButton() const { return button(ButtonType::LeftButton); }
 
-void NXContentDialog::setMiddleButtonText(const QString& text)
-{
-  Q_D(NXContentDialog);
-  d->_middleButton->setText(text);
-}
+NXPushButton *NXContentDialog::middleButton() const { return button(ButtonType::MiddleButton); }
 
-void NXContentDialog::setRightButtonText(const QString& text)
-{
-  Q_D(NXContentDialog);
-  d->_rightButton->setText(text);
-}
+NXPushButton *NXContentDialog::rightButton() const { return button(ButtonType::RightButton); }
 
-void NXContentDialog::setLeftButtonVisible(bool visible)
+NXPushButton *NXContentDialog::button(ButtonType button) const
 {
-  Q_D(NXContentDialog);
-  if (d->_isLeftButtonVisible == visible) { return; }
-  d->_isLeftButtonVisible = visible;
-  if (visible)
+  Q_D(const NXContentDialog);
+  switch (button)
   {
-    d->_buttonLayout->insertWidget(0, d->_leftButton);
-    d->_leftButton->show();
+  case ButtonType::LeftButton   : return d->_leftButton;
+  case ButtonType::MiddleButton : return d->_middleButton;
+  case ButtonType::RightButton  : return d->_rightButton;
   }
-  else
-  {
-    d->_buttonLayout->removeWidget(d->_leftButton);
-    d->_leftButton->hide();
-  }
+  return nullptr;
 }
 
-void NXContentDialog::setMiddleButtonVisible(bool visible)
+void NXContentDialog::setButtonText(ButtonType buttonType, const QString& text)
 {
-  Q_D(NXContentDialog);
-  if (d->_isMiddleButtonVisible == visible) { return; }
-  d->_isMiddleButtonVisible = visible;
-  if (visible)
-  {
-    d->_buttonLayout->insertWidget(1, d->_middleButton);
-    d->_middleButton->show();
-  }
-  else
-  {
-    d->_buttonLayout->removeWidget(d->_middleButton);
-    d->_middleButton->hide();
-  }
+  auto *buttonWidget = button(buttonType);
+  if (!buttonWidget) { return; }
+  buttonWidget->setText(text);
 }
 
-void NXContentDialog::setRightButtonVisible(bool visible)
+QString NXContentDialog::getButtonText(ButtonType buttonType) const
+{
+  auto *buttonWidget = button(buttonType);
+  return buttonWidget ? buttonWidget->text() : QString {};
+}
+
+void NXContentDialog::setIsButtonVisible(ButtonType buttonType, bool visible)
+{
+  auto *buttonWidget = button(buttonType);
+  if (!buttonWidget) { return; }
+  buttonWidget->setVisible(visible);
+}
+
+bool NXContentDialog::getIsButtonVisible(ButtonType buttonType) const
+{
+  auto *buttonWidget = button(buttonType);
+  return buttonWidget ? buttonWidget->isVisible() : false;
+}
+
+void NXContentDialog::setButtonDoneCode(ButtonType buttonType, int doneCode)
 {
   Q_D(NXContentDialog);
-  if (d->_isRightButtonVisible == visible) { return; }
-  d->_isRightButtonVisible = visible;
-  if (visible)
+  switch (buttonType)
   {
-    d->_buttonLayout->addWidget(d->_rightButton);
-    d->_rightButton->show();
-  }
-  else
-  {
-    d->_buttonLayout->removeWidget(d->_rightButton);
-    d->_rightButton->hide();
+  case ButtonType::LeftButton   : d->_leftButtonDoneCode = doneCode; break;
+  case ButtonType::MiddleButton : d->_middleButtonDoneCode = doneCode; break;
+  case ButtonType::RightButton  : d->_rightButtonDoneCode = doneCode; break;
+  default :
+#if _WIN32
+    __assume(false);
+#elif __linux__ || __unix__ || __APPLE__
+    __builtin_unreachable();
+#else
+    break
+#endif
   }
 }
 
-void NXContentDialog::close()
+int NXContentDialog::getButtonDoneCode(ButtonType buttonType) const
+{
+  Q_D(const NXContentDialog);
+  switch (buttonType)
+  {
+  case ButtonType::LeftButton   : return d->_leftButtonDoneCode;
+  case ButtonType::MiddleButton : return d->_middleButtonDoneCode;
+  case ButtonType::RightButton  : return d->_rightButtonDoneCode;
+  default                       : return DialogCode::Rejected;
+  }
+}
+
+void NXContentDialog::doneWithAnimation(int code)
 {
   Q_D(NXContentDialog);
-  d->_doCloseAnimation(false);
+  d->_doCloseAnimation(code);
 }
 
 NXAppBar *NXContentDialog::appBar() const

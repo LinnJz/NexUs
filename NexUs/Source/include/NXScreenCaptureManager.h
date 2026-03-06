@@ -1,4 +1,4 @@
-#ifndef NXSCREENCAPTUREMANAGER_H
+﻿#ifndef NXSCREENCAPTUREMANAGER_H
 #define NXSCREENCAPTUREMANAGER_H
 
 #include <QWidget>
@@ -12,7 +12,7 @@ class NX_EXPORT NXScreenCaptureManager : public QObject
 {
   Q_OBJECT
   Q_Q_CREATE(NXScreenCaptureManager)
-  Q_SINGLETON_CREATE_H(NXScreenCaptureManager);
+  LINN_SINGLETON_CREATE(LINN_SINGLETON_UNIQUE(NXScreenCaptureManager))
 
 private:
   explicit NXScreenCaptureManager(QObject *parent = nullptr);

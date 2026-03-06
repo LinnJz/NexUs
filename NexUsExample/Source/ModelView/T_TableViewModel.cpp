@@ -1,4 +1,4 @@
-#include "T_TableViewModel.h"
+﻿#include "T_TableViewModel.h"
 
 #include <QIcon>
 
@@ -97,11 +97,14 @@ QVariant T_TableViewModel::data(const QModelIndex& index, int role) const
   else if (role == Qt::DecorationRole && index.column() == 0) { return _iconList[index.row() % 9]; }
   else if (role == Qt::DecorationPropertyRole) { return Qt::AlignCenter; }
   else if (role == Qt::TextAlignmentRole && index.column() == 4) { return Qt::AlignCenter; }
+  else if (role == Qt::CheckStateRole && index.column() == 0) { return Qt::Checked; }
+
   return QVariant();
 }
 
 QVariant T_TableViewModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole) { return _header[section]; }
+  if (orientation == Qt::Horizontal && role == Qt::CheckStateRole && section == 0) { return Qt::Checked; }
   return QAbstractTableModel::headerData(section, orientation, role);
 }

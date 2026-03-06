@@ -5,10 +5,11 @@
 
 namespace __NXDefNamespace_MOC
 {
-Q_NAMESPACE // 空的命名空间，只是为了触发 moc 处理
+Q_NAMESPACE_EXPORT(NX_EXPORT) // 空的命名空间，只是为了触发 moc
+                              // 处理，当然可以使用CMAKE使用INTERFACE_AUTOMOC_MACRO_NAMES指定这个文件为MOC
 }
 
-Q_BEGIN_ENUM_CREATE(NXApplicationType)
+Q_BEGIN_ENUM_CREATE(NXApplicationType, NX_EXPORT)
 
 enum WindowDisplayMode
 {
@@ -54,6 +55,7 @@ enum ThemeColor
   BasicTextNoFocus,
   BasicTextDisable,
   BasicTextPress,
+  BasicTextCategory,
   BasicBorder,
   BasicBorderDeep,
   BasicBorderHover,
@@ -77,9 +79,32 @@ enum ThemeColor
   StatusDanger,
   Win10BorderActive,
   Win10BorderInactive,
+  TabBarBase,
+  TabBarSelected,
+  TabBarHover,
+  TabBarSelectedCloseHover,
+  TabBarCloseHover
 };
 Q_ENUM_CREATE(ThemeColor)
 Q_END_ENUM_CREATE(NXThemeType)
+
+Q_BEGIN_ENUM_CREATE(NXTabBarType, NX_EXPORT)
+
+enum TabBarStyle
+{
+  Google  = 0x00'00,
+  Firefox = 0x00'01,
+};
+Q_ENUM_CREATE(TabBarStyle)
+
+enum TabBarColorRole
+{
+  Base     = 0x00'00,
+  Selected = 0x00'01,
+  Hover    = 0x00'02,
+};
+Q_ENUM_CREATE(TabBarColorRole)
+Q_END_ENUM_CREATE(NXTabBarType)
 
 Q_BEGIN_ENUM_CREATE(NXAppBarType, NX_EXPORT)
 
@@ -123,17 +148,26 @@ Q_BEGIN_ENUM_CREATE(NXTextType, NX_EXPORT)
 
 enum TextStyle
 {
-  NoStyle     = 0x00'00,
-  Caption     = 0x00'01,
-  Body        = 0x00'02,
-  BodyStrong  = 0x00'03,
-  Subtitle    = 0x00'04,
-  Title       = 0x00'05,
-  TitleLarge  = 0x00'06,
-  Display     = 0x00'07,
-  CustomStyle = 0x00'08,
+  NoStyle    = 0x00'00,
+  Caption    = 0x00'01,
+  Body       = 0x00'02,
+  BodyStrong = 0x00'03,
+  Subtitle   = 0x00'04,
+  Title      = 0x00'05,
+  TitleLarge = 0x00'06,
+  Display    = 0x00'07
 };
 Q_ENUM_CREATE(TextStyle)
+
+enum DisplayMode
+{
+  IconOnly       = 0x00'00,
+  TextOnly       = 0x00'01,
+  TextBesideIcon = 0x00'02,
+  TextUnderIcon  = 0x00'03,
+  FollowStyle    = 0x00'04,
+};
+Q_ENUM_CREATE(DisplayMode)
 Q_END_ENUM_CREATE(NXTextType)
 
 Q_BEGIN_ENUM_CREATE(NXNavigationType, NX_EXPORT)
@@ -160,8 +194,9 @@ Q_ENUM_CREATE(NavigationDisplayMode)
 
 enum NavigationNodeType
 {
-  PageNode   = 0x00'00,
-  FooterNode = 0x00'01,
+  PageNode     = 0x00'00,
+  FooterNode   = 0x00'01,
+  CategoryNode = 0x00'02,
 };
 Q_ENUM_CREATE(NavigationNodeType)
 Q_END_ENUM_CREATE(NXNavigationType)
@@ -246,7 +281,7 @@ enum MessageMode
 Q_ENUM_CREATE(MessageMode)
 Q_END_ENUM_CREATE(NXMessageBarType)
 
-Q_BEGIN_ENUM_CREATE(NXProgressRingType)
+Q_BEGIN_ENUM_CREATE(NXProgressRingType, NX_EXPORT)
 
 enum ValueDisplayMode
 {
@@ -256,7 +291,7 @@ enum ValueDisplayMode
 Q_ENUM_CREATE(ValueDisplayMode)
 Q_END_ENUM_CREATE(NXProgressRingType)
 
-Q_BEGIN_ENUM_CREATE(NXWindowType)
+Q_BEGIN_ENUM_CREATE(NXWindowType, NX_EXPORT)
 
 enum StackSwitchMode
 {
@@ -277,7 +312,7 @@ enum PaintMode
 Q_ENUM_CREATE(PaintMode)
 Q_END_ENUM_CREATE(NXWindowType)
 
-Q_BEGIN_ENUM_CREATE(NXSpinBoxType)
+Q_BEGIN_ENUM_CREATE(NXSpinBoxType, NX_EXPORT)
 
 enum ButtonMode
 {
@@ -3629,6 +3664,24 @@ enum RotateMode
 };
 Q_ENUM_CREATE(RotateMode)
 Q_END_ENUM_CREATE(NXShadowGraphicsEffectType)
+
+Q_BEGIN_ENUM_CREATE(NXAbstractButtonType, NX_EXPORT)
+
+enum ButtonState
+{
+  Normal,
+  Hovered,
+  Pressed,
+  Unavailable,
+  Focused,
+  Active,
+  Loading,
+  Selected,
+  Highlighted,
+};
+
+Q_ENUM_CREATE(ButtonState)
+Q_END_ENUM_CREATE(NXAbstractButtonType)
 
 #if defined(__cpp_lib_expected) || (__cplusplus >= 202302L && __has_include(<expected>))
 #  include <expected>

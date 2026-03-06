@@ -4,14 +4,14 @@
 #include <QDrag>
 #include <QObject>
 #include <QPixmap>
-#include "NXProperty.h"
-#include "singleton.h"
+#include "LinnSingleton.h"
+#include "NXDef.h"
 
 class NXDragMonitor : public QObject
 {
   Q_OBJECT
   Q_PRIVATE_CREATE(bool, IsInDrag)
-  SINGLETON_CREATE(NXDragMonitor)
+  LINN_SINGLETON_CREATE(LINN_SINGLETON_MEYERS(NXDragMonitor))
 
 private:
   explicit NXDragMonitor(QObject *parent = nullptr);

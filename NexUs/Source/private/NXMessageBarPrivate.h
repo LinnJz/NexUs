@@ -6,8 +6,8 @@
 #include <QQueue>
 #include <QVariantMap>
 
+#include "LinnSingleton.h"
 #include "NXDef.h"
-#include "singleton.h"
 
 enum WorkStatus
 {
@@ -21,7 +21,7 @@ class NXMessageBar;
 class NXMessageBarManager : public QObject
 {
   Q_OBJECT
-  SINGLETON_CREATE_H(NXMessageBarManager)
+  LINN_SINGLETON_CREATE(LINN_SINGLETON_UNIQUE(NXMessageBarManager))
 
 private:
   explicit NXMessageBarManager(QObject *parent = nullptr);

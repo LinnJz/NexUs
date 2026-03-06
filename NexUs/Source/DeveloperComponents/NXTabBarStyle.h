@@ -8,6 +8,10 @@
 class NXTabBarStyle : public QProxyStyle
 {
   Q_OBJECT
+  Q_PRIVATE_CREATE(bool, IsSelectedIndicatorVisible)
+  Q_PRIVATE_CREATE(int, TabCornerRadius)
+  Q_PRIVATE_CREATE_D(NXTabBarType::TabBarStyle, TabBarStyle)
+  Q_PRIVATE_CREATE_Q_H(NXTabBarType::TabBarStyle, TabBarStyle)
   Q_PRIVATE_CREATE(QSize, TabSize)
 
 public:
@@ -19,13 +23,24 @@ public:
                    const QStyleOption *option,
                    QPainter *painter,
                    const QWidget *widget = nullptr) const override;
+
+  int pixelMetric(PixelMetric metric,
+                  const QStyleOption *option = nullptr,
+                  const QWidget *widget      = nullptr) const override;
+
+  QRect subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const override;
+
   QSize sizeFromContents(ContentsType type,
                          const QStyleOption *option,
                          const QSize& size,
                          const QWidget *widget) const override;
-  QRect subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const override;
+  int styleHint(StyleHint hint,
+                const QStyleOption *option   = nullptr,
+                const QWidget *widget        = nullptr,
+                QStyleHintReturn *returnData = nullptr) const override;
 
 private:
+  int _closeIndicatorSize;
   NXThemeType::ThemeMode _themeMode;
 };
 

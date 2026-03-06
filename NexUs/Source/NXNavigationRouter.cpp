@@ -2,7 +2,6 @@
 
 #include "private/NXNavigationRouterPrivate.h"
 
-SINGLETON_CREATE_CPP(NXNavigationRouter)
 Q_PROPERTY_CREATE_Q_CPP(NXNavigationRouter, int, MaxRouteCount)
 
 NXNavigationRouter::NXNavigationRouter(QObject *parent)

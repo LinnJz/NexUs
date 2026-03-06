@@ -8,9 +8,9 @@
 
 NXCheckBoxStyle::NXCheckBoxStyle(QStyle *style)
 {
-  _pCheckIndicatorWidth = 21;
-  _pCheckBorderRadius   = 2;
-  _themeMode            = nxTheme->getThemeMode();
+  _pIndicatorWidth = 21;
+  _pBorderRadius   = 2;
+  _themeMode       = nxTheme->getThemeMode();
   connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
@@ -32,8 +32,8 @@ void NXCheckBoxStyle::drawControl(ControlElement element,
       painter->save();
       painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
       QRect checkBoxRect = bopt->rect;
-      QRect checkRect(checkBoxRect.x(), checkBoxRect.y(), _pCheckIndicatorWidth, _pCheckIndicatorWidth);
-      int yAdjust = (checkBoxRect.height() - _pCheckIndicatorWidth) / 2;
+      QRect checkRect(checkBoxRect.x(), checkBoxRect.y(), _pIndicatorWidth, _pIndicatorWidth);
+      int yAdjust = (checkBoxRect.height() - _pIndicatorWidth) / 2;
       checkRect.moveTop(checkBoxRect.top() + yAdjust);
       checkRect.adjust(1, 1, -1, -1);
       // 复选框绘制
@@ -74,14 +74,14 @@ void NXCheckBoxStyle::drawControl(ControlElement element,
           }
         }
       }
-      painter->drawRoundedRect(checkRect, _pCheckBorderRadius, _pCheckBorderRadius);
+      painter->drawRoundedRect(checkRect, _pBorderRadius, _pBorderRadius);
       // 图标绘制
       painter->setPen(NXThemeColor(NXThemeType::Dark, BasicText));
       if (bopt->state.testFlag(QStyle::State_On))
       {
         painter->save();
         QFont iconFont = QFont("NXAwesome");
-        iconFont.setPixelSize(_pCheckIndicatorWidth * 0.75);
+        iconFont.setPixelSize(_pIndicatorWidth * 0.75);
         painter->setFont(iconFont);
         painter->drawText(checkRect, Qt::AlignCenter, QChar((unsigned short) NXIconType::Check));
         painter->restore();
@@ -115,11 +115,11 @@ int NXCheckBoxStyle::pixelMetric(PixelMetric metric, const QStyleOption *option,
   {
   case QStyle::PM_IndicatorWidth :
   {
-    return _pCheckIndicatorWidth;
+    return _pIndicatorWidth;
   }
   case QStyle::PM_IndicatorHeight :
   {
-    return _pCheckIndicatorWidth;
+    return _pIndicatorWidth;
   }
   case QStyle::PM_CheckBoxLabelSpacing :
   {

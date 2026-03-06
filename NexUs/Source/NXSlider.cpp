@@ -20,6 +20,7 @@ NXSlider::NXSlider(QWidget *parent)
 
   d->_valueToolTip = new NXToolTip(this);
   d->_valueToolTip->setToolTip(QString::number(this->value()));
+  d->_valueToolTip->setIsMoveEnabled(true);
   d->_valueToolTip->setOffSetX(-20);
   d->_valueToolTip->setOffSetY(-60);
   connect(this, &NXSlider::valueChanged, this, [=](const int value) {
@@ -45,11 +46,7 @@ void NXSlider::mousePressEvent(QMouseEvent *event)
     QStyleOptionSlider opt;
     initStyleOption(&opt);
     QRect handleRect = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
-    if (handleRect.contains(event->pos()))
-    {
-      d->_valueToolTip->updatePos(QCursor::pos());
-      d->_valueToolTip->show();
-    }
+    if (handleRect.contains(event->pos())) { d->_valueToolTip->show(); }
     else
     {
       d->_valueToolTip->hide();
@@ -66,11 +63,7 @@ void NXSlider::mouseMoveEvent(QMouseEvent *event)
     QStyleOptionSlider opt;
     initStyleOption(&opt);
     QRect handleRect = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
-    if (handleRect.contains(event->pos()))
-    {
-      d->_valueToolTip->updatePos(QCursor::pos());
-      d->_valueToolTip->show();
-    }
+    if (handleRect.contains(event->pos())) { d->_valueToolTip->show(); }
     else
     {
       d->_valueToolTip->hide();

@@ -1,4 +1,4 @@
-﻿#include "NXCustomTabWidget.h"
+#include "NXCustomTabWidget.h"
 
 #include <QDebug>
 #include <QMimeData>
@@ -45,7 +45,10 @@ NXCustomTabWidget::NXCustomTabWidget(QWidget *parent)
       hide();
     }
   });
-  connect(_customTabBar, &NXTabBar::tabCloseRequested, originTabBar, &QTabBar::tabCloseRequested);
+  connect(_customTabBar,
+          &NXTabBar::tabCloseRequested,
+          _customTabWidget->d_func(),
+          &NXTabWidgetPrivate::onTabCloseRequested);
 
   _customTabWidget->d_ptr->_customTabBar = _customTabBar;
   connect(_customTabBar, &NXTabBar::tabDragCreate, _customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragCreate);

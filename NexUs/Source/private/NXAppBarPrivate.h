@@ -1,30 +1,26 @@
 ﻿#ifndef NXAPPBARPRIVATE_H
 #define NXAPPBARPRIVATE_H
-#include <QObject>
-
 #include "NXDef.h"
-class QMenu;
+
 class QLabel;
 class QScreen;
-class QBoxLayout;
 class QHBoxLayout;
 class QVBoxLayout;
 class NXText;
 class NXAppBar;
 class NXIconButton;
 class NXToolButton;
+class QMenu;
 
 class NXAppBarPrivate : public QObject
 {
   Q_OBJECT
   Q_D_CREATE(NXAppBar)
-  Q_PROPERTY_CREATE_D(bool, IsCustomModule)
+  Q_PRIVATE_CREATE_D(QMenu *, CustomMenu)
   Q_PROPERTY_CREATE_D(bool, IsStayTop)
   Q_PROPERTY_CREATE_D(bool, IsFixedSize)
   Q_PROPERTY_CREATE_D(bool, IsDefaultClosed)
   Q_PROPERTY_CREATE_D(bool, IsOnlyAllowMinAndClose)
-  bool _isHoverMaxButton { false };
-  Q_PRIVATE_CREATE_D(QMenu *, CustomMenu)
   Q_PROPERTY_CREATE_D(int, AppBarHeight)
 
 public:
@@ -36,18 +32,19 @@ public:
   Q_SLOT void onStayTopButtonClicked();
 
 private:
+  NXThemeType::ThemeMode _themeMode;
+  NXAppBarType::ButtonFlags _buttonFlags;
   int _lastMinTrackWidth { 0 };
   int _edges { 0 };
   int _margins { 8 };
   int _win7Margins { 0 };
-  NXThemeType::ThemeMode _themeMode;
-  NXAppBarType::ButtonFlags _buttonFlags;
-  qint64 _currentWinID { 0 };
+  bool _isHoverMaxButton { false };
   quint64 _clickTimer { 0 };
+  qint64 _currentWinID { 0 };
+
   QHBoxLayout *_mainLayout { nullptr };
   QVBoxLayout *_iconLabelLayout { nullptr };
   QVBoxLayout *_titleLabelLayout { nullptr };
-
   NXToolButton *_routeBackButton { nullptr };
   NXToolButton *_routeForwardButton { nullptr };
   NXToolButton *_navigationButton { nullptr };
@@ -59,7 +56,6 @@ private:
   QScreen *_lastScreen { nullptr };
   NXText *_titleLabel { nullptr };
   QLabel *_iconLabel { nullptr };
-
   QList<QWidget *> _customAreaWidgetList { nullptr, nullptr, nullptr };
   QList<QObject *> _customAreaHitTestObjectList { nullptr, nullptr, nullptr };
   QStringList _customAreaHitTestFunctionNameList { "", "", "" };
@@ -72,7 +68,6 @@ private:
   void _onThemeModeChange(NXThemeType::ThemeMode themeMode);
   int _calculateMinimumWidth();
   QVBoxLayout *_createVLayout(QWidget *widget);
-  QHBoxLayout *_createHLayout(QWidget *widget);
 };
 
 #endif // NXAPPBARPRIVATE_H

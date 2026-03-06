@@ -3,6 +3,7 @@
 #include <QClipboard>
 #include <QContextMenuEvent>
 #include <QGuiApplication>
+#include <QKeyEvent>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPropertyAnimation>
@@ -37,13 +38,17 @@ NXLineEdit::NXLineEdit(QWidget *parent)
   setStyleSheet("#NXLineEdit{background-color:transparent;padding-left: 10px;}");
   d->onThemeChanged(nxTheme->getThemeMode());
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXLineEditPrivate::onThemeChanged);
+  connect(this, &QLineEdit::textEdited, d, [d](const QString&) { d->pushTextRoute(); });
+  d->resetTextRoute();
   setVisible(true);
 }
 
 NXLineEdit::NXLineEdit(const QString& text, QWidget *parent)
     : NXLineEdit(parent)
 {
+  Q_D(NXLineEdit);
   setText(text);
+  d->resetTextRoute();
 }
 
 NXLineEdit::~NXLineEdit() { delete this->style(); }
@@ -74,28 +79,28 @@ int NXLineEdit::getBorderRadius() const
   return d->_lineEditStyle->getLineEditBorderRadius();
 }
 
-void NXLineEdit::setContentsPaddings(int left, int top, int right, int bottom)
+void NXLineEdit::setContentsMargins(const QMargins& margins)
 {
   Q_D(NXLineEdit);
-  d->_paddings       = { left, top, right, bottom };
-  QString styleSheet = QString(QStringLiteral("#NXLineEdit { "
-                                              "padding-left: %1px; "
-                                              "padding-top: %2px; "
-                                              "padding-right: %3px; "
-                                              "padding-bottom: %4px; "
-                                              "}"))
-                           .arg(left)
-                           .arg(top)
-                           .arg(right)
-                           .arg(bottom);
+  d->_pContentMargins = margins;
+  QString styleSheet  = QString(QStringLiteral("#NXLineEdit { "
+                                               "padding-left: %1px; "
+                                               "padding-top: %2px; "
+                                               "padding-right: %3px; "
+                                               "padding-bottom: %4px; "
+                                               "}"))
+                           .arg(margins.left())
+                           .arg(margins.top())
+                           .arg(margins.right())
+                           .arg(margins.bottom());
 
   setStyleSheet(styleSheet);
 }
 
-QMargins NXLineEdit::getContentsPaddings() const
+QMargins NXLineEdit::getContentsMargins() const
 {
   Q_D(const NXLineEdit);
-  return d->_paddings;
+  return d->_pContentMargins;
 }
 
 void NXLineEdit::setLineEditIconMargin(int margin)
@@ -164,6 +169,7 @@ void NXLineEdit::paintEvent(QPaintEvent *event)
 
 void NXLineEdit::contextMenuEvent(QContextMenuEvent *event)
 {
+  Q_D(NXLineEdit);
   NXMenu *menu = new NXMenu(this);
   menu->setMenuItemHeight(27);
   menu->setAttribute(Qt::WA_DeleteOnClose);
@@ -171,12 +177,22 @@ void NXLineEdit::contextMenuEvent(QContextMenuEvent *event)
   if (!isReadOnly())
   {
     action = menu->addNXIconAction(NXIconType::ArrowRotateLeft, tr("撤销"), QKeySequence::Undo);
-    action->setEnabled(isUndoAvailable());
-    connect(action, &QAction::triggered, this, &NXLineEdit::undo);
+    action->setEnabled(d->canTextRouteBack());
+    connect(action, &QAction::triggered, this, [d]() { d->textRouteBack(); });
 
     action = menu->addNXIconAction(NXIconType::ArrowRotateRight, tr("恢复"), QKeySequence::Redo);
-    action->setEnabled(isRedoAvailable());
-    connect(action, &QAction::triggered, this, &NXLineEdit::redo);
+    action->setEnabled(d->canTextRouteForward());
+    connect(action, &QAction::triggered, this, [d]() { d->textRouteForward(); });
+
+    action = menu->addNXIconAction(
+        NXIconType::ArrowRotateLeft, tr("整体撤销"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Z));
+    action->setEnabled(d->canOverallUndo());
+    connect(action, &QAction::triggered, this, [d]() { d->overallUndo(); });
+
+    action = menu->addNXIconAction(
+        NXIconType::ArrowRotateRight, tr("整体恢复"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Y));
+    action->setEnabled(d->canOverallRedo());
+    connect(action, &QAction::triggered, this, [d]() { d->overallRedo(); });
     menu->addSeparator();
   }
 #ifndef QT_NO_CLIPBOARD
@@ -212,6 +228,7 @@ void NXLineEdit::contextMenuEvent(QContextMenuEvent *event)
         int startIndex = selectionStart();
         int endIndex   = selectionEnd();
         setText(text().remove(startIndex, endIndex - startIndex));
+        d->pushTextRoute();
       }
     });
   }
@@ -221,4 +238,38 @@ void NXLineEdit::contextMenuEvent(QContextMenuEvent *event)
   action->setEnabled(!text().isEmpty() && !(selectedText() == text()));
   connect(action, &QAction::triggered, this, &NXLineEdit::selectAll);
   menu->popup(event->globalPos());
+}
+
+void NXLineEdit::keyPressEvent(QKeyEvent *event)
+{
+  Q_D(NXLineEdit);
+  if (event->modifiers().testFlag(Qt::ControlModifier))
+  {
+    bool isShiftPressed = event->modifiers().testFlag(Qt::ShiftModifier);
+    if (!isShiftPressed && event->key() == Qt::Key_Z)
+    {
+      d->textRouteBack();
+      event->accept();
+      return;
+    }
+    if (!isShiftPressed && event->key() == Qt::Key_Y)
+    {
+      d->textRouteForward();
+      event->accept();
+      return;
+    }
+    if (isShiftPressed && event->key() == Qt::Key_Z)
+    {
+      d->overallUndo();
+      event->accept();
+      return;
+    }
+    if (isShiftPressed && event->key() == Qt::Key_Y)
+    {
+      d->overallRedo();
+      event->accept();
+      return;
+    }
+  }
+  QLineEdit::keyPressEvent(event);
 }

@@ -1,7 +1,7 @@
 ﻿#ifndef NXWINSHADOWHELPER_H
 #define NXWINSHADOWHELPER_H
+#include "LinnSingleton.h"
 #include "NXDef.h"
-#include "singleton.h"
 #ifdef Q_OS_WIN
 #  include <dwmapi.h>
 #  include <windowsx.h>
@@ -19,10 +19,10 @@
 
 class NXWinShadowHelper : public QObject
 {
-  SINGLETON_CREATE_H(NXWinShadowHelper)
   Q_OBJECT
   Q_PRIVATE_CREATE(bool, IsWinVersionGreater10)
   Q_PRIVATE_CREATE(bool, IsWinVersionGreater11)
+  LINN_SINGLETON_CREATE(LINN_SINGLETON_UNIQUE(NXWinShadowHelper))
 
 private:
   explicit NXWinShadowHelper(QObject *parent = nullptr);

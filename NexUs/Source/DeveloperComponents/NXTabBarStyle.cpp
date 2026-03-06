@@ -4,17 +4,30 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QStyleOption>
+#include <QTabBar>
 
 #include "NXTheme.h"
 
 NXTabBarStyle::NXTabBarStyle(QStyle *style)
 {
-  _pTabSize  = QSize(220, 35);
-  _themeMode = nxTheme->getThemeMode();
+  _pTabSize                    = QSize(220, 42);
+  _pTabCornerRadius            = 8;
+  _pIsSelectedIndicatorVisible = true;
+  _pTabBarStyle                = NXTabBarType::Firefox;
+  _closeIndicatorSize          = 24;
+  _themeMode                   = nxTheme->getThemeMode();
   connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 NXTabBarStyle::~NXTabBarStyle() { }
+
+void NXTabBarStyle::setTabBarStyle(NXTabBarType::TabBarStyle tabBarStyle)
+{
+  _pTabBarStyle       = tabBarStyle;
+  _closeIndicatorSize = tabBarStyle == NXTabBarType::Firefox ? 24 : 20;
+}
+
+NXTabBarType::TabBarStyle NXTabBarStyle::getTabBarStyle() const { return _pTabBarStyle; }
 
 void NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, QPainter *p, const QWidget *w) const
 {
@@ -24,23 +37,81 @@ void NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, 
   case QStyle::PE_FrameTabBarBase :
   {
     // 底边线
+    // p->save();
+    // p->setRenderHint(QPainter::Antialiasing);
+    // QColor lineColor = NXThemeColor(_themeMode, BasicText);
+    // lineColor.setAlpha(77); // 约 30% 透明度
+    // p->setPen(QPen(lineColor, 1));
+    // p->drawLine(opt->rect.bottomLeft(), opt->rect.bottomRight());
+    // p->restore();
     return;
   }
   case QStyle::PE_IndicatorArrowLeft :
-  {
-    return;
-  }
   case QStyle::PE_IndicatorArrowRight :
   {
+    // QRect tabRect = opt->rect;
+    // p->save();
+    // p->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+
+    // QColor arrowColor = NXThemeColor(_themeMode, BasicText);
+
+    // if (!(opt->state & QStyle::State_Enabled)) { arrowColor.setAlpha(100); }
+
+    // if (opt->state.testFlag(QStyle::State_MouseOver))
+    //{
+    //   p->setPen(Qt::NoPen);
+    //   p->setBrush(opt->state.testFlag(QStyle::State_Selected) ? NXThemeColor(_themeMode, TabBarSelectedCloseHover)
+    //                                                           : NXThemeColor(_themeMode, TabBarCloseHover));
+    //   p->drawRoundedRect(tabRect, 6, 6);
+    // }
+    // QFont iconFont = QFont("NXAwesome");
+    // iconFont.setPixelSize(16);
+    // p->setFont(iconFont);
+    // p->setPen(arrowColor);
+    // p->drawText(tabRect,
+    //             Qt::AlignCenter,
+    //             QChar((unsigned short) (QStyle::PE_IndicatorArrowLeft == pe ? NXIconType::ChevronLeft
+    //                                                                         : NXIconType::ChevronRight)));
+    // p->restore();
     return;
   }
   case QStyle::PE_PanelButtonTool :
   {
-    // 左侧隐藏图标
+    //// 左侧隐藏图标按钮（例如下拉箭头或省略号）
+    // p->save();
+    // p->setRenderHint(QPainter::Antialiasing);
+
+    //// 绘制背景（悬停时显示）
+    // if (opt->state & QStyle::State_MouseOver)
+    //{
+    //   p->setBrush(NXThemeColor(_themeMode, TabBarHover));
+    //   p->setPen(Qt::NoPen);
+    //   p->drawRoundedRect(opt->rect, 4, 4);
+    // }
+
+    //// 绘制图标（下拉箭头，可改为三个点）
+    // QFont iconFont = QFont("NXAwesome"); // 若字体不支持可改用多边形
+    // iconFont.setPixelSize(14);
+    // p->setFont(iconFont);
+    // p->setPen(NXThemeColor(_themeMode, BasicText));
+
+    //// 使用 Unicode 字符（例如向下箭头）或三个点
+    //// 这里使用下拉箭头（U+25BC）作为示例
+    // p->drawText(opt->rect, Qt::AlignCenter, QString(QChar(0x25'BC)));
+
+    // p->restore();
     return;
   }
   case QStyle::PE_IndicatorTabTear :
   {
+    // QRect tabRect = opt->rect;
+    // p->save();
+    // p->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+    // p->setPen(Qt::NoPen);
+    // p->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
+    // QRectF indicatorRect = QRectF(tabRect.center().x() - 0.5, tabRect.y() + 7, 1, tabRect.height() - 15);
+    // p->drawRoundedRect(indicatorRect, 0.5, 0.5);
+    // p->restore();
     return;
   }
   case QStyle::PE_IndicatorTabClose :
@@ -50,8 +121,13 @@ void NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, 
     if (opt->state.testFlag(QStyle::State_MouseOver))
     {
       p->setPen(Qt::NoPen);
-      p->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
-      p->drawRoundedRect(opt->rect, 2, 2);
+      p->setBrush(opt->state.testFlag(QStyle::State_Selected) ? NXThemeColor(_themeMode, TabBarSelectedCloseHover)
+                                                              : NXThemeColor(_themeMode, TabBarCloseHover));
+      if (_pTabBarStyle == NXTabBarType::Google) { p->drawEllipse(opt->rect); }
+      else
+      {
+        p->drawRoundedRect(opt->rect, 4, 4);
+      }
     }
     QFont iconFont = QFont("NXAwesome");
     iconFont.setPixelSize(16);
@@ -74,8 +150,7 @@ void NXTabBarStyle::drawControl(ControlElement element,
                                 QPainter *painter,
                                 const QWidget *widget) const
 {
-  int margin    = 9;
-  int topRadius = 7;
+  constexpr int margin = 9;
   switch (element)
   {
   case QStyle::CE_TabBarTab :
@@ -86,6 +161,7 @@ void NXTabBarStyle::drawControl(ControlElement element,
       drawControl(CE_TabBarTabLabel, topt, painter, widget);
       return;
     }
+    break;
   }
   case QStyle::CE_TabBarTabShape :
   {
@@ -98,64 +174,89 @@ void NXTabBarStyle::drawControl(ControlElement element,
       painter->setPen(Qt::NoPen);
       if (topt->state.testFlag(QStyle::State_Selected))
       {
-        // 选中背景绘制
-        tabRect.setLeft(tabRect.left() - margin);
-        tabRect.setRight(tabRect.right() + margin + 1);
-        painter->setBrush(topt->state.testFlag(QStyle::State_Sunken) ? NXThemeColor(_themeMode, BasicSelectedHover)
-                                                                     : NXThemeColor(_themeMode, BasicSelectedAlpha));
-        QPainterPath path;
-        path.moveTo(tabRect.x(), tabRect.bottom() + 1);
-        path.arcTo(QRectF(tabRect.x() - margin, tabRect.bottom() - margin * 2 + 1, margin * 2, margin * 2), -90, 90);
-        path.lineTo(tabRect.x() + margin, tabRect.y() + topRadius);
-        path.arcTo(QRectF(tabRect.x() + margin, tabRect.y(), topRadius * 2, topRadius * 2), 180, -90);
-        path.lineTo(tabRect.right() - margin - topRadius, tabRect.y());
-        path.arcTo(
-            QRectF(tabRect.right() - margin - 2 * topRadius, tabRect.y(), topRadius * 2, topRadius * 2), 90, -90);
-        path.lineTo(tabRect.right() - margin, tabRect.bottom() - margin);
-        path.arcTo(
-            QRectF(tabRect.right() - margin, tabRect.bottom() - 2 * margin + 1, margin * 2, margin * 2), -180, 90);
-        path.lineTo(tabRect.right(), tabRect.bottom() + 10);
-        path.lineTo(tabRect.x(), tabRect.bottom() + 10);
-        path.closeSubpath();
-        painter->drawPath(path);
-        // 选中绘制
-        painter->setPen(Qt::NoPen);
-        painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
-        painter->drawRoundedRect(QRectF(tabRect.left() + margin + 7, tabRect.y() + 7, 3, tabRect.height() - 14), 2, 2);
-      }
-      else
-      {
-        if (topt->state.testFlag(QStyle::State_MouseOver))
+        painter->setBrush(NXThemeColor(_themeMode, TabBarSelected));
+        if (_pTabBarStyle == NXTabBarType::Google)
         {
-          painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
+          tabRect = topt->rect.adjusted(6, 6, 0, 0);
+          tabRect.setLeft(tabRect.left() - margin);
+          tabRect.setRight(tabRect.right() + margin + 1);
+          QPainterPath path;
+          path.moveTo(tabRect.x(), tabRect.bottom() + 1);
+          path.arcTo(QRectF(tabRect.x() - margin, tabRect.bottom() - margin * 2 + 1, margin * 2, margin * 2), -90, 90);
+          path.lineTo(tabRect.x() + margin, tabRect.y() + _pTabCornerRadius);
+          path.arcTo(QRectF(tabRect.x() + margin, tabRect.y(), _pTabCornerRadius * 2, _pTabCornerRadius * 2), 180, -90);
+          path.lineTo(tabRect.right() - margin - _pTabCornerRadius, tabRect.y());
+          path.arcTo(QRectF(tabRect.right() - margin - 2 * _pTabCornerRadius,
+                            tabRect.y(),
+                            _pTabCornerRadius * 2,
+                            _pTabCornerRadius * 2),
+                     90,
+                     -90);
+          path.lineTo(tabRect.right() - margin, tabRect.bottom() - margin);
+          path.arcTo(
+              QRectF(tabRect.right() - margin, tabRect.bottom() - 2 * margin + 1, margin * 2, margin * 2), -180, 90);
+          path.lineTo(tabRect.right(), tabRect.bottom() + 10);
+          path.lineTo(tabRect.x(), tabRect.bottom() + 10);
+          path.closeSubpath();
+          painter->drawPath(path);
         }
         else
         {
-          painter->setBrush(Qt::transparent);
+          tabRect = topt->rect.adjusted(9, 4, -3, -3);
+          nxTheme->drawEffectShadow(painter, tabRect.adjusted(1, 1, -1, -1), 4, _pTabCornerRadius, 80);
+          painter->drawRoundedRect(tabRect, _pTabCornerRadius, _pTabCornerRadius);
         }
-        tabRect.setHeight(tabRect.height() + 10);
-        painter->drawRoundedRect(tabRect, 0, 0);
-        tabRect.setHeight(tabRect.height() - 10);
+        if (_pIsSelectedIndicatorVisible)
+        {
+          painter->setPen(Qt::NoPen);
+          painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
+          QRectF indicatorRect;
+          if (_pTabBarStyle == NXTabBarType::Google)
+          {
+            indicatorRect = QRectF(tabRect.left() + margin + 7, tabRect.y() + 6, 3, tabRect.height() - 16);
+          }
+          else
+          {
+            indicatorRect = QRectF(tabRect.left() + 7, tabRect.y() + 8.5, 3, tabRect.height() - 16);
+          }
+          painter->drawRoundedRect(indicatorRect, 2, 2);
+        }
+      }
+      else if (topt->state.testFlag(QStyle::State_MouseOver))
+      {
+        painter->setBrush(NXThemeColor(_themeMode, TabBarHover));
+        if (_pTabBarStyle == NXTabBarType::Google)
+        {
+          tabRect = topt->rect.adjusted(6, 6, -6, -5);
+          painter->drawRoundedRect(tabRect, _pTabCornerRadius, _pTabCornerRadius);
+        }
+        else
+        {
+          tabRect = topt->rect.adjusted(3, 4, -3, -3);
+          painter->drawRoundedRect(tabRect, _pTabCornerRadius, _pTabCornerRadius);
+        }
       }
       painter->restore();
       return;
     }
+    break;
   }
   case QStyle::CE_TabBarTabLabel :
   {
     // 文字和图标绘制
     if (const QStyleOptionTab *topt = qstyleoption_cast<const QStyleOptionTab *>(option))
     {
-      QRect textRect = subElementRect(QStyle::SE_TabBarTabText, topt, widget);
-      textRect.setLeft(textRect.left() + 10);
+      const int indent = _pIsSelectedIndicatorVisible ? 0 : 6;
+      QRect textRect   = subElementRect(QStyle::SE_TabBarTabText, topt, widget);
+      textRect.setLeft(textRect.left() + 16 - indent);
       painter->save();
       painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
       // 图标绘制
       QIcon icon = topt->icon;
       if (!icon.isNull())
       {
-        QRectF iconRect(topt->rect.x() + 15,
-                        textRect.center().y() - (qreal) topt->iconSize.height() / 2 + 1,
+        QRectF iconRect(topt->rect.x() + 24 - indent,
+                        textRect.center().y() - (qreal) topt->iconSize.height() / 2 + 2,
                         topt->iconSize.width(),
                         topt->iconSize.height());
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
@@ -177,6 +278,7 @@ void NXTabBarStyle::drawControl(ControlElement element,
       painter->restore();
       return;
     }
+    break;
   }
   default :
   {
@@ -206,16 +308,68 @@ QSize NXTabBarStyle::sizeFromContents(ContentsType type,
   return QProxyStyle::sizeFromContents(type, option, size, widget);
 }
 
+int NXTabBarStyle::styleHint(StyleHint hint,
+                             const QStyleOption *option,
+                             const QWidget *widget,
+                             QStyleHintReturn *returnData) const
+{
+  switch (hint)
+  {
+  case SH_TabBar_CloseButtonPosition :
+  {
+    return QTabBar::RightSide;
+  }
+  default : break;
+  }
+  return QProxyStyle::styleHint(hint, option, widget, returnData);
+}
+
+int NXTabBarStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
+{
+  switch (metric)
+  {
+  case PM_TabBarScrollButtonWidth :
+  {
+    return 22;
+  }
+  case PM_TabCloseIndicatorWidth :
+  case PM_TabCloseIndicatorHeight :
+  {
+    return _closeIndicatorSize;
+  }
+  }
+  return QProxyStyle::pixelMetric(metric, option, widget);
+}
+
 QRect NXTabBarStyle::subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const
 {
+  // QMargins margins  = widget->contentsMargins();
+  // QRect contentRect = option->rect.adjusted(margins.left(), margins.top(), -margins.right(), -margins.bottom());
+  //  constexpr QSize scrollButtonSize { 22, 30 };
   switch (element)
   {
-  case QStyle::SE_TabBarScrollLeftButton :
-  case QStyle::SE_TabBarScrollRightButton :
+  // case QStyle::SE_TabBarTearIndicatorLeft :
+  //{
+  //   return QRect(contentRect.x() + 6 + scrollButtonSize.width() + 6, contentRect.y(), 1, contentRect.height());
+  // }
+  // case QStyle::SE_TabBarTearIndicatorRight :
+  //{
+  //   return QRect(contentRect.right() - 6 - scrollButtonSize.width() - 6, contentRect.y(), 1, contentRect.height());
+  // }
+  // case QStyle::SE_TabBarScrollLeftButton :
+  //{
+  //   return QRect(QPoint { contentRect.x() + 6, 6 }, scrollButtonSize);
+  // }
+  // case QStyle::SE_TabBarScrollRightButton :
+  //{
+  //   return QRect(QPoint { contentRect.right() - 6 - scrollButtonSize.width(), 6 }, scrollButtonSize);
+  // }
   case QStyle::SE_TabBarTearIndicatorLeft :
   case QStyle::SE_TabBarTearIndicatorRight :
+  case QStyle::SE_TabBarScrollLeftButton :
+  case QStyle::SE_TabBarScrollRightButton :
   {
-    return QRect();
+    return QRect {};
   }
   default :
   {

@@ -118,7 +118,7 @@ void NXNavigationView::onCustomContextMenuRequested(const QPoint& pos)
   QModelIndex posIndex = indexAt(pos);
   if (!posIndex.isValid()) { return; }
   NXNavigationNode *posNode = static_cast<NXNavigationNode *>(posIndex.internalPointer());
-  if (!posNode->getIsExpanderNode())
+  if (!posNode->getIsExpanderNode() && !posNode->getIsCategoryNode())
   {
     NXMenu menu;
     menu.setMenuItemHeight(27);
@@ -358,7 +358,8 @@ void NXNavigationView::_doCompactToolTip()
     }
     NXNavigationNode *posNode = static_cast<NXNavigationNode *>(posIndex.internalPointer());
     _compactToolTip->setToolTip(posNode->getNodeTitle());
-    _compactToolTip->updatePos(cursorPos);
+    _compactToolTip->setOffSetX(10);
+    _compactToolTip->updatePos();
     _compactToolTip->show();
   }
   else

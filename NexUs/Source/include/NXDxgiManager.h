@@ -3,20 +3,20 @@
 
 #include <QWidget>
 #ifdef Q_OS_WIN
+#  include "LinnSingleton.h"
 #  include "NXProperty.h"
-#  include "singleton.h"
+
+#  pragma push_macro("Q_DISABLE_COPY")
+#  undef Q_DISABLE_COPY
+#  define Q_DISABLE_COPY(Class)
 
 class NXDxgiManagerPrivate;
 
 class NX_EXPORT NXDxgiManager : public QObject
 {
-#  pragma push_macro("DISABLE_COPY")
-#  undef DISABLE_COPY
-#  define DISABLE_COPY(Class)
-  SINGLETON_CREATE_H(NXDxgiManager)
-#  pragma pop_macro("DISABLE_COPY")
   Q_OBJECT
   Q_Q_CREATE(NXDxgiManager)
+  LINN_SINGLETON_CREATE(LINN_SINGLETON_UNIQUE(NXDxgiManager))
 
 private:
   explicit NXDxgiManager(QObject *parent = nullptr);
@@ -43,6 +43,8 @@ public:
 Q_SIGNALS:
   Q_SIGNAL void grabImageUpdate(QImage img);
 };
+
+#  pragma pop_macro("Q_DISABLE_COPY")
 
 class NXDxgiScreenPrivate;
 

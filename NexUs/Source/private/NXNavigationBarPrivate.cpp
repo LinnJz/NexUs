@@ -90,6 +90,11 @@ void NXNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool is
   {
     NXNavigationNode *node = static_cast<NXNavigationNode *>(index.internalPointer());
     if (!node) { return; }
+    if (node->getIsCategoryNode())
+    {
+      Q_EMIT q->navigationNodeClicked(NXNavigationType::CategoryNode, node->getNodeKey(), isRouteBack);
+      return;
+    }
     if (node->getIsExpanderNode()) { _expandOrCollapseExpanderNode(node, !_navigationView->isExpanded(index)); }
     else
     {
@@ -436,7 +441,7 @@ void NXNavigationBarPrivate::_doComponentAnimation(NXNavigationType::NavigationD
     if (_currentDisplayMode == NXNavigationType::Maximal)
     {
       _userCard->setVisible(false);
-      if (_isShowUserCard) { _userButton->setVisible(true); }
+      _doUserButtonAnimation(true, isAnimation);
       _handleNavigationExpandState(true);
     }
     _currentDisplayMode = displayMode;
@@ -448,7 +453,6 @@ void NXNavigationBarPrivate::_doComponentAnimation(NXNavigationType::NavigationD
     _doNavigationViewWidthAnimation(isAnimation);
     if (_currentDisplayMode != NXNavigationType::Minimal)
     {
-      _handleUserButtonLayout(true);
       _doUserButtonAnimation(true, isAnimation);
       _handleNavigationExpandState(true);
     }
@@ -457,7 +461,6 @@ void NXNavigationBarPrivate::_doComponentAnimation(NXNavigationType::NavigationD
   }
   case NXNavigationType::Maximal :
   {
-    _handleUserButtonLayout(false);
     _doNavigationBarWidthAnimation(displayMode, isAnimation);
     _doUserButtonAnimation(false, isAnimation);
     _currentDisplayMode = displayMode;
@@ -485,12 +488,6 @@ void NXNavigationBarPrivate::_handleNavigationExpandState(bool isSave)
     _navigationView->resize(_pNavigationBarWidth - 5, _navigationView->height());
     for (auto node : _lastExpandedNodesList) { onTreeViewClicked(node->getModelIndex(), false); }
   }
-}
-
-void NXNavigationBarPrivate::_handleUserButtonLayout(bool isCompact)
-{
-  while (_userButtonLayout->count()) { _userButtonLayout->takeAt(0); }
-  if (_isShowUserCard) { _userButtonLayout->addSpacing(isCompact ? 36 : 80); }
 }
 
 void NXNavigationBarPrivate::_resetLayout()
@@ -585,6 +582,7 @@ void NXNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnima
     if (_isShowUserCard) { _userButton->setVisible(true); }
     userButtonAnimation->setDuration(isAnimation ? 255 : 0);
     spacingAnimation->setDuration(isAnimation ? 255 : 0);
+    connect(spacingAnimation, &QPropertyAnimation::finished, this, [=]() { _resetLayout(); });
   }
   else
   {
@@ -593,8 +591,8 @@ void NXNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnima
             this,
             [=]()
     {
-      _userButton->setFixedSize(36, 36);
-      _userButton->setGeometry(QRect(3, 10, 36, 36));
+      _userButton->setFixedSize(64, 64);
+      _userButton->setGeometry(QRect(13, 18, 64, 64));
       _userButton->setVisible(false);
       _resetLayout();
       if (_isShowUserCard) { _userCard->setVisible(true); }

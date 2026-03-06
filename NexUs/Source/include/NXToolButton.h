@@ -7,24 +7,7 @@
 class NXMenu;
 class NXToolButtonPrivate;
 
-class NX_EXPORT NXAdvancedToolButton : public QToolButton
-{
-  Q_OBJECT
-
-public:
-  explicit NXAdvancedToolButton(QWidget *parent = nullptr);
-  virtual ~NXAdvancedToolButton() override = default;
-  Q_SIGNAL void rightReleased();
-  Q_SIGNAL void rightPressed();
-  Q_SIGNAL void middleReleased();
-  Q_SIGNAL void middlePressed();
-
-protected:
-  void mouseReleaseEvent(QMouseEvent *event) override;
-  void mousePressEvent(QMouseEvent *event) override;
-};
-
-class NX_EXPORT NXToolButton : public NXAdvancedToolButton
+class NX_EXPORT NXToolButton : public QToolButton
 {
   Q_OBJECT
   Q_Q_CREATE(NXToolButton)

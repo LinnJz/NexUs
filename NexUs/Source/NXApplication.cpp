@@ -8,7 +8,6 @@
 #include "DeveloperComponents/NXWinShadowHelper.h"
 #include "NXTheme.h"
 #include "private/NXApplicationPrivate.h"
-SINGLETON_CREATE_CPP(NXApplication)
 
 NXApplication::NXApplication(QObject *parent)
     : QObject { parent }

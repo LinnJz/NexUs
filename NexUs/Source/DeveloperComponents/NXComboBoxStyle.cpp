@@ -208,8 +208,8 @@ void NXComboBoxStyle::drawComplexControl(ComplexControl control,
         painter->translate(-expandIconRect.x() - (qreal) expandIconRect.width() / 2,
                            -expandIconRect.y() - (qreal) expandIconRect.height() / 2);
         painter->drawText(expandIconRect, Qt::AlignCenter, QChar((unsigned short) NXIconType::AngleDown));
-        painter->restore();
       }
+      painter->restore();
     }
     return;
   }

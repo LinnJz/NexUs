@@ -251,8 +251,8 @@ bool NXGraphicsScene::removeItemLink(NXGraphicsItem *item1, NXGraphicsItem *item
   {
     QVariant portVariant1 = link.value(item1->getItemUID());
     QVariant portVariant2 = link.value(item2->getItemUID());
-    if (portVariant1.isValid() && portVariant2.isValid() && portVariant1.toUInt() == port1 &&
-        portVariant2.toUInt() == port2)
+    if (portVariant1.isValid() && portVariant2.isValid() && portVariant1.toInt() == port1 &&
+        portVariant2.toInt() == port2)
     {
       d->_itemsLink.removeOne(link);
       // 这里处理连线图元

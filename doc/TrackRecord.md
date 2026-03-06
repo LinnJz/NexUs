@@ -323,6 +323,202 @@
 - `NXTableWidget`、`NXTableWidgetStyle`、`NXTableWidgetPrivate`
 - `NXScreenCapture`、`NXScreenCaptureManager`、`NXScreenCaptureManagerPrivate`
 
+## 二、总结
+
+### NXWidget
+
+```c++
+新增文件
+NXWidgetTools/singleton.h
+NXWidgetTools/private/NXTableWidgetPrivate.h
+NXWidgetTools/private/NXTableWidgetPrivate.cpp
+NXWidgetTools/private/NXSliderPrivate.h
+NXWidgetTools/private/NXSliderPrivate.cpp
+NXWidgetTools/private/NXShadowGraphicsEffectPrivate.h
+NXWidgetTools/private/NXShadowGraphicsEffectPrivate.cpp
+NXWidgetTools/private/NXScreenCaptureManagerPrivate.h
+NXWidgetTools/private/NXScreenCaptureManagerPrivate.cpp
+NXWidgetTools/private/NXMessageDialogPrivate.h
+NXWidgetTools/private/NXMessageDialogPrivate.cpp
+NXWidgetTools/private/NXMessageCardPrivate.h
+NXWidgetTools/private/NXMessageCardPrivate.cpp
+NXWidgetTools/private/NXInputDialogPrivate.h
+NXWidgetTools/private/NXInputDialogPrivate.cpp
+NXWidgetTools/private/NXGroupBoxPrivate.h
+NXWidgetTools/private/ NXGroupBoxPrivate.cpp
+NXWidgetTools/private/NXCheckBoxPrivate.h
+NXWidgetTools/private/NXCheckBoxPrivate.cpp
+NXWidgetTools/NXTableWidget.h
+NXWidaetTools/NXTableWidget.cpp
+NXWidgetTools/NXSharedMemoryManager.h
+NXWidgetTools/NXSharedMemoryManager.cpp
+NXWidgetTools/NXShadowWidget.h
+NXWidgetTools/NXShadowWidget.cpp
+NXWidgetTools/NXShadowGraphicsEffect.h
+NXWidgetTools/NXShadowGraphicsEffect.cpp
+NXWidgetTools/NXScreenCaptureManager.h
+NXWidgetTools/NXScreenCaptureManager.cpp
+NXWidgetTools/NXMessageDialog.h
+NXWidgetTools/NXMessageDialog.cpp
+NXWidgetTools/NXMessageCard.h
+NXWidgetTools/NXMessageCard.cpp
+NXWidgetTools/NXInputDialog.h
+NXWidgetTools/NXInputDialog.cpp
+NXWidgetTools/NXGroupBox.h
+NXWidgetTools/NXGroupBox.cpp
+NXWidgetTools/NXCentralStackedWidget.h
+NXWidgetTools/NXCentralStackedWidget.cpp
+NXWidgetTools/NXAESEncryption.h
+NXWidgetTools/NXAESEncryption.cpp
+NXWidgetTools/DeveloperComponents/NXTableWidgetStyle.h
+NXWidgetTools/DeveloperComponents/NXTableWidgetStyle.cpp
+NXWidgetTools/DeveloperComponents/NXScreenCapture.h
+NXWidgetTools/DeveloperComponents/NXScreenCapture.cpp
+NXWidgetTools/DeveloperComponents/NXMultiselectComboBoxDelegate.h
+NXWidgetTools/DeveloperComponents/NXMultiSelectComboBoxDelegate.cpp
+NXWidgetTools/DeveloperComponents/NXGroupBoxStyle.h
+NXWidgetTools/DeveloperComponents/NXGroupBoxStyle.cpp
+
+以下代码比较复杂
+NXWidgetTools/DeveloperComponents/NXNavigationView.h
+NXWidgetTools/DeveloperComponents/NXNavigationModel.h
+NXWidgetTools/DeveloperComponents/NXNavigationNode.cpp
+NXWidgetTools/DeveloperComponents/NXNavigationStyle.cpp
+NXWidgetTools/private/NXNavigationBarPrivate.h
+NXWidgetTools/NXNavigationBar.h
+NXWidgetTools/private/NXNavigationBarPrivate.cpp
+NXWidgetTools/DeveloperComponents/NXNavigationModel.cpp
+NXWidgetTools/DeveloperComponents/NXNavigationView.cpp
+NXWidgetTools/NXNavigationBar.cpp
+
+NXWidgetTools/NXWindow.h
+NXWidgetTools/NXWindow.cpp
+NXWidgetTools/private/NXWindowPrivate.cpp
+NXWidgetTools/NXTableView.h
+NXWidgetTools/NXTableView.cpp
+NXWidgetTools/DeveloperComponents/NXTableViewStyle.cpp
+NXWidgetTools/NXLineEdit.cpp
+NXWidgetTools/NXSlider.cpp
+NXWidgetTools/DeveloperComponents/NXToolButtonStyle.cpp
+NXWidgetTools/NXContentDialog.cpp
+NXWidgetTools/NXColorDialog.cpp
+NXWidgetTools/private/NXColorDialogPrivate.cpp
+NXWidgetTools/NXText.cpp
+
+
+以下代码修改内容不算很多，或者修改地方固定不复杂
+NXWidgetTools/NXDef.h
+NXWidgetTools/NXProperty.h
+
+NXWidgetTools/DeveloperComponents/NXColorValueSliderStyle.h
+NXWidgetTools/DeveloperComponents/NXTreeViewStyle.h
+NXWidgetTools/DeveloperComponents/NXLineEditStyle.h
+NXWidgetTools/DeveloperComponents/NXMicaBaseInitObject.cpp
+NXWidgetTools/DeveloperComponents/NXFooterModel.cpp
+NXWidgetTools/DeveloperComponents/NXCheckBoxStyle.cpp
+NXWidgetTools/DeveloperComponents/NXTableViewStyle.h
+NXWidgetTools/DeveloperComponents/NXColorPicker.cpp
+NXWidgetTools/DeveloperComponents/NXNavigationNode.h
+NXWidgetTools/DeveloperComponents/NXColorValueSliderStyle.cpp
+NXWidgetTools/DeveloperComponents/NXMenuStyle.cpp
+NXWidgetTools/DeveloperComponents/NXTreeViewStyle.cpp
+
+NXWidgetTools/private/NXMessageButtonPrivate.h
+NXWidgetTools/private/NXToggleButtonPrivate.h
+NXWidgetTools/private/NXPushButtonPrivate.h
+NXWidgetTools/private/NXToolTipPrivate.cpp
+NXWidgetTools/private/NXLineEditPrivate.h
+NXWidgetTools/private/NXTableViewPrivate.cpp
+NXWidgetTools/private/NXToolTipPrivate.h
+NXWidgetTools/private/NXColorDialogPrivate.h
+NXWidgetTools/private/NXContentDialogPrivate.h
+NXWidgetTools/private/NXMultiSelectComboBoxPrivate.h
+NXWidgetTools/private/NXTableViewPrivate.h
+NXWidgetTools/private/NXMessageButtonPrivate.cpp
+NXWidgetTools/private/NXApplicationPrivate.cpp
+NXWidgetTools/private/NXApplicationPrivate.h
+NXWidgetTools/private/NXMessageBarPrivate.cpp
+
+NXWidgetTools/NXKeyBinder.cpp
+NXWidgetTools/NXLineEdit.h
+NXWidgetTools/NXScrollPage.h
+NXWidgetTools/NXDockWidget.h
+NXWidgetTools/NXRadioButton.h
+NXWidgetTools/NXMenu.h
+NXWidgetTools/NXPushButton.h
+NXWidgetTools/NXScrollPage.cpp
+NXWidgetTools/NXToggleButton.h
+NXWidgetTools/NXToolTip.cpp
+NXWidgetTools/NXToolTip.h
+NXWidgetTools/NXMultiSelectComboBox.h
+NXWidgetTools/NXColorDialog.h
+NXWidgetTools/NXIcon.h
+NXWidgetTools/NXPromotionView.h
+NXWidgetTools/NXTreeView.h
+NXWidgetTools/NXMessageButton.h
+NXWidgetTools/NXSlider.h
+NXWidgetTools/NXTreeView.cpp
+NXWidgetTools/NXWidget.h
+NXWidgetTools/NXContentDialog.h
+NXWidgetTools/NXMessageButton.cpp
+NXWidgetTools/NXText.h
+NXWidgetTools/private/NXTextPrivate.h
+NXWidgetTools/NXCheckBox.h
+NXWidgetTools/DeveloperComponents/NXLineEditStyle.cpp
+NXWidgetTools/NXTabBar.cpp
+NXWidgetTools/NXDockWidget.cpp
+NXWidgetTools/NXToolButton.h
+NXWidgetTools/NXComboBox.cpp
+NXWidgetTools/NXToggleButton.cpp
+NXWidgetTools/NXMultiSelectComboBox.cpp
+NXWidgetTools/NXToolButton.cpp
+NXWidgetTools/NXMenu.cpp
+NXWidgetTools/NXRadioButton.cpp
+NXWidgetTools/NXPushButton.cpp
+NXWidgetTools/NXCheckBox.cpp
+
+
+单例
+NXWidgetTools/NXDxgiManager.h
+NXWidgetTools/NXExponentialBlur.h
+NXWidgetTools/NXTheme.h
+NXWidgetTools/NXLog.h
+NXWidgetTools/NXEventBus.h
+NXWidgetTools/NXNavigationRouter.h
+NXWidgetTools/NXApplication.h
+
+```
+
+### NXWidgetExamples
+
+```
+其他fork作者添加的自定义控件添加展示
+NXWidgetToolsExample/ExamplePage/T_BaseComponents.h
+NXWidgetToolsExample/ExamplePage/T_BaseComponents.cpp
+
+NXWidgetToolsExample/ExamplePage/T_Popup.h
+NXWidgetToolsExample/ExamplePage/T_Popup.cpp
+
+NXWidgetToolsExample/ExamplePage/T_BasePage.cpp
+
+核心修改
+NXWidgetToolsExample/mainwindow.h
+
+分离文件
+NXWidgetToolsExample/ExamplePage/T_NXScreen.h
+NXWidgetToolsExample/ExamplePage/T_NXScreen.cpp
+
+废文件
+NXWidgetToolsExample/ExamplePage/T_NXPacketO.cpp
+NXWidgetToolsExample/ExamplePage/T_NXPacketO.h
+NXWidgetToolsExample/ExamplePage/T_RecvScreen.cpp
+NXWidgetToolsExample/ExamplePage/T_RecvScreen.h
+NXWidgetToolsExample/ExamplePage/T_TableWidget.cpp
+NXWidgetToolsExample/ExamplePage/T_TableWidget.h
+```
+
+
+
 ---
 
 ## 二、改动记录
@@ -497,3 +693,44 @@
 
 ---
 
+### Track Record 5：2026年01月26日提交
+
+#### Modify Optize1
+
+项目格式化
+
+1. **移除单例文件**：删除 `singleton.h`，改用自定义宏工具管理单例。
+
+2. **新增宏工具文件**：添加 `LinnFunctionRegistry.h`、`LinnProperty.h`、`LinnSingleton.h`、`LinnUtils.h`，优化宏定义与单例实现，影响所有单例类的使用。
+   *注意：使用宏时，MSVC 需开启编译选项 `/Zc:preprocessor`，库已将其作为 PUBLIC 导出。*
+
+3. **导航接口返回值优化**：为 Navigation 系列的接口重新设计返回值，引入 `tl::expected` 作为错误处理机制，提高代码健壮性。
+
+4. **NXContentDialog 重构**：重构对话框实现，接口设计更通用、易用，方便操作三个按钮。
+5. **NXTabBar 增强**：
+   - 在 `NXTabBar.cpp` 和 `NXTabBarStyle` 中，`dragEnterEvent` 增加对 Qt 版本坐标事件的兼容性处理。
+   - 新增 Firefox 和 Google 两种标签栏样式绘制。
+
+6. **NXTheme 阴影绘制优化**：优化阴影绘制接口，提升视觉效果。
+
+7. **NXApplicationPrivate 改进**：在构造函数中兼容 `qApp` 信号槽连接，增强跨版本稳定性。
+
+8. **NXToolTip 逻辑重构**：
+
+   - 修改原贡献者逻辑，引入布尔变量控制显示行为，使逻辑更清晰。
+
+   - 新增定时器管理，防止延迟显示时长大于延迟隐藏时长时，鼠标快速滑过导致的不当展示。
+
+   - 修复窗口尺寸更新错误（例如大小切换时未能正确调整）。
+
+   - 同步调整 `NXSlider` 中 `NXToolTip` 的调用逻辑。
+
+9. **移除 NXAdvancedToolButton**：删除已废弃的 `NXAdvancedToolButton` 类。
+10. **代码清理**：移除 `NXWidget.cpp` 中不必要的背景色设置逻辑。
+11.  **引入 NXMultiCellLineEdit**：新增 `NXMultiCellLineEdit` 控件（类似 IP 输入框），相关文件一并添加。
+12. **基础控件文本样式调整**：
+
+- 回退 `NXRadioButton`、`NXPushButton`、`NXCheckBox`、`NXText` 等控件的 `setTextStyle` 方法。
+- 新增像素大小（pixel size）设置接口，便于精细控制字体。
+
+13. **问题修复**：同步修复若干已知问题，提升整体稳定性。

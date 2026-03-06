@@ -6,10 +6,3 @@ NXTableViewPrivate::NXTableViewPrivate(QObject *parent)
 }
 
 NXTableViewPrivate::~NXTableViewPrivate() { }
-
-NXModelIndexWidgetPrivate::NXModelIndexWidgetPrivate(QObject *parent)
-    : QObject { parent }
-{
-}
-
-NXModelIndexWidgetPrivate::~NXModelIndexWidgetPrivate() { }

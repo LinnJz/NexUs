@@ -17,6 +17,8 @@ NXNavigationNode::NXNavigationNode(const QString& nodeTitle, NXNavigationNode *p
   _pParentNode      = parent;
   _pIsExpanderNode  = false;
   _pIsVisible       = false;
+  _pIsCategoryNode  = false;
+  _pAwesome         = NXIconType::None;
 }
 
 NXNavigationNode::~NXNavigationNode()
@@ -137,6 +139,16 @@ int NXNavigationNode::getRow() const
 {
   if (_pParentNode) { return _pParentNode->getChildrenNodes().indexOf(const_cast<NXNavigationNode *>(this)); }
   return 0;
+}
+
+QList<NXNavigationNode *> NXNavigationNode::getExceptCategoryNodes()
+{
+  QList<NXNavigationNode *> exceptCategoryNodeList;
+  for (auto node : _pChildrenNodes)
+  {
+    if (!node->getIsCategoryNode()) { exceptCategoryNodeList.append(node); }
+  }
+  return exceptCategoryNodeList;
 }
 
 void NXNavigationNode::swapVisual(NXNavigationNode *other)

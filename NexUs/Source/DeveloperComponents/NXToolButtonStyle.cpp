@@ -222,7 +222,7 @@ void NXToolButtonStyle::_drawIcon(QPainter *painter,
           // 图片高度、字体高度、上下边距共10
           QRect buttonRect = bopt->rect;
           // 图标区域计算
-          const qreal iconHeightRatio    = 0.4; // 图标占按钮高度的40%
+          // const qreal iconHeightRatio    = 0.4; // 图标占按钮高度的40%
           const qreal iconTopMarginRatio = 0.1; // 图标顶部间距10%
 
           // 图标区域
@@ -282,7 +282,6 @@ void NXToolButtonStyle::_drawIcon(QPainter *painter,
       case Qt::ToolButtonTextUnderIcon :
       {
         QRect buttonRect               = bopt->rect;
-        const qreal iconHeightRatio    = 0.4;
         const qreal iconTopMarginRatio = 0.12;
 
         QRectF adjustIconRect(buttonRect.center().x() - iconSize.width() / 2,

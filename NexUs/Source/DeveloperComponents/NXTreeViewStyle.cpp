@@ -159,16 +159,13 @@ void NXTreeViewStyle::drawControl(ControlElement element,
       // 背景绘制
       this->drawPrimitive(QStyle::PE_PanelItemViewItem, option, painter, widget);
 
-      // 内容绘制
-      QRect itemRect = option->rect;
+      // 内容绘制;
       painter->save();
       painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
-      QRect checkRect = proxy()->subElementRect(SE_ItemViewItemCheckIndicator, vopt, widget);
-      QRect iconRect  = proxy()->subElementRect(SE_ItemViewItemDecoration, vopt, widget);
-      QRect textRect  = proxy()->subElementRect(SE_ItemViewItemText, vopt, widget);
       // 复选框绘制
-      if (checkRect.isValid())
+      if (vopt->features & QStyleOptionViewItem::HasCheckIndicator)
       {
+        QRect checkRect = proxy()->subElementRect(SE_ItemViewItemCheckIndicator, vopt, widget);
         painter->save();
         // 图标绘制
         if (vopt->checkState == Qt::Checked)
@@ -202,16 +199,19 @@ void NXTreeViewStyle::drawControl(ControlElement element,
       // 图标绘制
       if (!vopt->icon.isNull())
       {
+        QRect iconRect     = proxy()->subElementRect(SE_ItemViewItemDecoration, vopt, widget);
         QIcon::Mode mode   = QIcon::Normal;
         QIcon::State state = vopt->state & QStyle::State_Open ? QIcon::On : QIcon::Off;
         vopt->icon.paint(painter, iconRect, vopt->decorationAlignment, mode, state);
       }
+      QRect itemRect = option->rect;
       bool isFirst =
           vopt->state.testFlag(QStyle::State_Selected) && (vopt->viewItemPosition == QStyleOptionViewItem::Beginning ||
                                                            vopt->viewItemPosition == QStyleOptionViewItem::OnlyOne);
       // 文字绘制
       if (!vopt->text.isEmpty())
       {
+        QRect textRect = proxy()->subElementRect(SE_ItemViewItemText, vopt, widget);
         if (_pIconName != NXIconType::None)
         {
           const int lineHeight = textRect.height();

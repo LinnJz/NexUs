@@ -1,4 +1,4 @@
-#include "NXGroupBoxStyle.h"
+﻿#include "NXGroupBoxStyle.h"
 
 #include <QPainter>
 #include <QPainterPath>
@@ -59,7 +59,6 @@ void NXGroupBoxStyle::drawComplexControl(ComplexControl control,
 
         int textWidth = fm.horizontalAdvance(groupBox->text);
         int textLeft  = textRect.center().x() - textWidth / 2;
-        int textRight = textRect.center().x() + textWidth / 2;
 
         QRect titleBgRect(textLeft - 4, borderTop - 2, textWidth + 8, 2);
         // painter->fillRect(titleBgRect, NXThemeColor(_themeMode, WindowBase));

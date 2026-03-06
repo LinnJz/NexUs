@@ -4,13 +4,16 @@
 #include <QDrag>
 #include <QTabBar>
 
-#include "NXProperty.h"
+#include "NXDef.h"
 class NXTabBarPrivate;
 
 class NX_EXPORT NXTabBar : public QTabBar
 {
   Q_OBJECT
   Q_Q_CREATE(NXTabBar)
+  Q_PROPERTY_CREATE_Q_H(bool, IsSelectedIndicatorVisible)
+  Q_PROPERTY_CREATE_Q_H(int, TabCornerRadius)
+  Q_PROPERTY_CREATE_Q_H(NXTabBarType::TabBarStyle, TabBarStyle)
   Q_PROPERTY_CREATE_Q_H(QSize, TabSize)
 
 public:

@@ -6,7 +6,7 @@
 #include <QMouseEvent>
 #include <QTimer>
 #include <QWindow>
-#include "DeveloperComponents/NXCustomTabWidget.h"
+#include "NXCustomTabWidget.h"
 #include "NXTabBar.h"
 #include "NXTabWidget.h"
 
@@ -49,7 +49,11 @@ void NXTabWidgetPrivate::onTabDragCreate(QMimeData *mimeData)
       QEvent::MouseButtonRelease, QPoint(-1, -1), QPoint(-1, -1), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
   QApplication::sendEvent(tabBarObject, &releaseEvent);
   if (!originTabWidget) { originTabWidget = dragWidget->property("NXFloatParentWidget").value<QWidget *>(); }
-  bool isFloatWidget             = mimeData->property("IsFloatWidget").toBool();
+  bool isFloatWidget              = mimeData->property("IsFloatWidget").toBool();
+  bool isSelectedIndicatorVisible = mimeData->property("IsSelectedIndicatorVisible").toBool();
+  int tabCornerRadius             = mimeData->property("TabCornerRadius").toInt();
+  NXTabBarType::TabBarStyle tabBarStyle =
+      static_cast<NXTabBarType::TabBarStyle>(mimeData->property("TabBarStyle").toInt());
   QSize tabSize                  = mimeData->property("TabSize").toSize();
   NXCustomTabWidget *floatWidget = nullptr;
   if (isFloatWidget)
@@ -68,6 +72,9 @@ void NXTabWidgetPrivate::onTabDragCreate(QMimeData *mimeData)
       originCustomTabBar->removeTab(index);
     }
     NXTabBar *customTabBar = floatWidget->getCustomTabBar();
+    customTabBar->setIsSelectedIndicatorVisible(isSelectedIndicatorVisible);
+    customTabBar->setTabCornerRadius(tabCornerRadius);
+    customTabBar->setTabBarStyle(tabBarStyle);
     customTabBar->setTabSize(tabSize);
     dragWidget->setProperty("CurrentCustomBar", QVariant::fromValue<NXTabBar *>(customTabBar));
     floatWidget->addTab(dragWidget, tabIcon, tabText);
@@ -153,9 +160,16 @@ void NXTabWidgetPrivate::onTabDragLeave(QMimeData *mimeData)
   if (_customTabBar && _customTabBar != tabBarObject) { _customTabBar->removeTab(index); }
   QWidget *originTabWidget = dragWidget->property("NXOriginTabWidget").value<NXTabWidget *>();
   if (!originTabWidget) { originTabWidget = dragWidget->property("NXFloatParentWidget").value<QWidget *>(); }
-  NXCustomTabWidget *floatWidget = new NXCustomTabWidget(originTabWidget);
-  QSize tabSize                  = mimeData->property("TabSize").toSize();
-  NXTabBar *customTabBar         = floatWidget->getCustomTabBar();
+  NXCustomTabWidget *floatWidget  = new NXCustomTabWidget(originTabWidget);
+  bool isSelectedIndicatorVisible = mimeData->property("IsSelectedIndicatorVisible").toBool();
+  int tabCornerRadius             = mimeData->property("TabCornerRadius").toInt();
+  NXTabBarType::TabBarStyle tabBarStyle =
+      static_cast<NXTabBarType::TabBarStyle>(mimeData->property("TabBarStyle").toInt());
+  QSize tabSize          = mimeData->property("TabSize").toSize();
+  NXTabBar *customTabBar = floatWidget->getCustomTabBar();
+  customTabBar->setIsSelectedIndicatorVisible(isSelectedIndicatorVisible);
+  customTabBar->setTabCornerRadius(tabCornerRadius);
+  customTabBar->setTabBarStyle(tabBarStyle);
   customTabBar->setTabSize(tabSize);
   dragWidget->setProperty("CurrentCustomBar", QVariant::fromValue<NXTabBar *>(customTabBar));
   floatWidget->addTab(dragWidget, tabIcon, tabText);

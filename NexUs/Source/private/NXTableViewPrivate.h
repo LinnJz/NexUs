@@ -1,24 +1,10 @@
 ﻿#ifndef NXTABLEVIEWPRIVATE_H
 #define NXTABLEVIEWPRIVATE_H
 
-#include <QModelIndex>
+#include <QMetaObject>
 #include <QObject>
+
 #include "NXProperty.h"
-
-class NXModelIndexWidget;
-
-class NXModelIndexWidgetPrivate : public QObject
-{
-  Q_OBJECT
-  Q_D_CREATE(NXModelIndexWidget)
-
-public:
-  explicit NXModelIndexWidgetPrivate(QObject *parent = nullptr);
-  ~NXModelIndexWidgetPrivate();
-
-private:
-  QModelIndex _pIndex;
-};
 
 class NXTableView;
 class NXTableViewStyle;
@@ -27,12 +13,17 @@ class NXTableViewPrivate : public QObject
 {
   Q_OBJECT
   Q_D_CREATE(NXTableView)
-  Q_PRIVATE_CREATE(NXTableViewStyle *, TableViewStyle)
-  Q_PRIVATE_CREATE(bool, DrawSelectionBackground)
 
 public:
   explicit NXTableViewPrivate(QObject *parent = nullptr);
   ~NXTableViewPrivate();
+
+private:
+  NXTableViewStyle *_tableViewStyle { nullptr };
+  QMetaObject::Connection _modelResetConnection;
+  QMetaObject::Connection _columnsInsertedConnection;
+  QMetaObject::Connection _columnsRemovedConnection;
+  QMetaObject::Connection _layoutChangedConnection;
 };
 
 #endif // NXTABLEVIEWPRIVATE_H

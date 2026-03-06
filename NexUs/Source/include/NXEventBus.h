@@ -4,8 +4,8 @@
 #include <QObject>
 #include <QVariantMap>
 
+#include "LinnSingleton.h"
 #include "NXDef.h"
-#include "singleton.h"
 class NXEventPrivate;
 
 class NX_EXPORT NXEvent : public QObject
@@ -23,17 +23,17 @@ public:
   NXEventBusType::EventBusReturnType registerAndInit();
 };
 
+#pragma push_macro("Q_DISABLE_COPY")
+#undef Q_DISABLE_COPY
+#define Q_DISABLE_COPY(Class)
+
 class NXEventBusPrivate;
 
 class NX_EXPORT NXEventBus : public QObject
 {
-#pragma push_macro("DISABLE_COPY")
-#undef DISABLE_COPY
-#define DISABLE_COPY(Class)
-  SINGLETON_CREATE_H(NXEventBus)
-#pragma pop_macro("DISABLE_COPY")
   Q_OBJECT
   Q_Q_CREATE(NXEventBus)
+  LINN_SINGLETON_CREATE(LINN_SINGLETON_UNIQUE(NXEventBus))
 
 private:
   explicit NXEventBus(QObject *parent = nullptr);
@@ -47,4 +47,5 @@ private:
   friend class NXEvent;
 };
 
+#pragma pop_macro("Q_DISABLE_COPY")
 #endif // NXEVENTBUS_H

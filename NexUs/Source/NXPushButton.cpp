@@ -12,6 +12,8 @@ Q_PROPERTY_CREATE_Q_CPP(NXPushButton, QColor, LightHoverColor)
 Q_PROPERTY_CREATE_Q_CPP(NXPushButton, QColor, DarkHoverColor)
 Q_PROPERTY_CREATE_Q_CPP(NXPushButton, QColor, LightPressColor)
 Q_PROPERTY_CREATE_Q_CPP(NXPushButton, QColor, DarkPressColor)
+Q_PROPERTY_CREATE_Q_CPP(NXPushButton, QColor, LightTextColor)
+Q_PROPERTY_CREATE_Q_CPP(NXPushButton, QColor, DarkTextColor)
 
 NXPushButton::NXPushButton(QWidget *parent)
     : QPushButton(parent)
@@ -27,8 +29,8 @@ NXPushButton::NXPushButton(QWidget *parent)
   d->_pDarkHoverColor    = NXThemeColor(NXThemeType::Dark, BasicHover);
   d->_pLightPressColor   = NXThemeColor(NXThemeType::Light, BasicPress);
   d->_pDarkPressColor    = NXThemeColor(NXThemeType::Dark, BasicPress);
-  d->_lightTextColor     = NXThemeColor(NXThemeType::Light, BasicText);
-  d->_darkTextColor      = NXThemeColor(NXThemeType::Dark, BasicText);
+  d->_pLightTextColor    = NXThemeColor(NXThemeType::Light, BasicText);
+  d->_pDarkTextColor     = NXThemeColor(NXThemeType::Dark, BasicText);
   setMouseTracking(true);
   setFixedHeight(38);
   QFont font = this->font();
@@ -48,45 +50,29 @@ NXPushButton::NXPushButton(const QString& text, QWidget *parent)
 
 NXPushButton::~NXPushButton() { }
 
-void NXPushButton::setLightTextColor(QColor color)
+void NXPushButton::setTextPixelSize(int size)
+{
+  QFont font = this->font();
+  font.setPixelSize(size);
+  setFont(font);
+}
+
+int NXPushButton::getTextPixelSize() const { return this->font().pixelSize(); }
+
+void NXPushButton::setTextPointSize(int size)
+{
+  QFont font = this->font();
+  font.setPointSize(size);
+  setFont(font);
+}
+
+int NXPushButton::getTextPointSize() const { return this->font().pointSize(); }
+
+void NXPushButton::setTextStyle(NXTextType::TextStyle textStyle)
 {
   Q_D(NXPushButton);
-  d->_lightTextColor = color;
-}
-
-QColor NXPushButton::getLightTextColor() const
-{
-  Q_D(const NXPushButton);
-  return d->_lightTextColor;
-}
-
-void NXPushButton::setDarkTextColor(QColor color)
-{
-  Q_D(NXPushButton);
-  d->_darkTextColor = color;
-}
-
-QColor NXPushButton::getDarkTextColor() const
-{
-  Q_D(const NXPushButton);
-  return d->_darkTextColor;
-}
-
-void NXPushButton::setTextStyle(NXTextType::TextStyle textStyle,
-                                std::optional<int> pixelSize,
-                                std::optional<QFont::Weight> weight)
-{
-  if (textStyle < NXTextType::NoStyle || textStyle > NXTextType::CustomStyle)
-  {
-    qWarning() << "Warning: Invalid textStyle provided. Please use a valid NXTextType::TextStyle enum value.";
-    return;
-  }
-  if (textStyle != NXTextType::CustomStyle && (pixelSize.has_value() || weight.has_value()))
-  {
-    qWarning() << "Warning: To use pixelSize and weight, set textStyle to NXTextType::CustomStyle.";
-    return;
-  }
-  QFont textFont = this->font();
+  QFont textFont = font();
+  d->_textStyle  = textStyle;
   switch (textStyle)
   {
   case NXTextType::NoStyle :
@@ -133,18 +119,18 @@ void NXPushButton::setTextStyle(NXTextType::TextStyle textStyle,
     textFont.setWeight(QFont::DemiBold);
     break;
   }
-  case NXTextType::CustomStyle :
-  {
-    if (pixelSize.has_value()) { textFont.setPixelSize(pixelSize.value()); }
-    if (weight.has_value()) { textFont.setWeight(weight.value()); }
-    break;
-  }
   default :
   {
     break;
   }
   }
   setFont(textFont);
+}
+
+NXTextType::TextStyle NXPushButton::getTextStyle() const
+{
+  Q_D(const NXPushButton);
+  return d->_textStyle;
 }
 
 void NXPushButton::setNXIcon(NXIconType::IconName icon)
@@ -217,7 +203,7 @@ void NXPushButton::paintEvent(QPaintEvent *event)
                      height() - d->_shadowBorderWidth + 1);
   }
   // 文字绘制
-  painter.setPen(isEnabled() ? d->_themeMode == NXThemeType::Light ? d->_lightTextColor : d->_darkTextColor
+  painter.setPen(isEnabled() ? d->_themeMode == NXThemeType::Light ? d->_pLightTextColor : d->_pDarkTextColor
                              : NXThemeColor(d->_themeMode, BasicTextDisable));
   painter.drawText(foregroundRect, Qt::AlignCenter, text());
   painter.restore();

@@ -19,8 +19,8 @@ public:
 
 private:
   NXThemeType::ThemeMode _themeMode { NXThemeType::Light };
-  QColor _lightThemeColorList[42];
-  QColor _darkThemeColorList[42];
+  QColor _lightThemeColorList[48];
+  QColor _darkThemeColorList[48];
   void _initThemeColor();
 };
 

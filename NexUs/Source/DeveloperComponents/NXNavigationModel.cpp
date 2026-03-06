@@ -32,7 +32,7 @@ QModelIndex NXNavigationModel::parent(const QModelIndex& child) const
   NXNavigationNode *childNode  = static_cast<NXNavigationNode *>(child.internalPointer());
   NXNavigationNode *parentNode = childNode->getParentNode();
   if (parentNode == _rootNode) { return QModelIndex(); }
-  else if (parentNode == nullptr) { return QModelIndex(); }
+  if (parentNode == nullptr) { return QModelIndex(); }
   return createIndex(parentNode->getRow(), 0, parentNode);
 }
 
@@ -46,7 +46,14 @@ QModelIndex NXNavigationModel::index(int row, int column, const QModelIndex& par
     parentNode = static_cast<NXNavigationNode *>(parent.internalPointer());
   }
   NXNavigationNode *childNode = nullptr;
-  if (parentNode->getChildrenNodes().count() > row) { childNode = parentNode->getChildrenNodes().at(row); }
+  if (parentNode->getChildrenNodes().count() > row)
+  {
+    if (parentNode == _rootNode && !_isMaximalMode) { childNode = parentNode->getExceptCategoryNodes()[row]; }
+    else
+    {
+      childNode = parentNode->getChildrenNodes()[row];
+    }
+  }
   if (childNode) { return createIndex(row, column, childNode); }
   return QModelIndex();
 }
@@ -60,6 +67,7 @@ int NXNavigationModel::rowCount(const QModelIndex& parent) const
   {
     parentNode = static_cast<NXNavigationNode *>(parent.internalPointer());
   }
+  if (parentNode == _rootNode && !_isMaximalMode) { return _rootNode->getExceptCategoryNodes().count(); }
   return parentNode->getChildrenNodes().count();
 };
 
@@ -84,7 +92,11 @@ Qt::ItemFlags NXNavigationModel::flags(const QModelIndex& index) const
   return flags;
 }
 
-NXNodeOperateResult NXNavigationModel::addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome)
+void NXNavigationModel::setIsMaximalMode(bool isMaximal) { _isMaximalMode = isMaximal; }
+
+bool NXNavigationModel::getIsMaximalMode() { return _isMaximalMode; }
+
+QString NXNavigationModel::addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome)
 {
   NXNavigationNode *node = new NXNavigationNode(expanderTitle, _rootNode);
   node->setDepth(1);
@@ -128,7 +140,7 @@ NXNodeOperateResult NXNavigationModel::addExpanderNode(const QString& expanderTi
   return node->getNodeKey();
 }
 
-NXNodeOperateResult NXNavigationModel::addPageNode(const QString& pageTitle, NXIconType::IconName awesome)
+QString NXNavigationModel::addPageNode(const QString& pageTitle, NXIconType::IconName awesome)
 {
   NXNavigationNode *node = new NXNavigationNode(pageTitle, _rootNode);
   node->setAwesome(awesome);
@@ -171,8 +183,7 @@ NXNavigationModel::addPageNode(const QString& pageTitle, const QString& targetEx
   return node->getNodeKey();
 }
 
-NXNodeOperateResult
-NXNavigationModel::addPageNode(const QString& pageTitle, int keyPoints, NXIconType::IconName awesome)
+QString NXNavigationModel::addPageNode(const QString& pageTitle, int keyPoints, NXIconType::IconName awesome)
 {
   NXNavigationNode *node = new NXNavigationNode(pageTitle, _rootNode);
   node->setAwesome(awesome);
@@ -216,6 +227,46 @@ NXNodeOperateResult NXNavigationModel::addPageNode(const QString& pageTitle,
   _nodesMap.insert(node->getNodeKey(), node);
   endInsertRows();
   if (!_pSelectedNode) { _pSelectedNode = node; }
+  return node->getNodeKey();
+}
+
+QString NXNavigationModel::addCategoryNode(const QString& categoryTitle)
+{
+  NXNavigationNode *node = new NXNavigationNode(categoryTitle, _rootNode);
+  node->setDepth(1);
+  node->setIsVisible(true);
+  node->setIsCategoryNode(true);
+  beginInsertRows(QModelIndex(), _rootNode->getChildrenNodes().count(), _rootNode->getChildrenNodes().count());
+  _rootNode->appendChildNode(node);
+  _nodesMap.insert(node->getNodeKey(), node);
+  endInsertRows();
+  return node->getNodeKey();
+}
+
+NXNodeOperateResult NXNavigationModel::addCategoryNode(const QString& categoryTitle, const QString& targetExpanderKey)
+{
+  if (!_nodesMap.contains(targetExpanderKey))
+  {
+    return NXUnexpected<QString> { NXNavigationType::NodeOperateError::TargetNodeInvalid };
+  }
+  NXNavigationNode *parentNode = _nodesMap.value(targetExpanderKey);
+  if (!parentNode->getIsExpanderNode())
+  {
+    return NXUnexpected<QString> { NXNavigationType::NodeOperateError::TargetNodeTypeError };
+  }
+  if (parentNode->getDepth() > 10)
+  {
+    return NXUnexpected<QString> { NXNavigationType::NodeOperateError::TargetNodeDepthLimit };
+  }
+  NXNavigationNode *node = new NXNavigationNode(categoryTitle, parentNode);
+  node->setDepth(parentNode->getDepth() + 1);
+  node->setIsCategoryNode(true);
+  if (parentNode->getIsVisible() && parentNode->getIsExpanded()) { node->setIsVisible(true); }
+  beginInsertRows(
+      parentNode->getModelIndex(), parentNode->getChildrenNodes().count(), parentNode->getChildrenNodes().count());
+  parentNode->appendChildNode(node);
+  _nodesMap.insert(node->getNodeKey(), node);
+  endInsertRows();
   return node->getNodeKey();
 }
 
@@ -274,6 +325,16 @@ QList<NXNavigationNode *> NXNavigationModel::getRootExpandedNodes() const
     if (node->getIsExpanderNode() && node->getIsExpanded()) { expandedNodeList.append(node); }
   }
   return expandedNodeList;
+}
+
+QList<NXNavigationNode *> NXNavigationModel::getRootCategoryNodes() const
+{
+  QList<NXNavigationNode *> categoryNodeList;
+  for (auto node : _rootNode->getChildrenNodes())
+  {
+    if (node->getIsCategoryNode()) { categoryNodeList.append(node); }
+  }
+  return categoryNodeList;
 }
 
 Qt::DropActions NXNavigationModel::supportedDropActions() const { return Qt::MoveAction; }

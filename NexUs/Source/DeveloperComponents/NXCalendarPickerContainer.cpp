@@ -1,6 +1,5 @@
-﻿#include "NXCalendarPickerContainer.h"
-
-#include <QPainter>
+﻿#include <QPainter>
+#include "NXCalendarPickerContainer.h"
 
 #include "NXTheme.h"
 
@@ -13,7 +12,14 @@ NXCalendarPickerContainer::NXCalendarPickerContainer(QWidget *parent)
   setObjectName("NXCalendarPickerContainer");
   setStyleSheet("#NXCalendarPickerContainer{background-color:transparent}");
   _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme,
+          &NXTheme::themeModeChanged,
+          this,
+          [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+    update();
+  });
 }
 
 NXCalendarPickerContainer::~NXCalendarPickerContainer() { }

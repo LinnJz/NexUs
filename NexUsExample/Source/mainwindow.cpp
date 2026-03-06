@@ -57,19 +57,17 @@ MainWindow::MainWindow(QWidget *parent)
 
   // 拦截默认关闭事件
   _closeDialog = new NXContentDialog(this);
-  connect(_closeDialog, &NXContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
   connect(_closeDialog,
-          &NXContentDialog::middleButtonClicked,
-          this,
-          [=]()
+          &NXContentDialog::buttonClicked,
+          [this](NXContentDialog::ButtonType buttonType)
   {
-    _closeDialog->close();
-    showMinimized();
+    if (NXContentDialog::RightButton == buttonType) { closeWindow(); }
+    else if (NXContentDialog::MiddleButton == buttonType)
+    {
+      _closeDialog->close();
+      showMinimized();
+    }
   });
-  // 如果不需要，可以隐藏按钮
-  //_closeDialog->setLeftButtonVisible(false);
-  //_closeDialog->setMiddleButtonVisible(false);
-  //_closeDialog->setRightButtonVisible(false);
   this->setIsDefaultClosed(false);
   connect(this, &MainWindow::closeButtonClicked, this, [=]() { _closeDialog->exec(); });
 

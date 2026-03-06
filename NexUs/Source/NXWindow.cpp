@@ -25,7 +25,6 @@
 #include "private/NXWindowPrivate.h"
 
 Q_PROPERTY_CREATE_Q_CPP(NXWindow, int, ThemeChangeTime)
-Q_PROPERTY_CREATE_Q_CPP(NXWindow, NXNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
 Q_PROPERTY_CREATE_Q_CPP(NXWindow, NXWindowType::StackSwitchMode, StackSwitchMode)
 Q_TAKEOVER_NATIVEEVENT_CPP(NXWindow, d_func()->_appBar);
 
@@ -41,7 +40,6 @@ NXWindow::NXWindow(QWidget *parent)
 
   d->_pThemeChangeTime          = 700;
   d->_pNavigationBarDisplayMode = NXNavigationType::NavigationDisplayMode::Auto;
-  connect(this, &NXWindow::pNavigationBarDisplayModeChanged, d, &NXWindowPrivate::onDisplayModeChanged);
 
   // 自定义AppBar
   d->_appBar = new NXAppBar(this);
@@ -271,6 +269,44 @@ int NXWindow::getCurrentStackIndex() const
   return d->_centerStackedWidget->getContainerStackedWidget()->currentIndex();
 }
 
+void NXWindow::setNavigationBarDisplayMode(NXNavigationType::NavigationDisplayMode navigationBarDisplayMode)
+{
+  Q_D(NXWindow);
+  d->_pNavigationBarDisplayMode       = navigationBarDisplayMode;
+  d->_currentNavigationBarDisplayMode = d->_pNavigationBarDisplayMode;
+  bool isVisible                      = this->isVisible();
+  switch (d->_pNavigationBarDisplayMode)
+  {
+  case NXNavigationType::Auto :
+  {
+    d->_doNavigationDisplayModeChange();
+    break;
+  }
+  case NXNavigationType::Minimal :
+  {
+    d->_navigationBar->setDisplayMode(NXNavigationType::Minimal, isVisible);
+    break;
+  }
+  case NXNavigationType::Compact :
+  {
+    d->_navigationBar->setDisplayMode(NXNavigationType::Compact, isVisible);
+    break;
+  }
+  case NXNavigationType::Maximal :
+  {
+    d->_navigationBar->setDisplayMode(NXNavigationType::Maximal, isVisible);
+    break;
+  }
+  }
+  Q_EMIT pNavigationBarDisplayModeChanged();
+}
+
+NXNavigationType::NavigationDisplayMode NXWindow::getNavigationBarDisplayMode() const
+{
+  Q_D(const NXWindow);
+  return d->_pNavigationBarDisplayMode;
+}
+
 void NXWindow::setWindowPaintMode(NXWindowType::PaintMode windowPaintMode)
 {
   Q_D(NXWindow);
@@ -377,7 +413,7 @@ void NXWindow::setNavigationPageOpenPolicy(std::function<void(const QString& /*n
   d->_navigationBar->setNavigationPageOpenPolicy(std::move(openNavigationPageFunc));
 }
 
-NXNodeOperateResult NXWindow::addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome) const
+QString NXWindow::addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome) const
 {
   Q_D(const NXWindow);
   return d->_navigationBar->addExpanderNode(expanderTitle, awesome);
@@ -430,6 +466,18 @@ NXNodeOperateResult NXWindow::addPageNode(const QString& pageTitle,
       d->_navigationBar->addPageNode(pageTitle, page, targetExpanderKey, keyPoints, awesome);
   if (returnData.has_value()) { d->_pageMetaMap.insert(page->property("NXPageKey").toString(), page->metaObject()); }
   return returnData;
+}
+
+QString NXWindow::addCategoryNode(const QString& categoryTitle)
+{
+  Q_D(const NXWindow);
+  return d->_navigationBar->addCategoryNode(categoryTitle);
+}
+
+NXNodeOperateResult NXWindow::addCategoryNode(const QString& categoryTitle, const QString& targetExpanderKey)
+{
+  Q_D(const NXWindow);
+  return d->_navigationBar->addCategoryNode(categoryTitle, targetExpanderKey);
 }
 
 NXNodeOperateResult

@@ -1,7 +1,6 @@
 ﻿#ifndef NXWIDGETPRIVATE_H
 #define NXWIDGETPRIVATE_H
 
-#include <QColor>
 #include <QObject>
 #include "NXDef.h"
 
@@ -18,11 +17,8 @@ public:
   ~NXWidgetPrivate() override;
 
 private:
-  bool _isCustomBackground { false };
   NXApplicationType::WindowDisplayMode _windowDisplayMode;
   NXThemeType::ThemeMode _themeMode;
-  QColor _customLightBgColor;
-  QColor _customDarkBgColor;
   NXAppBar *_appBar { nullptr };
 };
 

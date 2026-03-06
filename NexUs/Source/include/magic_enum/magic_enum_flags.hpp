@@ -140,7 +140,7 @@ template<typename E>
 template<typename E, typename BinaryPredicate = std::equal_to<>>
 [[nodiscard]] constexpr auto
 enum_flags_cast(string_view value,
-                [[maybe_unused]] BinaryPredicate p = {}) noexcept(detail::is_nothrow_invocable<BinaryPredicate>())
+                [[maybe_unused]] BinaryPredicate p = {}) noexcept(detail::is_nothrow_invocable_v<BinaryPredicate>)
     -> detail::enable_if_t<E, optional<std::decay_t<E>>, BinaryPredicate>
 {
   using D          = std::decay_t<E>;
@@ -204,7 +204,7 @@ template<typename E>
 // Checks whether enum-flags contains enumerator with such name.
 template<typename E, typename BinaryPredicate = std::equal_to<>>
 [[nodiscard]] constexpr auto
-enum_flags_contains(string_view value, BinaryPredicate p = {}) noexcept(detail::is_nothrow_invocable<BinaryPredicate>())
+enum_flags_contains(string_view value, BinaryPredicate p = {}) noexcept(detail::is_nothrow_invocable_v<BinaryPredicate>)
     -> detail::enable_if_t<E, bool, BinaryPredicate>
 {
   using D = std::decay_t<E>;

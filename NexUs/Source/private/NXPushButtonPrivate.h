@@ -17,6 +17,8 @@ class NXPushButtonPrivate : public QObject
   Q_PROPERTY_CREATE_D(QColor, DarkHoverColor)
   Q_PROPERTY_CREATE_D(QColor, LightPressColor)
   Q_PROPERTY_CREATE_D(QColor, DarkPressColor)
+  Q_PROPERTY_CREATE_D(QColor, LightTextColor)
+  Q_PROPERTY_CREATE_D(QColor, DarkTextColor)
   Q_PROPERTY_CREATE_D(int, BorderRadius)
 
 public:
@@ -27,11 +29,10 @@ private:
   int _iconSize { 18 };
   int _shadowBorderWidth { 3 };
   NXIconType::IconName _icon { NXIconType::None };
+  NXTextType::TextStyle _textStyle { NXTextType::NoStyle };
+  NXThemeType::ThemeMode _themeMode;
   bool _hasIcon { false };
   bool _isPressed { false };
-  NXThemeType::ThemeMode _themeMode;
-  QColor _lightTextColor;
-  QColor _darkTextColor;
 };
 
 #endif // NXPUSHBUTTONPRIVATE_H

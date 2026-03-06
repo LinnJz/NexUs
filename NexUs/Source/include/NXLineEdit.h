@@ -20,8 +20,8 @@ public:
   void setBorderRadius(int borderRadius);
   int getBorderRadius() const;
 
-  void setContentsPaddings(int left, int top, int right, int bottom);
-  QMargins getContentsPaddings() const;
+  void setContentsMargins(const QMargins& margins);
+  QMargins getContentsMargins() const;
 
   void setLineEditIconMargin(int margin);
   int getLineEditIconMargin() const;
@@ -35,6 +35,7 @@ protected:
   void focusOutEvent(QFocusEvent *event) override;
   void paintEvent(QPaintEvent *event) override;
   void contextMenuEvent(QContextMenuEvent *event) override;
+  void keyPressEvent(QKeyEvent *event) override;
 };
 
 #endif // NXLINEEDIT_H

@@ -4,7 +4,6 @@
 #include <QPainterPath>
 
 #include "private/NXThemePrivate.h"
-SINGLETON_CREATE_CPP(NXTheme)
 
 NXTheme::NXTheme(QObject *parent)
     : QObject { parent }
@@ -49,6 +48,43 @@ void NXTheme::drawEffectShadow(QPainter *painter, QRect widgetRect, int shadowBo
     int alpha = 1 * (shadowBorderWidth - i + 1);
     color.setAlpha(alpha > 255 ? 255 : alpha);
     painter->setPen(color);
+    painter->drawPath(path);
+  }
+  painter->restore();
+}
+
+void NXTheme::drawEffectShadow(QPainter *painter,
+                               QRect widgetRect,
+                               int shadowBorderWidth,
+                               int borderRadius,
+                               int maxAlpha,
+                               int extendPixels,
+                               const QColor& lightColor,
+                               const QColor& darkColor)
+{
+  Q_D(NXTheme);
+  painter->save();
+  painter->setRenderHints(QPainter::Antialiasing);
+
+  QColor color = d->_themeMode == NXThemeType::Light ? lightColor : darkColor;
+
+  for (int i = 0; i < shadowBorderWidth; ++i)
+  {
+    int expansion = i + extendPixels;
+
+    QRect rect = widgetRect.adjusted(-expansion, -expansion, expansion, expansion);
+
+    int currentRadius = borderRadius + expansion / 2;
+
+    QPainterPath path;
+    path.addRoundedRect(rect, currentRadius, currentRadius);
+
+    int alpha = maxAlpha * (shadowBorderWidth - i) / shadowBorderWidth;
+    alpha     = qBound(0, alpha, 255);
+    color.setAlpha(alpha);
+
+    painter->setBrush(color);
+    painter->setPen(Qt::NoPen);
     painter->drawPath(path);
   }
   painter->restore();

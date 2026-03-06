@@ -220,37 +220,37 @@ private:                   \
 
 #define Q_BEGIN_ENUM_CREATE_IMPL(_1, _2, NAME, ...) NAME
 #define Q_BEGIN_ENUM_CREATE_ARGS(args)              Q_BEGIN_ENUM_CREATE_IMPL args
-#define Q_BEGIN_ENUM_CREATE(...)                                                                      \
-  Q_BEGIN_ENUM_CREATE_ARGS((__VA_ARGS__, Q_BEGIN_ENUM_CREATE_EX, Q_BEGIN_ENUM_CREATE_0))(__VA_ARGS__)
+#define Q_BEGIN_ENUM_CREATE(...)                                                                     \
+  Q_BEGIN_ENUM_CREATE_ARGS((__VA_ARGS__, Q_BEGIN_ENUM_CREATE_2, Q_BEGIN_ENUM_CREATE_1))(__VA_ARGS__)
 
 // 枚举类导出  兼容QT5低版本
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-#  define Q_BEGIN_ENUM_CREATE_0(CLASS) \
+#  define Q_BEGIN_ENUM_CREATE_1(CLASS) \
     namespace CLASS                    \
     {                                  \
     Q_NAMESPACE_EXPORT()
 
-#  define Q_BEGIN_ENUM_CREATE_EX(CLASS, EXPORT) \
-    namespace CLASS                             \
-    {                                           \
+#  define Q_BEGIN_ENUM_CREATE_2(CLASS, EXPORT) \
+    namespace CLASS                            \
+    {                                          \
     Q_NAMESPACE_EXPORT(EXPORT)
 
 #  define Q_END_ENUM_CREATE(CLASS) }
 
 #  define Q_ENUM_CREATE(CLASS) Q_ENUM_NS(CLASS)
 #else
-#  define Q_BEGIN_ENUM_CREATE_0(CLASS) \
+#  define Q_BEGIN_ENUM_CREATE_1(CLASS) \
     class CLASS : public QObject       \
     {                                  \
       Q_OBJECT                         \
                                        \
     public:
 
-#  define Q_BEGIN_ENUM_CREATE_EX(CLASS, EXPORT) \
-    class EXPORT CLASS : public QObject         \
-    {                                           \
-      Q_OBJECT                                  \
-                                                \
+#  define Q_BEGIN_ENUM_CREATE_2(CLASS, EXPORT) \
+    class EXPORT CLASS : public QObject        \
+    {                                          \
+      Q_OBJECT                                 \
+                                               \
     public:
 
 #  define Q_END_ENUM_CREATE(CLASS) \
@@ -263,14 +263,32 @@ private:                   \
 #  define Q_ENUM_CREATE(CLASS) Q_ENUM(CLASS)
 #endif
 
-#define Q_GET_ENUM_NAME(value)                                                               \
-  (QMetaEnum::fromType<std::decay_t<decltype(value)>>().valueToKey(static_cast<int>(value)))
-
-template<typename T>
-QString q_get_enum_name(T value)
+template<typename EnumT>
+QString qEnumName()
 {
-  const QMetaEnum metaEnum = QMetaEnum::fromType<T>();
-  return QString(metaEnum.valueToKey(static_cast<int>(value)));
+  using Enum = std::decay_t<EnumT>;
+  static_assert(std::is_enum_v<Enum>, "qEnumName requires an enum type");
+
+  QMetaEnum meta = QMetaEnum::fromType<Enum>();
+  if (!meta.isValid()) { return {}; }
+  return QString::fromUtf8(meta.name());
+}
+
+template<typename EnumT>
+QString qEnumName(EnumT value)
+{
+  using Enum = std::decay_t<EnumT>;
+  static_assert(std::is_enum_v<Enum>, "qEnumName requires an enum type");
+
+
+  const QMetaEnum metaEnum = QMetaEnum::fromType<Enum>();
+  if (!metaEnum.isValid()) { return {}; }
+
+  using Underlying   = std::underlying_type_t<Enum>;
+  const int intValue = static_cast<int>(static_cast<Underlying>(value));
+  const char *key    = metaEnum.valueToKey(intValue);
+  if (!key) { return QString::number(intValue); }
+  return QString::fromUtf8(key);
 }
 
 #endif // NXPROPERTY_H

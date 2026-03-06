@@ -61,6 +61,8 @@ void NXThemePrivate::_initThemeColor()
   _darkThemeColorList[NXThemeType::BasicTextDisable]    = QColor(0xA7, 0xA7, 0xA7);
   _lightThemeColorList[NXThemeType::BasicTextPress]     = QColor(0x5A, 0x5A, 0x5D);
   _darkThemeColorList[NXThemeType::BasicTextPress]      = QColor(0xBB, 0xBB, 0xBF);
+  _lightThemeColorList[NXThemeType::BasicTextCategory]  = QColor(0x5C, 0x5C, 0x5F);
+  _darkThemeColorList[NXThemeType::BasicTextCategory]   = QColor(0xCC, 0xCC, 0xCE);
   _lightThemeColorList[NXThemeType::BasicBorder]        = QColor(0xE5, 0xE5, 0xE5);
   _darkThemeColorList[NXThemeType::BasicBorder]         = QColor(0x4B, 0x4B, 0x4B);
   _lightThemeColorList[NXThemeType::BasicBorderDeep]    = QColor(0xA8, 0xA8, 0xA8);
@@ -113,4 +115,16 @@ void NXThemePrivate::_initThemeColor()
   _darkThemeColorList[NXThemeType::Win10BorderActive]    = QColor(0x33, 0x33, 0x33);
   _lightThemeColorList[NXThemeType::Win10BorderInactive] = QColor(0xA7, 0xA7, 0xA7);
   _darkThemeColorList[NXThemeType::Win10BorderInactive]  = QColor(0x3D, 0x3D, 0x3D);
+
+  _lightThemeColorList[NXThemeType::TabBarBase]     = QColor(0xEA, 0xEA, 0xED);
+  _darkThemeColorList[NXThemeType::TabBarBase]      = QColor(0x1C, 0x20, 0x27);
+  _lightThemeColorList[NXThemeType::TabBarSelected] = QColor(0xFF, 0xFF, 0xFF);
+  _darkThemeColorList[NXThemeType::TabBarSelected]  = QColor(0x38, 0x3B, 0x43);
+  _lightThemeColorList[NXThemeType::TabBarHover]    = QColor(0xD2, 0xD2, 0xD6);
+  _darkThemeColorList[NXThemeType::TabBarHover]     = QColor(0x3B, 0x47, 0x5E);
+
+  _lightThemeColorList[NXThemeType::TabBarSelectedCloseHover] = QColor(0xE7, 0xE7, 0xE8);
+  _lightThemeColorList[NXThemeType::TabBarCloseHover]         = QColor(0xBF, 0xBF, 0xC3);
+  _darkThemeColorList[NXThemeType::TabBarSelectedCloseHover]  = QColor(0x57, 0x5A, 0x60);
+  _darkThemeColorList[NXThemeType::TabBarCloseHover]          = QColor(0x5A, 0x64, 0x77);
 }

@@ -53,11 +53,14 @@ public:
   NXNavigationType::NodeOperateError setNavigationNodeTitle(const QString& nodeTitle, const QString& nodeKey);
   QString getNavigationNodeTitle(const QString& nodeKey) const;
 
-  NXNodeOperateResult addExpanderNode(const QString& expanderTitle,
-                                      NXIconType::IconName awesome = NXIconType::None) const;
+  QString addExpanderNode(const QString& expanderTitle, NXIconType::IconName awesome = NXIconType::None) const;
   NXNodeOperateResult addExpanderNode(const QString& expanderTitle,
                                       const QString& targetExpanderKey,
                                       NXIconType::IconName awesome = NXIconType::None) const;
+
+  QString addCategoryNode(const QString& categoryTitle);
+  NXNodeOperateResult addCategoryNode(const QString& categoryTitle, const QString& targetExpanderKey);
+
   NXNodeOperateResult
   addPageNode(const QString& pageTitle, QWidget *page, NXIconType::IconName awesome = NXIconType::None);
   NXNodeOperateResult addPageNode(const QString& pageTitle,
@@ -73,6 +76,7 @@ public:
                                   const QString& targetExpanderKey,
                                   int keyPoints                = 0,
                                   NXIconType::IconName awesome = NXIconType::None);
+
   NXNodeOperateResult
   addFooterNode(const QString& footerTitle, int keyPoints = 0, NXIconType::IconName awesome = NXIconType::None) const;
   NXNodeOperateResult addFooterNode(const QString& footerTitle,

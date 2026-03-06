@@ -1,14 +1,12 @@
 ﻿#include "NXText.h"
 
-#include <optional>
-
 #include <QContextMenuEvent>
 #include <QPainter>
 
 #include "NXTheme.h"
 #include "private/NXTextPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(NXText, bool, IsAllowClick)
-Q_PROPERTY_CREATE_Q_CPP(NXText, NXWidgetType::BorderFlags, BorderFlag)
+Q_PROPERTY_CREATE_Q_CPP(NXText, NXTextType::DisplayMode, DisplayMode)
 
 NXText::NXText(QWidget *parent)
     : QLabel(parent)
@@ -16,10 +14,11 @@ NXText::NXText(QWidget *parent)
 {
   Q_D(NXText);
   d->q_ptr            = this;
-  d->_pTextStyle      = NXTextType::NoStyle;
-  d->_pNXIcon         = NXIconType::None;
   d->_pIsAllowClick   = false;
   d->_pIsWrapAnywhere = false;
+  d->_pTextStyle      = NXTextType::NoStyle;
+  d->_pNXIcon         = NXIconType::None;
+  d->_pDisplayMode    = NXTextType::FollowStyle;
 
   setObjectName("NXText");
   setStyleSheet("#NXText{background-color:transparent;}");
@@ -33,13 +32,13 @@ NXText::NXText(QWidget *parent)
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXTextPrivate::onThemeChanged);
 }
 
-NXText::NXText(QString text, QWidget *parent)
+NXText::NXText(const QString& text, QWidget *parent)
     : NXText(parent)
 {
   setText(text);
 }
 
-NXText::NXText(QString text, int pixelSize, QWidget *parent)
+NXText::NXText(const QString& text, int pixelSize, QWidget *parent)
     : NXText(text, parent)
 {
   QFont font = this->font();
@@ -48,14 +47,6 @@ NXText::NXText(QString text, int pixelSize, QWidget *parent)
 }
 
 NXText::~NXText() { }
-
-void NXText::setBorderStyle(int pixelSize, NXWidgetType::BorderFlags borderFlag, QColor color)
-{
-  Q_D(NXText);
-  d->_pBorderFlag = borderFlag;
-  d->_borderColor = color;
-  d->_borderPx    = pixelSize;
-}
 
 void NXText::setIsWrapAnywhere(bool isWrapAnywhere)
 {
@@ -88,20 +79,8 @@ void NXText::setTextPointSize(int size)
 
 int NXText::getTextPointSize() const { return this->font().pointSize(); }
 
-void NXText::setTextStyle(NXTextType::TextStyle textStyle,
-                          std::optional<int> pixelSize,
-                          std::optional<QFont::Weight> weight)
+void NXText::setTextStyle(NXTextType::TextStyle textStyle)
 {
-  if (textStyle < NXTextType::NoStyle || textStyle > NXTextType::CustomStyle)
-  {
-    qWarning() << "Warning: Invalid textStyle provided. Please use a valid NXTextType::TextStyle enum value.";
-    return;
-  }
-  if (textStyle != NXTextType::CustomStyle && (pixelSize.has_value() || weight.has_value()))
-  {
-    qWarning() << "Warning: To use pixelSize and weight, set textStyle to NXTextType::CustomStyle.";
-    return;
-  }
   Q_D(NXText);
   QFont textFont = font();
   d->_pTextStyle = textStyle;
@@ -151,12 +130,6 @@ void NXText::setTextStyle(NXTextType::TextStyle textStyle,
     textFont.setWeight(QFont::DemiBold);
     break;
   }
-  case NXTextType::CustomStyle :
-  {
-    if (pixelSize.has_value()) { textFont.setPixelSize(pixelSize.value()); }
-    if (weight.has_value()) { textFont.setWeight(weight.value()); }
-    break;
-  }
   default :
   {
     break;
@@ -171,10 +144,10 @@ NXTextType::TextStyle NXText::getTextStyle() const
   return d->_pTextStyle;
 }
 
-void NXText::setNXIcon(NXIconType::IconName elaIcon)
+void NXText::setNXIcon(NXIconType::IconName icon)
 {
   Q_D(NXText);
-  d->_pNXIcon = elaIcon;
+  d->_pNXIcon = icon;
   update();
   Q_EMIT pNXIconChanged();
 }
@@ -187,21 +160,18 @@ NXIconType::IconName NXText::getNXIcon() const
 
 void NXText::mouseReleaseEvent(QMouseEvent *event)
 {
-  Q_D(NXText);
   if (d_ptr->_pIsAllowClick && event->button() == Qt::LeftButton) { Q_EMIT clicked(); }
   QLabel::mouseReleaseEvent(event);
 }
 
 void NXText::enterEvent(QEnterEvent *event)
 {
-  Q_D(const NXText);
   if (d_ptr->_pIsAllowClick) { setCursor(QCursor(Qt::PointingHandCursor)); }
   QLabel::enterEvent(event);
 }
 
 void NXText::leaveEvent(QEvent *event)
 {
-  Q_D(const NXText);
   if (d_ptr->_pIsAllowClick) { setCursor(QCursor(Qt::ArrowCursor)); }
   QLabel::leaveEvent(event);
 }
@@ -213,63 +183,14 @@ void NXText::paintEvent(QPaintEvent *event)
   {
     d->onThemeChanged(d->_themeMode);
   }
-  if (d->_pNXIcon != NXIconType::None)
+  QPainter painter(this);
+  painter.save();
+  painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
+  if (!d->drawByDisplayMode(painter))
   {
-    QPainter painter(this);
-    painter.save();
-    painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-    QFont iconFont = QFont("NXAwesome");
-    iconFont.setPixelSize(this->font().pixelSize());
-    painter.setFont(iconFont);
-    painter.setPen(NXThemeColor(d->_themeMode, BasicText));
-    painter.drawText(rect(), Qt::AlignCenter, QChar((unsigned short) d->_pNXIcon));
     painter.restore();
+    QLabel::paintEvent(event);
+    return;
   }
-  else
-  {
-    if (wordWrap() && d->_pIsWrapAnywhere)
-    {
-      QPainter painter(this);
-      painter.save();
-      painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-      painter.setPen(NXThemeColor(d->_themeMode, BasicText));
-      painter.drawText(rect(), Qt::AlignLeft | Qt::AlignVCenter | Qt::TextWordWrap | Qt::TextWrapAnywhere, text());
-      painter.restore();
-    }
-    else
-    {
-      QRect contentRect = rect().adjusted(
-          contentsMargins().left(), contentsMargins().top(), -contentsMargins().right(), -contentsMargins().bottom());
-      QPainter painter(this);
-      painter.save();
-      painter.setPen(QPen(d->_borderColor, d->_borderPx));
-      QFontMetrics fontMetrics(font());
-      int textWidth = fontMetrics.horizontalAdvance(text());
-      if (d->_pBorderFlag & NXWidgetType::TopBorder)
-      {
-        painter.drawLine(QPoint(contentRect.center().x() - textWidth / 2, contentRect.top()),
-                         QPoint(contentRect.center().x() + textWidth / 2, contentRect.top()));
-      }
-
-      if (d->_pBorderFlag & NXWidgetType::BottomBorder)
-      {
-        painter.drawLine(QPoint(contentRect.center().x() - textWidth / 2, contentRect.bottom()),
-                         QPoint(contentRect.center().x() + textWidth / 2, contentRect.bottom()));
-      }
-
-      if (d->_pBorderFlag & NXWidgetType::LeftBorder)
-      {
-        painter.drawLine(QPoint(contentRect.left(), contentRect.center().y() - fontMetrics.height() / 2),
-                         QPoint(contentRect.left(), contentRect.center().y() + fontMetrics.height() / 2));
-      }
-
-      if (d->_pBorderFlag & NXWidgetType::RightBorder)
-      {
-        painter.drawLine(QPoint(contentRect.right(), contentRect.center().y() - fontMetrics.height() / 2),
-                         QPoint(contentRect.right(), contentRect.center().y() + fontMetrics.height() / 2));
-      }
-      painter.restore();
-      QLabel::paintEvent(event);
-    }
-  }
+  painter.restore();
 }

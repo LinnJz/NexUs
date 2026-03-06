@@ -30,21 +30,26 @@ NXRadioButton::NXRadioButton(const QString& text, QWidget *parent)
 
 NXRadioButton::~NXRadioButton() { delete this->style(); }
 
-void NXRadioButton::setTextStyle(NXTextType::TextStyle textStyle,
-                                 std::optional<int> pixelSize,
-                                 std::optional<QFont::Weight> weight)
+void NXRadioButton::setTextPixelSize(int size)
 {
-  if (textStyle < NXTextType::NoStyle || textStyle > NXTextType::CustomStyle)
-  {
-    qWarning() << "Warning: Invalid textStyle provided. Please use a valid NXTextType::TextStyle enum value.";
-    return;
-  }
-  if (textStyle != NXTextType::CustomStyle && (pixelSize.has_value() || weight.has_value()))
-  {
-    qWarning() << "Warning: To use pixelSize and weight, set textStyle to NXTextType::CustomStyle.";
-    return;
-  }
+  QFont font = this->font();
+  font.setPixelSize(size);
+  setFont(font);
+}
 
+int NXRadioButton::getTextPixelSize() const { return this->font().pixelSize(); }
+
+void NXRadioButton::setTextPointSize(int size)
+{
+  QFont font = this->font();
+  font.setPointSize(size);
+  setFont(font);
+}
+
+int NXRadioButton::getTextPointSize() const { return this->font().pointSize(); }
+
+void NXRadioButton::setTextStyle(NXTextType::TextStyle textStyle)
+{
   Q_D(NXRadioButton);
   QFont textFont = font();
   d->_textStyle  = textStyle;
@@ -92,12 +97,6 @@ void NXRadioButton::setTextStyle(NXTextType::TextStyle textStyle,
   {
     textFont.setPixelSize(48);
     textFont.setWeight(QFont::DemiBold);
-    break;
-  }
-  case NXTextType::CustomStyle :
-  {
-    if (pixelSize.has_value()) { textFont.setPixelSize(pixelSize.value()); }
-    if (weight.has_value()) { textFont.setWeight(weight.value()); }
     break;
   }
   default :

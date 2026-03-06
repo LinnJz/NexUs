@@ -7,6 +7,8 @@
 #include <QListView>
 #include <QMouseEvent>
 #include <QPropertyAnimation>
+#include <QScreen>
+#include <QVBoxLayout>
 #include "DeveloperComponents/NXComboBoxStyle.h"
 #include "NXScrollBar.h"
 #include "NXTheme.h"
@@ -39,14 +41,16 @@ NXComboBox::NXComboBox(QWidget *parent)
   comboBoxView->setObjectName("NXComboBoxView");
   comboBoxView->setStyleSheet("#NXComboBoxView{background-color:transparent;}");
   comboBoxView->setStyle(d->_comboBoxStyle);
-  QWidget *container = this->findChild<QFrame *>();
-  if (container)
+  auto *container = qobject_cast<QWidget *>(view()->parentWidget());
+  if (!container || container == this) { container = qobject_cast<QWidget *>(view()->window()); }
+  if (container && container != this && container != view())
   {
     container->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
     container->setAttribute(Qt::WA_TranslucentBackground);
     container->setObjectName("NXComboBoxContainer");
     container->setStyle(d->_comboBoxStyle);
     QLayout *layout = container->layout();
+    if (!layout) { layout = new QVBoxLayout(container); }
     while (layout->count()) { layout->takeAt(0); }
     layout->addWidget(view());
     layout->setContentsMargins(6, 0, 6, 6);
@@ -86,8 +90,8 @@ void NXComboBox::showPopup()
   qApp->setEffectEnabled(Qt::UI_AnimateCombo, oldAnimationEffects);
   if (count() > 0)
   {
-    QWidget *container = this->findChild<QFrame *>();
-    if (container)
+    auto *container = qobject_cast<QWidget *>(view()->window());
+    if (container && container != this && container != view())
     {
       int containerHeight = 0;
       if (count() >= maxVisibleItems()) { containerHeight = maxVisibleItems() * 35 + 8; }
@@ -95,8 +99,9 @@ void NXComboBox::showPopup()
       {
         containerHeight = count() * 35 + 8;
       }
-      QPoint globalPos     = mapToGlobal(QPoint(0, 0));
-      QRect screenGeometry = QApplication::primaryScreen()->availableGeometry();
+      QPoint globalPos           = mapToGlobal(QPoint(0, 0));
+      const QScreen *screen      = QApplication::primaryScreen();
+      const QRect screenGeometry = screen ? screen->availableGeometry() : QRect();
 
       bool showAbove = (globalPos.y() + height() + containerHeight > screenGeometry.bottom()) &&
                        (globalPos.y() - containerHeight >= screenGeometry.top());
@@ -110,6 +115,7 @@ void NXComboBox::showPopup()
       container->move(containerPos);
       view()->resize(view()->width(), containerHeight - 8);
       QLayout *layout = container->layout();
+      if (!layout) { layout = new QVBoxLayout(container); }
       while (layout->count()) { layout->takeAt(0); }
       QPropertyAnimation *fixedSizeAnimation = new QPropertyAnimation(container, "maximumHeight");
       connect(fixedSizeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
@@ -159,12 +165,14 @@ void NXComboBox::hidePopup()
   Q_D(NXComboBox);
   if (d->_isAllowHidePopup)
   {
-    QWidget *container  = this->findChild<QFrame *>();
-    int containerHeight = container->height();
-    if (container)
+    auto *container = qobject_cast<QWidget *>(view()->window());
+    if (container && container != this && container != view())
     {
-      QLayout *layout = container->layout();
+      const int containerHeight = container->height();
+      QLayout *layout           = container->layout();
+      if (!layout) { layout = new QVBoxLayout(container); }
       while (layout->count()) { layout->takeAt(0); }
+      QPoint viewPos                       = view()->pos();
       QPropertyAnimation *viewPosAnimation = new QPropertyAnimation(view(), "pos");
       connect(viewPosAnimation,
               &QPropertyAnimation::finished,
@@ -177,9 +185,8 @@ void NXComboBox::hidePopup()
         QApplication::sendEvent(parentWidget(), &focusEvent);
         QComboBox::hidePopup();
         container->setFixedHeight(containerHeight);
+        view()->move(viewPos);
       });
-      QPoint viewPos = view()->pos();
-      connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() { view()->move(viewPos); });
       viewPosAnimation->setStartValue(viewPos);
       viewPosAnimation->setEndValue(QPoint(viewPos.x(), viewPos.y() - view()->height()));
       viewPosAnimation->setEasingCurve(QEasingCurve::InCubic);

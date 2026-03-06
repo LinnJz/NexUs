@@ -1,4 +1,4 @@
-#include "NXScreenCaptureManager.h"
+﻿#include "NXScreenCaptureManager.h"
 #ifdef Q_OS_MAC
 #  include <QApplication>
 #  include <QDebug>
@@ -9,8 +9,6 @@
 
 #  include "NXScreenCapture.h"
 #  include "NXScreenCaptureManagerPrivate.h"
-
-Q_SINGLETON_CREATE_CPP(NXScreenCaptureManager);
 
 NXScreenCaptureManager::NXScreenCaptureManager(QObject *parent)
     : QObject { parent }

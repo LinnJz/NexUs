@@ -118,13 +118,12 @@ void NXScrollBarPrivate::_handleScrollBarGeometry()
   q->raise();
   q->setSingleStep(_originScrollBar->singleStep());
   q->setPageStep(_originScrollBar->pageStep());
-  int scrollBarExtent = q->style()->pixelMetric(QStyle::PM_ScrollBarExtent, nullptr, q);
   if (q->orientation() == Qt::Horizontal)
   {
-    q->setGeometry(0, _originScrollArea->height() - scrollBarExtent, _originScrollArea->width(), scrollBarExtent);
+    q->setGeometry(0, _originScrollArea->height() - 10, _originScrollArea->width(), 10);
   }
   else
   {
-    q->setGeometry(_originScrollArea->width() - scrollBarExtent, 0, scrollBarExtent, _originScrollArea->height());
+    q->setGeometry(_originScrollArea->width() - 10, 0, 10, _originScrollArea->height());
   }
 }

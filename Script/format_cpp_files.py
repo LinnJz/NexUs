@@ -8,8 +8,8 @@ def format_cpp_files():
     cpp_extensions = ['.cc', '.hh', '.h', '.hpp', '.cpp', '.cxx', '.cu']
     # 需要处理的目标文件夹列表
     target_dirs = [
-        r'C:\Users\Re11a\Downloads\NexUs\NexUs\Source',
-        r'C:\Users\Re11a\Downloads\NexUs\NexUsExample\Source'
+        r'E:\NexUs\NexUs\Source',
+        r'E:\NexUs\NexUsExample\Source'
     ]
     # clang-format可执行文件路径
     clang_format_exe = r'E:\Development\LLVM\bin\clang-format.exe'

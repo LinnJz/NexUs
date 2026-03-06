@@ -4,7 +4,6 @@
 
 #include "private/NXLogPrivate.h"
 
-SINGLETON_CREATE_CPP(NXLog)
 Q_PROPERTY_CREATE_Q_CPP(NXLog, QString, LogSavePath)
 Q_PROPERTY_CREATE_Q_CPP(NXLog, QString, LogFileName)
 Q_PROPERTY_CREATE_Q_CPP(NXLog, bool, IsLogFileNameWithTime)

@@ -6,6 +6,7 @@
 #include "NXText.h"
 #include "NXTheme.h"
 #include "private/NXToolTipPrivate.h"
+Q_PROPERTY_CREATE_Q_CPP(NXToolTip, bool, IsMoveEnabled)
 Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, OffSetX)
 Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, OffSetY)
 Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, BorderRadius)
@@ -19,6 +20,9 @@ NXToolTip::NXToolTip(QWidget *parent)
 {
   Q_D(NXToolTip);
   d->q_ptr           = this;
+  d->_pIsMoveEnabled = false;
+  d->_pOffSetX       = 10;
+  d->_pOffSetY       = 0;
   d->_pBorderRadius  = 5;
   d->_pDisplayMsec   = -1;
   d->_pShowDelayMsec = 0;
@@ -52,11 +56,21 @@ NXToolTip::NXToolTip(QWidget *parent)
 
 NXToolTip::~NXToolTip() { }
 
-void NXToolTip::setToolTip(QString toolTip)
+void NXToolTip::updatePos()
 {
   Q_D(NXToolTip);
-  resize(fontMetrics().horizontalAdvance(toolTip), height());
+  d->_updatePos();
+}
+
+void NXToolTip::setToolTip(const QString& toolTip)
+{
+  Q_D(NXToolTip);
   d->_toolTipText->setText(toolTip);
+  d->_toolTipText->adjustSize();
+  d->_toolTipText->updateGeometry();
+  d->_mainLayout->invalidate();
+  d->_mainLayout->activate();
+  setFixedSize(sizeHint());
   Q_EMIT pToolTipChanged();
 }
 
@@ -85,12 +99,6 @@ QWidget *NXToolTip::getCustomWidget() const
 {
   Q_D(const NXToolTip);
   return d->_pCustomWidget;
-}
-
-void NXToolTip::updatePos(const QPoint& pos)
-{
-  Q_D(NXToolTip);
-  d->_updatePos(pos);
 }
 
 void NXToolTip::paintEvent(QPaintEvent *event)

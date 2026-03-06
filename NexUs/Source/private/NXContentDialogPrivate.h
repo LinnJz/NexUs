@@ -21,15 +21,12 @@ public:
   ~NXContentDialogPrivate() override;
 
 private:
-  bool _isLeftButtonVisible { true };
-  bool _isMiddleButtonVisible { true };
-  bool _isRightButtonVisible { true };
   NXThemeType::ThemeMode _themeMode;
   qint64 _currentWinID { 0 };
 
-  QString _leftButtonText { "cancel" };
-  QString _middleButtonText { "minimum" };
-  QString _rightButtonText { "exit" };
+  int _leftButtonDoneCode { 0 /*Rejected*/ };
+  int _middleButtonDoneCode { 0 /*Rejected*/ };
+  int _rightButtonDoneCode { 1 /*Accepted*/ };
   NXAppBar *_appBar { nullptr };
   NXMaskWidget *_maskWidget { nullptr };
   QWidget *_centralWidget { nullptr };
@@ -39,7 +36,7 @@ private:
   NXPushButton *_leftButton { nullptr };
   NXPushButton *_middleButton { nullptr };
   NXPushButton *_rightButton { nullptr };
-  void _doCloseAnimation(bool isAccept);
+  void _doCloseAnimation(int result);
 };
 
 #endif // NXCONTENTDIALOGPRIVATE_H

@@ -28,20 +28,26 @@ NXCheckBox::NXCheckBox(const QString& text, QWidget *parent)
 
 NXCheckBox::~NXCheckBox() { delete this->style(); }
 
-void NXCheckBox::setTextStyle(NXTextType::TextStyle textStyle,
-                              std::optional<int> pixelSize,
-                              std::optional<QFont::Weight> weight)
+void NXCheckBox::setTextPixelSize(int size)
 {
-  if (textStyle < NXTextType::NoStyle || textStyle > NXTextType::CustomStyle)
-  {
-    qWarning() << "Warning: Invalid textStyle provided. Please use a valid NXTextType::TextStyle enum value.";
-    return;
-  }
-  if (textStyle != NXTextType::CustomStyle && (pixelSize.has_value() || weight.has_value()))
-  {
-    qWarning() << "Warning: To use pixelSize and weight, set textStyle to NXTextType::CustomStyle.";
-    return;
-  }
+  QFont font = this->font();
+  font.setPixelSize(size);
+  setFont(font);
+}
+
+int NXCheckBox::getTextPixelSize() const { return this->font().pixelSize(); }
+
+void NXCheckBox::setTextPointSize(int size)
+{
+  QFont font = this->font();
+  font.setPointSize(size);
+  setFont(font);
+}
+
+int NXCheckBox::getTextPointSize() const { return this->font().pointSize(); }
+
+void NXCheckBox::setTextStyle(NXTextType::TextStyle textStyle)
+{
   Q_D(NXCheckBox);
   QFont textFont = font();
   d->_textStyle  = textStyle;
@@ -91,12 +97,6 @@ void NXCheckBox::setTextStyle(NXTextType::TextStyle textStyle,
     textFont.setWeight(QFont::DemiBold);
     break;
   }
-  case NXTextType::CustomStyle :
-  {
-    if (pixelSize.has_value()) { textFont.setPixelSize(pixelSize.value()); }
-    if (weight.has_value()) { textFont.setWeight(weight.value()); }
-    break;
-  }
   default :
   {
     break;
@@ -111,26 +111,26 @@ NXTextType::TextStyle NXCheckBox::getTextStyle() const
   return d->_textStyle;
 }
 
-void NXCheckBox::setCheckBorderRadius(int borderRadius)
+void NXCheckBox::setBorderRadius(int borderRadius)
 {
   Q_D(const NXCheckBox);
-  d->_checkBoxStyle->setCheckBorderRadius(borderRadius);
+  d->_checkBoxStyle->setBorderRadius(borderRadius);
 }
 
-int NXCheckBox::getCheckBorderRadius() const
+int NXCheckBox::getBorderRadius() const
 {
   Q_D(const NXCheckBox);
-  return d->_checkBoxStyle->getCheckBorderRadius();
+  return d->_checkBoxStyle->getBorderRadius();
 }
 
-void NXCheckBox::setCheckIndicatorWidth(int indicatorWidth)
+void NXCheckBox::setIndicatorWidth(int indicatorWidth)
 {
   Q_D(const NXCheckBox);
-  d->_checkBoxStyle->setCheckIndicatorWidth(indicatorWidth);
+  d->_checkBoxStyle->setIndicatorWidth(indicatorWidth);
 }
 
-int NXCheckBox::getCheckIndicatorWidth() const
+int NXCheckBox::getIndicatorWidth() const
 {
   Q_D(const NXCheckBox);
-  return d->_checkBoxStyle->getCheckIndicatorWidth();
+  return d->_checkBoxStyle->getIndicatorWidth();
 }

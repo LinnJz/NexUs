@@ -1,8 +1,10 @@
 ﻿#include "NXAppBarPrivate.h"
 
+#include "NXToolButton.h"
 #ifdef Q_OS_WIN
 #  include <Windows.h>
 #endif
+#include <QDebug>
 #include <QGuiApplication>
 #include <QLabel>
 #include <QMenu>
@@ -10,12 +12,11 @@
 #include <QScreen>
 #include <QVBoxLayout>
 #include <QWidget>
-
+#include <QWindow>
 #include "NXAppBar.h"
 #include "NXIconButton.h"
 #include "NXNavigationBar.h"
 #include "NXText.h"
-#include "NXToolButton.h"
 
 NXAppBarPrivate::NXAppBarPrivate(QObject *parent)
     : QObject { parent }
@@ -43,11 +44,7 @@ void NXAppBarPrivate::onMaxButtonClicked()
 void NXAppBarPrivate::onCloseButtonClicked()
 {
   Q_Q(NXAppBar);
-  if (_pIsDefaultClosed)
-  {
-    Q_EMIT q_ptr->closeButtonClicked();
-    q->window()->close();
-  }
+  if (_pIsDefaultClosed) { q->window()->close(); }
   else
   {
     Q_EMIT q_ptr->closeButtonClicked();
@@ -72,15 +69,7 @@ void NXAppBarPrivate::onStayTopButtonClicked()
   }
 #endif
   _stayTopButton->setIsSelected(_pIsStayTop);
-  int currentRotate                   = _stayTopButton->property("NXIconRotate").toInt();
-  int targetRotate                    = _pIsStayTop ? 0 : 45;
-  QPropertyAnimation *rotateAnimation = new QPropertyAnimation(_stayTopButton, "NXIconRotate");
-  rotateAnimation->setDuration(300);
-  rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
-  rotateAnimation->setStartValue(currentRotate);
-  rotateAnimation->setEndValue(targetRotate);
-  connect(rotateAnimation, &QPropertyAnimation::valueChanged, _stayTopButton, [=]() { _stayTopButton->update(); });
-  rotateAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+  _stayTopButton->update();
 }
 
 void NXAppBarPrivate::_changeMaxButtonAwesome(bool isMaximized)
@@ -252,6 +241,7 @@ int NXAppBarPrivate::_calculateMinimumWidth()
   {
     width += 5;
   }
+
   int customWidgetWidth = 0;
   for (int i = 0; i < _customAreaWidgetList.count(); i++)
   {
@@ -265,10 +255,15 @@ int NXAppBarPrivate::_calculateMinimumWidth()
   {
     width += customWidgetWidth;
   }
+
   QList<QAbstractButton *> buttonList = q->findChildren<QAbstractButton *>();
   for (auto button : buttonList)
   {
-    if (button->isVisible() && button->objectName() != "NavigationButton") { width += button->width(); }
+    // fixed bug scrollarea add components，double click will let window size change
+    if (button->isVisible() && button->objectName() != "NavigationButton" && button->parentWidget() == q)
+    {
+      width += button->width();
+    }
   }
   return width;
 }

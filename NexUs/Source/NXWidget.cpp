@@ -114,27 +114,6 @@ void NXWidget::moveToCenter()
               height());
 }
 
-void NXWidget::setCustomBackgroundColor(const BackgroundColors& bgColor)
-{
-  Q_D(NXWidget);
-  d->_customLightBgColor = bgColor.lightColor;
-  d->_customDarkBgColor  = bgColor.darkColor;
-  d->_isCustomBackground = true;
-}
-
-NXWidget::BackgroundColors NXWidget::getCustomBackgroundColor() const
-{
-  Q_D(const NXWidget);
-  return { d->_customLightBgColor, d->_customDarkBgColor };
-}
-
-void NXWidget::clearCustomBackgroundColor()
-{
-  Q_D(NXWidget);
-  d->_isCustomBackground = false;
-  update(); // 触发重绘
-}
-
 void NXWidget::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable)
 {
   Q_D(NXWidget);
@@ -168,16 +147,7 @@ void NXWidget::paintEvent(QPaintEvent *event)
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(Qt::NoPen);
-    QColor bgColor;
-    if (d->_isCustomBackground)
-    {
-      bgColor = (d->_themeMode == NXThemeType::Light) ? d->_customLightBgColor : d->_customDarkBgColor;
-    }
-    else
-    {
-      bgColor = NXThemeColor(d->_themeMode, WindowBase);
-    }
-    painter.setBrush(bgColor);
+    painter.setBrush(NXThemeColor(d->_themeMode, WindowBase));
     painter.drawRect(rect());
     painter.restore();
   }

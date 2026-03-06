@@ -40,12 +40,38 @@ if (MINGW)
     set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
 endif ()
 if (MSVC)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
+
+    set(PUBLIC_MSVC_COMPILE_GENERAL_OPTIONS
+        /utf-8                # character set
+        /Zc:__cplusplus       # Correctly set the __cplusplus macroX
+        /Zc:preprocessor
+        /MP                   # Multiprocessor Compilation
+        /sdl                  # SDL checks
+        /EHsc                 # C Exception Handling
+        /nologo
+    )
+    target_compile_options(${PROJECT_NAME} PUBLIC ${PUBLIC_MSVC_COMPILE_GENERAL_OPTIONS})
     target_compile_options(${PROJECT_NAME} PRIVATE
-        "$<$<CONFIG:Debug>:/ZI>"
-        "$<$<CONFIG:Debug>:/Od>"
-        "$<$<CONFIG:Release>:/O2>"
-        "$<$<CONFIG:RelWithDebInfo>:/Zi>"
-        "$<$<CONFIG:RelWithDebInfo>:/O2>"
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Debug>>:/JMC>"    # Just My Code debugging
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Debug>>:/ZI>"     # Edit and Continue
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Debug>>:/Od>"     # Disable optimization
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Debug>>:/RTC1>"   # Runtime error checks
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/O2>"    # Maximize speed
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/Ob2>"   # Inline any suitable function
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/GL>"    # Whole program optimization
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/GS>"    # Buffer security check
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/Qpar>"  # Auto-parallelization
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/Gy>"    # Function-level linking
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/Oi>"    # Intrinsic functions
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/O2>" 
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/Ob1>"
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/Zi>" 
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/GL>" 
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/GS>" 
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/Qpar>"
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/Gy>" 
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/Oi>" 
         "$<$<CONFIG:MinSizeRel>:/Zi>"
         "$<$<CONFIG:MinSizeRel>:/O1>"
     )
@@ -53,6 +79,8 @@ if (MSVC)
     target_link_options(${PROJECT_NAME} PRIVATE
         "$<$<CONFIG:Debug>:/DEBUG>"
         "$<$<CONFIG:RelWithDebInfo>:/DEBUG:FULL>"
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:RelWithDebInfo>>:/LTCG>"
+        "$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/LTCG>"
         "$<$<CONFIG:Release>:/DEBUG:NONE>"
         "$<$<CONFIG:MinSizeRel>:/DEBUG:FASTLINK>"
     )

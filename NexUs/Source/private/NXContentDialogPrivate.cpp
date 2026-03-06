@@ -1,4 +1,4 @@
-﻿#include "NXContentDialogPrivate.h"
+#include "NXContentDialogPrivate.h"
 
 #include "DeveloperComponents/NXMaskWidget.h"
 #include "NXContentDialog.h"
@@ -10,9 +10,9 @@ NXContentDialogPrivate::NXContentDialogPrivate(QObject *parent)
 
 NXContentDialogPrivate::~NXContentDialogPrivate() { }
 
-void NXContentDialogPrivate::_doCloseAnimation(bool isAccept)
+void NXContentDialogPrivate::_doCloseAnimation(int result)
 {
   Q_Q(NXContentDialog);
   _maskWidget->doMaskAnimation(0);
-  isAccept ? q->accept() : q->reject();
+  q->done(result);
 }

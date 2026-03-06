@@ -10,21 +10,16 @@ class NX_EXPORT NXCheckBox : public QCheckBox
 {
   Q_OBJECT
   Q_Q_CREATE(NXCheckBox)
+  Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
+  Q_PROPERTY_CREATE_Q_H(int, IndicatorWidth)
+  Q_PROPERTY_CREATE_Q_H(int, TextPixelSize)
+  Q_PROPERTY_CREATE_Q_H(int, TextPointSize)
+  Q_PROPERTY_CREATE_Q_H(NXTextType::TextStyle, TextStyle)
 
 public:
   explicit NXCheckBox(QWidget *parent = nullptr);
   explicit NXCheckBox(const QString& text, QWidget *parent = nullptr);
   ~NXCheckBox() override;
-  void setTextStyle(NXTextType::TextStyle textStyle,
-                    std::optional<int> pixelSize        = std::nullopt,
-                    std::optional<QFont::Weight> weight = std::nullopt);
-  NXTextType::TextStyle getTextStyle() const;
-
-  void setCheckBorderRadius(int borderRadius);
-  int getCheckBorderRadius() const;
-
-  void setCheckIndicatorWidth(int indicatorWidth);
-  int getCheckIndicatorWidth() const;
 };
 
 #endif // NXCHECKBOX_H

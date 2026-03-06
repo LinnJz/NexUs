@@ -38,9 +38,20 @@ if errorlevel 1 (
 echo 第二步执行完成！
 echo.
 
-:: 5. 执行完成提示
+:: 5. 新增第三步：运行C++文件格式化脚本
+echo 【第三步】运行C++文件格式化脚本：format_cpp_files.py
+python "!SCRIPT_DIR!\format_cpp_files.py"
+if errorlevel 1 (
+    echo 警告：format_cpp_files.py 运行出错！
+    pause
+    exit /b 1
+)
+echo 第三步执行完成！
+echo.
+
+:: 6. 执行完成提示
 echo =============================================
-echo 两个脚本均已成功执行完毕！
+echo 所有脚本均已成功执行完毕！
 echo 基准递归目录：!BASE_DIR!
 echo =============================================
 pause

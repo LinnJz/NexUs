@@ -10,7 +10,7 @@
 
 #include "NXIconButton.h"
 #include "NXMessageBar.h"
-SINGLETON_CREATE_CPP(NXMessageBarManager)
+
 QMap<NXMessageBarType::PositionPolicy, QList<QPointer<NXMessageBar>> *> _messageBarActiveMap;
 
 NXMessageBarManager::NXMessageBarManager(QObject *parent) { }

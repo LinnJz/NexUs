@@ -6,7 +6,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include "NXTabBar.h"
-#include "private/NXTabWidgetPrivate.h"
+#include "NXTabWidgetPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(NXTabWidget, bool, IsTabTransparent);
 Q_PROPERTY_CREATE_Q_CPP(NXTabWidget, bool, IsContainerAcceptDrops);
 
@@ -45,6 +45,45 @@ QSize NXTabWidget::getTabSize() const
 {
   Q_D(const NXTabWidget);
   return d->_tabBar->getTabSize();
+}
+
+void NXTabWidget::setTabBarStyle(NXTabBarType::TabBarStyle style)
+{
+  Q_D(NXTabWidget);
+  if (d->_tabBar) { d->_tabBar->setTabBarStyle(style); }
+  if (d->_customTabBar) { d->_customTabBar->setTabBarStyle(style); }
+}
+
+NXTabBarType::TabBarStyle NXTabWidget::getTabBarStyle() const
+{
+  Q_D(const NXTabWidget);
+  return d->_tabBar->getTabBarStyle();
+}
+
+void NXTabWidget::setTabCornerRadius(int radius)
+{
+  Q_D(NXTabWidget);
+  if (d->_tabBar) { d->_tabBar->setTabCornerRadius(radius); }
+  if (d->_customTabBar) { d->_customTabBar->setTabCornerRadius(radius); }
+}
+
+int NXTabWidget::getTabCornerRadius() const
+{
+  Q_D(const NXTabWidget);
+  return d->_tabBar->getTabCornerRadius();
+}
+
+void NXTabWidget::setIsSelectedIndicatorVisible(bool isVisible)
+{
+  Q_D(NXTabWidget);
+  if (d->_tabBar) { d->_tabBar->setIsSelectedIndicatorVisible(isVisible); }
+  if (d->_customTabBar) { d->_customTabBar->setIsSelectedIndicatorVisible(isVisible); }
+}
+
+bool NXTabWidget::getIsSelectedIndicatorVisible() const
+{
+  Q_D(const NXTabWidget);
+  return d->_tabBar->getIsSelectedIndicatorVisible();
 }
 
 void NXTabWidget::setTabPosition(TabPosition position)

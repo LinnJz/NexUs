@@ -13,11 +13,11 @@
 NXNavigationStyle::NXNavigationStyle(QStyle *style)
 {
   _pOpacity              = 1;
-  _pItemHeight           = 40;
-  _pLastSelectMarkTop    = 10.0;
-  _pLastSelectMarkBottom = 10.0;
-  _pSelectMarkTop        = 10.0;
-  _pSelectMarkBottom     = 10.0;
+  _pItemHeight           = 38;
+  _pLastSelectMarkTop    = 10.5;
+  _pLastSelectMarkBottom = 10.5;
+  _pSelectMarkTop        = 10.5;
+  _pSelectMarkBottom     = 10.5;
 
   // Mark向上
   _lastSelectMarkTopAnimation = new QPropertyAnimation(this, "pLastSelectMarkTop");
@@ -40,8 +40,8 @@ NXNavigationStyle::NXNavigationStyle(QStyle *style)
   {
     _isSelectMarkDisplay = true;
     _lastSelectedNode    = nullptr;
-    _selectMarkBottomAnimation->setStartValue(0);
-    _selectMarkBottomAnimation->setEndValue(10);
+    _selectMarkBottomAnimation->setStartValue(0.0);
+    _selectMarkBottomAnimation->setEndValue(10.5);
     _selectMarkBottomAnimation->start();
   });
 
@@ -66,8 +66,8 @@ NXNavigationStyle::NXNavigationStyle(QStyle *style)
   {
     _isSelectMarkDisplay = true;
     _lastSelectedNode    = nullptr;
-    _selectMarkTopAnimation->setStartValue(0);
-    _selectMarkTopAnimation->setEndValue(10);
+    _selectMarkTopAnimation->setStartValue(0.0);
+    _selectMarkTopAnimation->setEndValue(10.5);
     _selectMarkTopAnimation->start();
   });
   _themeMode = nxTheme->getThemeMode();
@@ -88,9 +88,10 @@ void NXNavigationStyle::drawPrimitive(PrimitiveElement element,
     // Item背景
     if (const QStyleOptionViewItem *vopt = qstyleoption_cast<const QStyleOptionViewItem *>(option))
     {
-      painter->save();
       QModelIndex index      = vopt->index;
       NXNavigationNode *node = static_cast<NXNavigationNode *>(index.internalPointer());
+      if (node->getIsCategoryNode()) { return; }
+      painter->save();
       if (this->_opacityAnimationTargetNode && node->getParentNode() == this->_opacityAnimationTargetNode)
       {
         painter->setOpacity(_pOpacity);
@@ -100,7 +101,7 @@ void NXNavigationStyle::drawPrimitive(PrimitiveElement element,
       itemRect.setTop(itemRect.top() + 2);
       itemRect.setBottom(itemRect.bottom() - 2);
       QPainterPath path;
-      path.addRoundedRect(itemRect, 8, 8);
+      path.addRoundedRect(itemRect, 5, 5);
       if (vopt->state & QStyle::State_Selected)
       {
         if (index == _pPressIndex)
@@ -224,8 +225,8 @@ void NXNavigationStyle::drawControl(ControlElement element,
                                         itemRect.y() + _pSelectMarkTop,
                                         3,
                                         itemRect.height() - _pSelectMarkTop - _pSelectMarkBottom),
-                                 3,
-                                 3);
+                                 1.5,
+                                 1.5);
       }
       if (node == _lastSelectedNode)
       {
@@ -235,8 +236,8 @@ void NXNavigationStyle::drawControl(ControlElement element,
                                         itemRect.y() + _pLastSelectMarkTop,
                                         3,
                                         itemRect.height() - _pLastSelectMarkTop - _pLastSelectMarkBottom),
-                                 3,
-                                 3);
+                                 1.5,
+                                 1.5);
       }
 
       // 图标绘制
@@ -256,8 +257,18 @@ void NXNavigationStyle::drawControl(ControlElement element,
 
       int viewWidth = widget->width();
       // 文字绘制
-      painter->setPen(vopt->index == _pPressIndex ? NXThemeColor(_themeMode, BasicTextPress)
-                                                  : NXThemeColor(_themeMode, BasicText));
+      if (node->getIsCategoryNode())
+      {
+        QFont categoryFont = painter->font();
+        categoryFont.setBold(true);
+        painter->setFont(categoryFont);
+        painter->setPen(NXThemeColor(_themeMode, BasicTextCategory));
+      }
+      else
+      {
+        painter->setPen(vopt->index == _pPressIndex ? NXThemeColor(_themeMode, BasicTextPress)
+                                                    : NXThemeColor(_themeMode, BasicText));
+      }
       QRect textRect;
       if (node->getAwesome() != NXIconType::None)
       {
@@ -452,14 +463,14 @@ void NXNavigationStyle::navigationNodeStateChange(QVariantMap data)
     _lastSelectedNode              = data.value("LastSelectedNode").value<NXNavigationNode *>();
     NXNavigationNode *selectedNode = data.value("SelectedNode").value<NXNavigationNode *>();
     bool direction                 = _compareItemY(selectedNode, _lastSelectedNode);
-    _pLastSelectMarkTop            = 10;
-    _pLastSelectMarkBottom         = 10;
-    _pSelectMarkTop                = 10;
-    _pSelectMarkBottom             = 10;
+    _pLastSelectMarkTop            = 10.5;
+    _pLastSelectMarkBottom         = 10.5;
+    _pSelectMarkTop                = 10.5;
+    _pSelectMarkBottom             = 10.5;
     if (direction)
     {
-      _lastSelectMarkTopAnimation->setStartValue(10);
-      _lastSelectMarkTopAnimation->setEndValue(0);
+      _lastSelectMarkTopAnimation->setStartValue(10.5);
+      _lastSelectMarkTopAnimation->setEndValue(0.0);
       _lastSelectMarkTopAnimation->start();
       _lastSelectMarkBottomAnimation->stop();
       _selectMarkTopAnimation->stop();
@@ -467,8 +478,8 @@ void NXNavigationStyle::navigationNodeStateChange(QVariantMap data)
     }
     else
     {
-      _lastSelectMarkBottomAnimation->setStartValue(10);
-      _lastSelectMarkBottomAnimation->setEndValue(0);
+      _lastSelectMarkTopAnimation->setStartValue(10.5);
+      _lastSelectMarkTopAnimation->setEndValue(0.0);
       _lastSelectMarkBottomAnimation->start();
       _lastSelectMarkTopAnimation->stop();
       _selectMarkBottomAnimation->stop();

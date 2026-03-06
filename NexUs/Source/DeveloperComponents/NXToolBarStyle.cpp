@@ -127,7 +127,11 @@ void NXToolBarStyle::drawControl(ControlElement element,
       }
       else
       {
-        if (bopt->arrowType != Qt::NoArrow) { break; }
+        if (bopt->arrowType != Qt::NoArrow)
+        {
+          painter->restore();
+          break;
+        }
         // 背景绘制
         if (bopt->state.testFlag(QStyle::State_Enabled))
         {

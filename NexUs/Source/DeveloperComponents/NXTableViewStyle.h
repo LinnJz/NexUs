@@ -4,21 +4,19 @@
 #include <QProxyStyle>
 
 #include "NXDef.h"
-struct NXAdjustParam;
 class QStyleOptionViewItem;
 
 class NXTableViewStyle : public QProxyStyle
 {
   Q_OBJECT
-  Q_PROPERTY_CREATE(QModelIndex, CurrentHoverIndex)
+  Q_PROPERTY_CREATE_EX(const QModelIndex&, QModelIndex, CurrentHoverIndex)
   Q_PROPERTY_CREATE(int, HeaderMargin)
   Q_PROPERTY_CREATE(int, BorderRadius)
-  Q_PROPERTY_CREATE(bool, IsDrawAlternateRowsEnabled)
+  Q_PROPERTY_CREATE(int, CheckIndicatorWidth)
   Q_PROPERTY_CREATE(bool, IsHoverEffectsEnabled)
   Q_PROPERTY_CREATE(bool, IsSelectionEffectsEnabled)
 
 public:
-  using coords = std::tuple<int, int, int, int>;
   explicit NXTableViewStyle(QStyle *style = nullptr);
   ~NXTableViewStyle() override;
   void drawPrimitive(PrimitiveElement element,
@@ -33,15 +31,16 @@ public:
                   const QStyleOption *option = nullptr,
                   const QWidget *widget      = nullptr) const override;
 
-  void adjustHeaderColumnIconRect(const QHash<int, coords>& adjusts);
-  void adjustColummTextRect(const QHash<int, coords>& adjusts);
+  void setHorizontalPadding(int column, int padding);
+  int getHorizontalPadding(int column) const;
+  void syncHorizontalPaddings(int columnCount);
 
 private:
-  int _horizontalPadding { 11 };
   NXThemeType::ThemeMode _themeMode;
-  int _borderRadius { 3 };
-  QHash<int, coords> _headerAdjusts;
-  QHash<int, coords> _adjusts;
+  QList<int> _horizontalPaddings;
+
+  int _horizontalPaddingForColumn(int column) const;
+  void _drawCheckIndicator(QPainter *painter, const QRect& rect, Qt::CheckState state) const;
 };
 
 #endif // NXTABLEVIEWSTYLE_H

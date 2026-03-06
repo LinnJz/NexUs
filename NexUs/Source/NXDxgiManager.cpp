@@ -13,7 +13,6 @@
 
 #  include "DeveloperComponents/NXDxgi.h"
 #  include "private/NXDxgiManagerPrivate.h"
-SINGLETON_CREATE_CPP(NXDxgiManager);
 
 NXDxgiManager::NXDxgiManager(QObject *parent)
     : QObject { parent }
@@ -29,7 +28,7 @@ NXDxgiManager::NXDxgiManager(QObject *parent)
   {
     for (int i = 1; i < d->_dxgi->getDxDeviceList().count(); i++)
     {
-      bool ret = d->_dxgi->initialize(i, 0);
+      ret = d->_dxgi->initialize(i, 0);
       if (ret) { break; }
     }
   }

@@ -21,6 +21,7 @@ class NXNavigationNode : public QObject
   Q_PROPERTY_CREATE(bool, IsExpanderNode)
   Q_PROPERTY_CREATE(bool, IsVisible)
   Q_PROPERTY_CREATE_D(bool, IsExpanded)
+  Q_PRIVATE_CREATE(bool, IsCategoryNode)
   Q_PROPERTY_CREATE_D(QString, NodeKey)
   Q_PROPERTY_CREATE_EX(const QString&, QString, NodeTitle)
 
@@ -47,6 +48,8 @@ public:
   bool getIsChildNode(NXNavigationNode *node) const;
 
   int getRow() const;
+
+  QList<NXNavigationNode *> getExceptCategoryNodes();
 
   void swapVisual(NXNavigationNode *other);
 };
