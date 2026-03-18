@@ -7,7 +7,7 @@ NXPivotModel::NXPivotModel(QObject *parent)
 
 NXPivotModel::~NXPivotModel() { }
 
-void NXPivotModel::appendPivot(const QString& pivot)
+void NXPivotModel::appendPivot(const QString& pivot) noexcept
 {
   if (!pivot.isEmpty())
   {
@@ -18,7 +18,7 @@ void NXPivotModel::appendPivot(const QString& pivot)
   }
 }
 
-void NXPivotModel::removePivot(const QString& pivot)
+void NXPivotModel::removePivot(const QString& pivot) noexcept
 {
   if (_pivotList.contains(pivot))
   {
@@ -29,7 +29,7 @@ void NXPivotModel::removePivot(const QString& pivot)
   }
 }
 
-int NXPivotModel::getPivotListCount() const { return _pivotList.count(); }
+int NXPivotModel::getPivotListCount() const noexcept { return _pivotList.count(); }
 
 int NXPivotModel::rowCount(const QModelIndex& parent) const { return _pivotList.count(); }
 

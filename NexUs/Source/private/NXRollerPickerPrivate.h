@@ -16,16 +16,16 @@ class NXRollerPickerPrivate : public QObject
 public:
   explicit NXRollerPickerPrivate(QObject *parent = nullptr);
   ~NXRollerPickerPrivate() override;
-  Q_SLOT void onRollerPickerClicked();
-  Q_SLOT void onOverButtonClicked();
-  Q_SLOT void onCancelButtonClicked();
+  Q_SLOT void onRollerPickerClicked() noexcept;
+  Q_SLOT void onOverButtonClicked() noexcept;
+  Q_SLOT void onCancelButtonClicked() noexcept;
 
 private:
   int _pickerRollerHeight { 245 };
   NXThemeType::ThemeMode _themeMode;
   QHBoxLayout *_containerLayout { nullptr };
   NXRollerPickerContainer *_rollerPickerContainer { nullptr };
-  int _getRollerTotalWidth() const;
+  int _getRollerTotalWidth() const noexcept;
 };
 
 #endif // NXFRAMEWORK_NXROLLERPICKERPRIVATE_H

@@ -103,12 +103,9 @@ void NXProgressBarStyle::drawControl(ControlElement element,
       }
       else
       {
-        painter->drawRoundedRect(QRectF(contentRect.x(),
-                                        contentRect.y() + contentRect.height() * (1 - ratio),
-                                        contentRect.width(),
-                                        contentRect.height() * ratio),
-                                 3,
-                                 3);
+        painter->drawRoundedRect(QRectF(contentRect.x(), contentRect.y() + contentRect.height() * (1 - ratio),
+                                        contentRect.width(), contentRect.height() * ratio),
+                                 3, 3);
       }
     }
     painter->restore();

@@ -18,20 +18,20 @@ class NX_EXPORT NXApplication : public QObject
 {
   Q_OBJECT
   Q_Q_CREATE(NXApplication)
-  Q_PROPERTY_CREATE_Q_H(NXApplicationType::WindowDisplayMode, WindowDisplayMode)
-  LINN_SINGLETON_CREATE(LINN_SINGLETON_UNIQUE(NXApplication))
+  Q_PROPERTY_CREATE_H(NXApplicationType::WindowDisplayMode, WindowDisplayMode)
+  Q_SINGLETON_CREATE(QS_S_UNIQUE(NXApplication))
 
 private:
   explicit NXApplication(QObject *parent = nullptr);
   ~NXApplication() override;
 
 public:
-  void init();
-  void syncWindowDisplayMode(QWidget *widget, bool isSync = true);
-  static bool containsCursorToItem(QWidget *item);
+  void init() noexcept;
+  void syncWindowDisplayMode(QWidget *widget, bool isSync = true) noexcept;
+  static bool containsCursorToItem(QWidget *item) noexcept;
 
-  void setMicaImagePath(const QString& micaImagePath);
-  QString getMicaImagePath() const;
+  void setMicaImagePath(const QString& micaImagePath) noexcept;
+  QString getMicaImagePath() const noexcept;
   Q_SIGNAL void pMicaImagePathChanged();
 };
 

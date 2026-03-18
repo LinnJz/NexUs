@@ -13,17 +13,16 @@ NXLCDNumber::NXLCDNumber(QWidget *parent)
   Q_D(NXLCDNumber);
   d->q_ptr             = this;
   d->_pIsUseAutoClock  = false;
-  d->_pAutoClockFormat = "yyyy-MM-dd hh:mm:ss";
+  d->_pAutoClockFormat = QStringLiteral("yyyy-MM-dd hh:mm:ss");
   setDigitCount(d->_pAutoClockFormat.length());
   setSegmentStyle(QLCDNumber::Flat);
   setObjectName("NXLCDNumber");
-  setStyleSheet("#NXLCDNumber{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXLCDNumber{background-color:transparent;}"));
   d->_lcdNumberStyle = new NXLCDNumberStyle();
   setStyle(d->_lcdNumberStyle);
   d->_clockTimer = new QTimer(this);
-  connect(d->_clockTimer, &QTimer::timeout, this, [=]() {
-    display(QDateTime::currentDateTime().toString(d->_pAutoClockFormat));
-  });
+  connect(d->_clockTimer, &QTimer::timeout, this,
+          [=]() { display(QDateTime::currentDateTime().toString(d->_pAutoClockFormat)); });
 
   d->onThemeModeChanged(nxTheme->getThemeMode());
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXLCDNumberPrivate::onThemeModeChanged);
@@ -41,7 +40,7 @@ NXLCDNumber::~NXLCDNumber()
   delete d->_lcdNumberStyle;
 }
 
-void NXLCDNumber::setIsUseAutoClock(bool isUseAutoClock)
+void NXLCDNumber::setIsUseAutoClock(bool isUseAutoClock) noexcept
 {
   Q_D(NXLCDNumber);
   d->_pIsUseAutoClock = isUseAutoClock;
@@ -54,18 +53,18 @@ void NXLCDNumber::setIsUseAutoClock(bool isUseAutoClock)
   else
   {
     d->_clockTimer->stop();
-    display("");
+    display(QString {});
   }
   Q_EMIT pIsUseAutoClockChanged();
 }
 
-bool NXLCDNumber::getIsUseAutoClock() const
+bool NXLCDNumber::getIsUseAutoClock() const noexcept
 {
   Q_D(const NXLCDNumber);
   return d->_pIsUseAutoClock;
 }
 
-void NXLCDNumber::setAutoClockFormat(const QString& autoClockFormat)
+void NXLCDNumber::setAutoClockFormat(const QString& autoClockFormat) noexcept
 {
   Q_D(NXLCDNumber);
   d->_pAutoClockFormat = autoClockFormat;
@@ -73,13 +72,13 @@ void NXLCDNumber::setAutoClockFormat(const QString& autoClockFormat)
   Q_EMIT pAutoClockFormatChanged();
 }
 
-QString NXLCDNumber::getAutoClockFormat() const
+QString NXLCDNumber::getAutoClockFormat() const noexcept
 {
   Q_D(const NXLCDNumber);
   return d->_pAutoClockFormat;
 }
 
-void NXLCDNumber::setIsTransparent(bool isTransparent)
+void NXLCDNumber::setIsTransparent(bool isTransparent) noexcept
 {
   Q_D(NXLCDNumber);
   d->_lcdNumberStyle->setIsTransparent(isTransparent);
@@ -87,7 +86,7 @@ void NXLCDNumber::setIsTransparent(bool isTransparent)
   Q_EMIT pIsTransparentChanged();
 }
 
-bool NXLCDNumber::getIsTransparent() const
+bool NXLCDNumber::getIsTransparent() const noexcept
 {
   Q_D(const NXLCDNumber);
   return d->_lcdNumberStyle->getIsTransparent();

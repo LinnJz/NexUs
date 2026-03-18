@@ -10,7 +10,7 @@ NXKeyBinderContainer::NXKeyBinderContainer(QWidget *parent)
     : QWidget(parent)
 {
   _keyBinder = dynamic_cast<NXKeyBinder *>(parent);
-  setStyleSheet("#NXKeyBinderContainer{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXKeyBinderContainer{background-color:transparent;}"));
   setFocusPolicy(Qt::StrongFocus);
   setMouseTracking(true);
   setFixedHeight(140);
@@ -19,10 +19,7 @@ NXKeyBinderContainer::NXKeyBinderContainer(QWidget *parent)
   textFont.setPixelSize(16);
   setFont(textFont);
   _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme,
-          &NXTheme::themeModeChanged,
-          this,
-          [=](NXThemeType::ThemeMode themeMode)
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
     _themeMode = themeMode;
     update();
@@ -31,7 +28,7 @@ NXKeyBinderContainer::NXKeyBinderContainer(QWidget *parent)
 
 NXKeyBinderContainer::~NXKeyBinderContainer() { }
 
-void NXKeyBinderContainer::logOrResetHistoryData(bool isLog)
+void NXKeyBinderContainer::logOrResetHistoryData(bool isLog) noexcept
 {
   if (isLog)
   {
@@ -46,14 +43,14 @@ void NXKeyBinderContainer::logOrResetHistoryData(bool isLog)
   }
 }
 
-void NXKeyBinderContainer::saveBinderChanged()
+void NXKeyBinderContainer::saveBinderChanged() noexcept
 {
   Q_EMIT _keyBinder->binderKeyTextChanged(_pBinderKeyText);
   Q_EMIT _keyBinder->nativeVirtualBinderKeyChanged(_pNativeVirtualBinderKey);
-  if (_pBinderKeyText.isEmpty()) { _keyBinder->setText(u8"  按键: " + QString(u8"未绑定") + "      "); }
+  if (_pBinderKeyText.isEmpty()) {_keyBinder->setText(QStringLiteral("  按键: 未绑定      ")); }
   else
   {
-    _keyBinder->setText(u8"  按键: " + _pBinderKeyText + "      ");
+    _keyBinder->setText(QStringLiteral("  按键: ") + _pBinderKeyText + QStringLiteral("      "));
   }
 }
 
@@ -70,22 +67,22 @@ bool NXKeyBinderContainer::event(QEvent *event)
       {
       case Qt::Key_Shift :
       {
-        _pBinderKeyText = "Shift";
+        _pBinderKeyText = QStringLiteral("Shift");
         break;
       }
       case Qt::Key_Control :
       {
-        _pBinderKeyText = "Ctrl";
+        _pBinderKeyText = QStringLiteral("Ctrl");
         break;
       }
       case Qt::Key_Alt :
       {
-        _pBinderKeyText = "Alt";
+        _pBinderKeyText = QStringLiteral("Alt");
         break;
       }
       case Qt::Key_Meta :
       {
-        _pBinderKeyText = "Win";
+        _pBinderKeyText = QStringLiteral("Win");
         break;
       }
       default :
@@ -114,31 +111,31 @@ void NXKeyBinderContainer::mousePressEvent(QMouseEvent *event)
   {
   case Qt::LeftButton :
   {
-    _pBinderKeyText          = "Mouse1";
+    _pBinderKeyText          = QStringLiteral("Mouse1");
     _pNativeVirtualBinderKey = 0x01;
     break;
   }
   case Qt::RightButton :
   {
-    _pBinderKeyText          = "Mouse2";
+    _pBinderKeyText          = QStringLiteral("Mouse2");
     _pNativeVirtualBinderKey = 0x02;
     break;
   }
   case Qt::MiddleButton :
   {
-    _pBinderKeyText          = "Middle";
+    _pBinderKeyText          = QStringLiteral("Middle");
     _pNativeVirtualBinderKey = 0x04;
     break;
   }
   case Qt::BackButton :
   {
-    _pBinderKeyText          = "Back";
+    _pBinderKeyText          = QStringLiteral("Back");
     _pNativeVirtualBinderKey = 0x05;
     break;
   }
   case Qt::ForwardButton :
   {
-    _pBinderKeyText          = "Forward";
+    _pBinderKeyText          = QStringLiteral("Forward");
     _pNativeVirtualBinderKey = 0x06;
     break;
   }
@@ -164,7 +161,7 @@ void NXKeyBinderContainer::paintEvent(QPaintEvent *event)
   painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
   // 顶部提示绘制
   painter.setPen(NXThemeColor(_themeMode, BasicText));
-  painter.drawText(QRect(20, 20, width(), 50), Qt::AlignLeft | Qt::AlignTop, u8"按下任意按键以进行绑定");
+  painter.drawText(QRect(20, 20, width(), 50), Qt::AlignLeft | Qt::AlignTop, QStringLiteral("按下任意按键以进行绑定"));
   if (_pBinderKeyText.isEmpty())
   {
     painter.restore();
@@ -181,7 +178,6 @@ void NXKeyBinderContainer::paintEvent(QPaintEvent *event)
   // 文字绘制
   painter.setPen(NXThemeColor(_themeMode, BasicTextInvert));
   painter.drawText(QRectF((width() - textWidth) / 2.0, rect().center().y() + 10, textWidth, textHeight),
-                   Qt::AlignCenter,
-                   _pBinderKeyText);
+                   Qt::AlignCenter, _pBinderKeyText);
   painter.restore();
 }

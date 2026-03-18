@@ -33,7 +33,7 @@ QDataStream& operator>> (QDataStream& stream, NXGraphicsScenePrivate *data)
   return stream;
 }
 
-QList<NXGraphicsItem *> NXGraphicsScenePrivate::_serializeItem(int count)
+QList<NXGraphicsItem *> NXGraphicsScenePrivate::_serializeItem(int count) noexcept
 {
   Q_Q(NXGraphicsScene);
   QList<NXGraphicsItem *> itemList;
@@ -48,7 +48,7 @@ QList<NXGraphicsItem *> NXGraphicsScenePrivate::_serializeItem(int count)
   return itemList;
 }
 
-void NXGraphicsScenePrivate::_removeLinkLineItem()
+void NXGraphicsScenePrivate::_removeLinkLineItem() noexcept
 {
   Q_Q(NXGraphicsScene);
   if (_linkLineItem)
@@ -59,7 +59,7 @@ void NXGraphicsScenePrivate::_removeLinkLineItem()
   }
 }
 
-void NXGraphicsScenePrivate::_deserializeLink()
+void NXGraphicsScenePrivate::_deserializeLink() noexcept
 {
   Q_Q(NXGraphicsScene);
   for (int i = 0; i < _itemsLink.count(); i++)
@@ -67,8 +67,8 @@ void NXGraphicsScenePrivate::_deserializeLink()
     QVariantMap itemLinkData     = _itemsLink[i];
     QList<QString> uidList       = itemLinkData.keys();
     QList<QVariant> portList     = itemLinkData.values();
-    NXGraphicsLineItem *lineItem = new NXGraphicsLineItem(
-        _items.value(uidList[0]), _items.value(uidList[1]), portList[0].toInt(), portList[1].toInt());
+    NXGraphicsLineItem *lineItem = new NXGraphicsLineItem(_items.value(uidList[0]), _items.value(uidList[1]),
+                                                          portList[0].toInt(), portList[1].toInt());
     q->QGraphicsScene::addItem(lineItem);
     _lineItemsList.append(lineItem);
   }

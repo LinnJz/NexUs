@@ -25,21 +25,21 @@ class NXTextPrivate : public QObject
 public:
   explicit NXTextPrivate(QObject *parent = nullptr);
   ~NXTextPrivate() override;
-  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
-  bool drawByDisplayMode(QPainter& painter) const;
+  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept;
+  bool drawByDisplayMode(QPainter& painter) const noexcept;
 
 private:
   qreal _textSpacing { 0.5 };
   NXThemeType::ThemeMode _themeMode;
 
   std::unique_ptr<QTextDocument>
-  _createDocument(const QString& htmlText, qreal maxWidth, Qt::Alignment alignment) const;
-  void _drawNXIcon(QPainter& painter, const QRectF& targetRect) const;
-  void _drawTextCentered(QPainter& painter, const QRectF& targetRect, const QString& htmlText) const;
+  _createDocument(const QString& htmlText, qreal maxWidth, Qt::Alignment alignment) const noexcept;
+  void _drawNXIcon(QPainter& painter, const QRectF& targetRect) const noexcept;
+  void _drawTextCentered(QPainter& painter, const QRectF& targetRect, const QString& htmlText) const noexcept;
   void _drawTextDocumentHorizontal(QPainter& painter,
                                    const QRectF& targetRect,
                                    const QString& htmlText,
-                                   Qt::Alignment alignment) const;
+                                   Qt::Alignment alignment) const noexcept;
 };
 
 #endif // NXTEXTPRIVATE_H

@@ -5,12 +5,12 @@
 
 #include "NXGraphicsItem.h"
 #include "private/NXGraphicsLineItemPrivate.h"
-Q_PRIVATE_CREATE_Q_CPP(NXGraphicsLineItem, QPointF, StartPoint);
-Q_PRIVATE_CREATE_Q_CPP(NXGraphicsLineItem, QPointF, EndPoint);
-Q_PRIVATE_CREATE_Q_CPP(NXGraphicsLineItem, NXGraphicsItem *, StartItem);
-Q_PRIVATE_CREATE_Q_CPP(NXGraphicsLineItem, NXGraphicsItem *, EndItem);
-Q_PRIVATE_CREATE_Q_CPP(NXGraphicsLineItem, int, StartItemPort);
-Q_PRIVATE_CREATE_Q_CPP(NXGraphicsLineItem, int, EndItemPort);
+Q_PRIVATE_CREATE_CPP(NXGraphicsLineItem, QPointF, StartPoint)
+Q_PRIVATE_CREATE_CPP(NXGraphicsLineItem, QPointF, EndPoint)
+Q_PRIVATE_CREATE_CPP(NXGraphicsLineItem, NXGraphicsItem *, StartItem)
+Q_PRIVATE_CREATE_CPP(NXGraphicsLineItem, NXGraphicsItem *, EndItem)
+Q_PRIVATE_CREATE_CPP(NXGraphicsLineItem, int, StartItemPort)
+Q_PRIVATE_CREATE_CPP(NXGraphicsLineItem, int, EndItemPort)
 
 NXGraphicsLineItem::NXGraphicsLineItem(
     NXGraphicsItem *startItem, NXGraphicsItem *endItem, int startItemPort, int endItemPort, QGraphicsItem *parent)
@@ -42,21 +42,21 @@ NXGraphicsLineItem::NXGraphicsLineItem(QPointF startPoint, QPointF endPoint, QGr
 
 NXGraphicsLineItem::~NXGraphicsLineItem() { }
 
-bool NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item) const
+bool NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item) const noexcept
 {
   Q_D(const NXGraphicsLineItem);
   if (d->_linkItemMap.contains(item)) { return true; }
   return false;
 }
 
-bool NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item1, NXGraphicsItem *item2) const
+bool NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item1, NXGraphicsItem *item2) const noexcept
 {
   Q_D(const NXGraphicsLineItem);
   if (d->_linkItemMap.contains(item1) && d->_linkItemMap.contains(item2)) { return true; }
   return false;
 }
 
-bool NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item1, NXGraphicsItem *item2, int port1, int port2) const
+bool NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item1, NXGraphicsItem *item2, int port1, int port2) const noexcept
 {
   Q_D(const NXGraphicsLineItem);
   if (d->_linkItemMap.value(item1) == port1 && d->_linkItemMap.value(item2) == port2) { return true; }

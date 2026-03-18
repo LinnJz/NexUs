@@ -27,7 +27,7 @@ public:
                 const QStyleOption *option   = nullptr,
                 const QWidget *widget        = nullptr,
                 QStyleHintReturn *returnData = nullptr) const override;
-  void startExpandAnimation(bool isExpand);
+  void startExpandAnimation(bool isExpand) noexcept;
 
 private:
   NXThemeType::ThemeMode _themeMode;

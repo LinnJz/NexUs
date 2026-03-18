@@ -15,7 +15,7 @@ NXApplication::NXApplication(QObject *parent)
 {
   Q_D(NXApplication);
   d->q_ptr               = this;
-  d->_pMicaImagePath     = ":/Resource/Image/MicaBase.png";
+  d->_pMicaImagePath     = QStringLiteral(":/Resource/Image/MicaBase.png");
   d->_pWindowDisplayMode = NXApplicationType::Normal;
   d->_themeMode          = nxTheme->getThemeMode();
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXApplicationPrivate::onThemeModeChanged);
@@ -23,7 +23,7 @@ NXApplication::NXApplication(QObject *parent)
 
 NXApplication::~NXApplication() { }
 
-void NXApplication::setWindowDisplayMode(NXApplicationType::WindowDisplayMode windowDisplayType)
+void NXApplication::setWindowDisplayMode(NXApplicationType::WindowDisplayMode windowDisplayType) noexcept
 {
   Q_D(NXApplication);
   auto lastDisplayMode = d->_pWindowDisplayMode;
@@ -60,13 +60,13 @@ void NXApplication::setWindowDisplayMode(NXApplicationType::WindowDisplayMode wi
   }
 }
 
-NXApplicationType::WindowDisplayMode NXApplication::getWindowDisplayMode() const
+NXApplicationType::WindowDisplayMode NXApplication::getWindowDisplayMode() const noexcept
 {
   Q_D(const NXApplication);
   return d->_pWindowDisplayMode;
 }
 
-void NXApplication::setMicaImagePath(const QString& micaImagePath)
+void NXApplication::setMicaImagePath(const QString& micaImagePath) noexcept
 {
   Q_D(NXApplication);
   d->_pMicaImagePath = micaImagePath;
@@ -74,23 +74,23 @@ void NXApplication::setMicaImagePath(const QString& micaImagePath)
   Q_EMIT pMicaImagePathChanged();
 }
 
-QString NXApplication::getMicaImagePath() const
+QString NXApplication::getMicaImagePath() const noexcept
 {
   Q_D(const NXApplication);
   return d->_pMicaImagePath;
 }
 
-void NXApplication::init()
+void NXApplication::init() noexcept
 {
   Q_D(NXApplication);
   Q_INIT_RESOURCE(NexUs);
   QApplication::setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
-  QFontDatabase::addApplicationFont(":/Resource/Font/NXAwesome.ttf");
-  QFontDatabase::addApplicationFont(":/Resource/Font/segoe_slboot.ttf");
+  QFontDatabase::addApplicationFont(QStringLiteral(":/Resource/Font/NXAwesome.ttf"));
+  QFontDatabase::addApplicationFont(QStringLiteral(":/Resource/Font/segoe_slboot.ttf"));
   // 默认字体
   QFont font = qApp->font();
   font.setPixelSize(13);
-  font.setFamily("Microsoft YaHei");
+  font.setFamily(QStringLiteral("Microsoft YaHei"));
   font.setHintingPreference(QFont::PreferNoHinting);
   qApp->setFont(font);
 #ifdef Q_OS_WIN
@@ -99,7 +99,7 @@ void NXApplication::init()
   d->syncSystemTheme();
 }
 
-void NXApplication::syncWindowDisplayMode(QWidget *widget, bool isSync)
+void NXApplication::syncWindowDisplayMode(QWidget *widget, bool isSync) noexcept
 {
   Q_D(NXApplication);
   if (!widget) { return; }
@@ -143,7 +143,7 @@ void NXApplication::syncWindowDisplayMode(QWidget *widget, bool isSync)
   }
 }
 
-bool NXApplication::containsCursorToItem(QWidget *item)
+bool NXApplication::containsCursorToItem(QWidget *item) noexcept
 {
   if (!item || !item->isVisible()) { return false; }
   auto point  = item->window()->mapFromGlobal(QCursor::pos());

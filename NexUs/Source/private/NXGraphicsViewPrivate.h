@@ -18,7 +18,7 @@ public:
   ~NXGraphicsViewPrivate();
 
 private:
-  void _initStyle();
+  void _initStyle() noexcept;
 };
 
 #endif // NXGRAPHICSVIEWPRIVATE_H

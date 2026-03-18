@@ -24,10 +24,10 @@ class NXCalendarPrivate : public QObject
 public:
   explicit NXCalendarPrivate(QObject *parent = nullptr);
   ~NXCalendarPrivate();
-  Q_SLOT void onSwitchButtonClicked();
-  Q_SLOT void onCalendarViewClicked(const QModelIndex& index);
-  Q_SLOT void onUpButtonClicked();
-  Q_SLOT void onDownButtonClicked();
+  Q_SLOT void onSwitchButtonClicked() noexcept;
+  Q_SLOT void onCalendarViewClicked(const QModelIndex& index) noexcept;
+  Q_SLOT void onUpButtonClicked() noexcept;
+  Q_SLOT void onDownButtonClicked() noexcept;
 
 private:
   NXThemeType::ThemeMode _themeMode;
@@ -46,9 +46,9 @@ private:
   NXToolButton *_upButton { nullptr };
   NXToolButton *_downButton { nullptr };
 
-  void _scrollToDate(QDate date);
+  void _scrollToDate(QDate date) noexcept;
   void _doSwitchAnimation(bool isZoomIn);
-  void _updateSwitchButtonText();
+  void _updateSwitchButtonText() noexcept;
 };
 
 #endif // NXCALENDARPRIVATE_H

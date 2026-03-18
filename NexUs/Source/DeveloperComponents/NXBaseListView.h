@@ -14,15 +14,15 @@ public:
   explicit NXBaseListView(QWidget *parent = nullptr);
   ~NXBaseListView();
 Q_SIGNALS:
-  Q_SIGNAL void mousePress(const QModelIndex& index);
-  Q_SIGNAL void mouseRelease(const QModelIndex& index);
-  Q_SIGNAL void mouseDoubleClick(const QModelIndex& index);
+  void mousePress(const QModelIndex& index);
+  void mouseRelease(const QModelIndex& index);
+  void mouseDoubleClick(const QModelIndex& index);
 
 protected:
-  virtual void wheelEvent(QWheelEvent *event) override;
-  virtual void mousePressEvent(QMouseEvent *event) override;
-  virtual void mouseReleaseEvent(QMouseEvent *event) override;
-  virtual void mouseDoubleClickEvent(QMouseEvent *event) override;
+  void wheelEvent(QWheelEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
+  void mouseDoubleClickEvent(QMouseEvent *event) override;
 };
 
 #endif // NXBASELISTVIEW_H

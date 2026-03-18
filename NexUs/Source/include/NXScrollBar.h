@@ -12,8 +12,8 @@ class NX_EXPORT NXScrollBar : public QScrollBar
 {
   Q_OBJECT
   Q_Q_CREATE(NXScrollBar)
-  Q_PROPERTY_CREATE_Q_H(bool, IsAnimation)
-  Q_PROPERTY_CREATE_Q_H(qreal, SpeedLimit)
+  Q_PROPERTY_CREATE_H(bool, IsAnimation)
+  Q_PROPERTY_CREATE_H(qreal, SpeedLimit)
 
 public:
   explicit NXScrollBar(QWidget *parent = nullptr);
@@ -22,16 +22,16 @@ public:
   ~NXScrollBar() override;
 
 Q_SIGNALS:
-  Q_SIGNAL void rangeAnimationFinished();
+  void rangeAnimationFinished();
 
 protected:
-  virtual bool event(QEvent *event) override;
-  virtual bool eventFilter(QObject *watched, QEvent *event) override;
-  virtual void mousePressEvent(QMouseEvent *event) override;
-  virtual void mouseReleaseEvent(QMouseEvent *event) override;
-  virtual void mouseMoveEvent(QMouseEvent *event) override;
-  virtual void wheelEvent(QWheelEvent *event) override;
-  virtual void contextMenuEvent(QContextMenuEvent *event) override;
+  bool event(QEvent *event) override;
+  bool eventFilter(QObject *watched, QEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void wheelEvent(QWheelEvent *event) override;
+  void contextMenuEvent(QContextMenuEvent *event) override;
 };
 
 #endif // NXSCROLLBAR_H

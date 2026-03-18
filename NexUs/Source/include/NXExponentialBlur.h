@@ -16,14 +16,14 @@ class NX_EXPORT NXExponentialBlur : public QObject
 {
   Q_OBJECT
   Q_Q_CREATE(NXExponentialBlur)
-  LINN_SINGLETON_CREATE(LINN_SINGLETON_UNIQUE(NXExponentialBlur))
+  Q_SINGLETON_CREATE(QS_S_UNIQUE(NXExponentialBlur))
 
 private:
   explicit NXExponentialBlur(QObject *parent = nullptr);
   ~NXExponentialBlur();
 
 public:
-  static QPixmap doExponentialBlur(QImage img, const quint16& blurRadius);
+  static QPixmap doExponentialBlur(const QImage& img, const quint16& blurRadius) noexcept;
 };
 
 #pragma pop_macro("Q_DISABLE_COPY")

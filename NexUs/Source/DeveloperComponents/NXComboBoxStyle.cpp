@@ -61,15 +61,13 @@ void NXComboBoxStyle::drawControl(ControlElement element,
   case QStyle::CE_ShapedFrame :
   {
     // container区域
-    if (widget->objectName() == "NXComboBoxContainer")
+    if (widget->objectName() == QStringLiteral("NXComboBoxContainer"))
     {
       QRect viewRect = option->rect;
       painter->save();
       painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
       nxTheme->drawEffectShadow(painter, viewRect, _shadowBorderWidth, 6);
-      QRect foregroundRect(viewRect.x() + _shadowBorderWidth,
-                           viewRect.y(),
-                           viewRect.width() - 2 * _shadowBorderWidth,
+      QRect foregroundRect(viewRect.x() + _shadowBorderWidth, viewRect.y(), viewRect.width() - 2 * _shadowBorderWidth,
                            viewRect.height() - _shadowBorderWidth);
       painter->setPen(NXThemeColor(_themeMode, PopupBorder));
       painter->setBrush(NXThemeColor(_themeMode, PopupBase));
@@ -111,12 +109,9 @@ void NXComboBoxStyle::drawControl(ControlElement element,
         // 选中Mark
         painter->setPen(Qt::NoPen);
         painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
-        painter->drawRoundedRect(QRectF(optionRect.x() + 3,
-                                        optionRect.y() + optionRect.height() * 0.2,
-                                        3,
+        painter->drawRoundedRect(QRectF(optionRect.x() + 3, optionRect.y() + optionRect.height() * 0.2, 3,
                                         optionRect.height() - +optionRect.height() * 0.4),
-                                 2,
-                                 2);
+                                 2, 2);
       }
       else
       {
@@ -131,8 +126,7 @@ void NXComboBoxStyle::drawControl(ControlElement element,
       painter->setPen(NXThemeColor(_themeMode, BasicText));
       painter->drawText(
           QRect(option->rect.x() + 15, option->rect.y(), option->rect.width() - 15, option->rect.height()),
-          Qt::AlignVCenter,
-          vopt->text);
+          Qt::AlignVCenter, vopt->text);
       painter->restore();
     }
     return;
@@ -173,10 +167,8 @@ void NXComboBoxStyle::drawComplexControl(ComplexControl control,
       painter->drawRoundedRect(comboBoxRect, 3, 3);
       // 底边线绘制
       painter->setPen(NXThemeColor(_themeMode, BasicBaseLine));
-      painter->drawLine(comboBoxRect.x() + 3,
-                        comboBoxRect.y() + comboBoxRect.height(),
-                        comboBoxRect.x() + comboBoxRect.width() - 3,
-                        comboBoxRect.y() + comboBoxRect.height());
+      painter->drawLine(comboBoxRect.x() + 3, comboBoxRect.y() + comboBoxRect.height(),
+                        comboBoxRect.x() + comboBoxRect.width() - 3, comboBoxRect.y() + comboBoxRect.height());
 
       // 文字绘制
       if (!copt->editable)
@@ -189,16 +181,13 @@ void NXComboBoxStyle::drawComplexControl(ComplexControl control,
       painter->setPen(Qt::NoPen);
       painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
       painter->drawRoundedRect(QRectF(comboBoxRect.center().x() - _pExpandMarkWidth,
-                                      comboBoxRect.y() + comboBoxRect.height() - 3,
-                                      _pExpandMarkWidth * 2,
-                                      3),
-                               2,
-                               2);
+                                      comboBoxRect.y() + comboBoxRect.height() - 3, _pExpandMarkWidth * 2, 3),
+                               2, 2);
       // 展开图标绘制
       QRect expandIconRect = subControlRect(QStyle::CC_ComboBox, copt, QStyle::SC_ScrollBarAddPage, widget);
       if (expandIconRect.isValid())
       {
-        QFont iconFont = QFont("NXAwesome");
+        QFont iconFont = QFont(QStringLiteral("NXAwesome"));
         iconFont.setPixelSize(17);
         painter->setFont(iconFont);
         painter->setPen(isEnabled ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));

@@ -72,16 +72,12 @@ void NXToolBarStyle::drawPrimitive(PrimitiveElement element,
     const NXToolBar *toolBar = dynamic_cast<const NXToolBar *>(widget);
     if (toolBar->orientation() == Qt::Vertical)
     {
-      painter->drawRect(QRectF(separatorRect.x() + separatorRect.width() * 0.1,
-                               separatorRect.center().y() - 0.9,
-                               separatorRect.width() * 0.8,
-                               1.8));
+      painter->drawRect(QRectF(separatorRect.x() + separatorRect.width() * 0.1, separatorRect.center().y() - 0.9,
+                               separatorRect.width() * 0.8, 1.8));
     }
     else
     {
-      painter->drawRect(QRectF(separatorRect.center().x() - 0.9,
-                               separatorRect.y() + separatorRect.height() * 0.1,
-                               1.8,
+      painter->drawRect(QRectF(separatorRect.center().x() - 0.9, separatorRect.y() + separatorRect.height() * 0.1, 1.8,
                                separatorRect.height() * 0.8));
     }
     painter->restore();
@@ -120,7 +116,7 @@ void NXToolBarStyle::drawControl(ControlElement element,
         // 展开图标
         painter->setPen(!bopt->state.testFlag(QStyle::State_Enabled) ? NXThemeColor(_themeMode, BasicTextDisable)
                                                                      : NXThemeColor(_themeMode, BasicText));
-        QFont iconFont = QFont("NXAwesome");
+        QFont iconFont = QFont(QStringLiteral("NXAwesome"));
         iconFont.setPixelSize(18);
         painter->setFont(iconFont);
         painter->drawText(bopt->rect, Qt::AlignCenter, QChar((unsigned short) NXIconType::AngleRight));
@@ -195,7 +191,9 @@ int NXToolBarStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, 
   return QProxyStyle::pixelMetric(metric, option, widget);
 }
 
-void NXToolBarStyle::_drawIndicator(QPainter *painter, const QStyleOptionToolButton *bopt, const QWidget *widget) const
+void NXToolBarStyle::_drawIndicator(QPainter *painter,
+                                    const QStyleOptionToolButton *bopt,
+                                    const QWidget *widget) const noexcept
 {
   if (bopt->features.testFlag(QStyleOptionToolButton::MenuButtonPopup))
   {
@@ -230,7 +228,7 @@ void NXToolBarStyle::_drawIndicator(QPainter *painter, const QStyleOptionToolBut
 void NXToolBarStyle::_drawIcon(QPainter *painter,
                                QRectF iconRect,
                                const QStyleOptionToolButton *bopt,
-                               const QWidget *widget) const
+                               const QWidget *widget) const noexcept
 {
   if (bopt->toolButtonStyle != Qt::ToolButtonTextOnly)
   {
@@ -244,8 +242,7 @@ void NXToolBarStyle::_drawIcon(QPainter *painter,
       QIcon icon = bopt->icon;
       if (!icon.isNull())
       {
-        QPixmap iconPix = icon.pixmap(iconSize,
-                                      (bopt->state & State_Enabled) ? QIcon::Normal : QIcon::Disabled,
+        QPixmap iconPix = icon.pixmap(iconSize, (bopt->state & State_Enabled) ? QIcon::Normal : QIcon::Disabled,
                                       (bopt->state & State_Selected) ? QIcon::On : QIcon::Off);
         switch (bopt->toolButtonStyle)
         {
@@ -279,7 +276,7 @@ void NXToolBarStyle::_drawIcon(QPainter *painter,
       // 绘制NXIcon
       painter->save();
       painter->setPen(NXThemeColor(_themeMode, BasicText));
-      QFont iconFont = QFont("NXAwesome");
+      QFont iconFont = QFont(QStringLiteral("NXAwesome"));
       switch (bopt->toolButtonStyle)
       {
       case Qt::ToolButtonIconOnly :
@@ -294,8 +291,8 @@ void NXToolBarStyle::_drawIcon(QPainter *painter,
       }
       case Qt::ToolButtonTextUnderIcon :
       {
-        QRect adjustIconRect(
-            iconRect.center().x() - iconSize.width() / 2, iconRect.y(), iconSize.width(), iconSize.height());
+        QRect adjustIconRect(iconRect.center().x() - iconSize.width() / 2, iconRect.y(), iconSize.width(),
+                             iconSize.height());
         iconFont.setPixelSize(0.8 * std::min(iconSize.width(), iconSize.height()));
         painter->setFont(iconFont);
         painter->drawText(adjustIconRect, Qt::AlignHCenter, action->property("NXIconType").toString());
@@ -311,7 +308,7 @@ void NXToolBarStyle::_drawIcon(QPainter *painter,
   }
 }
 
-void NXToolBarStyle::_drawText(QPainter *painter, QRect contentRect, const QStyleOptionToolButton *bopt) const
+void NXToolBarStyle::_drawText(QPainter *painter, QRect contentRect, const QStyleOptionToolButton *bopt) const noexcept
 {
   if (!bopt->text.isEmpty())
   {
@@ -325,12 +322,9 @@ void NXToolBarStyle::_drawText(QPainter *painter, QRect contentRect, const QStyl
     }
     case Qt::ToolButtonTextBesideIcon :
     {
-      painter->drawText(QRect(contentRect.x() + bopt->iconSize.width() + 12,
-                              contentRect.y(),
-                              contentRect.width() - bopt->iconSize.width(),
-                              contentRect.height()),
-                        Qt::AlignLeft | Qt::AlignVCenter,
-                        bopt->text);
+      painter->drawText(QRect(contentRect.x() + bopt->iconSize.width() + 12, contentRect.y(),
+                              contentRect.width() - bopt->iconSize.width(), contentRect.height()),
+                        Qt::AlignLeft | Qt::AlignVCenter, bopt->text);
       break;
     }
     case Qt::ToolButtonTextUnderIcon :

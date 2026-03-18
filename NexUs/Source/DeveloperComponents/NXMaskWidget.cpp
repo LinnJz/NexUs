@@ -7,20 +7,17 @@ NXMaskWidget::NXMaskWidget(QWidget *parent)
     : QWidget { parent }
 {
   setObjectName("NXMaskWidget");
-  setStyleSheet("#NXMaskWidget{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXMaskWidget{background-color:transparent;}"));
   _pMaskAlpha = 0;
 }
 
 NXMaskWidget::~NXMaskWidget() { }
 
-void NXMaskWidget::doMaskAnimation(int endValue)
+void NXMaskWidget::doMaskAnimation(int endValue) noexcept
 {
   QPropertyAnimation *opacityAnimation = new QPropertyAnimation(this, "pMaskAlpha");
   connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
-  connect(opacityAnimation,
-          &QPropertyAnimation::finished,
-          this,
-          [=]()
+  connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]()
   {
     if (endValue == 0) { setVisible(false); }
   });

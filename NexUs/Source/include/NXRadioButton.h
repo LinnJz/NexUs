@@ -10,9 +10,9 @@ class NX_EXPORT NXRadioButton : public QRadioButton
 {
   Q_OBJECT
   Q_Q_CREATE(NXRadioButton)
-  Q_PROPERTY_CREATE_Q_H(int, TextPixelSize)
-  Q_PROPERTY_CREATE_Q_H(int, TextPointSize)
-  Q_PROPERTY_CREATE_Q_H(NXTextType::TextStyle, TextStyle)
+  Q_PROPERTY_CREATE_H(int, TextPixelSize)
+  Q_PROPERTY_CREATE_H(int, TextPointSize)
+  Q_PROPERTY_CREATE_H(NXTextType::TextStyle, TextStyle)
 
 public:
   explicit NXRadioButton(QWidget *parent = nullptr);
@@ -20,7 +20,7 @@ public:
   ~NXRadioButton() override;
 
 protected:
-  virtual void paintEvent(QPaintEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // NXRADIOBUTTON_H

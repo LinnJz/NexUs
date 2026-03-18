@@ -16,18 +16,18 @@ public:
   explicit NXDockWidget(const QString& title, QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
   ~NXDockWidget() override;
   Q_SIGNAL void dockClosed();
-  Q_SIGNAL void dockResized(const QSize& size);
+  Q_SIGNAL void dockResized(QSize size);
 
 protected:
-  virtual void resizeEvent(QResizeEvent *event) override;
-  virtual void closeEvent(QCloseEvent *event) override;
-  virtual void paintEvent(QPaintEvent *event) override;
+  void resizeEvent(QResizeEvent *event) override;
+  void closeEvent(QCloseEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 #ifdef Q_OS_WIN
-  virtual bool event(QEvent *event) override;
+  bool event(QEvent *event) override;
 #  if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-  virtual bool nativeEvent(const QByteArray& eventType, void *message, qintptr *result) override;
+  bool nativeEvent(const QByteArray& eventType, void *message, qintptr *result) override;
 #  else
-  virtual bool nativeEvent(const QByteArray& eventType, void *message, long *result) override;
+  bool nativeEvent(const QByteArray& eventType, void *message, long *result) override;
 #  endif
 #endif
 };

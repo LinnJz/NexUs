@@ -106,4 +106,4 @@ int NXPivotStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, co
   return QProxyStyle::pixelMetric(metric, option, widget);
 }
 
-const QColor& NXPivotStyle::getMarkColor() { return NXThemeColor(_themeMode, PrimaryNormal); }
+const QColor& NXPivotStyle::getMarkColor() const noexcept { return NXThemeColor(_themeMode, PrimaryNormal); }

@@ -15,17 +15,17 @@ public:
   explicit NXColorPicker(QWidget *parent = nullptr);
   ~NXColorPicker();
 
-  void setSelectedColor(QColor color);
-  QColor getSelectedColor() const;
+  void setSelectedColor(const QColor& color) noexcept;
+  QColor getSelectedColor() const noexcept;
 
 Q_SIGNALS:
-  Q_SIGNAL void selectedColorChanged(QColor selectedColor);
+  void selectedColorChanged(QColor selectedColor);
 
 protected:
-  virtual void mousePressEvent(QMouseEvent *event) override;
-  virtual void mouseReleaseEvent(QMouseEvent *event) override;
-  virtual void mouseMoveEvent(QMouseEvent *event) override;
-  virtual void paintEvent(QPaintEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 
 private:
   QImage _colorPickerImage;

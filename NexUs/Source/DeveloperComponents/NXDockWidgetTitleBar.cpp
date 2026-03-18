@@ -28,14 +28,12 @@ NXDockWidgetTitleBar::NXDockWidgetTitleBar(QWidget *parent)
   connect(_closeButton, &NXIconButton::clicked, this, &NXDockWidgetTitleBar::onCloseButtonClicked);
 
   _setVisibleFromFeatures(_dockWidget->features());
-  connect(_dockWidget, &QDockWidget::featuresChanged, this, [=](QDockWidget::DockWidgetFeatures features) {
-    _setVisibleFromFeatures(features);
-  });
-  connect(
-      _dockWidget, &QDockWidget::windowTitleChanged, this, [=](const QString& title) { _titleLabel->setText(title); });
-  connect(_dockWidget, &QDockWidget::windowIconChanged, this, [=](const QIcon& icon) {
-    _iconLabel->setPixmap(icon.pixmap(QSize(18, 18)));
-  });
+  connect(_dockWidget, &QDockWidget::featuresChanged, this,
+          [=](QDockWidget::DockWidgetFeatures features) { _setVisibleFromFeatures(features); });
+  connect(_dockWidget, &QDockWidget::windowTitleChanged, this,
+          [=](const QString& title) { _titleLabel->setText(title); });
+  connect(_dockWidget, &QDockWidget::windowIconChanged, this,
+          [=](const QIcon& icon) { _iconLabel->setPixmap(icon.pixmap(QSize(18, 18))); });
 
   QHBoxLayout *mainLayout = new QHBoxLayout(this);
   mainLayout->setSpacing(0);
@@ -56,12 +54,12 @@ NXDockWidgetTitleBar::NXDockWidgetTitleBar(QWidget *parent)
 
 NXDockWidgetTitleBar::~NXDockWidgetTitleBar() { }
 
-void NXDockWidgetTitleBar::onFloatButtonClicked()
+void NXDockWidgetTitleBar::onFloatButtonClicked() noexcept
 {
   _dockWidget->setFloating(_dockWidget->isFloating() ? false : true);
 }
 
-void NXDockWidgetTitleBar::onCloseButtonClicked() { _dockWidget->close(); }
+void NXDockWidgetTitleBar::onCloseButtonClicked() noexcept { _dockWidget->close(); }
 
 void NXDockWidgetTitleBar::paintEvent(QPaintEvent *event)
 {

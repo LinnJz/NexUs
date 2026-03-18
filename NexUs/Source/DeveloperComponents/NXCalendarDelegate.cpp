@@ -16,15 +16,13 @@ NXCalendarDelegate::NXCalendarDelegate(NXCalendarModel *calendarModel, QObject *
   _nowDate        = QDate::currentDate();
   _themeMode      = nxTheme->getThemeMode();
   connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
-  connect(_calendarModel,
-          &NXCalendarModel::displayModeChanged,
-          this,
+  connect(_calendarModel, &NXCalendarModel::displayModeChanged, this,
           &NXCalendarDelegate::onCalendarModelDisplayModeChanged);
 }
 
 NXCalendarDelegate::~NXCalendarDelegate() { }
 
-void NXCalendarDelegate::onCalendarModelDisplayModeChanged()
+void NXCalendarDelegate::onCalendarModelDisplayModeChanged() noexcept
 {
   switch (_calendarModel->getDisplayMode())
   {
@@ -106,8 +104,7 @@ void NXCalendarDelegate::_drawYearOrMonth(QPainter *painter,
 
   // 文字绘制
   painter->setPen(isNow ? NXThemeColor(_themeMode, BasicTextInvert) : NXThemeColor(_themeMode, BasicText));
-  painter->drawText(itemRect,
-                    Qt::AlignCenter,
+  painter->drawText(itemRect, Qt::AlignCenter,
                     displayMode == NXCalendarType::YearMode ? QString::number(data.year) : QString::number(data.month));
   QString desText = data.desText;
   if (!desText.isEmpty())

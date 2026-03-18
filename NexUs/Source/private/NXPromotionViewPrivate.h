@@ -21,7 +21,7 @@ class NXPromotionViewPrivate : public QObject
 public:
   explicit NXPromotionViewPrivate(QObject *parent = nullptr);
   ~NXPromotionViewPrivate();
-  void onPromotionCardClicked(NXPromotionCard *clickedCard);
+  void onPromotionCardClicked(NXPromotionCard *clickedCard) noexcept;
 
 private:
   bool _isAllowSwitch { true };
@@ -34,11 +34,11 @@ private:
   QTimer *_autoScrollTimer { nullptr };
   QList<NXPromotionCard *> _promotionCardList;
 
-  void _startCardGeometryAnimation(NXPromotionCard *card, QRect start, QRect end);
-  void _startHorizontalCardPixmapRatioAnimation(NXPromotionCard *card, qreal start, qreal end);
-  void _updatePromotionCardGeometry();
-  int _getAdjacentIndex(Qt::LayoutDirection direction, int index);
-  int _getRightLimitX();
+  void _startCardGeometryAnimation(NXPromotionCard *card, QRect start, QRect end) noexcept;
+  void _startHorizontalCardPixmapRatioAnimation(NXPromotionCard *card, qreal start, qreal end) noexcept;
+  void _updatePromotionCardGeometry() noexcept;
+  int _getAdjacentIndex(Qt::LayoutDirection direction, int index) noexcept;
+  int _getRightLimitX() noexcept;
 };
 
 #endif // NXPROMOTIONVIEWPRIVATE_H

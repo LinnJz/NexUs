@@ -12,15 +12,12 @@ NXThemeAnimationWidget::NXThemeAnimationWidget(QWidget *parent)
 
 NXThemeAnimationWidget::~NXThemeAnimationWidget() { }
 
-void NXThemeAnimationWidget::startAnimation(int msec)
+void NXThemeAnimationWidget::startAnimation(int msec) noexcept
 {
   QPropertyAnimation *themeChangeAnimation = new QPropertyAnimation(this, "pRadius");
   themeChangeAnimation->setDuration(msec);
   themeChangeAnimation->setEasingCurve(QEasingCurve::InOutSine);
-  connect(themeChangeAnimation,
-          &QPropertyAnimation::finished,
-          this,
-          [=]()
+  connect(themeChangeAnimation, &QPropertyAnimation::finished, this, [=]()
   {
     Q_EMIT animationFinished();
     this->deleteLater();
@@ -49,8 +46,7 @@ void NXThemeAnimationWidget::paintEvent(QPaintEvent *event)
   QPainterPath clipPath;
   clipPath.moveTo(_pCenter.x() * devicePixelRatioF, _pCenter.y() * devicePixelRatioF);
   clipPath.addEllipse(QPointF(_pCenter.x() * devicePixelRatioF, _pCenter.y() * devicePixelRatioF),
-                      _pRadius * devicePixelRatioF,
-                      _pRadius * devicePixelRatioF);
+                      _pRadius * devicePixelRatioF, _pRadius * devicePixelRatioF);
   animationImagePainter.setClipPath(clipPath);
   animationImagePainter.drawImage(animationImage.rect(), animationImage);
   animationImagePainter.end();

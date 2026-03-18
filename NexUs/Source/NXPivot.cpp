@@ -18,7 +18,7 @@ NXPivot::NXPivot(QWidget *parent)
   d->_pTextPixelSize = 20;
   setFixedHeight(40);
   setObjectName("NXPivot");
-  setStyleSheet("#NXPivot{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXPivot{background-color:transparent;}"));
   setMouseTracking(true);
 
   d->_listView = new NXPivotView(this);
@@ -47,10 +47,7 @@ NXPivot::NXPivot(QWidget *parent)
   properties.setScrollMetric(QScrollerProperties::FrameRate, QScrollerProperties::Fps60);
   scroller->setScrollerProperties(properties);
 
-  connect(scroller,
-          &QScroller::stateChanged,
-          this,
-          [=](QScroller::State newstate)
+  connect(scroller, &QScroller::stateChanged, this, [=](QScroller::State newstate)
   {
     if (newstate == QScroller::Pressed)
     {
@@ -63,19 +60,15 @@ NXPivot::NXPivot(QWidget *parent)
       d->_listView->viewport()->update();
     }
   });
-  connect(d->_listView,
-          &NXPivotView::clicked,
-          this,
-          [=](const QModelIndex& index)
+  connect(d->_listView, &NXPivotView::clicked, this, [=](const QModelIndex& index)
   {
     if (index.row() != d->_listStyle->getCurrentIndex()) { Q_EMIT pCurrentIndexChanged(); }
     d->_listView->doCurrentIndexChangedAnimation(index);
     d->_listStyle->setCurrentIndex(index.row());
     Q_EMIT pivotClicked(index.row());
   });
-  connect(d->_listView, &NXPivotView::doubleClicked, this, [=](const QModelIndex& index) {
-    Q_EMIT pivotDoubleClicked(index.row());
-  });
+  connect(d->_listView, &NXPivotView::doubleClicked, this,
+          [=](const QModelIndex& index) { Q_EMIT pivotDoubleClicked(index.row()); });
   QVBoxLayout *mainLayout = new QVBoxLayout(this);
   mainLayout->setContentsMargins(0, 0, 0, 0);
   mainLayout->addWidget(d->_listView);
@@ -87,21 +80,21 @@ NXPivot::~NXPivot()
   delete d->_listStyle;
 }
 
-void NXPivot::appendPivot(const QString& pivotTitle)
+void NXPivot::appendPivot(const QString& pivotTitle) noexcept
 {
   Q_D(NXPivot);
   d->_listModel->appendPivot(pivotTitle);
   d->_checkCurrentIndex();
 }
 
-void NXPivot::removePivot(const QString& pivotTitle)
+void NXPivot::removePivot(const QString& pivotTitle) noexcept
 {
   Q_D(NXPivot);
   d->_listModel->removePivot(pivotTitle);
   d->_checkCurrentIndex();
 }
 
-void NXPivot::setTextPixelSize(int textPixelSize)
+void NXPivot::setTextPixelSize(int textPixelSize) noexcept
 {
   Q_D(NXPivot);
   if (textPixelSize > 0)
@@ -115,13 +108,13 @@ void NXPivot::setTextPixelSize(int textPixelSize)
   }
 }
 
-int NXPivot::getTextPixelSize() const
+int NXPivot::getTextPixelSize() const noexcept
 {
   Q_D(const NXPivot);
   return d->_pTextPixelSize;
 }
 
-void NXPivot::setCurrentIndex(int currentIndex)
+void NXPivot::setCurrentIndex(int currentIndex) noexcept
 {
   Q_D(NXPivot);
   if (currentIndex < d->_listModel->getPivotListCount())
@@ -133,13 +126,13 @@ void NXPivot::setCurrentIndex(int currentIndex)
   }
 }
 
-int NXPivot::getCurrentIndex() const
+int NXPivot::getCurrentIndex() const noexcept
 {
   Q_D(const NXPivot);
   return d->_listView->currentIndex().row();
 }
 
-void NXPivot::setPivotSpacing(int pivotSpacing)
+void NXPivot::setPivotSpacing(int pivotSpacing) noexcept
 {
   Q_D(NXPivot);
   if (pivotSpacing >= 0)
@@ -150,13 +143,13 @@ void NXPivot::setPivotSpacing(int pivotSpacing)
   }
 }
 
-int NXPivot::getPivotSpacing() const
+int NXPivot::getPivotSpacing() const noexcept
 {
   Q_D(const NXPivot);
   return d->_listStyle->getPivotSpacing();
 }
 
-void NXPivot::setMarkWidth(int markWidth)
+void NXPivot::setMarkWidth(int markWidth) noexcept
 {
   Q_D(NXPivot);
   if (markWidth >= 0)
@@ -167,7 +160,7 @@ void NXPivot::setMarkWidth(int markWidth)
   }
 }
 
-int NXPivot::getMarkWidth() const
+int NXPivot::getMarkWidth() const noexcept
 {
   Q_D(const NXPivot);
   return d->_listView->getMarkWidth();

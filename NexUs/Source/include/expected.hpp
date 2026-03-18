@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2023, Alibaba Group Holding Limited;
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -1454,7 +1454,7 @@ public:
   {
   }
 
-  virtual const char *what() const noexcept override { return "Bad expected access"; }
+  const char *what() const noexcept override { return "Bad expected access"; }
 
   const E& error() const& { return m_val; }
 
@@ -2161,8 +2161,7 @@ private:
 
   void swap_where_only_one_has_value(expected& rhs, t_is_not_void)
   {
-    swap_where_only_one_has_value_and_t_is_not_void(rhs,
-                                                    typename std::is_nothrow_move_constructible<T>::type {},
+    swap_where_only_one_has_value_and_t_is_not_void(rhs, typename std::is_nothrow_move_constructible<T>::type {},
                                                     typename std::is_nothrow_move_constructible<E>::type {});
   }
 

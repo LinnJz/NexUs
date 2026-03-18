@@ -9,14 +9,14 @@ class NX_EXPORT NXShadowGraphicsEffect : public QGraphicsEffect
 {
   Q_OBJECT
   Q_Q_CREATE(NXShadowGraphicsEffect)
-  Q_PRIVATE_CREATE_Q_EX_H(const QColor&, QColor, LightColor)
-  Q_PRIVATE_CREATE_Q_EX_H(const QColor&, QColor, DarkColor)
-  Q_PRIVATE_CREATE_Q_H(NXShadowGraphicsEffectType::RotateMode, RotateMode)
-  Q_PRIVATE_CREATE_Q_H(NXShadowGraphicsEffectType::ProjectionMode, ProjectionMode)
-  Q_PRIVATE_CREATE_Q_H(qreal, Blur)
-  Q_PRIVATE_CREATE_Q_H(qreal, Spread)
-  Q_PRIVATE_CREATE_Q_H(QPointF, LightOffset)
-  Q_PRIVATE_CREATE_Q_H(QPointF, DarkOffset)
+  Q_PROPERTY_CREATE_H(NXShadowGraphicsEffectType::RotateMode, RotateMode)
+  Q_PROPERTY_CREATE_H(NXShadowGraphicsEffectType::ProjectionMode, ProjectionMode)
+  Q_PROPERTY_CREATE_H(qreal, Blur)
+  Q_PROPERTY_CREATE_H(qreal, Spread)
+  Q_PROPERTY_CREATE_H(QPointF, LightOffset)
+  Q_PROPERTY_CREATE_H(QPointF, DarkOffset)
+  Q_PROPERTY_CREATE_2_H(const QColor&, QColor, LightColor)
+  Q_PROPERTY_CREATE_2_H(const QColor&, QColor, DarkColor)
 
 public:
   explicit NXShadowGraphicsEffect(QObject *parent = nullptr);

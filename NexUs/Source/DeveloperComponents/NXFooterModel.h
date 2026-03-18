@@ -17,10 +17,10 @@ public:
   NXNodeOperateResult addFooterNode(const QString& footerTitle,
                                     bool isHasFooterPage,
                                     int keyPoints                = 0,
-                                    NXIconType::IconName awesome = NXIconType::None);
-  int getFooterNodeCount() const;
-  NXNavigationNode *getNavigationNode(const QString& footerKey);
-  void removeNavigationNode(const QString& footerKey);
+                                    NXIconType::IconName awesome = NXIconType::None) noexcept;
+  int getFooterNodeCount() const noexcept;
+  NXNavigationNode *getNavigationNode(const QString& footerKey) const noexcept;
+  void removeNavigationNode(const QString& footerKey) noexcept;
 
 protected:
   int rowCount(const QModelIndex& parent = QModelIndex()) const override;

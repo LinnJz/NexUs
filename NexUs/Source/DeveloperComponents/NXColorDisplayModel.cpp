@@ -7,21 +7,21 @@ NXColorDisplayModel::NXColorDisplayModel(QObject *parent)
 
 NXColorDisplayModel::~NXColorDisplayModel() { }
 
-void NXColorDisplayModel::appendDisplayColor(QList<QColor> colorList)
+void NXColorDisplayModel::appendDisplayColor(const QList<QColor>& colorList) noexcept
 {
   beginResetModel();
   _displayColorList.append(colorList);
   endResetModel();
 }
 
-void NXColorDisplayModel::appendDisplayColor(QColor color)
+void NXColorDisplayModel::appendDisplayColor(const QColor& color) noexcept
 {
   beginResetModel();
   _displayColorList.append(color);
   endResetModel();
 }
 
-void NXColorDisplayModel::removeDisplayColor(int index)
+void NXColorDisplayModel::removeDisplayColor(int index) noexcept
 {
   if (index < 0 || index >= _displayColorList.count()) { return; }
   beginResetModel();
@@ -29,7 +29,7 @@ void NXColorDisplayModel::removeDisplayColor(int index)
   endResetModel();
 }
 
-void NXColorDisplayModel::replaceDisplayColor(QColor color, int index)
+void NXColorDisplayModel::replaceDisplayColor(const QColor& color, int index) noexcept
 {
   if (index < 0 || index >= _displayColorList.count()) { return; }
   beginResetModel();
@@ -37,9 +37,9 @@ void NXColorDisplayModel::replaceDisplayColor(QColor color, int index)
   endResetModel();
 }
 
-QList<QColor> NXColorDisplayModel::getDisplayColorList() const { return _displayColorList; }
+QList<QColor> NXColorDisplayModel::getDisplayColorList() const noexcept { return _displayColorList; }
 
-QColor NXColorDisplayModel::getDisplayColor(int index) const
+QColor NXColorDisplayModel::getDisplayColor(int index) const noexcept
 {
   if (index < 0 || index >= _displayColorList.count()) { return QColor(); }
   return _displayColorList[index];

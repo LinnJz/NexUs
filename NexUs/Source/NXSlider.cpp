@@ -23,9 +23,8 @@ NXSlider::NXSlider(QWidget *parent)
   d->_valueToolTip->setIsMoveEnabled(true);
   d->_valueToolTip->setOffSetX(-20);
   d->_valueToolTip->setOffSetY(-60);
-  connect(this, &NXSlider::valueChanged, this, [=](const int value) {
-    d->_valueToolTip->setToolTip(QString::number(value));
-  });
+  connect(this, &NXSlider::valueChanged, this,
+          [=](const int value) { d->_valueToolTip->setToolTip(QString::number(value)); });
 }
 
 NXSlider::NXSlider(Qt::Orientation orientation, QWidget *parent)

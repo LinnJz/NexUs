@@ -18,11 +18,11 @@ public:
   explicit NXDockWidgetTitleBar(QWidget *parent = nullptr);
   ~NXDockWidgetTitleBar();
 
-  Q_SLOT void onFloatButtonClicked();
-  Q_SLOT void onCloseButtonClicked();
+  Q_SLOT void onFloatButtonClicked() noexcept;
+  Q_SLOT void onCloseButtonClicked() noexcept;
 
 protected:
-  virtual void paintEvent(QPaintEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 
 private:
   friend class NXDockWidgetPrivate;

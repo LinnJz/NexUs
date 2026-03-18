@@ -25,11 +25,11 @@ NXTabWidgetPrivate::NXTabWidgetPrivate(QObject *parent)
 
 NXTabWidgetPrivate::~NXTabWidgetPrivate() { }
 
-void NXTabWidgetPrivate::onTabDragCreate(QMimeData *mimeData)
+void NXTabWidgetPrivate::onTabDragCreate(QMimeData *mimeData) noexcept
 {
   Q_Q(NXTabWidget);
-  if (NXDragMonitor::getInstance().getIsInDrag()) { return; }
-  NXDragMonitor::getInstance().setIsInDrag(true);
+  if (NXDragMonitor::getInstance()->getIsInDrag()) { return; }
+  NXDragMonitor::getInstance()->setIsInDrag(true);
   mimeData->setProperty("NXTabWidgetObject", QVariant::fromValue(q));
   int index           = q->currentIndex();
   QString tabText     = q->tabText(index);
@@ -45,8 +45,8 @@ void NXTabWidgetPrivate::onTabDragCreate(QMimeData *mimeData)
   }
   mimeData->setProperty("DragWidget", QVariant::fromValue(dragWidget));
   NXTabBar *tabBarObject = mimeData->property("NXTabBarObject").value<NXTabBar *>();
-  QMouseEvent releaseEvent(
-      QEvent::MouseButtonRelease, QPoint(-1, -1), QPoint(-1, -1), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+  QMouseEvent releaseEvent(QEvent::MouseButtonRelease, QPoint(-1, -1), QPoint(-1, -1), Qt::LeftButton, Qt::LeftButton,
+                           Qt::NoModifier);
   QApplication::sendEvent(tabBarObject, &releaseEvent);
   if (!originTabWidget) { originTabWidget = dragWidget->property("NXFloatParentWidget").value<QWidget *>(); }
   bool isFloatWidget              = mimeData->property("IsFloatWidget").toBool();
@@ -82,10 +82,7 @@ void NXTabWidgetPrivate::onTabDragCreate(QMimeData *mimeData)
   QPoint dragPos    = mimeData->property("DragPos").toPoint();
   QTimer *dragTimer = new QTimer(this);
   dragTimer->start(10);
-  connect(dragTimer,
-          &QTimer::timeout,
-          floatWidget,
-          [=]()
+  connect(dragTimer, &QTimer::timeout, floatWidget, [=]()
   {
     if (floatWidget->getIsFinished() && !isFloatWidget) { dragTimer->stop(); }
     else
@@ -105,16 +102,14 @@ void NXTabWidgetPrivate::onTabDragCreate(QMimeData *mimeData)
   drag->setMimeData(mimeData);
   connect(drag, &QDrag::destroyed, this, [=]() { dragTimer->deleteLater(); });
   drag->setHotSpot(QPoint(tabSize.width() / 2, 0));
-  QTimer::singleShot(1,
-                     this,
-                     [=]()
+  QTimer::singleShot(1, this, [=]()
   {
     floatWidget->show();
     if (floatWidget->windowHandle()) { floatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, true); }
     if (!isFloatWidget) { floatWidget->resize(700, 500); }
   });
   auto ret = drag->exec();
-  NXDragMonitor::getInstance().setIsInDrag(false);
+  NXDragMonitor::getInstance()->setIsInDrag(false);
   NXCustomTabWidget *tempFloatWidget = mimeData->property("TempFloatWidget").value<NXCustomTabWidget *>();
   if (tempFloatWidget)
   {
@@ -137,14 +132,14 @@ void NXTabWidgetPrivate::onTabDragCreate(QMimeData *mimeData)
   }
 }
 
-void NXTabWidgetPrivate::onTabDragEnter(QMimeData *mimeData)
+void NXTabWidgetPrivate::onTabDragEnter(QMimeData *mimeData) noexcept
 {
   Q_Q(NXTabWidget);
   mimeData->setProperty("NXTabBarObject", QVariant::fromValue<NXTabBar *>(dynamic_cast<NXTabBar *>(q->tabBar())));
   onTabDragDrop(mimeData);
 }
 
-void NXTabWidgetPrivate::onTabDragLeave(QMimeData *mimeData)
+void NXTabWidgetPrivate::onTabDragLeave(QMimeData *mimeData) noexcept
 {
   Q_Q(NXTabWidget);
   QWidget *dragWidget = mimeData->property("DragWidget").value<QWidget *>();
@@ -180,10 +175,7 @@ void NXTabWidgetPrivate::onTabDragLeave(QMimeData *mimeData)
   floatWidget->move(cursorPoint.x() - tabSize.width() / 2, cursorPoint.y() - tabSize.height() / 2);
   QTimer *dragTimer = new QTimer(this);
   dragTimer->start(10);
-  connect(dragTimer,
-          &QTimer::timeout,
-          floatWidget,
-          [=]()
+  connect(dragTimer, &QTimer::timeout, floatWidget, [=]()
   {
     QPoint cursorPoint = QCursor::pos();
     floatWidget->move(cursorPoint.x() - tabSize.width() / 2 - 10, cursorPoint.y() - tabSize.height() / 2 - 10);
@@ -194,7 +186,7 @@ void NXTabWidgetPrivate::onTabDragLeave(QMimeData *mimeData)
   mimeData->setProperty("TempFloatWidget", QVariant::fromValue<NXCustomTabWidget *>(floatWidget));
 }
 
-void NXTabWidgetPrivate::onTabDragDrop(QMimeData *mimeData)
+void NXTabWidgetPrivate::onTabDragDrop(QMimeData *mimeData) noexcept
 {
   Q_Q(NXTabWidget);
   QWidget *dragWidget = mimeData->property("DragWidget").value<QWidget *>();
@@ -212,7 +204,7 @@ void NXTabWidgetPrivate::onTabDragDrop(QMimeData *mimeData)
   }
 }
 
-void NXTabWidgetPrivate::onTabCloseRequested(int index)
+void NXTabWidgetPrivate::onTabCloseRequested(int index) noexcept
 {
   Q_Q(NXTabWidget);
   QWidget *closeWidget         = q->widget(index);
@@ -237,7 +229,7 @@ void NXTabWidgetPrivate::onTabCloseRequested(int index)
   }
 }
 
-void NXTabWidgetPrivate::_clearAllTabWidgetList()
+void NXTabWidgetPrivate::_clearAllTabWidgetList() noexcept
 {
   Q_Q(NXTabWidget);
   for (auto widget : _allTabWidgetList)

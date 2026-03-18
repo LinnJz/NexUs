@@ -10,7 +10,7 @@ class NX_EXPORT NXGroupBox : public QGroupBox
 {
   Q_OBJECT
   Q_Q_CREATE(NXGroupBox)
-  Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
+  Q_PROPERTY_CREATE_H(int, BorderRadius)
 
 public:
   explicit NXGroupBox(QWidget *parent = nullptr);
@@ -18,7 +18,7 @@ public:
   ~NXGroupBox() override;
 
 protected:
-  virtual void paintEvent(QPaintEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // NXGROUPBOX_H

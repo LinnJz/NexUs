@@ -5,8 +5,8 @@
 #include <QWheelEvent>
 
 #include "private/NXGraphicsViewPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(NXGraphicsView, qreal, MaxTransform);
-Q_PROPERTY_CREATE_Q_CPP(NXGraphicsView, qreal, MinTransform);
+Q_PROPERTY_CREATE_CPP(NXGraphicsView, qreal, MaxTransform)
+Q_PROPERTY_CREATE_CPP(NXGraphicsView, qreal, MinTransform)
 
 NXGraphicsView::NXGraphicsView(QWidget *parent)
     : QGraphicsView(parent)

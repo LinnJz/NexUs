@@ -7,6 +7,7 @@
 
 #include <QContextMenuEvent>
 #include <QLineEdit>
+#include <QLocale>
 #include <QPainter>
 #include <QPropertyAnimation>
 
@@ -17,11 +18,12 @@ NXSpinBox::NXSpinBox(QWidget *parent)
   Q_D(NXSpinBox);
   d->q_ptr             = this;
   d->_pExpandMarkWidth = 0;
+  setLocale(QLocale::C);
   setFixedSize(115, 35);
   d->_style = new NXSpinBoxStyle(style());
   setStyle(d->_style);
   lineEdit()->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-  lineEdit()->setStyleSheet("background-color:transparent;padding-left:10px;padding-bottom:3px;");
+  lineEdit()->setStyleSheet(QStringLiteral("background-color:transparent;padding-left:10px;padding-bottom:3px;"));
   lineEdit()->setAttribute(Qt::WA_MacShowFocusRect, false);
   d->onThemeChanged(nxTheme->getThemeMode());
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXSpinBoxPrivate::onThemeChanged);
@@ -33,7 +35,7 @@ NXSpinBox::~NXSpinBox()
   delete d->_style;
 }
 
-void NXSpinBox::setButtonMode(NXSpinBoxType::ButtonMode buttonMode)
+void NXSpinBox::setButtonMode(NXSpinBoxType::ButtonMode buttonMode) noexcept
 {
   Q_D(NXSpinBox);
   if (minimumWidth() < 90) { setMinimumWidth(90); }
@@ -60,7 +62,7 @@ void NXSpinBox::setButtonMode(NXSpinBoxType::ButtonMode buttonMode)
   Q_EMIT pButtonModeChanged();
 }
 
-NXSpinBoxType::ButtonMode NXSpinBox::getButtonMode() const
+NXSpinBoxType::ButtonMode NXSpinBox::getButtonMode() const noexcept
 {
   Q_D(const NXSpinBox);
   return d->_style->getButtonMode();
@@ -108,8 +110,8 @@ void NXSpinBox::paintEvent(QPaintEvent *event)
   painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
   painter.setPen(Qt::NoPen);
   painter.setBrush(NXThemeColor(d->_themeMode, PrimaryNormal));
-  painter.drawRoundedRect(
-      QRectF(width() / 2 - d->_pExpandMarkWidth, height() - 2.5, d->_pExpandMarkWidth * 2, 2.5), 2, 2);
+  painter.drawRoundedRect(QRectF(width() / 2 - d->_pExpandMarkWidth, height() - 2.5, d->_pExpandMarkWidth * 2, 2.5), 2,
+                          2);
   painter.restore();
 }
 

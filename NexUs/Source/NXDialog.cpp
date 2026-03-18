@@ -17,13 +17,13 @@ NXDialog::NXDialog(QWidget *parent)
   Q_D(NXDialog);
   d->q_ptr = this;
   resize(500, 500); // 默认宽高
-  setWindowTitle("NXDialog");
+  setWindowTitle(QStringLiteral("NXDialog"));
   setObjectName("NXDialog");
 #ifndef Q_OS_WIN
   setAttribute(Qt::WA_Hover);
 #endif
 #if (QT_VERSION < QT_VERSION_CHECK(6, 5, 3) || QT_VERSION > QT_VERSION_CHECK(6, 6, 1))
-  setStyleSheet("#NXDialog{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXDialog{background-color:transparent;}"));
 #endif
   // 自定义AppBar
   d->_appBar = new NXAppBar(this);
@@ -37,20 +37,14 @@ NXDialog::NXDialog(QWidget *parent)
 
   // 主题
   d->_themeMode = nxTheme->getThemeMode();
-  connect(nxTheme,
-          &NXTheme::themeModeChanged,
-          this,
-          [=](NXThemeType::ThemeMode themeMode)
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
     d->_themeMode = themeMode;
     update();
   });
 
   d->_windowDisplayMode = nxApp->getWindowDisplayMode();
-  connect(nxApp,
-          &NXApplication::pWindowDisplayModeChanged,
-          this,
-          [=]()
+  connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]()
   {
     d->_windowDisplayMode = nxApp->getWindowDisplayMode();
     update();
@@ -60,49 +54,49 @@ NXDialog::NXDialog(QWidget *parent)
 
 NXDialog::~NXDialog() { nxApp->syncWindowDisplayMode(this, false); }
 
-void NXDialog::setIsStayTop(bool isStayTop)
+void NXDialog::setIsStayTop(bool isStayTop) noexcept
 {
   Q_D(NXDialog);
   d->_appBar->setIsStayTop(isStayTop);
 }
 
-bool NXDialog::getIsStayTop() const { return d_ptr->_appBar->getIsStayTop(); }
+bool NXDialog::getIsStayTop() const noexcept { return d_ptr->_appBar->getIsStayTop(); }
 
-void NXDialog::setIsFixedSize(bool isFixedSize)
+void NXDialog::setIsFixedSize(bool isFixedSize) noexcept
 {
   Q_D(NXDialog);
   d->_appBar->setIsFixedSize(isFixedSize);
 }
 
-bool NXDialog::getIsFixedSize() const { return d_ptr->_appBar->getIsFixedSize(); }
+bool NXDialog::getIsFixedSize() const noexcept { return d_ptr->_appBar->getIsFixedSize(); }
 
-void NXDialog::setIsDefaultClosed(bool isDefaultClosed)
+void NXDialog::setIsDefaultClosed(bool isDefaultClosed) noexcept
 {
   Q_D(NXDialog);
   d->_appBar->setIsDefaultClosed(isDefaultClosed);
   Q_EMIT pIsDefaultClosedChanged();
 }
 
-bool NXDialog::getIsDefaultClosed() const
+bool NXDialog::getIsDefaultClosed() const noexcept
 {
   Q_D(const NXDialog);
   return d->_appBar->getIsDefaultClosed();
 }
 
-void NXDialog::setAppBarHeight(int appBarHeight)
+void NXDialog::setAppBarHeight(int appBarHeight) noexcept
 {
   Q_D(NXDialog);
   d->_appBar->setAppBarHeight(appBarHeight);
   Q_EMIT pAppBarHeightChanged();
 }
 
-int NXDialog::getAppBarHeight() const
+int NXDialog::getAppBarHeight() const noexcept
 {
   Q_D(const NXDialog);
   return d->_appBar->getAppBarHeight();
 }
 
-void NXDialog::moveToCenter()
+void NXDialog::moveToCenter() noexcept
 {
   if (isMaximized() || isFullScreen()) { return; }
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
@@ -110,25 +104,26 @@ void NXDialog::moveToCenter()
 #else
   auto geometry = qApp->screenAt(this->geometry().center())->geometry();
 #endif
-  setGeometry((geometry.left() + geometry.right() - width()) / 2,
-              (geometry.top() + geometry.bottom() - height()) / 2,
-              width(),
-              height());
+  setGeometry((geometry.left() + geometry.right() - width()) / 2, (geometry.top() + geometry.bottom() - height()) / 2,
+              width(), height());
 }
 
-void NXDialog::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable)
+void NXDialog::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable) noexcept
 {
   Q_D(NXDialog);
   d->_appBar->setWindowButtonFlag(buttonFlag, isEnable);
 }
 
-void NXDialog::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags)
+void NXDialog::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags) noexcept
 {
   Q_D(NXDialog);
   d->_appBar->setWindowButtonFlags(buttonFlags);
 }
 
-NXAppBarType::ButtonFlags NXDialog::getWindowButtonFlags() const { return d_ptr->_appBar->getWindowButtonFlags(); }
+NXAppBarType::ButtonFlags NXDialog::getWindowButtonFlags() const noexcept
+{
+  return d_ptr->_appBar->getWindowButtonFlags();
+}
 
 void NXDialog::paintEvent(QPaintEvent *event)
 {

@@ -10,10 +10,10 @@ NXPlainTextEditPrivate::NXPlainTextEditPrivate(QObject *parent)
 
 NXPlainTextEditPrivate::~NXPlainTextEditPrivate() { }
 
-void NXPlainTextEditPrivate::onWMWindowClickedEvent(QVariantMap data)
+void NXPlainTextEditPrivate::onWMWindowClickedEvent(const QVariantMap& data)
 {
   Q_Q(NXPlainTextEdit);
-  NXAppBarType::WMMouseActionType actionType = data.value("WMClickType").value<NXAppBarType::WMMouseActionType>();
+  NXAppBarType::WMMouseActionType actionType = data.value(QStringLiteral("WMClickType")).value<NXAppBarType::WMMouseActionType>();
   if (actionType == NXAppBarType::WMLBUTTONDOWN)
   {
     if (!q->toPlainText().isEmpty() && q->hasFocus()) { q->clearFocus(); }
@@ -29,7 +29,7 @@ void NXPlainTextEditPrivate::onWMWindowClickedEvent(QVariantMap data)
   }
 }
 
-void NXPlainTextEditPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
+void NXPlainTextEditPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_Q(NXPlainTextEdit);
   _themeMode       = themeMode;

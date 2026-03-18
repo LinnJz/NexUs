@@ -12,7 +12,7 @@ NXPromotionViewPrivate::NXPromotionViewPrivate(QObject *parent)
 
 NXPromotionViewPrivate::~NXPromotionViewPrivate() { }
 
-void NXPromotionViewPrivate::onPromotionCardClicked(NXPromotionCard *clickedCard)
+void NXPromotionViewPrivate::onPromotionCardClicked(NXPromotionCard *clickedCard) noexcept
 {
   Q_Q(NXPromotionView);
   int newCurrentIndex = _promotionCardList.indexOf(clickedCard);
@@ -37,11 +37,8 @@ void NXPromotionViewPrivate::onPromotionCardClicked(NXPromotionCard *clickedCard
       {
         if (!isRightToLeft)
         {
-          geometryAnimation->setKeyValueAt(0.7,
-                                           QRect(geometry.x() + _pCardCollapseWidth * 0.7 + _cardSpacing,
-                                                 0,
-                                                 _pCardCollapseWidth,
-                                                 q->height() - _bottomMargin));
+          geometryAnimation->setKeyValueAt(0.7, QRect(geometry.x() + _pCardCollapseWidth * 0.7 + _cardSpacing, 0,
+                                                      _pCardCollapseWidth, q->height() - _bottomMargin));
           geometryAnimation->setKeyValueAt(
               0.71, QRect(-_pCardCollapseWidth, 0, _pCardCollapseWidth, q->height() - _bottomMargin));
         }
@@ -52,10 +49,8 @@ void NXPromotionViewPrivate::onPromotionCardClicked(NXPromotionCard *clickedCard
         if (isRightToLeft) { geometryAnimation->setEndValue(targetGeometry); }
         else
         {
-          geometryAnimation->setEndValue(QRect(_leftPadding + _pCardExpandWidth + _cardSpacing * 2,
-                                               0,
-                                               _pCardCollapseWidth,
-                                               q->height() - _bottomMargin));
+          geometryAnimation->setEndValue(QRect(_leftPadding + _pCardExpandWidth + _cardSpacing * 2, 0,
+                                               _pCardCollapseWidth, q->height() - _bottomMargin));
         }
       }
       _startHorizontalCardPixmapRatioAnimation(card, card->getHorizontalCardPixmapRatio(), 0.5);
@@ -69,16 +64,11 @@ void NXPromotionViewPrivate::onPromotionCardClicked(NXPromotionCard *clickedCard
     }
     else
     {
-      QRect targetGeometry(_leftPadding + _pCardExpandWidth + _cardSpacing * i + _pCardCollapseWidth * (i - 2),
-                           0,
-                           _pCardCollapseWidth,
-                           q->height() - _bottomMargin);
+      QRect targetGeometry(_leftPadding + _pCardExpandWidth + _cardSpacing * i + _pCardCollapseWidth * (i - 2), 0,
+                           _pCardCollapseWidth, q->height() - _bottomMargin);
       if (isRightToLeft && targetGeometry.x() > card->x())
       {
-        connect(geometryAnimation,
-                &QPropertyAnimation::valueChanged,
-                this,
-                [=]()
+        connect(geometryAnimation, &QPropertyAnimation::valueChanged, this, [=]()
         {
           if (card->geometry().right() <= 0)
           {
@@ -88,9 +78,7 @@ void NXPromotionViewPrivate::onPromotionCardClicked(NXPromotionCard *clickedCard
                 timeRatio,
                 QRect(_promotionCardList[_getAdjacentIndex(Qt::RightToLeft, originIndex)]->geometry().right() +
                           _pCardCollapseWidth * (1 - timeRatio),
-                      0,
-                      _pCardCollapseWidth,
-                      q->height() - _bottomMargin));
+                      0, _pCardCollapseWidth, q->height() - _bottomMargin));
             geometryAnimation->setEndValue(targetGeometry);
             geometryAnimation->resume();
           }
@@ -112,7 +100,7 @@ void NXPromotionViewPrivate::onPromotionCardClicked(NXPromotionCard *clickedCard
   Q_EMIT q->pCurrentIndexChanged();
 }
 
-void NXPromotionViewPrivate::_startCardGeometryAnimation(NXPromotionCard *card, QRect start, QRect end)
+void NXPromotionViewPrivate::_startCardGeometryAnimation(NXPromotionCard *card, QRect start, QRect end) noexcept
 {
   QPropertyAnimation *geometryAnimation = new QPropertyAnimation(card, "geometry");
   geometryAnimation->setEasingCurve(QEasingCurve::OutCubic);
@@ -122,7 +110,9 @@ void NXPromotionViewPrivate::_startCardGeometryAnimation(NXPromotionCard *card, 
   geometryAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXPromotionViewPrivate::_startHorizontalCardPixmapRatioAnimation(NXPromotionCard *card, qreal start, qreal end)
+void NXPromotionViewPrivate::_startHorizontalCardPixmapRatioAnimation(NXPromotionCard *card,
+                                                                      qreal start,
+                                                                      qreal end) noexcept
 {
   QPropertyAnimation *ratioAnimation = new QPropertyAnimation(card, "pHorizontalCardPixmapRatio");
   ratioAnimation->setEasingCurve(QEasingCurve::OutCubic);
@@ -132,20 +122,20 @@ void NXPromotionViewPrivate::_startHorizontalCardPixmapRatioAnimation(NXPromotio
   ratioAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXPromotionViewPrivate::_updatePromotionCardGeometry()
+void NXPromotionViewPrivate::_updatePromotionCardGeometry() noexcept
 {
   Q_Q(NXPromotionView);
   if (_promotionCardList.count() < 3)
   {
     if (_promotionCardList.count() == 1)
     {
-      _promotionCardList[0]->setGeometry(
-          _leftPadding + _cardSpacing, 0, _pCardExpandWidth, q->height() - _bottomMargin);
+      _promotionCardList[0]->setGeometry(_leftPadding + _cardSpacing, 0, _pCardExpandWidth,
+                                         q->height() - _bottomMargin);
     }
     else
     {
-      _promotionCardList[0]->setGeometry(
-          _leftPadding + _cardSpacing, 0, _pCardExpandWidth, q->height() - _bottomMargin);
+      _promotionCardList[0]->setGeometry(_leftPadding + _cardSpacing, 0, _pCardExpandWidth,
+                                         q->height() - _bottomMargin);
       QRect lastGeometry = _promotionCardList[0]->geometry();
       _promotionCardList[1]->setGeometry(
           QRect(lastGeometry.right() + _cardSpacing, lastGeometry.y(), _pCardCollapseWidth, lastGeometry.height()));
@@ -159,15 +149,15 @@ void NXPromotionViewPrivate::_updatePromotionCardGeometry()
       if (i == 0)
       {
         // 展开的卡片
-        _promotionCardList[i]->setGeometry(
-            _leftPadding + _cardSpacing, 0, _pCardExpandWidth, q->height() - _bottomMargin);
+        _promotionCardList[i]->setGeometry(_leftPadding + _cardSpacing, 0, _pCardExpandWidth,
+                                           q->height() - _bottomMargin);
         _promotionCardList[i]->setHorizontalCardPixmapRatio(1);
       }
       else if (i == _promotionCardList.count() - 1)
       {
         // 最左侧卡片
-        _promotionCardList[i]->setGeometry(
-            -_pCardCollapseWidth + _leftPadding, 0, _pCardCollapseWidth, q->height() - _bottomMargin);
+        _promotionCardList[i]->setGeometry(-_pCardCollapseWidth + _leftPadding, 0, _pCardCollapseWidth,
+                                           q->height() - _bottomMargin);
         _promotionCardList[i]->setHorizontalCardPixmapRatio(0.5);
       }
       else
@@ -181,7 +171,7 @@ void NXPromotionViewPrivate::_updatePromotionCardGeometry()
   }
 }
 
-int NXPromotionViewPrivate::_getAdjacentIndex(Qt::LayoutDirection direction, int index)
+int NXPromotionViewPrivate::_getAdjacentIndex(Qt::LayoutDirection direction, int index) noexcept
 {
   if (direction == Qt::LeftToRight)
   {
@@ -195,7 +185,7 @@ int NXPromotionViewPrivate::_getAdjacentIndex(Qt::LayoutDirection direction, int
   }
 }
 
-int NXPromotionViewPrivate::_getRightLimitX()
+int NXPromotionViewPrivate::_getRightLimitX() noexcept
 {
   int count = _promotionCardList.count();
   return _leftPadding + _pCardExpandWidth + _cardSpacing * (count - 1) + _pCardCollapseWidth * (count - 3);

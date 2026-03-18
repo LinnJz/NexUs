@@ -1,4 +1,4 @@
-#ifndef NXFRAMEWORK_NXWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_NXPACKETIO_H_
+﻿#ifndef NXFRAMEWORK_NXWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_NXPACKETIO_H_
 #define NXFRAMEWORK_NXWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_NXPACKETIO_H_
 
 #include <QObject>
@@ -16,8 +16,8 @@ class NXXIO_Connection;
 class T_NXPacketIO : public QObject
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE(bool, IsActive);
-  Q_PRIVATE_CREATE(QString, InterfaceIP);
+  Q_PRIVATE_CREATE(bool, IsActive)
+  Q_PRIVATE_CREATE(QString, InterfaceIP)
 
 public:
   Q_INVOKABLE explicit T_NXPacketIO(QObject *parent = nullptr);

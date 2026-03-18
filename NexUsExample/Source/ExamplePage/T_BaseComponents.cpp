@@ -40,9 +40,8 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   NXToggleSwitch *toggleSwitchDisableSwitch = new NXToggleSwitch(this);
   NXText *toggleSwitchDisableText           = new NXText("禁用", this);
   toggleSwitchDisableText->setTextPixelSize(15);
-  connect(toggleSwitchDisableSwitch, &NXToggleSwitch::toggled, this, [=](bool checked) {
-    _toggleSwitch->setDisabled(checked);
-  });
+  connect(toggleSwitchDisableSwitch, &NXToggleSwitch::toggled, this,
+          [=](bool checked) { _toggleSwitch->setDisabled(checked); });
   toggleSwitchLayout->addWidget(toggleSwitchDisableSwitch);
   toggleSwitchLayout->addWidget(toggleSwitchDisableText);
   toggleSwitchLayout->addSpacing(10);
@@ -59,9 +58,8 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   NXToggleSwitch *toggleButtonDisableSwitch = new NXToggleSwitch(this);
   NXText *toggleButtonDisableText           = new NXText("禁用", this);
   toggleButtonDisableText->setTextPixelSize(15);
-  connect(toggleButtonDisableSwitch, &NXToggleSwitch::toggled, this, [=](bool checked) {
-    _toggleButton->setDisabled(checked);
-  });
+  connect(toggleButtonDisableSwitch, &NXToggleSwitch::toggled, this,
+          [=](bool checked) { _toggleButton->setDisabled(checked); });
   toggleButtonLayout->addWidget(toggleButtonDisableSwitch);
   toggleButtonLayout->addWidget(toggleButtonDisableText);
   toggleButtonLayout->addSpacing(10);
@@ -80,8 +78,8 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   NXToggleSwitch *comboBoxDisableSwitch = new NXToggleSwitch(this);
   NXText *comboBoxDisableText           = new NXText("禁用", this);
   comboBoxDisableText->setTextPixelSize(15);
-  connect(
-      comboBoxDisableSwitch, &NXToggleSwitch::toggled, this, [=](bool checked) { _comboBox->setDisabled(checked); });
+  connect(comboBoxDisableSwitch, &NXToggleSwitch::toggled, this,
+          [=](bool checked) { _comboBox->setDisabled(checked); });
   comboBoxLayout->addWidget(comboBoxDisableSwitch);
   comboBoxLayout->addWidget(comboBoxDisableText);
   comboBoxLayout->addSpacing(10);
@@ -103,9 +101,8 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   NXToggleSwitch *multiSelectComboBoxDisableSwitch = new NXToggleSwitch(this);
   NXText *multiSelectComboBoxDisableText           = new NXText("禁用", this);
   multiSelectComboBoxDisableText->setTextPixelSize(15);
-  connect(multiSelectComboBoxDisableSwitch, &NXToggleSwitch::toggled, this, [=](bool checked) {
-    _multiSelectComboBox->setDisabled(checked);
-  });
+  connect(multiSelectComboBoxDisableSwitch, &NXToggleSwitch::toggled, this,
+          [=](bool checked) { _multiSelectComboBox->setDisabled(checked); });
   multiSelectComboBoxLayout->addWidget(multiSelectComboBoxDisableSwitch);
   multiSelectComboBoxLayout->addWidget(multiSelectComboBoxDisableText);
   multiSelectComboBoxLayout->addSpacing(10);
@@ -145,10 +142,7 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   NXToggleSwitch *messageButtonDisableSwitch = new NXToggleSwitch(this);
   NXText *messageButtonDisableText           = new NXText("禁用", this);
   messageButtonDisableText->setTextPixelSize(15);
-  connect(messageButtonDisableSwitch,
-          &NXToggleSwitch::toggled,
-          this,
-          [=](bool checked)
+  connect(messageButtonDisableSwitch, &NXToggleSwitch::toggled, this, [=](bool checked)
   {
     _messageButton->setDisabled(checked);
     _infoMessageButton->setDisabled(checked);
@@ -170,8 +164,8 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   NXToggleSwitch *checkBoxDisableSwitch = new NXToggleSwitch(this);
   NXText *checkBoxDisableText           = new NXText("禁用", this);
   checkBoxDisableText->setTextPixelSize(15);
-  connect(
-      checkBoxDisableSwitch, &NXToggleSwitch::toggled, this, [=](bool checked) { _checkBox->setDisabled(checked); });
+  connect(checkBoxDisableSwitch, &NXToggleSwitch::toggled, this,
+          [=](bool checked) { _checkBox->setDisabled(checked); });
   checkBoxLayout->addWidget(checkBoxDisableSwitch);
   checkBoxLayout->addWidget(checkBoxDisableText);
   checkBoxLayout->addSpacing(10);
@@ -207,9 +201,7 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   spinButtonGroup->addButton(compactButton, 1);
   spinButtonGroup->addButton(sideButton, 2);
   spinButtonGroup->addButton(pmSideButton, 3);
-  connect(spinButtonGroup,
-          QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled),
-          this,
+  connect(spinButtonGroup, QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled), this,
           [=](QAbstractButton *button, bool isToggled)
   {
     if (isToggled) { _spinBox->setButtonMode((NXSpinBoxType::ButtonMode) spinButtonGroup->id(button)); }
@@ -305,8 +297,8 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   NXToggleSwitch *groupBoxDisableSwitch = new NXToggleSwitch(this);
   NXText *groupBoxDisableText           = new NXText("禁用", this);
   groupBoxDisableText->setTextPixelSize(15);
-  connect(
-      groupBoxDisableSwitch, &NXToggleSwitch::toggled, this, [=](bool checked) { _groupBox->setDisabled(checked); });
+  connect(groupBoxDisableSwitch, &NXToggleSwitch::toggled, this,
+          [=](bool checked) { _groupBox->setDisabled(checked); });
   groupBoxAreaLayout->addWidget(groupBoxDisableSwitch);
   groupBoxAreaLayout->addWidget(groupBoxDisableText);
   groupBoxAreaLayout->addSpacing(10);

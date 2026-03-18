@@ -734,3 +734,32 @@ NXWidgetToolsExample/ExamplePage/T_TableWidget.h
 - 新增像素大小（pixel size）设置接口，便于精细控制字体。
 
 13. **问题修复**：同步修复若干已知问题，提升整体稳定性。
+
+### Track Record 6：2026年03月12日提交
+
+* 同步
+
+* NXTheme 阴影绘制逻辑修改统一
+
+* NXTableView表格更新性能优化，降低移动重绘视口开销
+
+  表格添加check指示器位置接口供外部调用
+
+* NXProperty 大改，
+  QS_TAG_DEFAULT_VALUE：成员变量支持默认值初始化。
+  QS_TAG_ASSIGN_MOVE：支持两种写法
+  Q_PROPERTY_CREATE(QString, Text, QS_ASSIGN_MOVE)
+  Q_PROPERTY_CREATE(QString, QS_ASSIGN_MOVE(Text))
+  且 QString&& 形参也走 std::move。
+  QS_TAG_CONTRACT_ALWAYS / QS_TAG_CONTRACT_DEBUG：setter 前置断言，支持 (expr, msg, location)。
+  QS_TAG_NOEXCEPT：getter/setter 都可配置，默认 noexcept(true)。
+  QS_TAG_NO_EMIT_SIGNAL：setter 不发信号。
+  QS_TAG_SIGNAL_PARAMS：信号参数可配置，支持多个参数。
+  QS_TAG_UPDATE：setter 中调用 this->update()，且顺序在 emit 前。
+  同步修改所有的property、private创建，
+
+* 几乎所有接口方法内置方法都标记为noexcept，非pod对象使用const&传递，QStringLiteral包裹字符串
+
+* CMake设置大改进一步规范
+
+* **RainbowCandyX —— Mar 19, 2026**

@@ -37,52 +37,52 @@ NXMenu::~NXMenu()
   delete d->_menuStyle;
 }
 
-void NXMenu::setBorderRadius(int borderRadius)
+void NXMenu::setBorderRadius(int borderRadius) noexcept
 {
   Q_D(NXMenu);
   d->_menuStyle->setBorderRadius(borderRadius);
 }
 
-int NXMenu::getBorderRadius() const
+int NXMenu::getBorderRadius() const noexcept
 {
   Q_D(const NXMenu);
   return d->_menuStyle->getBorderRadius();
 }
 
-void NXMenu::setMenuItemHeight(int menuItemHeight)
+void NXMenu::setMenuItemHeight(int menuItemHeight) noexcept
 {
   Q_D(NXMenu);
   d->_menuStyle->setMenuItemHeight(menuItemHeight);
 }
 
-int NXMenu::getMenuItemHeight() const
+int NXMenu::getMenuItemHeight() const noexcept
 {
   Q_D(const NXMenu);
   return d->_menuStyle->getMenuItemHeight();
 }
 
-void NXMenu::setAlignParentMenuHeight(bool alignParentMenuHeight)
+void NXMenu::setAlignParentMenuHeight(bool alignParentMenuHeight) noexcept
 {
   Q_D(NXMenu);
   d->setAlignParentMenuHeight(alignParentMenuHeight);
 }
 
-bool NXMenu::getAlignParentMenuHeight() const
+bool NXMenu::getAlignParentMenuHeight() const noexcept
 {
   Q_D(const NXMenu);
   return d->getAlignParentMenuHeight();
 }
 
-QAction *NXMenu::addMenu(QMenu *menu) { return QMenu::addMenu(menu); }
+QAction *NXMenu::addMenu(QMenu *menu) noexcept { return QMenu::addMenu(menu); }
 
-NXMenu *NXMenu::addMenu(const QString& title)
+NXMenu *NXMenu::addMenu(const QString& title) noexcept
 {
   NXMenu *menu = new NXMenu(title, this);
   QMenu::addAction(menu->menuAction());
   return menu;
 }
 
-NXMenu *NXMenu::addMenu(const QIcon& icon, const QString& title)
+NXMenu *NXMenu::addMenu(const QIcon& icon, const QString& title) noexcept
 {
   NXMenu *menu = new NXMenu(title, this);
   menu->setIcon(icon);
@@ -90,7 +90,7 @@ NXMenu *NXMenu::addMenu(const QIcon& icon, const QString& title)
   return menu;
 }
 
-NXMenu *NXMenu::addMenu(NXIconType::IconName icon, const QString& title)
+NXMenu *NXMenu::addMenu(NXIconType::IconName icon, const QString& title) noexcept
 {
   NXMenu *menu = new NXMenu(title, this);
   QMenu::addAction(menu->menuAction());
@@ -98,7 +98,7 @@ NXMenu *NXMenu::addMenu(NXIconType::IconName icon, const QString& title)
   return menu;
 }
 
-QAction *NXMenu::addNXIconAction(NXIconType::IconName icon, const QString& text)
+QAction *NXMenu::addNXIconAction(NXIconType::IconName icon, const QString& text) noexcept
 {
   QAction *action = new QAction(text, this);
   action->setProperty("NXIconType", QChar((unsigned short) icon));
@@ -106,7 +106,7 @@ QAction *NXMenu::addNXIconAction(NXIconType::IconName icon, const QString& text)
   return action;
 }
 
-QAction *NXMenu::addNXIconAction(NXIconType::IconName icon, const QString& text, const QKeySequence& shortcut)
+QAction *NXMenu::addNXIconAction(NXIconType::IconName icon, const QString& text, const QKeySequence& shortcut) noexcept
 {
   QAction *action = new QAction(text, this);
   action->setShortcut(shortcut);
@@ -115,9 +115,9 @@ QAction *NXMenu::addNXIconAction(NXIconType::IconName icon, const QString& text,
   return action;
 }
 
-bool NXMenu::isHasParentMenu() const { return qobject_cast<QMenu *>(parentWidget()) != nullptr; }
+bool NXMenu::isHasParentMenu() const noexcept { return qobject_cast<QMenu *>(parentWidget()) != nullptr; }
 
-bool NXMenu::isHasChildMenu() const
+bool NXMenu::isHasChildMenu() const noexcept
 {
   QList<QAction *> actionList = this->actions();
   for (auto action : actionList)
@@ -128,7 +128,7 @@ bool NXMenu::isHasChildMenu() const
   return false;
 }
 
-bool NXMenu::isHasIcon() const
+bool NXMenu::isHasIcon() const noexcept
 {
   QList<QAction *> actionList = this->actions();
   for (auto action : actionList)
@@ -165,10 +165,7 @@ void NXMenu::showEvent(QShowEvent *event)
   if (!d->_animationPix.isNull()) { d->_animationPix = QPixmap(); }
   d->_animationPix                 = this->grab(this->rect());
   QPropertyAnimation *posAnimation = new QPropertyAnimation(d, "pAnimationImagePosY");
-  connect(posAnimation,
-          &QPropertyAnimation::finished,
-          this,
-          [=]()
+  connect(posAnimation, &QPropertyAnimation::finished, this, [=]()
   {
     d->_animationPix = QPixmap();
     update();

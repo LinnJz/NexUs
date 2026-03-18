@@ -1,58 +1,59 @@
 ﻿cmake_minimum_required(VERSION 3.5)
 
-project(NXFramework VERSION 0.1 LANGUAGES CXX)
+project(NexUs VERSION 1.0.0 LANGUAGES CXX)
 
-set(CMAKE_CONFIGURATION_TYPES "Debug;Release;RelWithDebInfo;MinSizeRel" CACHE STRING "" FORCE)
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build" FORCE)
-    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
-endif()
-if(MSVC)
-    string(REPLACE "/Zi" "/ZI" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
-endif()
+#在这里配置QT路径 例如 D:/Qt/6.6.2/msvc2019_64 D:/Qt/5.15.2/msvc2019_64 /home/liniyous/Qt/5.15.2/gcc_64
+set(QT_SDK_DIR E:/Qt/6.6.2/msvc2019_64 CACHE PATH "QT SDK DIR" FORCE)
+list(APPEND CMAKE_PREFIX_PATH ${QT_SDK_DIR})
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(PLATFORM_SUFFIX "x64")
-else()
-    set(PLATFORM_SUFFIX "x86")
-endif()
+option(AUTO_INSTALL_AFTER_BUILD "Automatically install after building" OFF)
+message(STATUS "Auto install after build: ${AUTO_INSTALL_AFTER_BUILD}")
 
-set(NEXUS_ROOT_DIR "${CMAKE_SOURCE_DIR}")
-set(NEXUS_BIN_DIR "${NEXUS_ROOT_DIR}/Bin/NexUs_${CMAKE_BUILD_TYPE}_${PLATFORM_SUFFIX}")
+option(BUILD_NXPACKETIO "Build NXPacketIO" ON)
 
-# 设置构建输出目录
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${NEXUS_BIN_DIR})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${NEXUS_BIN_DIR})
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${NEXUS_BIN_DIR})
-set(CMAKE_PDB_OUTPUT_DIRECTORY ${NEXUS_BIN_DIR})
+option(NXPACKETIO_BUILD_STATIC_LIB "Build static library." OFF)
+option(NEXUS_BUILD_STATIC_LIB "Build static library." OFF)
 
-# 为每种配置类型设置输出目录
-foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
-    string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${NEXUS_BIN_DIR})
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${NEXUS_BIN_DIR})
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${NEXUS_BIN_DIR})
-    set(CMAKE_PDB_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${NEXUS_BIN_DIR})
-endforeach()
+if (NXPACKETIO_BUILD_STATIC_LIB)
+    set(NXPACKETIO_LIB_TYPE "STATIC")
+else ()
+    set(NXPACKETIO_LIB_TYPE "SHARED")
+endif ()
+if (NEXUS_BUILD_STATIC_LIB)
+    set(NEXUS_LIB_TYPE "STATIC")
+else ()
+    set(NEXUS_LIB_TYPE "SHARED")
+endif ()
 
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-#在这里配置QT路径 例如 D:/Qt/6.6.2/msvc2019_64 D:/Qt/5.15.2/msvc2019_64 /home/liniyous/Qt/5.15.2/gcc_64
-SET(QT_SDK_DIR E:/Qt/6.6.2/msvc2019_64 CACHE PATH "QT SDK DIR" FORCE)
-message("在CMAKE中配置 QT_SDK_DIR 选项指定QT路径; 当前路径: ${QT_SDK_DIR}")
-SET(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/Install/NexUs_${PLATFORM_SUFFIX}/${CMAKE_BUILD_TYPE} CACHE PATH "Installation path" FORCE)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
+include(CMake/Global.cmake)
+include(CMake/Functions.cmake)
 
-option(BUILD_NXPACKETIO "Build NXPacketIO" ON)
-list(APPEND CMAKE_PREFIX_PATH ${QT_SDK_DIR})
+# Comes with third-party libraries and vcpkg management; whichever is added to the search path first will be found first.
+# include(CMake/Dependencies.cmake) # vcpkg 3rdparty
+# include(CMake/CompilerConfigs.cmake) # global compiler configs
 
-option(AUTO_INSTALL_AFTER_BUILD "Automatically install after building" OFF)
-message(STATUS "Auto install after build: ${AUTO_INSTALL_AFTER_BUILD}")
+set(NexUs_BIN_DIR "${CMAKE_SOURCE_DIR}/Bin/${PROJECT_NAME}_${CMAKE_BUILD_TYPE}_${PLATFORM_SUFFIX}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${NexUs_BIN_DIR} CACHE PATH "Runtime output directory")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${NexUs_BIN_DIR} CACHE PATH "Library output directory")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${NexUs_BIN_DIR} CACHE PATH "Archive output directory")
+set(CMAKE_PCH_OUTPUT_DIRECTORY ${NexUs_BIN_DIR} CACHE PATH "Precompiled header output directory")
+set(CMAKE_ASM_LISTING_OUTPUT_DIRECTORY ${NexUs_BIN_DIR} CACHE PATH "Assembly listing output directory")
+set(CMAKE_CXX_MODULE_OUTPUT_DIRECTORY ${NexUs_BIN_DIR} CACHE PATH "C++ module output directory")
+if (COMPILER_MSVC)
+  set(CMAKE_COMPILE_PDB_OUTPUT_DIRECTORY ${NexUs_BIN_DIR} CACHE PATH "PDB compile output directory")
+  set(CMAKE_PDB_OUTPUT_DIRECTORY ${NexUs_BIN_DIR} CACHE PATH "PDB output directory")
+endif()
+set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/Install/${PROJECT_NAME}_${PLATFORM_SUFFIX}/${CMAKE_BUILD_TYPE}" CACHE PATH "Installation path" FORCE)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)

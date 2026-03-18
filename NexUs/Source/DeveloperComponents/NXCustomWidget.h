@@ -16,10 +16,10 @@ public:
   explicit NXCustomWidget(QWidget *parent = nullptr);
   ~NXCustomWidget() override;
 
-  void setCentralWidget(QWidget *widget);
+  void setCentralWidget(QWidget *widget) noexcept;
 
 protected:
-  virtual void paintEvent(QPaintEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
   QVBoxLayout *_mainLayout { nullptr };
   NXAppBar *_appBar { nullptr };
   QWidget *_centralWidget { nullptr };

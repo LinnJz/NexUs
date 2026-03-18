@@ -15,12 +15,12 @@ class NX_EXPORT NXProgressBar : public QProgressBar
 public:
   explicit NXProgressBar(QWidget *parent = nullptr);
   ~NXProgressBar() override;
-  void setMinimum(int minimum);
-  void setMaximum(int maximum);
+  void setMinimum(int minimum) noexcept;
+  void setMaximum(int maximum) noexcept;
 
 protected:
-  virtual void paintEvent(QPaintEvent *event) override;
-  virtual void resizeEvent(QResizeEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
+  void resizeEvent(QResizeEvent *event) override;
 };
 
 #endif // NXPROGRESSBAR_H

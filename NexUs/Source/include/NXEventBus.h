@@ -12,15 +12,15 @@ class NX_EXPORT NXEvent : public QObject
 {
   Q_OBJECT
   Q_Q_CREATE(NXEvent)
-  Q_PROPERTY_CREATE_Q_H(QString, EventName);
-  Q_PROPERTY_CREATE_Q_H(QString, FunctionName);
-  Q_PROPERTY_CREATE_Q_H(Qt::ConnectionType, ConnectionType);
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, EventName)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, FunctionName)
+  Q_PROPERTY_CREATE_H(Qt::ConnectionType, ConnectionType)
 
 public:
   explicit NXEvent(QObject *parent = nullptr);
   explicit NXEvent(const QString& eventName, const QString& functionName, QObject *parent = nullptr);
   ~NXEvent() override;
-  NXEventBusType::EventBusReturnType registerAndInit();
+  NXEventBusType::EventBusReturnType registerAndInit() noexcept;
 };
 
 #pragma push_macro("Q_DISABLE_COPY")
@@ -33,15 +33,15 @@ class NX_EXPORT NXEventBus : public QObject
 {
   Q_OBJECT
   Q_Q_CREATE(NXEventBus)
-  LINN_SINGLETON_CREATE(LINN_SINGLETON_UNIQUE(NXEventBus))
+  Q_SINGLETON_CREATE(QS_S_UNIQUE(NXEventBus))
 
 private:
   explicit NXEventBus(QObject *parent = nullptr);
   ~NXEventBus() override;
 
 public:
-  NXEventBusType::EventBusReturnType post(const QString& eventName, const QVariantMap& data = {});
-  QStringList getRegisteredEventsName() const;
+  NXEventBusType::EventBusReturnType post(const QString& eventName, const QVariantMap& data = {}) noexcept;
+  QStringList getRegisteredEventsName() const noexcept;
 
 private:
   friend class NXEvent;

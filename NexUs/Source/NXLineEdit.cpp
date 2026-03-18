@@ -27,7 +27,7 @@ NXLineEdit::NXLineEdit(QWidget *parent)
   d->_pIsClearButtonEnabled = true;
   setFocusPolicy(Qt::StrongFocus);
   // 事件总线
-  d->_focusEvent = new NXEvent("WMWindowClicked", "onWMWindowClickedEvent", d);
+  d->_focusEvent = new NXEvent(QStringLiteral("WMWindowClicked"), QStringLiteral("onWMWindowClickedEvent"), d);
   d->_focusEvent->registerAndInit();
   setMouseTracking(true);
   QFont textFont = font();
@@ -35,7 +35,7 @@ NXLineEdit::NXLineEdit(QWidget *parent)
   setFont(textFont);
   d->_lineEditStyle = new NXLineEditStyle(style());
   setStyle(d->_lineEditStyle);
-  setStyleSheet("#NXLineEdit{background-color:transparent;padding-left: 10px;}");
+  setStyleSheet(QStringLiteral("#NXLineEdit{background-color:transparent;padding-left: 10px;}"));
   d->onThemeChanged(nxTheme->getThemeMode());
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXLineEditPrivate::onThemeChanged);
   connect(this, &QLineEdit::textEdited, d, [d](const QString&) { d->pushTextRoute(); });
@@ -53,7 +53,7 @@ NXLineEdit::NXLineEdit(const QString& text, QWidget *parent)
 
 NXLineEdit::~NXLineEdit() { delete this->style(); }
 
-void NXLineEdit::setIsClearButtonEnabled(bool isClearButtonEnabled)
+void NXLineEdit::setIsClearButtonEnabled(bool isClearButtonEnabled) noexcept
 {
   Q_D(NXLineEdit);
   d->_pIsClearButtonEnabled = isClearButtonEnabled;
@@ -61,34 +61,34 @@ void NXLineEdit::setIsClearButtonEnabled(bool isClearButtonEnabled)
   Q_EMIT pIsClearButtonEnabledChanged();
 }
 
-bool NXLineEdit::getIsClearButtonEnabled() const
+bool NXLineEdit::getIsClearButtonEnabled() const noexcept
 {
   Q_D(const NXLineEdit);
   return d->_pIsClearButtonEnabled;
 }
 
-void NXLineEdit::setBorderRadius(int borderRadius)
+void NXLineEdit::setBorderRadius(int borderRadius) noexcept
 {
   Q_D(const NXLineEdit);
   d->_lineEditStyle->setLineEditBorderRadius(borderRadius);
 }
 
-int NXLineEdit::getBorderRadius() const
+int NXLineEdit::getBorderRadius() const noexcept
 {
   Q_D(const NXLineEdit);
   return d->_lineEditStyle->getLineEditBorderRadius();
 }
 
-void NXLineEdit::setContentsMargins(const QMargins& margins)
+void NXLineEdit::setContentsMargins(const QMargins& margins) noexcept
 {
   Q_D(NXLineEdit);
   d->_pContentMargins = margins;
-  QString styleSheet  = QString(QStringLiteral("#NXLineEdit { "
-                                               "padding-left: %1px; "
-                                               "padding-top: %2px; "
-                                               "padding-right: %3px; "
-                                               "padding-bottom: %4px; "
-                                               "}"))
+  QString styleSheet  = QStringLiteral("#NXLineEdit { "
+                                        "padding-left: %1px; "
+                                        "padding-top: %2px; "
+                                        "padding-right: %3px; "
+                                        "padding-bottom: %4px; "
+                                        "}")
                            .arg(margins.left())
                            .arg(margins.top())
                            .arg(margins.right())
@@ -97,19 +97,19 @@ void NXLineEdit::setContentsMargins(const QMargins& margins)
   setStyleSheet(styleSheet);
 }
 
-QMargins NXLineEdit::getContentsMargins() const
+QMargins NXLineEdit::getContentsMargins() const noexcept
 {
   Q_D(const NXLineEdit);
   return d->_pContentMargins;
 }
 
-void NXLineEdit::setLineEditIconMargin(int margin)
+void NXLineEdit::setLineEditIconMargin(int margin) noexcept
 {
   Q_D(NXLineEdit);
   d->_lineEditStyle->setLineEditIconMargin(margin);
 }
 
-int NXLineEdit::getLineEditIconMargin() const
+int NXLineEdit::getLineEditIconMargin() const noexcept
 {
   Q_D(const NXLineEdit);
   return d->_lineEditStyle->getLineEditIconMargin();
@@ -163,7 +163,7 @@ void NXLineEdit::paintEvent(QPaintEvent *event)
   painter.setPen(Qt::NoPen);
   painter.setBrush(NXThemeColor(d->_themeMode, PrimaryNormal));
   painter.drawRoundedRect(
-      QRectF(width() / 2 - d->_pExpandMarkWidth, height() - 2.5, d->_pExpandMarkWidth * 2, 2.5), 2, 2);
+      QRectF(width() / 2 - d->_pExpandMarkWidth + 0.5, height() - 2.5, d->_pExpandMarkWidth * 2 - 1, 2.5), 2, 2);
   painter.restore();
 }
 
@@ -184,13 +184,13 @@ void NXLineEdit::contextMenuEvent(QContextMenuEvent *event)
     action->setEnabled(d->canTextRouteForward());
     connect(action, &QAction::triggered, this, [d]() { d->textRouteForward(); });
 
-    action = menu->addNXIconAction(
-        NXIconType::ArrowRotateLeft, tr("整体撤销"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Z));
+    action = menu->addNXIconAction(NXIconType::ArrowRotateLeft, tr("整体撤销"),
+                                   QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Z));
     action->setEnabled(d->canOverallUndo());
     connect(action, &QAction::triggered, this, [d]() { d->overallUndo(); });
 
-    action = menu->addNXIconAction(
-        NXIconType::ArrowRotateRight, tr("整体恢复"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Y));
+    action = menu->addNXIconAction(NXIconType::ArrowRotateRight, tr("整体恢复"),
+                                   QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Y));
     action->setEnabled(d->canOverallRedo());
     connect(action, &QAction::triggered, this, [d]() { d->overallRedo(); });
     menu->addSeparator();
@@ -218,10 +218,7 @@ void NXLineEdit::contextMenuEvent(QContextMenuEvent *event)
   {
     action = menu->addNXIconAction(NXIconType::DeleteLeft, tr("删除"));
     action->setEnabled(!isReadOnly() && !text().isEmpty() && hasSelectedText());
-    connect(action,
-            &QAction::triggered,
-            this,
-            [=](bool checked)
+    connect(action, &QAction::triggered, this, [=](bool checked)
     {
       if (hasSelectedText())
       {

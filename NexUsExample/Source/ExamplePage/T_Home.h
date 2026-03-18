@@ -19,7 +19,7 @@ Q_SIGNALS:
   Q_SIGNAL void elaIconNavigation();
 
 protected:
-  virtual void mouseReleaseEvent(QMouseEvent *event);
+  void mouseReleaseEvent(QMouseEvent *event);
 
 private:
   NXMenu *_homeMenu { nullptr };

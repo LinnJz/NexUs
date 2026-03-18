@@ -17,7 +17,7 @@ class NXNavigationStyle : public QProxyStyle
   Q_PROPERTY_CREATE(qreal, LastSelectMarkBottom)
   Q_PROPERTY_CREATE(qreal, SelectMarkTop)
   Q_PROPERTY_CREATE(qreal, SelectMarkBottom)
-  Q_PRIVATE_CREATE(QModelIndex, PressIndex)
+  Q_PRIVATE_CREATE_2(const QModelIndex&, QModelIndex, PressIndex)
   Q_PRIVATE_CREATE(NXNavigationView *, NavigationView)
   Q_PROPERTY_CREATE(int, ItemHeight)
 
@@ -37,7 +37,7 @@ public:
                          const QSize& size,
                          const QWidget *widget) const override;
 
-  void navigationNodeStateChange(QVariantMap data);
+  void navigationNodeStateChange(const QVariantMap& data) noexcept;
 
 private:
   NXThemeType::ThemeMode _themeMode;

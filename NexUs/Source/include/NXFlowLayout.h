@@ -19,8 +19,8 @@ public:
   ~NXFlowLayout() override;
 
   void addItem(QLayoutItem *item) override;
-  int horizontalSpacing() const;
-  int verticalSpacing() const;
+  int horizontalSpacing() const noexcept;
+  int verticalSpacing() const noexcept;
   Qt::Orientations expandingDirections() const override;
   bool hasHeightForWidth() const override;
   int heightForWidth(int) const override;
@@ -31,7 +31,7 @@ public:
   QSize sizeHint() const override;
   QLayoutItem *takeAt(int index) override;
 
-  void setIsAnimation(bool isAnimation);
+  void setIsAnimation(bool isAnimation) noexcept;
 };
 
 #endif // NXFLOWLAYOUT_H

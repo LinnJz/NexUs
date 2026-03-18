@@ -15,7 +15,7 @@ int NXSuggestModel::rowCount(const QModelIndex& parent) const
 
 QVariant NXSuggestModel::data(const QModelIndex& index, int role) const { return QVariant(); }
 
-void NXSuggestModel::setSearchSuggestion(QList<NXSuggestion *> suggestionVector)
+void NXSuggestModel::setSearchSuggestion(const QList<NXSuggestion *>& suggestionVector) noexcept
 {
   if (suggestionVector.count() == 0) { return; }
   beginResetModel();
@@ -23,9 +23,9 @@ void NXSuggestModel::setSearchSuggestion(QList<NXSuggestion *> suggestionVector)
   endResetModel();
 }
 
-void NXSuggestModel::clearSearchNode() { this->_suggestionVector.clear(); }
+void NXSuggestModel::clearSearchNode() noexcept { this->_suggestionVector.clear(); }
 
-NXSuggestion *NXSuggestModel::getSearchSuggestion(int row)
+NXSuggestion *NXSuggestModel::getSearchSuggestion(int row) const noexcept
 {
   if (row >= _suggestionVector.count()) { return nullptr; }
   return _suggestionVector[row];

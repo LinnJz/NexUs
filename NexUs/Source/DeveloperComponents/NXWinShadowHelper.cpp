@@ -261,7 +261,7 @@ bool NXWinShadowHelper::getIsCompositionEnabled() const
   return isCompositionEnabled;
 }
 
-bool NXWinShadowHelper::getIsFullScreen(const HWND hwnd)
+bool NXWinShadowHelper::getIsFullScreen(const HWND hwnd) const
 {
   RECT windowRect {};
   ::GetWindowRect(hwnd, &windowRect);
@@ -270,7 +270,7 @@ bool NXWinShadowHelper::getIsFullScreen(const HWND hwnd)
          windowRect.bottom == rcMonitor.bottom;
 }
 
-MONITORINFOEXW NXWinShadowHelper::getMonitorForWindow(const HWND hwnd)
+MONITORINFOEXW NXWinShadowHelper::getMonitorForWindow(const HWND hwnd) const
 {
   HMONITOR monitor = ::MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
   MONITORINFOEXW monitorInfo {};
@@ -279,12 +279,12 @@ MONITORINFOEXW NXWinShadowHelper::getMonitorForWindow(const HWND hwnd)
   return monitorInfo;
 }
 
-quint32 NXWinShadowHelper::getResizeBorderThickness(const HWND hwnd)
+quint32 NXWinShadowHelper::getResizeBorderThickness(const HWND hwnd) const
 {
   return getSystemMetricsForDpi(hwnd, SM_CXSIZEFRAME) + getSystemMetricsForDpi(hwnd, SM_CXPADDEDBORDER);
 }
 
-quint32 NXWinShadowHelper::getDpiForWindow(const HWND hwnd)
+quint32 NXWinShadowHelper::getDpiForWindow(const HWND hwnd) const
 {
   if (_getDpiForWindow) { return _getDpiForWindow(hwnd); }
   else if (_getDpiForMonitor)
@@ -304,7 +304,7 @@ quint32 NXWinShadowHelper::getDpiForWindow(const HWND hwnd)
   }
 }
 
-int NXWinShadowHelper::getSystemMetricsForDpi(const HWND hwnd, const int index)
+int NXWinShadowHelper::getSystemMetricsForDpi(const HWND hwnd, const int index) const
 {
   const quint32 dpi = getDpiForWindow(hwnd);
   if (_getSystemMetricsForDpi) { return _getSystemMetricsForDpi(index, dpi); }
@@ -314,7 +314,7 @@ int NXWinShadowHelper::getSystemMetricsForDpi(const HWND hwnd, const int index)
   return qRound(qreal(result) / dpr);
 }
 
-bool NXWinShadowHelper::compareWindowsVersion(const QString& windowsVersion) const
+bool NXWinShadowHelper::compareWindowsVersion(const QString& windowsVersion)
 {
   QStringList versionList = windowsVersion.split(".");
   if (versionList.count() != 3) { return false; }

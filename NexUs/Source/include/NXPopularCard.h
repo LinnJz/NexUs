@@ -11,26 +11,26 @@ class NX_EXPORT NXPopularCard : public QWidget
 {
   Q_OBJECT
   Q_Q_CREATE(NXPopularCard)
-  Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
-  Q_PROPERTY_CREATE_Q_H(QPixmap, CardPixmap)
-  Q_PROPERTY_CREATE_Q_H(QPixmap, CardFloatPixmap)
-  Q_PROPERTY_CREATE_Q_H(QString, Title)
-  Q_PROPERTY_CREATE_Q_H(QString, SubTitle)
-  Q_PROPERTY_CREATE_Q_H(QString, InteractiveTips)
-  Q_PROPERTY_CREATE_Q_H(QString, DetailedText)
-  Q_PROPERTY_CREATE_Q_H(QString, CardButtonText)
-  Q_PROPERTY_CREATE_Q_H(QWidget *, CardFloatArea)
+  Q_PROPERTY_CREATE_H(int, BorderRadius)
+  Q_PROPERTY_CREATE_H(QWidget *, CardFloatArea)
+  Q_PROPERTY_CREATE_2_H(const QPixmap&, QPixmap, CardPixmap)
+  Q_PROPERTY_CREATE_2_H(const QPixmap&, QPixmap, CardFloatPixmap)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, Title)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, SubTitle)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, InteractiveTips)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, DetailedText)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, CardButtonText)
 
 public:
   explicit NXPopularCard(QWidget *parent = nullptr);
   ~NXPopularCard() override;
 Q_SIGNALS:
-  Q_SIGNAL void popularCardClicked();
-  Q_SIGNAL void popularCardButtonClicked();
+  void popularCardClicked();
+  void popularCardButtonClicked();
 
 protected:
-  virtual bool event(QEvent *event) override;
-  virtual void paintEvent(QPaintEvent *event) override;
+  bool event(QEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // NXPOPULARCARD_H

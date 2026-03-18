@@ -14,7 +14,7 @@ public:
   ~NXSuggestBoxSearchViewContainer();
 
 protected:
-  virtual void paintEvent(QPaintEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 
 private:
   NXThemeType::ThemeMode _themeMode;

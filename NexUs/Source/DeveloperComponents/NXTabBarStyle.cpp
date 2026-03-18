@@ -21,13 +21,13 @@ NXTabBarStyle::NXTabBarStyle(QStyle *style)
 
 NXTabBarStyle::~NXTabBarStyle() { }
 
-void NXTabBarStyle::setTabBarStyle(NXTabBarType::TabBarStyle tabBarStyle)
+void NXTabBarStyle::setTabBarStyle(NXTabBarType::TabBarStyle tabBarStyle) noexcept
 {
   _pTabBarStyle       = tabBarStyle;
   _closeIndicatorSize = tabBarStyle == NXTabBarType::Firefox ? 24 : 20;
 }
 
-NXTabBarType::TabBarStyle NXTabBarStyle::getTabBarStyle() const { return _pTabBarStyle; }
+NXTabBarType::TabBarStyle NXTabBarStyle::getTabBarStyle() const noexcept { return _pTabBarStyle; }
 
 void NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, QPainter *p, const QWidget *w) const
 {
@@ -64,7 +64,7 @@ void NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, 
     //                                                           : NXThemeColor(_themeMode, TabBarCloseHover));
     //   p->drawRoundedRect(tabRect, 6, 6);
     // }
-    // QFont iconFont = QFont("NXAwesome");
+    // QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     // iconFont.setPixelSize(16);
     // p->setFont(iconFont);
     // p->setPen(arrowColor);
@@ -90,7 +90,7 @@ void NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, 
     // }
 
     //// 绘制图标（下拉箭头，可改为三个点）
-    // QFont iconFont = QFont("NXAwesome"); // 若字体不支持可改用多边形
+    // QFont iconFont = QFont(QStringLiteral("NXAwesome")); // 若字体不支持可改用多边形
     // iconFont.setPixelSize(14);
     // p->setFont(iconFont);
     // p->setPen(NXThemeColor(_themeMode, BasicText));
@@ -129,7 +129,7 @@ void NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, 
         p->drawRoundedRect(opt->rect, 4, 4);
       }
     }
-    QFont iconFont = QFont("NXAwesome");
+    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     iconFont.setPixelSize(16);
     p->setFont(iconFont);
     p->setPen(NXThemeColor(_themeMode, BasicText));
@@ -186,15 +186,12 @@ void NXTabBarStyle::drawControl(ControlElement element,
           path.lineTo(tabRect.x() + margin, tabRect.y() + _pTabCornerRadius);
           path.arcTo(QRectF(tabRect.x() + margin, tabRect.y(), _pTabCornerRadius * 2, _pTabCornerRadius * 2), 180, -90);
           path.lineTo(tabRect.right() - margin - _pTabCornerRadius, tabRect.y());
-          path.arcTo(QRectF(tabRect.right() - margin - 2 * _pTabCornerRadius,
-                            tabRect.y(),
-                            _pTabCornerRadius * 2,
+          path.arcTo(QRectF(tabRect.right() - margin - 2 * _pTabCornerRadius, tabRect.y(), _pTabCornerRadius * 2,
                             _pTabCornerRadius * 2),
-                     90,
-                     -90);
+                     90, -90);
           path.lineTo(tabRect.right() - margin, tabRect.bottom() - margin);
-          path.arcTo(
-              QRectF(tabRect.right() - margin, tabRect.bottom() - 2 * margin + 1, margin * 2, margin * 2), -180, 90);
+          path.arcTo(QRectF(tabRect.right() - margin, tabRect.bottom() - 2 * margin + 1, margin * 2, margin * 2), -180,
+                     90);
           path.lineTo(tabRect.right(), tabRect.bottom() + 10);
           path.lineTo(tabRect.x(), tabRect.bottom() + 10);
           path.closeSubpath();
@@ -203,7 +200,8 @@ void NXTabBarStyle::drawControl(ControlElement element,
         else
         {
           tabRect = topt->rect.adjusted(9, 4, -3, -3);
-          nxTheme->drawEffectShadow(painter, tabRect.adjusted(1, 1, -1, -1), 4, _pTabCornerRadius, 80);
+          nxTheme->drawEffectShadow(painter, tabRect.adjusted(1, 1, -1, -1), 4, _pTabCornerRadius);
+          painter->setPen(NXThemeColor(_themeMode, PopupBorder));
           painter->drawRoundedRect(tabRect, _pTabCornerRadius, _pTabCornerRadius);
         }
         if (_pIsSelectedIndicatorVisible)
@@ -255,18 +253,14 @@ void NXTabBarStyle::drawControl(ControlElement element,
       QIcon icon = topt->icon;
       if (!icon.isNull())
       {
-        QRectF iconRect(topt->rect.x() + 24 - indent,
-                        textRect.center().y() - (qreal) topt->iconSize.height() / 2 + 2,
-                        topt->iconSize.width(),
-                        topt->iconSize.height());
+        QRectF iconRect(topt->rect.x() + 24 - indent, textRect.center().y() - (qreal) topt->iconSize.height() / 2 + 2,
+                        topt->iconSize.width(), topt->iconSize.height());
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-        QPixmap iconPix = icon.pixmap(topt->iconSize,
-                                      painter->device()->devicePixelRatio(),
+        QPixmap iconPix = icon.pixmap(topt->iconSize, painter->device()->devicePixelRatio(),
                                       (topt->state & State_Enabled) ? QIcon::Normal : QIcon::Disabled,
                                       (topt->state & State_Selected) ? QIcon::On : QIcon::Off);
 #else
-        QPixmap iconPix = icon.pixmap(topt->iconSize,
-                                      (topt->state & State_Enabled) ? QIcon::Normal : QIcon::Disabled,
+        QPixmap iconPix = icon.pixmap(topt->iconSize, (topt->state & State_Enabled) ? QIcon::Normal : QIcon::Disabled,
                                       (topt->state & State_Selected) ? QIcon::On : QIcon::Off);
 #endif
         painter->drawPixmap(iconRect.x(), iconRect.y(), iconPix);

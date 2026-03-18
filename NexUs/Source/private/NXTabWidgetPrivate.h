@@ -11,7 +11,7 @@ class NXDragMonitor : public QObject
 {
   Q_OBJECT
   Q_PRIVATE_CREATE(bool, IsInDrag)
-  LINN_SINGLETON_CREATE(LINN_SINGLETON_MEYERS(NXDragMonitor))
+  Q_SINGLETON_CREATE(QS_S_UNIQUE(NXDragMonitor))
 
 private:
   explicit NXDragMonitor(QObject *parent = nullptr);
@@ -26,24 +26,24 @@ class NXTabWidgetPrivate : public QObject
   Q_OBJECT
   Q_D_CREATE(NXTabWidget)
   Q_PROPERTY_CREATE_D(bool, IsTabTransparent)
-  Q_PROPERTY_CREATE_D(bool, IsContainerAcceptDrops);
+  Q_PROPERTY_CREATE_D(bool, IsContainerAcceptDrops)
   Q_PROPERTY_CREATE_D(QSize, TabSize)
 
 public:
   explicit NXTabWidgetPrivate(QObject *parent = nullptr);
   ~NXTabWidgetPrivate() override;
-  Q_SLOT void onTabDragCreate(QMimeData *mimeData);
-  Q_SLOT void onTabDragEnter(QMimeData *mimeData);
-  Q_SLOT void onTabDragLeave(QMimeData *mimeData);
-  Q_SLOT void onTabDragDrop(QMimeData *mimeData);
-  Q_SLOT void onTabCloseRequested(int index);
+  Q_SLOT void onTabDragCreate(QMimeData *mimeData) noexcept;
+  Q_SLOT void onTabDragEnter(QMimeData *mimeData) noexcept;
+  Q_SLOT void onTabDragLeave(QMimeData *mimeData) noexcept;
+  Q_SLOT void onTabDragDrop(QMimeData *mimeData) noexcept;
+  Q_SLOT void onTabCloseRequested(int index) noexcept;
 
 private:
   friend class NXCustomTabWidget;
   NXTabBar *_tabBar { nullptr };
   NXTabBar *_customTabBar { nullptr };
   QList<QWidget *> _allTabWidgetList;
-  void _clearAllTabWidgetList();
+  void _clearAllTabWidgetList() noexcept;
 };
 
 #endif // NXTABWIDGETPRIVATE_H

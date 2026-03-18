@@ -11,7 +11,7 @@ class NX_EXPORT NXSpinBox : public QSpinBox
 {
   Q_OBJECT
   Q_Q_CREATE(NXSpinBox)
-  Q_PROPERTY_CREATE_Q_H(NXSpinBoxType::ButtonMode, ButtonMode)
+  Q_PROPERTY_CREATE_H(NXSpinBoxType::ButtonMode, ButtonMode)
 
 public:
   explicit NXSpinBox(QWidget *parent = nullptr);

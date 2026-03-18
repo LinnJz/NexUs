@@ -15,7 +15,7 @@ NXSpinBoxPrivate::NXSpinBoxPrivate(QObject *parent)
 
 NXSpinBoxPrivate::~NXSpinBoxPrivate() { }
 
-void NXSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
+void NXSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_Q(NXSpinBox);
   _themeMode = themeMode;
@@ -25,7 +25,7 @@ void NXSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
   q->lineEdit()->setPalette(palette);
 }
 
-NXMenu *NXSpinBoxPrivate::_createStandardContextMenu()
+NXMenu *NXSpinBoxPrivate::_createStandardContextMenu() noexcept
 {
   Q_Q(NXSpinBox);
   QLineEdit *lineEdit = q->lineEdit();
@@ -68,10 +68,7 @@ NXMenu *NXSpinBoxPrivate::_createStandardContextMenu()
   {
     action = menu->addNXIconAction(NXIconType::DeleteLeft, tr("删除"));
     action->setEnabled(!lineEdit->isReadOnly() && !lineEdit->text().isEmpty() && lineEdit->hasSelectedText());
-    connect(action,
-            &QAction::triggered,
-            this,
-            [=](bool checked)
+    connect(action, &QAction::triggered, this, [=](bool checked)
     {
       if (lineEdit->hasSelectedText())
       {

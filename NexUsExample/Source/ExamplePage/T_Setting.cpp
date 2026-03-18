@@ -37,10 +37,7 @@ T_Setting::T_Setting(QWidget *parent)
   themeSwitchLayout->addWidget(themeSwitchText);
   themeSwitchLayout->addStretch();
   themeSwitchLayout->addWidget(_themeComboBox);
-  connect(_themeComboBox,
-          QOverload<int>::of(&NXComboBox::currentIndexChanged),
-          this,
-          [=](int index)
+  connect(_themeComboBox, QOverload<int>::of(&NXComboBox::currentIndexChanged), this, [=](int index)
   {
     if (index == 0) { nxTheme->setThemeMode(NXThemeType::Light); }
     else
@@ -48,10 +45,7 @@ T_Setting::T_Setting(QWidget *parent)
       nxTheme->setThemeMode(NXThemeType::Dark);
     }
   });
-  connect(nxTheme,
-          &NXTheme::themeModeChanged,
-          this,
-          [=](NXThemeType::ThemeMode themeMode)
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
     _themeComboBox->blockSignals(true);
     if (themeMode == NXThemeType::Light) { _themeComboBox->setCurrentIndex(0); }
@@ -74,17 +68,12 @@ T_Setting::T_Setting(QWidget *parent)
   windowPaintButtonGroup->addButton(_windowNormalButton, 0);
   windowPaintButtonGroup->addButton(_windowPixmapButton, 1);
   windowPaintButtonGroup->addButton(_windowMovieButton, 2);
-  connect(windowPaintButtonGroup,
-          QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled),
-          this,
+  connect(windowPaintButtonGroup, QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled), this,
           [=](QAbstractButton *button, bool isToggled)
   {
     if (isToggled) { window->setWindowPaintMode((NXWindowType::PaintMode) windowPaintButtonGroup->id(button)); }
   });
-  connect(window,
-          &NXWindow::pWindowPaintModeChanged,
-          this,
-          [=]()
+  connect(window, &NXWindow::pWindowPaintModeChanged, this, [=]()
   {
     auto button                   = windowPaintButtonGroup->button(window->getWindowPaintMode());
     NXRadioButton *elaRadioButton = dynamic_cast<NXRadioButton *>(button);
@@ -123,9 +112,7 @@ T_Setting::T_Setting(QWidget *parent)
   displayButtonGroup->addButton(_acrylicButton, 4);
   displayButtonGroup->addButton(_dwmBlurnormalButton, 5);
 #endif
-  connect(displayButtonGroup,
-          QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled),
-          this,
+  connect(displayButtonGroup, QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled), this,
           [=](QAbstractButton *button, bool isToggled)
   {
     if (isToggled)
@@ -133,10 +120,7 @@ T_Setting::T_Setting(QWidget *parent)
       nxApp->setWindowDisplayMode((NXApplicationType::WindowDisplayMode) displayButtonGroup->id(button));
     }
   });
-  connect(nxApp,
-          &NXApplication::pWindowDisplayModeChanged,
-          this,
-          [=]()
+  connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]()
   {
     auto button                   = displayButtonGroup->button(nxApp->getWindowDisplayMode());
     NXRadioButton *elaRadioButton = dynamic_cast<NXRadioButton *>(button);
@@ -164,10 +148,7 @@ T_Setting::T_Setting(QWidget *parent)
   logSwitchLayout->addWidget(logSwitchText);
   logSwitchLayout->addStretch();
   logSwitchLayout->addWidget(_logSwitchButton);
-  connect(_logSwitchButton,
-          &NXToggleSwitch::toggled,
-          this,
-          [=](bool checked)
+  connect(_logSwitchButton, &NXToggleSwitch::toggled, this, [=](bool checked)
   {
     NXLog::getInstance()->initMessageLog(checked);
     if (checked) { qDebug() << "日志已启用!"; }
@@ -186,9 +167,8 @@ T_Setting::T_Setting(QWidget *parent)
   userCardSwitchLayout->addWidget(userCardSwitchText);
   userCardSwitchLayout->addStretch();
   userCardSwitchLayout->addWidget(_userCardSwitchButton);
-  connect(_userCardSwitchButton, &NXToggleSwitch::toggled, this, [=](bool checked) {
-    window->setUserInfoCardVisible(!checked);
-  });
+  connect(_userCardSwitchButton, &NXToggleSwitch::toggled, this,
+          [=](bool checked) { window->setUserInfoCardVisible(!checked); });
 
   _minimumButton = new NXRadioButton("Minimum", this);
   _compactButton = new NXRadioButton("Compact", this);
@@ -212,9 +192,7 @@ T_Setting::T_Setting(QWidget *parent)
   navigationGroup->addButton(_minimumButton, 1);
   navigationGroup->addButton(_compactButton, 2);
   navigationGroup->addButton(_maximumButton, 3);
-  connect(navigationGroup,
-          QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled),
-          this,
+  connect(navigationGroup, QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled), this,
           [=](QAbstractButton *button, bool isToggled)
   {
     if (isToggled)
@@ -248,17 +226,12 @@ T_Setting::T_Setting(QWidget *parent)
   stackSwitchGroup->addButton(_scaleButton, 2);
   stackSwitchGroup->addButton(_flipButton, 3);
   stackSwitchGroup->addButton(_blurButton, 4);
-  connect(stackSwitchGroup,
-          QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled),
-          this,
+  connect(stackSwitchGroup, QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled), this,
           [=](QAbstractButton *button, bool isToggled)
   {
     if (isToggled) { window->setStackSwitchMode((NXWindowType::StackSwitchMode) stackSwitchGroup->id(button)); }
   });
-  connect(window,
-          &NXWindow::pStackSwitchModeChanged,
-          this,
-          [=]()
+  connect(window, &NXWindow::pStackSwitchModeChanged, this, [=]()
   {
     auto button                   = stackSwitchGroup->button(window->getStackSwitchMode());
     NXRadioButton *elaRadioButton = dynamic_cast<NXRadioButton *>(button);

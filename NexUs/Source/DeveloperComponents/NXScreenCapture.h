@@ -1,4 +1,4 @@
-#ifndef NXSCREENCAPTURE_H
+﻿#ifndef NXSCREENCAPTURE_H
 #define NXSCREENCAPTURE_H
 
 #include <QObject>
@@ -11,12 +11,12 @@
 class NXScreenCapture : public QObject
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE(QStringList, DisplayList)
-  Q_PRIVATE_CREATE(int, DisplayID)
-  Q_PRIVATE_CREATE(QString, LastError)
-  Q_PRIVATE_CREATE(bool, IsGrabActive)
+  Q_PRIVATE_CREATE_2(const QStringList&, QStringList, DisplayList)
+  Q_PRIVATE_CREATE_2(const QString&, QString, LastError)
   Q_PRIVATE_CREATE(QRect, GrabArea)
+  Q_PRIVATE_CREATE(int, DisplayID)
   Q_PRIVATE_CREATE(int, GrabFrameRate)
+  Q_PRIVATE_CREATE(bool, IsGrabActive)
   Q_PRIVATE_CREATE(bool, IsInitSuccess)
   Q_PRIVATE_CREATE(bool, IsGrabStoped)
   Q_PRIVATE_CREATE(bool, IsGrabCenter)
@@ -25,8 +25,8 @@ public:
   explicit NXScreenCapture(QObject *parent = nullptr);
   ~NXScreenCapture() override;
   bool initialize(int displayID);
-  QImage getGrabImage() const;
-  Q_SLOT void onGrabScreen();
+  QImage getGrabImage() const noexcept;
+  Q_SLOT void onGrabScreen() noexcept;
   Q_SIGNAL void grabScreenOver(QImage img);
 
 private:

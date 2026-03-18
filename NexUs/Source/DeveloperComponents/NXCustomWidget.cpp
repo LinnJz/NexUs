@@ -15,7 +15,7 @@ NXCustomWidget::NXCustomWidget(QWidget *parent)
   setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint |
                  Qt::WindowCloseButtonHint | Qt::WindowFullscreenButtonHint);
 #if (QT_VERSION < QT_VERSION_CHECK(6, 5, 3) || QT_VERSION > QT_VERSION_CHECK(6, 6, 1))
-  setStyleSheet("#NXCustomWidget{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXCustomWidget{background-color:transparent;}"));
 #endif
   // 自定义AppBar
   _appBar = new NXAppBar(this);
@@ -25,20 +25,14 @@ NXCustomWidget::NXCustomWidget(QWidget *parent)
   _mainLayout->setContentsMargins(0, 0, 0, 0);
 
   _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme,
-          &NXTheme::themeModeChanged,
-          this,
-          [=](NXThemeType::ThemeMode themeMode)
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
     _themeMode = themeMode;
     update();
   });
 
   _windowDisplayMode = nxApp->getWindowDisplayMode();
-  connect(nxApp,
-          &NXApplication::pWindowDisplayModeChanged,
-          this,
-          [=]()
+  connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]()
   {
     _windowDisplayMode = nxApp->getWindowDisplayMode();
     update();
@@ -49,7 +43,7 @@ NXCustomWidget::NXCustomWidget(QWidget *parent)
 
 NXCustomWidget::~NXCustomWidget() { nxApp->syncWindowDisplayMode(this, false); }
 
-void NXCustomWidget::setCentralWidget(QWidget *widget)
+void NXCustomWidget::setCentralWidget(QWidget *widget) noexcept
 {
   if (!widget) { return; }
   _centralWidget = widget;

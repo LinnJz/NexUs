@@ -8,7 +8,7 @@
 class NXColorPreview : public QWidget
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE(QColor, BaseColor)
+  Q_PRIVATE_CREATE_2(const QColor&, QColor, BaseColor)
   Q_PRIVATE_CREATE(NXThemeType::ThemeMode, ThemeMode)
 
 public:
@@ -16,7 +16,7 @@ public:
   ~NXColorPreview();
 
 protected:
-  virtual void paintEvent(QPaintEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // NXCOLORPREVIEW_H

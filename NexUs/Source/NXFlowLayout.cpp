@@ -38,7 +38,7 @@ void NXFlowLayout::addItem(QLayoutItem *item)
   d->_itemList.append(item);
 }
 
-int NXFlowLayout::horizontalSpacing() const
+int NXFlowLayout::horizontalSpacing() const noexcept
 {
   Q_D(const NXFlowLayout);
   if (d->_hSpacing >= 0) { return d->_hSpacing; }
@@ -48,7 +48,7 @@ int NXFlowLayout::horizontalSpacing() const
   }
 }
 
-int NXFlowLayout::verticalSpacing() const
+int NXFlowLayout::verticalSpacing() const noexcept
 {
   Q_D(const NXFlowLayout);
   if (d->_vSpacing >= 0) { return d->_vSpacing; }
@@ -77,7 +77,7 @@ QLayoutItem *NXFlowLayout::takeAt(int index)
   return nullptr;
 }
 
-void NXFlowLayout::setIsAnimation(bool isAnimation)
+void NXFlowLayout::setIsAnimation(bool isAnimation) noexcept
 {
   Q_D(NXFlowLayout);
   d->_isAnimation = isAnimation;

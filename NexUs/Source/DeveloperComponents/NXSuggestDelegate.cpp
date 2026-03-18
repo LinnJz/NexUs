@@ -59,7 +59,7 @@ void NXSuggestDelegate::paint(QPainter *painter, const QStyleOptionViewItem& opt
   // 图标绘制
   if (suggest->getNXIcon() != NXIconType::None)
   {
-    QFont iconFont = QFont("NXAwesome");
+    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     iconFont.setPixelSize(17);
     painter->setFont(iconFont);
     painter->drawText(option.rect.x() + 11, option.rect.y() + 26, QChar((unsigned short) suggest->getNXIcon()));

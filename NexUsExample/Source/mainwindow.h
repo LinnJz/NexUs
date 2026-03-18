@@ -33,7 +33,7 @@ public:
   void initContent();
 
 protected:
-  virtual void mouseReleaseEvent(QMouseEvent *event);
+  void mouseReleaseEvent(QMouseEvent *event);
 
 private:
   NXContentDialog *_closeDialog { nullptr };

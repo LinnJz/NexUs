@@ -39,11 +39,8 @@ NXContentDialog::NXContentDialog(QWidget *parent)
   // 防止意外拉伸
   createWinId();
 #endif
-  d->_leftButton = new NXPushButton("cancel", this);
-  connect(d->_leftButton,
-          &NXPushButton::clicked,
-          this,
-          [=]()
+  d->_leftButton = new NXPushButton(QStringLiteral("cancel"), this);
+  connect(d->_leftButton, &NXPushButton::clicked, this, [=]()
   {
     Q_EMIT buttonClicked(ButtonType::LeftButton);
     doneWithAnimation(getButtonDoneCode(ButtonType::LeftButton));
@@ -52,11 +49,8 @@ NXContentDialog::NXContentDialog(QWidget *parent)
   d->_leftButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
   d->_leftButton->setFixedHeight(38);
   d->_leftButton->setBorderRadius(6);
-  d->_middleButton = new NXPushButton("minimum", this);
-  connect(d->_middleButton,
-          &NXPushButton::clicked,
-          this,
-          [=]()
+  d->_middleButton = new NXPushButton(QStringLiteral("minimum"), this);
+  connect(d->_middleButton, &NXPushButton::clicked, this, [=]()
   {
     Q_EMIT buttonClicked(ButtonType::MiddleButton);
     doneWithAnimation(getButtonDoneCode(ButtonType::MiddleButton));
@@ -65,11 +59,8 @@ NXContentDialog::NXContentDialog(QWidget *parent)
   d->_middleButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
   d->_middleButton->setFixedHeight(38);
   d->_middleButton->setBorderRadius(6);
-  d->_rightButton = new NXPushButton("exit", this);
-  connect(d->_rightButton,
-          &NXPushButton::clicked,
-          this,
-          [=]()
+  d->_rightButton = new NXPushButton(QStringLiteral("exit"), this);
+  connect(d->_rightButton, &NXPushButton::clicked, this, [=]()
   {
     Q_EMIT buttonClicked(ButtonType::RightButton);
     doneWithAnimation(getButtonDoneCode(ButtonType::RightButton));
@@ -90,9 +81,9 @@ NXContentDialog::NXContentDialog(QWidget *parent)
   d->_centralWidget           = new QWidget(this);
   QVBoxLayout *centralVLayout = new QVBoxLayout(d->_centralWidget);
   centralVLayout->setContentsMargins(15, 25, 15, 10);
-  NXText *title = new NXText("退出", this);
+  NXText *title = new NXText(QStringLiteral("退出"), this);
   title->setTextStyle(NXTextType::Title);
-  NXText *subTitle = new NXText("确定要退出程序吗", this);
+  NXText *subTitle = new NXText(QStringLiteral("确定要退出程序吗"), this);
   subTitle->setTextStyle(NXTextType::Body);
   centralVLayout->addWidget(title);
   centralVLayout->addSpacing(2);
@@ -111,8 +102,8 @@ NXContentDialog::NXContentDialog(QWidget *parent)
   d->_mainLayout->addWidget(d->_buttonWidget);
 
   d->_themeMode = nxTheme->getThemeMode();
-  connect(
-      nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this,
+          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXContentDialog::~NXContentDialog()
@@ -121,7 +112,7 @@ NXContentDialog::~NXContentDialog()
   d->_maskWidget->deleteLater();
 }
 
-void NXContentDialog::setCentralWidget(QWidget *centralWidget)
+void NXContentDialog::setCentralWidget(QWidget *centralWidget) noexcept
 {
   Q_D(NXContentDialog);
   if (!centralWidget || centralWidget == d->_centralWidget) { return; }
@@ -139,13 +130,13 @@ void NXContentDialog::setCentralWidget(QWidget *centralWidget)
   d->_mainLayout->insertWidget(0, d->_centralWidget);
 }
 
-NXPushButton *NXContentDialog::leftButton() const { return button(ButtonType::LeftButton); }
+NXPushButton *NXContentDialog::leftButton() const noexcept { return button(ButtonType::LeftButton); }
 
-NXPushButton *NXContentDialog::middleButton() const { return button(ButtonType::MiddleButton); }
+NXPushButton *NXContentDialog::middleButton() const noexcept { return button(ButtonType::MiddleButton); }
 
-NXPushButton *NXContentDialog::rightButton() const { return button(ButtonType::RightButton); }
+NXPushButton *NXContentDialog::rightButton() const noexcept { return button(ButtonType::RightButton); }
 
-NXPushButton *NXContentDialog::button(ButtonType button) const
+NXPushButton *NXContentDialog::button(ButtonType button) const noexcept
 {
   Q_D(const NXContentDialog);
   switch (button)
@@ -157,33 +148,33 @@ NXPushButton *NXContentDialog::button(ButtonType button) const
   return nullptr;
 }
 
-void NXContentDialog::setButtonText(ButtonType buttonType, const QString& text)
+void NXContentDialog::setButtonText(ButtonType buttonType, const QString& text) noexcept
 {
   auto *buttonWidget = button(buttonType);
   if (!buttonWidget) { return; }
   buttonWidget->setText(text);
 }
 
-QString NXContentDialog::getButtonText(ButtonType buttonType) const
+QString NXContentDialog::getButtonText(ButtonType buttonType) const noexcept
 {
   auto *buttonWidget = button(buttonType);
   return buttonWidget ? buttonWidget->text() : QString {};
 }
 
-void NXContentDialog::setIsButtonVisible(ButtonType buttonType, bool visible)
+void NXContentDialog::setIsButtonVisible(ButtonType buttonType, bool visible) noexcept
 {
   auto *buttonWidget = button(buttonType);
   if (!buttonWidget) { return; }
   buttonWidget->setVisible(visible);
 }
 
-bool NXContentDialog::getIsButtonVisible(ButtonType buttonType) const
+bool NXContentDialog::getIsButtonVisible(ButtonType buttonType) const noexcept
 {
   auto *buttonWidget = button(buttonType);
   return buttonWidget ? buttonWidget->isVisible() : false;
 }
 
-void NXContentDialog::setButtonDoneCode(ButtonType buttonType, int doneCode)
+void NXContentDialog::setButtonDoneCode(ButtonType buttonType, int doneCode) noexcept
 {
   Q_D(NXContentDialog);
   switch (buttonType)
@@ -202,7 +193,7 @@ void NXContentDialog::setButtonDoneCode(ButtonType buttonType, int doneCode)
   }
 }
 
-int NXContentDialog::getButtonDoneCode(ButtonType buttonType) const
+int NXContentDialog::getButtonDoneCode(ButtonType buttonType) const noexcept
 {
   Q_D(const NXContentDialog);
   switch (buttonType)
@@ -214,13 +205,13 @@ int NXContentDialog::getButtonDoneCode(ButtonType buttonType) const
   }
 }
 
-void NXContentDialog::doneWithAnimation(int code)
+void NXContentDialog::doneWithAnimation(int code) noexcept
 {
   Q_D(NXContentDialog);
   d->_doCloseAnimation(code);
 }
 
-NXAppBar *NXContentDialog::appBar() const
+NXAppBar *NXContentDialog::appBar() const noexcept
 {
   Q_D(const NXContentDialog);
   return d->_appBar;

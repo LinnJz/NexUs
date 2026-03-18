@@ -12,13 +12,13 @@ class NXBaseListView;
 class NXFooterDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE(NXBaseListView *, NXListView);
-  Q_PRIVATE_CREATE(QModelIndex, PressIndex);
+  Q_PRIVATE_CREATE(NXBaseListView *, NXListView)
+  Q_PRIVATE_CREATE_2(const QModelIndex&, QModelIndex, PressIndex)
 
 public:
   explicit NXFooterDelegate(QObject *parent = nullptr);
   ~NXFooterDelegate();
-  void navigationNodeStateChange(QVariantMap data);
+  void navigationNodeStateChange(const QVariantMap& data) noexcept;
 
 protected:
   void paint(QPainter *painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;

@@ -1,4 +1,4 @@
-#include "NXCustomTabWidget.h"
+﻿#include "NXCustomTabWidget.h"
 
 #include <QDebug>
 #include <QMimeData>
@@ -16,7 +16,7 @@ NXCustomTabWidget::NXCustomTabWidget(QWidget *parent)
 {
   _pIsFinished = false;
   resize(700, 500);
-  setWindowTitle("");
+  setWindowTitle({});
 #ifndef Q_OS_WIN
   setAttribute(Qt::WA_Hover);
 #endif
@@ -30,14 +30,10 @@ NXCustomTabWidget::NXCustomTabWidget(QWidget *parent)
   setAcceptDrops(true);
   _customTabBar = new NXTabBar(this);
   _customTabBar->setObjectName("NXCustomTabBar");
-  connect(_customTabBar, &NXTabBar::tabMoved, this, [=](int from, int to) {
-    _customTabWidget->tabBar()->moveTab(from, to);
-  });
+  connect(_customTabBar, &NXTabBar::tabMoved, this,
+          [=](int from, int to) { _customTabWidget->tabBar()->moveTab(from, to); });
   connect(_customTabBar, &NXTabBar::currentChanged, this, [=](int index) { _customTabWidget->setCurrentIndex(index); });
-  connect(_customTabWidget,
-          &NXTabWidget::currentChanged,
-          this,
-          [=](int index)
+  connect(_customTabWidget, &NXTabWidget::currentChanged, this, [=](int index)
   {
     if (index == -1)
     {
@@ -45,9 +41,7 @@ NXCustomTabWidget::NXCustomTabWidget(QWidget *parent)
       hide();
     }
   });
-  connect(_customTabBar,
-          &NXTabBar::tabCloseRequested,
-          _customTabWidget->d_func(),
+  connect(_customTabBar, &NXTabBar::tabCloseRequested, _customTabWidget->d_func(),
           &NXTabWidgetPrivate::onTabCloseRequested);
 
   _customTabWidget->d_ptr->_customTabBar = _customTabBar;
@@ -60,7 +54,7 @@ NXCustomTabWidget::NXCustomTabWidget(QWidget *parent)
   customLayout->setContentsMargins(10, 0, 10, 0);
   customLayout->addStretch();
   customLayout->addWidget(_customTabBar);
-  _appBar->setCustomWidget(NXAppBarType::LeftArea, customWidget, this, "processHitTest");
+  _appBar->setCustomWidget(NXAppBarType::LeftArea, customWidget, this, QStringLiteral("processHitTest"));
   setCentralWidget(_customTabWidget);
 }
 
@@ -83,15 +77,15 @@ NXCustomTabWidget::~NXCustomTabWidget()
   }
 }
 
-void NXCustomTabWidget::addTab(QWidget *widget, QIcon tabIcon, const QString& tabTitle)
+void NXCustomTabWidget::addTab(QWidget *widget, QIcon tabIcon, const QString& tabTitle) noexcept
 {
   _customTabBar->addTab(tabIcon, tabTitle);
   _customTabWidget->addTab(widget, tabIcon, tabTitle);
 }
 
-NXTabBar *NXCustomTabWidget::getCustomTabBar() const { return _customTabBar; }
+NXTabBar *NXCustomTabWidget::getCustomTabBar() const noexcept { return _customTabBar; }
 
-NXTabWidget *NXCustomTabWidget::getCustomTabWidget() const { return _customTabWidget; }
+NXTabWidget *NXCustomTabWidget::getCustomTabWidget() const noexcept { return _customTabWidget; }
 
 bool NXCustomTabWidget::processHitTest()
 {

@@ -1,5 +1,4 @@
-﻿
-#include "NXCentralStackedWidget.h"
+﻿#include "NXCentralStackedWidget.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -8,105 +7,116 @@
 #include <QPainterPath>
 #include <QPropertyAnimation>
 #include <QTimer>
+#include <QVboxLayout>
 #include <cmath>
 #include "NXTheme.h"
 
+#include "private/NXCentralStackedWidgetPrivate.h"
+
+Q_PROPERTY_CREATE_CPP(NXCentralStackedWidget, int, BlurAnimationRadius)
+Q_PROPERTY_CREATE_CPP(NXCentralStackedWidget, int, PopupAnimationYOffset)
+Q_PROPERTY_CREATE_CPP(NXCentralStackedWidget, qreal, ScaleAnimationRatio)
+Q_PROPERTY_CREATE_CPP(NXCentralStackedWidget, qreal, ScaleAnimationPixOpacity)
+Q_PROPERTY_CREATE_CPP(NXCentralStackedWidget, qreal, FlipAnimationRatio)
+
 NXCentralStackedWidget::NXCentralStackedWidget(QWidget *parent)
     : QWidget(parent)
+    , d_ptr(new NXCentralStackedWidgetPrivate())
 {
-  _pPopupAnimationYOffset    = 0;
-  _pScaleAnimationRatio      = 1;
-  _pScaleAnimationPixOpacity = 1;
-  _pFlipAnimationRatio       = 1;
-  _pBlurAnimationRadius      = 0;
+  Q_D(NXCentralStackedWidget);
+  d->q_ptr = this;
+
+  d->_pPopupAnimationYOffset    = 0;
+  d->_pScaleAnimationRatio      = 1;
+  d->_pScaleAnimationPixOpacity = 1;
+  d->_pFlipAnimationRatio       = 1;
+  d->_pBlurAnimationRadius      = 0;
 
   setObjectName("NXCentralStackedWidget");
-  setStyleSheet("#NXCentralStackedWidget{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXCentralStackedWidget{background-color:transparent;}"));
 
-  _containerStackedWidget = new QStackedWidget(this);
-  _containerStackedWidget->setObjectName("NXCentralStackedWidget");
-  _containerStackedWidget->setStyleSheet("#NXCentralStackedWidget{background-color:transparent;}");
+  d->_containerStackedWidget = new QStackedWidget(this);
+  d->_containerStackedWidget->setObjectName("NXCentralStackedWidget");
+  d->_containerStackedWidget->setStyleSheet(QStringLiteral("#NXCentralStackedWidget{background-color:transparent;}"));
 
-  _blurEffect = new QGraphicsBlurEffect(_containerStackedWidget);
-  _blurEffect->setBlurHints(QGraphicsBlurEffect::BlurHint::QualityHint);
-  _blurEffect->setBlurRadius(0);
-  _blurEffect->setEnabled(false);
-  _containerStackedWidget->setGraphicsEffect(_blurEffect);
+  d->_blurEffect = new QGraphicsBlurEffect(d->_containerStackedWidget);
+  d->_blurEffect->setBlurHints(QGraphicsBlurEffect::BlurHint::QualityHint);
+  d->_blurEffect->setBlurRadius(0);
+  d->_blurEffect->setEnabled(false);
+  d->_containerStackedWidget->setGraphicsEffect(d->_blurEffect);
 
-  _mainLayout = new QVBoxLayout(this);
-  _mainLayout->setSpacing(0);
-  _mainLayout->setContentsMargins(0, 0, 0, 0);
-  _mainLayout->addWidget(_containerStackedWidget);
+  d->_mainLayout = new QVBoxLayout(this);
+  d->_mainLayout->setSpacing(0);
+  d->_mainLayout->setContentsMargins(0, 0, 0, 0);
+  d->_mainLayout->addWidget(d->_containerStackedWidget);
 
-  _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, &NXCentralStackedWidget::onThemeModeChanged);
+  d->_themeMode = nxTheme->getThemeMode();
+  connect(nxTheme, &NXTheme::themeModeChanged, d, &NXCentralStackedWidgetPrivate::onThemeModeChanged);
 }
 
 NXCentralStackedWidget::~NXCentralStackedWidget() { }
 
-QStackedWidget *NXCentralStackedWidget::getContainerStackedWidget() const { return _containerStackedWidget; }
-
-void NXCentralStackedWidget::setCustomWidget(QWidget *widget)
+QStackedWidget *NXCentralStackedWidget::getContainerStackedWidget() const noexcept
 {
-  if (!widget) { return; }
-  if (_customWidget) { _mainLayout->removeWidget(_customWidget); }
-  _mainLayout->insertWidget(0, widget);
-  _customWidget = widget;
+  return d_ptr->_containerStackedWidget;
 }
 
-QWidget *NXCentralStackedWidget::getCustomWidget() const { return this->_customWidget; }
-
-void NXCentralStackedWidget::onThemeModeChanged(NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; }
-
-void NXCentralStackedWidget::setIsTransparent(bool isTransparent)
+void NXCentralStackedWidget::setCustomWidget(QWidget *widget) noexcept
 {
-  this->_isTransparent = isTransparent;
+  Q_D(NXCentralStackedWidget);
+  if (!widget) { return; }
+  if (d->_customWidget) { d->_mainLayout->removeWidget(d->_customWidget); }
+  d->_mainLayout->insertWidget(0, widget);
+  d->_customWidget = widget;
+}
+
+QWidget *NXCentralStackedWidget::getCustomWidget() const noexcept { return d_ptr->_customWidget; }
+
+void NXCentralStackedWidget::setIsTransparent(bool isTransparent) noexcept
+{
+  d_ptr->_isTransparent = isTransparent;
   update();
 }
 
-bool NXCentralStackedWidget::getIsTransparent() const { return _isTransparent; }
+bool NXCentralStackedWidget::getIsTransparent() const noexcept { return d_ptr->_isTransparent; }
 
-void NXCentralStackedWidget::setIsHasRadius(bool isHasRadius)
+void NXCentralStackedWidget::setIsHasRadius(bool isHasRadius) noexcept
 {
-  this->_isHasRadius = isHasRadius;
+  d_ptr->_isHasRadius = isHasRadius;
   update();
 }
 
 void NXCentralStackedWidget::doWindowStackSwitch(NXWindowType::StackSwitchMode stackSwitchMode,
                                                  int nodeIndex,
-                                                 bool isRouteBack)
+                                                 bool isRouteBack) noexcept
 {
-  _stackSwitchMode = stackSwitchMode;
+  Q_D(NXCentralStackedWidget);
+  d->_stackSwitchMode = stackSwitchMode;
   switch (stackSwitchMode)
   {
   case NXWindowType::None :
   {
-    _containerStackedWidget->setCurrentIndex(nodeIndex);
+    d->_containerStackedWidget->setCurrentIndex(nodeIndex);
     break;
   }
   case NXWindowType::Popup :
   {
-    QTimer::singleShot(180,
-                       this,
-                       [=]()
+    QTimer::singleShot(180, this, [=]()
     {
-      QWidget *targetWidget = _containerStackedWidget->widget(nodeIndex);
-      _containerStackedWidget->setCurrentIndex(nodeIndex);
-      _getTargetStackPix();
+      QWidget *targetWidget = d->_containerStackedWidget->widget(nodeIndex);
+      d->_containerStackedWidget->setCurrentIndex(nodeIndex);
+      d->_getTargetStackPix();
       targetWidget->setVisible(false);
       QPropertyAnimation *popupAnimation = new QPropertyAnimation(this, "pPopupAnimationYOffset");
       connect(popupAnimation, &QPropertyAnimation::valueChanged, this, [=]() { update(); });
-      connect(popupAnimation,
-              &QPropertyAnimation::finished,
-              this,
-              [=]()
+      connect(popupAnimation, &QPropertyAnimation::finished, this, [=]()
       {
-        _targetStackPix = QPixmap();
+        d->_targetStackPix = QPixmap();
         targetWidget->setVisible(true);
       });
       popupAnimation->setEasingCurve(QEasingCurve::OutCubic);
       popupAnimation->setDuration(300);
-      int targetWidgetY = _containerStackedWidget->mapToParent(QPoint(0, 0)).y();
+      int targetWidgetY = d->_containerStackedWidget->mapToParent(QPoint(0, 0)).y();
       popupAnimation->setEndValue(targetWidgetY);
       targetWidgetY += 80;
       popupAnimation->setStartValue(targetWidgetY);
@@ -116,29 +126,23 @@ void NXCentralStackedWidget::doWindowStackSwitch(NXWindowType::StackSwitchMode s
   }
   case NXWindowType::Scale :
   {
-    QWidget *targetWidget = _containerStackedWidget->widget(nodeIndex);
-    _getCurrentStackPix();
-    _containerStackedWidget->setCurrentIndex(nodeIndex);
-    _getTargetStackPix();
+    QWidget *targetWidget = d->_containerStackedWidget->widget(nodeIndex);
+    d->_getCurrentStackPix();
+    d->_containerStackedWidget->setCurrentIndex(nodeIndex);
+    d->_getTargetStackPix();
     targetWidget->setVisible(false);
-    _isDrawNewPix                               = false;
+    d->_isDrawNewPix                            = false;
     QPropertyAnimation *currentPixZoomAnimation = new QPropertyAnimation(this, "pScaleAnimationRatio");
     connect(currentPixZoomAnimation, &QPropertyAnimation::valueChanged, this, [=]() { update(); });
-    connect(currentPixZoomAnimation,
-            &QPropertyAnimation::finished,
-            this,
-            [=]()
+    connect(currentPixZoomAnimation, &QPropertyAnimation::finished, this, [=]()
     {
-      _isDrawNewPix                              = true;
+      d->_isDrawNewPix                           = true;
       QPropertyAnimation *targetPixZoomAnimation = new QPropertyAnimation(this, "pScaleAnimationRatio");
       connect(targetPixZoomAnimation, &QPropertyAnimation::valueChanged, this, [=]() { update(); });
-      connect(targetPixZoomAnimation,
-              &QPropertyAnimation::finished,
-              this,
-              [=]()
+      connect(targetPixZoomAnimation, &QPropertyAnimation::finished, this, [=]()
       {
-        _targetStackPix  = QPixmap();
-        _currentStackPix = QPixmap();
+        d->_targetStackPix  = QPixmap();
+        d->_currentStackPix = QPixmap();
         targetWidget->setVisible(true);
       });
       if (isRouteBack)
@@ -172,10 +176,7 @@ void NXCentralStackedWidget::doWindowStackSwitch(NXWindowType::StackSwitchMode s
     currentPixZoomAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
     QPropertyAnimation *currentPixOpacityAnimation = new QPropertyAnimation(this, "pScaleAnimationPixOpacity");
-    connect(currentPixZoomAnimation,
-            &QPropertyAnimation::finished,
-            this,
-            [=]()
+    connect(currentPixZoomAnimation, &QPropertyAnimation::finished, this, [=]()
     {
       QPropertyAnimation *targetPixOpacityAnimation = new QPropertyAnimation(this, "pScaleAnimationPixOpacity");
       targetPixOpacityAnimation->setStartValue(0);
@@ -191,20 +192,17 @@ void NXCentralStackedWidget::doWindowStackSwitch(NXWindowType::StackSwitchMode s
   }
   case NXWindowType::Flip :
   {
-    QWidget *targetWidget = _containerStackedWidget->widget(nodeIndex);
-    _getCurrentStackPix();
-    _containerStackedWidget->setCurrentIndex(nodeIndex);
-    _getTargetStackPix();
+    QWidget *targetWidget = d->_containerStackedWidget->widget(nodeIndex);
+    d->_getCurrentStackPix();
+    d->_containerStackedWidget->setCurrentIndex(nodeIndex);
+    d->_getTargetStackPix();
     targetWidget->setVisible(false);
     QPropertyAnimation *flipAnimation = new QPropertyAnimation(this, "pFlipAnimationRatio");
     connect(flipAnimation, &QPropertyAnimation::valueChanged, this, [=]() { update(); });
-    connect(flipAnimation,
-            &QPropertyAnimation::finished,
-            this,
-            [=]()
+    connect(flipAnimation, &QPropertyAnimation::finished, this, [=]()
     {
-      _targetStackPix  = QPixmap();
-      _currentStackPix = QPixmap();
+      d->_targetStackPix  = QPixmap();
+      d->_currentStackPix = QPixmap();
       targetWidget->setVisible(true);
     });
     flipAnimation->setEasingCurve(QEasingCurve::InOutSine);
@@ -216,20 +214,19 @@ void NXCentralStackedWidget::doWindowStackSwitch(NXWindowType::StackSwitchMode s
   }
   case NXWindowType::Blur :
   {
-    _targetStackPix = QPixmap();
-    _blurEffect->setEnabled(true);
+    d->_targetStackPix = QPixmap();
+    d->_blurEffect->setEnabled(true);
     QPropertyAnimation *blurAnimation = new QPropertyAnimation(this, "pBlurAnimationRadius");
-    connect(blurAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
-      _blurEffect->setBlurRadius(_pBlurAnimationRadius);
-    });
-    connect(blurAnimation, &QPropertyAnimation::finished, this, [=]() { _blurEffect->setEnabled(false); });
+    connect(blurAnimation, &QPropertyAnimation::valueChanged, this,
+            [=]() { d->_blurEffect->setBlurRadius(d->_pBlurAnimationRadius); });
+    connect(blurAnimation, &QPropertyAnimation::finished, this, [=]() { d->_blurEffect->setEnabled(false); });
     blurAnimation->setEasingCurve(QEasingCurve::InOutSine);
     blurAnimation->setDuration(350);
     blurAnimation->setStartValue(40);
     blurAnimation->setEndValue(2);
     blurAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     QApplication::processEvents();
-    _containerStackedWidget->setCurrentIndex(nodeIndex);
+    d->_containerStackedWidget->setCurrentIndex(nodeIndex);
     break;
   }
   }
@@ -237,31 +234,32 @@ void NXCentralStackedWidget::doWindowStackSwitch(NXWindowType::StackSwitchMode s
 
 void NXCentralStackedWidget::paintEvent(QPaintEvent *event)
 {
+  Q_D(NXCentralStackedWidget);
   QRect targetRect = this->rect();
   targetRect.adjust(1, 1, 10, 10);
   QPainter painter(this);
   painter.save();
   painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-  if (!_isTransparent)
+  if (!d->_isTransparent)
   {
-    painter.setPen(QPen(NXThemeColor(_themeMode, BasicBaseLine), 1.5));
-    painter.setBrush(NXThemeColor(_themeMode, WindowCentralStackBase));
-    if (_isHasRadius) { painter.drawRoundedRect(targetRect, 10, 10); }
+    painter.setPen(QPen(NXThemeColor(d->_themeMode, BasicBaseLine), 1.5));
+    painter.setBrush(NXThemeColor(d->_themeMode, WindowCentralStackBase));
+    if (d->_isHasRadius) { painter.drawRoundedRect(targetRect, 10, 10); }
     else
     {
       painter.drawRect(targetRect);
     }
   }
   // 切换动画
-  if (!_targetStackPix.isNull())
+  if (!d->_targetStackPix.isNull())
   {
-    QPoint centralStackPos = _containerStackedWidget->mapToParent(QPoint(0, 0));
-    QRect centralStackRect = QRect(
-        centralStackPos.x(), centralStackPos.y(), _containerStackedWidget->width(), _containerStackedWidget->height());
+    QPoint centralStackPos = d->_containerStackedWidget->mapToParent(QPoint(0, 0));
+    QRect centralStackRect = QRect(centralStackPos.x(), centralStackPos.y(), d->_containerStackedWidget->width(),
+                                   d->_containerStackedWidget->height());
     QPainterPath clipPath;
     clipPath.addRoundedRect(centralStackRect, 10, 10);
     painter.setClipPath(clipPath);
-    switch (_stackSwitchMode)
+    switch (d->_stackSwitchMode)
     {
     case NXWindowType::None :
     {
@@ -269,34 +267,34 @@ void NXCentralStackedWidget::paintEvent(QPaintEvent *event)
     }
     case NXWindowType::Popup :
     {
-      painter.drawPixmap(QRect(0, _pPopupAnimationYOffset, width(), _containerStackedWidget->height()),
-                         _targetStackPix);
+      painter.drawPixmap(QRect(0, d->_pPopupAnimationYOffset, width(), d->_containerStackedWidget->height()),
+                         d->_targetStackPix);
       break;
     }
     case NXWindowType::Scale :
     {
-      painter.setOpacity(_pScaleAnimationPixOpacity);
-      painter.translate(_containerStackedWidget->rect().center());
-      painter.scale(_pScaleAnimationRatio, _pScaleAnimationRatio);
-      painter.translate(-_containerStackedWidget->rect().center());
-      painter.drawPixmap(centralStackRect, _isDrawNewPix ? _targetStackPix : _currentStackPix);
+      painter.setOpacity(d->_pScaleAnimationPixOpacity);
+      painter.translate(d->_containerStackedWidget->rect().center());
+      painter.scale(d->_pScaleAnimationRatio, d->_pScaleAnimationRatio);
+      painter.translate(-d->_containerStackedWidget->rect().center());
+      painter.drawPixmap(centralStackRect, d->_isDrawNewPix ? d->_targetStackPix : d->_currentStackPix);
       break;
     }
     case NXWindowType::Flip :
     {
       QTransform transform;
       transform.translate(centralStackRect.center().x(), 0);
-      if (abs(_pFlipAnimationRatio) >= 90) { transform.rotate(-180 + _pFlipAnimationRatio, Qt::YAxis); }
+      if (abs(d->_pFlipAnimationRatio) >= 90) { transform.rotate(-180 + d->_pFlipAnimationRatio, Qt::YAxis); }
       else
       {
-        transform.rotate(_pFlipAnimationRatio, Qt::YAxis);
+        transform.rotate(d->_pFlipAnimationRatio, Qt::YAxis);
       }
       transform.translate(-centralStackRect.center().x(), 0);
       painter.setTransform(transform);
-      if (abs(_pFlipAnimationRatio) >= 90) { painter.drawPixmap(centralStackRect, _targetStackPix); }
+      if (abs(d->_pFlipAnimationRatio) >= 90) { painter.drawPixmap(centralStackRect, d->_targetStackPix); }
       else
       {
-        painter.drawPixmap(centralStackRect, _currentStackPix);
+        painter.drawPixmap(centralStackRect, d->_currentStackPix);
       }
       break;
     }
@@ -307,24 +305,4 @@ void NXCentralStackedWidget::paintEvent(QPaintEvent *event)
     }
   }
   painter.restore();
-}
-
-void NXCentralStackedWidget::_getCurrentStackPix()
-{
-  _targetStackPix    = QPixmap();
-  bool isTransparent = _isTransparent;
-  _isTransparent     = true;
-  _containerStackedWidget->currentWidget()->setVisible(true);
-  _currentStackPix = _containerStackedWidget->grab();
-  _containerStackedWidget->currentWidget()->setVisible(false);
-  _isTransparent = isTransparent;
-}
-
-void NXCentralStackedWidget::_getTargetStackPix()
-{
-  _targetStackPix    = QPixmap();
-  bool isTransparent = _isTransparent;
-  _isTransparent     = true;
-  _targetStackPix    = _containerStackedWidget->grab();
-  _isTransparent     = isTransparent;
 }

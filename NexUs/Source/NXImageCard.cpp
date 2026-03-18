@@ -7,9 +7,9 @@
 #include "NXTheme.h"
 #include "private/NXImageCardPrivate.h"
 
-Q_PROPERTY_CREATE_Q_CPP(NXImageCard, QImage, CardImage);
-Q_PROPERTY_CREATE_Q_CPP(NXImageCard, int, BorderRadius)
-Q_PROPERTY_CREATE_Q_CPP(NXImageCard, bool, IsPreserveAspectCrop)
+Q_PROPERTY_CREATE_CPP(NXImageCard, int, BorderRadius)
+Q_PROPERTY_CREATE_CPP(NXImageCard, bool, IsPreserveAspectCrop)
+Q_PROPERTY_CREATE_2_CPP(NXImageCard, const QImage&, QImage, CardImage)
 
 NXImageCard::NXImageCard(QWidget *parent)
     : QWidget(parent)
@@ -21,8 +21,8 @@ NXImageCard::NXImageCard(QWidget *parent)
   d->_pIsPreserveAspectCrop = true;
   setMinimumSize(350, 260);
   d->_themeMode = nxTheme->getThemeMode();
-  connect(
-      nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this,
+          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXImageCard::~NXImageCard() { }
@@ -53,12 +53,9 @@ void NXImageCard::paintEvent(QPaintEvent *event)
       targetPixWidth  = d->_pCardImage.width();
       targetPixHeight = qRound(d->_pCardImage.height() * pixAspectRatio / windowAspectRatio);
     }
-    painter.drawImage(rect(),
-                      d->_pCardImage,
+    painter.drawImage(rect(), d->_pCardImage,
                       QRect((d->_pCardImage.width() - targetPixWidth) / 2,
-                            (d->_pCardImage.height() - targetPixHeight) / 2,
-                            targetPixWidth,
-                            targetPixHeight));
+                            (d->_pCardImage.height() - targetPixHeight) / 2, targetPixWidth, targetPixHeight));
   }
   else
   {

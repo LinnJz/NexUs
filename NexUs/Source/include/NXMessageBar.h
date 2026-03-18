@@ -14,25 +14,37 @@ class NX_EXPORT NXMessageBar : public QWidget
   Q_Q_CREATE(NXMessageBar)
 
 public:
-  static void success(
-      NXMessageBarType::PositionPolicy policy, QString title, QString text, int displayMsec, QWidget *parent = nullptr);
-  static void warning(
-      NXMessageBarType::PositionPolicy policy, QString title, QString text, int displayMsec, QWidget *parent = nullptr);
-  static void information(
-      NXMessageBarType::PositionPolicy policy, QString title, QString text, int displayMsec, QWidget *parent = nullptr);
-  static void error(
-      NXMessageBarType::PositionPolicy policy, QString title, QString text, int displayMsec, QWidget *parent = nullptr);
+  static void success(NXMessageBarType::PositionPolicy policy,
+                      const QString& title,
+                      const QString& text,
+                      int displayMsec,
+                      QWidget *parent = nullptr) noexcept;
+  static void warning(NXMessageBarType::PositionPolicy policy,
+                      const QString& title,
+                      const QString& text,
+                      int displayMsec,
+                      QWidget *parent = nullptr) noexcept;
+  static void information(NXMessageBarType::PositionPolicy policy,
+                          const QString& title,
+                          const QString& text,
+                          int displayMsec,
+                          QWidget *parent = nullptr) noexcept;
+  static void error(NXMessageBarType::PositionPolicy policy,
+                    const QString& title,
+                    const QString& text,
+                    int displayMsec,
+                    QWidget *parent = nullptr) noexcept;
 
 protected:
-  virtual void paintEvent(QPaintEvent *event) override;
-  virtual bool eventFilter(QObject *watched, QEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
+  bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
   friend class NXMessageBarManager;
   explicit NXMessageBar(NXMessageBarType::PositionPolicy policy,
                         NXMessageBarType::MessageMode messageMode,
-                        QString& title,
-                        QString& text,
+                        const QString& title,
+                        const QString& text,
                         int displayMsec,
                         QWidget *parent = nullptr);
   ~NXMessageBar();

@@ -10,12 +10,9 @@ NXCalendarPickerContainer::NXCalendarPickerContainer(QWidget *parent)
   setAttribute(Qt::WA_TranslucentBackground);
   setContentsMargins(0, 0, 0, 0);
   setObjectName("NXCalendarPickerContainer");
-  setStyleSheet("#NXCalendarPickerContainer{background-color:transparent}");
+  setStyleSheet(QStringLiteral("#NXCalendarPickerContainer{background-color:transparent}"));
   _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme,
-          &NXTheme::themeModeChanged,
-          this,
-          [=](NXThemeType::ThemeMode themeMode)
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
     _themeMode = themeMode;
     update();

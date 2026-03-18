@@ -8,17 +8,17 @@
 
 #include "NXTheme.h"
 #include "private/NXIconButtonPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(NXIconButton, int, BorderRadius)
-Q_PROPERTY_CREATE_Q_CPP(NXIconButton, qreal, Opacity);
-Q_PROPERTY_CREATE_Q_CPP(NXIconButton, QColor, LightHoverColor);
-Q_PROPERTY_CREATE_Q_CPP(NXIconButton, QColor, DarkHoverColor);
-Q_PROPERTY_CREATE_Q_CPP(NXIconButton, QColor, LightIconColor);
-Q_PROPERTY_CREATE_Q_CPP(NXIconButton, QColor, DarkIconColor);
-Q_PROPERTY_CREATE_Q_CPP(NXIconButton, QColor, LightHoverIconColor);
-Q_PROPERTY_CREATE_Q_CPP(NXIconButton, QColor, DarkHoverIconColor);
-Q_PROPERTY_CREATE_Q_CPP(NXIconButton, bool, IsSelected);
+Q_PROPERTY_CREATE_CPP(NXIconButton, int, BorderRadius)
+Q_PROPERTY_CREATE_CPP(NXIconButton, bool, IsSelected)
+Q_PROPERTY_CREATE_CPP(NXIconButton, qreal, Opacity)
+Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor&, QColor, LightHoverColor)
+Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor&, QColor, DarkHoverColor)
+Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor&, QColor, LightIconColor)
+Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor&, QColor, DarkIconColor)
+Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor&, QColor, LightHoverIconColor)
+Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor&, QColor, DarkHoverIconColor)
 
-NXIconButton::NXIconButton(QPixmap pix, QWidget *parent)
+NXIconButton::NXIconButton(const QPixmap& pix, QWidget *parent)
     : QPushButton(parent)
     , d_ptr(new NXIconButtonPrivate())
 {
@@ -37,8 +37,8 @@ NXIconButton::NXIconButton(QPixmap pix, QWidget *parent)
   d->_pBorderRadius        = 0;
   d->_themeMode            = nxTheme->getThemeMode();
   connect(this, &NXIconButton::pIsSelectedChanged, this, [=]() { update(); });
-  connect(
-      nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this,
+          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXIconButton::NXIconButton(NXIconType::IconName awesome, QWidget *parent)
@@ -58,14 +58,14 @@ NXIconButton::NXIconButton(NXIconType::IconName awesome, QWidget *parent)
   d->_pIsSelected          = false;
   d->_pBorderRadius        = 0;
   d->_themeMode            = nxTheme->getThemeMode();
-  QFont iconFont           = QFont("NXAwesome");
+  QFont iconFont           = QFont(QStringLiteral("NXAwesome"));
   iconFont.setPixelSize(15);
   this->setFont(iconFont);
   d->_pAwesome = awesome;
   this->setText(QChar((unsigned short) awesome));
   connect(this, &NXIconButton::pIsSelectedChanged, this, [=]() { update(); });
-  connect(
-      nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this,
+          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXIconButton::NXIconButton(NXIconType::IconName awesome, int pixelSize, QWidget *parent)
@@ -85,14 +85,14 @@ NXIconButton::NXIconButton(NXIconType::IconName awesome, int pixelSize, QWidget 
   d->_pIsSelected          = false;
   d->_pBorderRadius        = 0;
   d->_themeMode            = nxTheme->getThemeMode();
-  QFont iconFont           = QFont("NXAwesome");
+  QFont iconFont           = QFont(QStringLiteral("NXAwesome"));
   iconFont.setPixelSize(pixelSize);
   this->setFont(iconFont);
   d->_pAwesome = awesome;
   this->setText(QChar((unsigned short) awesome));
   connect(this, &NXIconButton::pIsSelectedChanged, this, [=]() { update(); });
-  connect(
-      nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this,
+          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXIconButton::NXIconButton(
@@ -113,29 +113,29 @@ NXIconButton::NXIconButton(
   d->_pIsSelected          = false;
   d->_pBorderRadius        = 0;
   d->_themeMode            = nxTheme->getThemeMode();
-  QFont iconFont           = QFont("NXAwesome");
+  QFont iconFont           = QFont(QStringLiteral("NXAwesome"));
   iconFont.setPixelSize(pixelSize);
   this->setFont(iconFont);
   d->_pAwesome = awesome;
   this->setText(QChar((unsigned short) awesome));
   this->setFixedSize(fixedWidth, fixedHeight);
   connect(this, &NXIconButton::pIsSelectedChanged, this, [=]() { update(); });
-  connect(
-      nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this,
+          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXIconButton::~NXIconButton() { }
 
-void NXIconButton::setAwesome(NXIconType::IconName awesome)
+void NXIconButton::setAwesome(NXIconType::IconName awesome) noexcept
 {
   Q_D(NXIconButton);
   d->_pAwesome = awesome;
   this->setText(QChar((unsigned short) awesome));
 }
 
-NXIconType::IconName NXIconButton::getAwesome() const { return this->d_ptr->_pAwesome; }
+NXIconType::IconName NXIconButton::getAwesome() const noexcept { return this->d_ptr->_pAwesome; }
 
-void NXIconButton::setPixmap(QPixmap pix)
+void NXIconButton::setPixmap(const QPixmap& pix) noexcept
 {
   Q_D(NXIconButton);
   d->_iconPix = pix.copy();

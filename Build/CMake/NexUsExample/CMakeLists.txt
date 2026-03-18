@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required(VERSION 3.5)
 cmake_policy(SET CMP0087 NEW)
-project(NexUsExample VERSION 0.1 LANGUAGES CXX)
+project(NexUsExample VERSION 1.0.0 LANGUAGES CXX)
 
 include(Dependencies.cmake)
 FILE(GLOB ORIGIN main.cpp Source/*.cpp Source/*.h)
@@ -42,64 +42,23 @@ else ()
     )
 endif ()
 
-if (WIN32)
-    target_include_directories(${PROJECT_NAME} PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Source>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Source/ExamplePage>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Source/ModelView>
-    )
-    if (BUILD_NXPACKETIO)
-        target_link_libraries(${PROJECT_NAME} PRIVATE
-            Qt${QT_VERSION_MAJOR}::Widgets
-            NexUs
-            NXPacketIO
-        )
-    else ()
-        target_link_libraries(${PROJECT_NAME} PRIVATE
-            Qt${QT_VERSION_MAJOR}::Widgets
-            NexUs
-        )
-    endif ()
+target_include_directories(${PROJECT_NAME} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Source>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Source/ExamplePage>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Source/ModelView>
+)
 
-else ()
-    target_include_directories(${PROJECT_NAME} PUBLIC
-        ExamplePage
-        ModelView
-    )
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
+    NexUs
+)
+if (WIN32 AND BUILD_NXPACKETIO)
     target_link_libraries(${PROJECT_NAME} PRIVATE
-        Qt${QT_VERSION_MAJOR}::Widgets
-        NexUs
+        NXPacketIO
     )
 endif ()
 
-if (MINGW)
-    set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
-endif ()
-if (MSVC)
-    target_compile_options(${PROJECT_NAME} PRIVATE
-        "$<$<CONFIG:Debug>:/ZI>"
-        "$<$<CONFIG:Debug>:/Od>"
-        "$<$<CONFIG:Release>:/O2>"
-        "$<$<CONFIG:RelWithDebInfo>:/Zi>"
-        "$<$<CONFIG:RelWithDebInfo>:/O2>"
-        "$<$<CONFIG:MinSizeRel>:/Zi>"
-        "$<$<CONFIG:MinSizeRel>:/O1>"
-    )
-    
-    target_link_options(${PROJECT_NAME} PRIVATE
-        "$<$<CONFIG:Debug>:/DEBUG>"
-        "$<$<CONFIG:RelWithDebInfo>:/DEBUG:FULL>"
-        "$<$<CONFIG:Release>:/DEBUG:NONE>"
-        "$<$<CONFIG:MinSizeRel>:/DEBUG:FASTLINK>"
-    )
-    
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        DEBUG_POSTFIX "d"
-        COMPILE_PDB_NAME ${PROJECT_NAME}
-        COMPILE_PDB_NAME_DEBUG ${PROJECT_NAME}d
-        COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
-    )
-endif ()
+include(../CMake/TargetCompilerConfig.cmake)
 
 if (${QT_VERSION} VERSION_LESS 6.1.0)
     set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.${PROJECT_NAME})

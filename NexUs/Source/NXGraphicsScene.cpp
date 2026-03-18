@@ -9,8 +9,8 @@
 #include "NXGraphicsItem.h"
 #include "NXGraphicsLineItem.h"
 #include "private/NXGraphicsScenePrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(NXGraphicsScene, bool, IsCheckLinkPort)
-Q_PROPERTY_CREATE_Q_CPP(NXGraphicsScene, QString, SerializePath)
+Q_PROPERTY_CREATE_CPP(NXGraphicsScene, bool, IsCheckLinkPort)
+Q_PROPERTY_CREATE_2_CPP(NXGraphicsScene, const QString&, QString, SerializePath)
 
 NXGraphicsScene::NXGraphicsScene(QObject *parent)
     : QGraphicsScene(parent)
@@ -21,12 +21,12 @@ NXGraphicsScene::NXGraphicsScene(QObject *parent)
   setItemIndexMethod(QGraphicsScene::NoIndex);
   d->_pIsCheckLinkPort = false;
   d->_sceneMode        = NXGraphicsSceneType::SceneMode::Default;
-  d->_pSerializePath   = "./scene.bin";
+  d->_pSerializePath   = QStringLiteral("./scene.bin");
 }
 
 NXGraphicsScene::~NXGraphicsScene() { }
 
-void NXGraphicsScene::addItem(NXGraphicsItem *item)
+void NXGraphicsScene::addItem(NXGraphicsItem *item) noexcept
 {
   Q_D(NXGraphicsScene);
   if (!item) { return; }
@@ -36,14 +36,14 @@ void NXGraphicsScene::addItem(NXGraphicsItem *item)
   }
   item->setParent(this);
   item->setZValue(d->_currentZ);
-  if (item->getItemName().isEmpty()) { item->setItemName(QString("NXItem%1").arg(d->_currentZ)); }
+  if (item->getItemName().isEmpty()) { item->setItemName(QStringLiteral("NXItem%1").arg(d->_currentZ)); }
   item->setPos(sceneRect().width() / 2, sceneRect().height() / 2);
   QGraphicsScene::addItem(item);
   d->_currentZ++;
   d->_items.insert(item->getItemUID(), item);
 }
 
-void NXGraphicsScene::removeItem(NXGraphicsItem *item)
+void NXGraphicsScene::removeItem(NXGraphicsItem *item) noexcept
 {
   Q_D(NXGraphicsScene);
   if (!item) { return; }
@@ -54,14 +54,14 @@ void NXGraphicsScene::removeItem(NXGraphicsItem *item)
   update();
 }
 
-void NXGraphicsScene::removeSelectedItems()
+void NXGraphicsScene::removeSelectedItems() noexcept
 {
   QList<NXGraphicsItem *> selectedItemList = getSelectedNXItems();
   if (selectedItemList.count() == 0) { return; }
   for (auto item : selectedItemList) { removeItem(item); }
 }
 
-void NXGraphicsScene::clear()
+void NXGraphicsScene::clear() noexcept
 {
   Q_D(NXGraphicsScene);
   d->_itemsLink.clear();
@@ -70,7 +70,7 @@ void NXGraphicsScene::clear()
   update();
 }
 
-QList<NXGraphicsItem *> NXGraphicsScene::createAndAddItem(int width, int height, int count)
+QList<NXGraphicsItem *> NXGraphicsScene::createAndAddItem(int width, int height, int count) noexcept
 {
   if (count <= 0) { return QList<NXGraphicsItem *>(); }
   QList<NXGraphicsItem *> createItemList;
@@ -85,7 +85,7 @@ QList<NXGraphicsItem *> NXGraphicsScene::createAndAddItem(int width, int height,
   return createItemList;
 }
 
-QList<NXGraphicsItem *> NXGraphicsScene::getSelectedNXItems() const
+QList<NXGraphicsItem *> NXGraphicsScene::getSelectedNXItems() const noexcept
 {
   QList<QGraphicsItem *> selectedItemList = selectedItems();
   QList<NXGraphicsItem *> selectedNXItemList;
@@ -97,13 +97,13 @@ QList<NXGraphicsItem *> NXGraphicsScene::getSelectedNXItems() const
   return selectedNXItemList;
 }
 
-QList<NXGraphicsItem *> NXGraphicsScene::getNXItems()
+QList<NXGraphicsItem *> NXGraphicsScene::getNXItems() noexcept
 {
   Q_D(NXGraphicsScene);
   return d->_items.values();
 }
 
-QList<NXGraphicsItem *> NXGraphicsScene::getNXItems(QPoint pos)
+QList<NXGraphicsItem *> NXGraphicsScene::getNXItems(QPoint pos) noexcept
 {
   QList<QGraphicsItem *> itemList = items(pos);
   QList<NXGraphicsItem *> elaItemList;
@@ -115,7 +115,7 @@ QList<NXGraphicsItem *> NXGraphicsScene::getNXItems(QPoint pos)
   return elaItemList;
 }
 
-QList<NXGraphicsItem *> NXGraphicsScene::getNXItems(QPointF pos)
+QList<NXGraphicsItem *> NXGraphicsScene::getNXItems(QPointF pos) noexcept
 {
   QList<QGraphicsItem *> itemList = items(pos);
   QList<NXGraphicsItem *> elaItemList;
@@ -127,7 +127,7 @@ QList<NXGraphicsItem *> NXGraphicsScene::getNXItems(QPointF pos)
   return elaItemList;
 }
 
-QList<NXGraphicsItem *> NXGraphicsScene::getNXItems(QRect rect)
+QList<NXGraphicsItem *> NXGraphicsScene::getNXItems(QRect rect) noexcept
 {
   QList<QGraphicsItem *> itemList = items(rect);
   QList<NXGraphicsItem *> elaItemList;
@@ -139,7 +139,7 @@ QList<NXGraphicsItem *> NXGraphicsScene::getNXItems(QRect rect)
   return elaItemList;
 }
 
-QList<NXGraphicsItem *> NXGraphicsScene::getNXItems(QRectF rect)
+QList<NXGraphicsItem *> NXGraphicsScene::getNXItems(QRectF rect) noexcept
 {
   QList<QGraphicsItem *> itemList = items(rect);
   QList<NXGraphicsItem *> elaItemList;
@@ -151,7 +151,7 @@ QList<NXGraphicsItem *> NXGraphicsScene::getNXItems(QRectF rect)
   return elaItemList;
 }
 
-void NXGraphicsScene::setSceneMode(NXGraphicsSceneType::SceneMode mode)
+void NXGraphicsScene::setSceneMode(NXGraphicsSceneType::SceneMode mode) noexcept
 {
   Q_D(NXGraphicsScene);
   d->_sceneMode = mode;
@@ -162,9 +162,9 @@ void NXGraphicsScene::setSceneMode(NXGraphicsSceneType::SceneMode mode)
   }
 }
 
-NXGraphicsSceneType::SceneMode NXGraphicsScene::getSceneMode() const { return d_ptr->_sceneMode; }
+NXGraphicsSceneType::SceneMode NXGraphicsScene::getSceneMode() const noexcept { return d_ptr->_sceneMode; }
 
-void NXGraphicsScene::selectAllItems()
+void NXGraphicsScene::selectAllItems() noexcept
 {
   Q_D(NXGraphicsScene);
   for (const auto& pair : d->_items.toStdMap())
@@ -174,9 +174,9 @@ void NXGraphicsScene::selectAllItems()
   }
 }
 
-QList<QVariantMap> NXGraphicsScene::getItemLinkList() const { return d_ptr->_itemsLink; }
+QList<QVariantMap> NXGraphicsScene::getItemLinkList() const noexcept { return d_ptr->_itemsLink; }
 
-bool NXGraphicsScene::addItemLink(NXGraphicsItem *item1, NXGraphicsItem *item2, int port1, int port2)
+bool NXGraphicsScene::addItemLink(NXGraphicsItem *item1, NXGraphicsItem *item2, int port1, int port2) noexcept
 {
   Q_D(NXGraphicsScene);
   if (!item1 || !item2 || (item1 == item2) || port1 < 0 || port2 < 0 || item1->getMaxLinkPortCount() <= port1 ||
@@ -207,7 +207,7 @@ bool NXGraphicsScene::addItemLink(NXGraphicsItem *item1, NXGraphicsItem *item2, 
   return true;
 }
 
-bool NXGraphicsScene::removeItemLink(NXGraphicsItem *item1)
+bool NXGraphicsScene::removeItemLink(NXGraphicsItem *item1) noexcept
 {
   Q_D(NXGraphicsScene);
   if (!item1) { return false; }
@@ -242,7 +242,7 @@ bool NXGraphicsScene::removeItemLink(NXGraphicsItem *item1)
   return true;
 }
 
-bool NXGraphicsScene::removeItemLink(NXGraphicsItem *item1, NXGraphicsItem *item2, int port1, int port2)
+bool NXGraphicsScene::removeItemLink(NXGraphicsItem *item1, NXGraphicsItem *item2, int port1, int port2) noexcept
 {
   Q_D(NXGraphicsScene);
   if (!item1 || !item2) { return false; }
@@ -286,7 +286,7 @@ bool NXGraphicsScene::removeItemLink(NXGraphicsItem *item1, NXGraphicsItem *item
   }
 }
 
-QList<QVariantMap> NXGraphicsScene::getItemsDataRoute() const
+QList<QVariantMap> NXGraphicsScene::getItemsDataRoute() const noexcept
 {
   QList<QVariantMap> dataRouteVector;
   for (const auto& pair : d_ptr->_items.toStdMap())
@@ -297,7 +297,7 @@ QList<QVariantMap> NXGraphicsScene::getItemsDataRoute() const
   return dataRouteVector;
 }
 
-void NXGraphicsScene::serialize()
+void NXGraphicsScene::serialize() noexcept
 {
   Q_D(NXGraphicsScene);
   QFile file(d->_pSerializePath);
@@ -312,7 +312,7 @@ void NXGraphicsScene::serialize()
   file.close();
 }
 
-void NXGraphicsScene::deserialize()
+void NXGraphicsScene::deserialize() noexcept
 {
   Q_D(NXGraphicsScene);
   QFile file(d->_pSerializePath);

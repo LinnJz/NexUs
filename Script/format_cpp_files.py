@@ -14,7 +14,7 @@ def format_cpp_files():
     # clang-format可执行文件路径
     clang_format_exe = r'E:\Development\LLVM\bin\clang-format.exe'
     # .clang-format配置文件路径
-    clang_format_config = r'D:\Code\PDFWiz\.clang-format'
+    clang_format_config = r'E:\NexUs\.clang-format'
     # ==========================================================================
 
     # 检查clang-format可执行文件是否存在

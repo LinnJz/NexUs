@@ -13,7 +13,7 @@ NXScrollArea::NXScrollArea(QWidget *parent)
   Q_D(NXScrollArea);
   d->q_ptr = this;
   setObjectName("NXScrollArea");
-  setStyleSheet("#NXScrollArea{background-color:transparent;border:0px;}");
+  setStyleSheet(QStringLiteral("#NXScrollArea{background-color:transparent;border:0px;}"));
   setHorizontalScrollBar(new NXScrollBar(this));
   setVerticalScrollBar(new NXScrollBar(this));
   QScrollArea::setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -22,7 +22,7 @@ NXScrollArea::NXScrollArea(QWidget *parent)
 
 NXScrollArea::~NXScrollArea() { }
 
-void NXScrollArea::setIsGrabGesture(bool isEnable, qreal mousePressEventDelay)
+void NXScrollArea::setIsGrabGesture(bool isEnable, qreal mousePressEventDelay) noexcept
 {
   if (isEnable)
   {
@@ -40,7 +40,7 @@ void NXScrollArea::setIsGrabGesture(bool isEnable, qreal mousePressEventDelay)
   }
 }
 
-void NXScrollArea::setIsOverShoot(Qt::Orientation orientation, bool isEnable)
+void NXScrollArea::setIsOverShoot(Qt::Orientation orientation, bool isEnable) noexcept
 {
   QScrollerProperties properties = QScroller::scroller(this->viewport())->scrollerProperties();
   properties.setScrollMetric(orientation == Qt::Horizontal ? QScrollerProperties::HorizontalOvershootPolicy
@@ -50,7 +50,7 @@ void NXScrollArea::setIsOverShoot(Qt::Orientation orientation, bool isEnable)
   QScroller::scroller(this->viewport())->setScrollerProperties(properties);
 }
 
-bool NXScrollArea::getIsOverShoot(Qt::Orientation orientation) const
+bool NXScrollArea::getIsOverShoot(Qt::Orientation orientation) const noexcept
 {
   QScrollerProperties properties = QScroller::scroller(this->viewport())->scrollerProperties();
   return properties
@@ -59,7 +59,7 @@ bool NXScrollArea::getIsOverShoot(Qt::Orientation orientation) const
       .toBool();
 }
 
-void NXScrollArea::setIsAnimation(Qt::Orientation orientation, bool isAnimation)
+void NXScrollArea::setIsAnimation(Qt::Orientation orientation, bool isAnimation) noexcept
 {
   if (orientation == Qt::Horizontal)
   {
@@ -71,7 +71,7 @@ void NXScrollArea::setIsAnimation(Qt::Orientation orientation, bool isAnimation)
   }
 }
 
-bool NXScrollArea::getIsAnimation(Qt::Orientation orientation) const
+bool NXScrollArea::getIsAnimation(Qt::Orientation orientation) const noexcept
 {
   if (orientation == Qt::Horizontal)
   {

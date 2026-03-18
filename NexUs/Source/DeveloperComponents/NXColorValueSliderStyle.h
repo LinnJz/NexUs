@@ -9,7 +9,7 @@
 class NXColorValueSliderStyle : public QProxyStyle
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE(QColor, BaseColor)
+  Q_PRIVATE_CREATE_2(const QColor&, QColor, BaseColor)
   Q_PRIVATE_CREATE(bool, IsUseAlpha)
 
 public:

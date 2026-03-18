@@ -1,0 +1,41 @@
+#ifndef NXPOPCONFIRMPRIVATE_H
+#define NXPOPCONFIRMPRIVATE_H
+
+#include <QObject>
+
+#include "NXDef.h"
+class QVBoxLayout;
+class QGraphicsOpacityEffect;
+class NXPushButton;
+class NXPopconfirm;
+class NXPopconfirmPrivate : public QObject
+{
+    Q_OBJECT
+    Q_D_CREATE(NXPopconfirm)
+    Q_PROPERTY_CREATE_D(int, BorderRadius)
+    Q_PROPERTY_CREATE_D(QString, Title)
+    Q_PROPERTY_CREATE_D(QString, Content)
+    Q_PROPERTY_CREATE_D(QString, ConfirmButtonText)
+    Q_PROPERTY_CREATE_D(QString, CancelButtonText)
+    Q_PROPERTY_CREATE_D(NXIconType::IconName, Icon)
+    Q_PROPERTY_CREATE_D(bool, IsLightDismiss)
+public:
+    explicit NXPopconfirmPrivate(QObject* parent = nullptr);
+    ~NXPopconfirmPrivate() override;
+
+protected:
+    bool eventFilter(QObject* watched, QEvent* event) override;
+
+private:
+    NXThemeType::ThemeMode _themeMode;
+    QVBoxLayout* _mainLayout{nullptr};
+    QGraphicsOpacityEffect* _opacityEffect{nullptr};
+    NXPushButton* _confirmButton{nullptr};
+    NXPushButton* _cancelButton{nullptr};
+    int _shadowBorderWidth{8};
+    void _doShowAnimation();
+
+    friend class NXPopconfirm;
+};
+
+#endif // NXPOPCONFIRMPRIVATE_H

@@ -18,7 +18,7 @@ public:
   explicit NXCalendarDelegate(NXCalendarModel *calendarModel, QObject *parent = nullptr);
   ~NXCalendarDelegate();
 
-  Q_SLOT void onCalendarModelDisplayModeChanged();
+  Q_SLOT void onCalendarModelDisplayModeChanged() noexcept;
 
   void paint(QPainter *painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
   QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;

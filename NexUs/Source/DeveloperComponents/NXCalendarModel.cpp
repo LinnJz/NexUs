@@ -10,23 +10,23 @@ NXCalendarModel::NXCalendarModel(QObject *parent)
 
 NXCalendarModel::~NXCalendarModel() { }
 
-void NXCalendarModel::setMinimumDate(QDate minimudate)
+void NXCalendarModel::setMinimumDate(QDate minimudate) noexcept
 {
   _pMinimumDate = minimudate;
   _initRowCount();
 }
 
-QDate NXCalendarModel::getMinimumDate() const { return _pMinimumDate; }
+QDate NXCalendarModel::getMinimumDate() const noexcept { return _pMinimumDate; }
 
-void NXCalendarModel::setMaximumDate(QDate maximumDate)
+void NXCalendarModel::setMaximumDate(QDate maximumDate) noexcept
 {
   _pMaximumDate = maximumDate;
   _initRowCount();
 }
 
-QDate NXCalendarModel::getMaximumDate() const { return _pMaximumDate; }
+QDate NXCalendarModel::getMaximumDate() const noexcept { return _pMaximumDate; }
 
-void NXCalendarModel::setDisplayMode(NXCalendarType displayMode)
+void NXCalendarModel::setDisplayMode(NXCalendarType displayMode) noexcept
 {
   beginResetModel();
   _displayMode = displayMode;
@@ -34,9 +34,9 @@ void NXCalendarModel::setDisplayMode(NXCalendarType displayMode)
   Q_EMIT displayModeChanged();
 }
 
-NXCalendarType NXCalendarModel::getDisplayMode() const { return _displayMode; }
+NXCalendarType NXCalendarModel::getDisplayMode() const noexcept { return _displayMode; }
 
-QModelIndex NXCalendarModel::getIndexFromDate(QDate date)
+QModelIndex NXCalendarModel::getIndexFromDate(QDate date) const noexcept
 {
   switch (_displayMode)
   {
@@ -56,7 +56,7 @@ QModelIndex NXCalendarModel::getIndexFromDate(QDate date)
   return QModelIndex();
 }
 
-QDate NXCalendarModel::getDateFromIndex(const QModelIndex& index) const
+QDate NXCalendarModel::getDateFromIndex(const QModelIndex& index) const noexcept
 {
   if (!index.isValid() || index.row() < _offset) { return QDate(); }
   return _pMinimumDate.addDays(index.row() - _offset);
@@ -93,7 +93,7 @@ QVariant NXCalendarModel::data(const QModelIndex& index, int role) const
         if (date.day() == 1)
         {
           return QVariant::fromValue<NXCalendarData>(
-              NXCalendarData(date.year(), date.month(), date.day(), QString("%1月").arg(date.month())));
+              NXCalendarData(date.year(), date.month(), date.day(), QStringLiteral("%1月").arg(date.month())));
         }
         else
         {

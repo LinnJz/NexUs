@@ -6,13 +6,13 @@
 #include "NXText.h"
 #include "NXTheme.h"
 #include "private/NXToolTipPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(NXToolTip, bool, IsMoveEnabled)
-Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, OffSetX)
-Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, OffSetY)
-Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, BorderRadius)
-Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, DisplayMsec)
-Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, ShowDelayMsec)
-Q_PROPERTY_CREATE_Q_CPP(NXToolTip, int, HideDelayMsec)
+Q_PROPERTY_CREATE_CPP(NXToolTip, bool, IsMoveEnabled)
+Q_PROPERTY_CREATE_CPP(NXToolTip, int, OffSetX)
+Q_PROPERTY_CREATE_CPP(NXToolTip, int, OffSetY)
+Q_PROPERTY_CREATE_CPP(NXToolTip, int, BorderRadius)
+Q_PROPERTY_CREATE_CPP(NXToolTip, int, DisplayMsec)
+Q_PROPERTY_CREATE_CPP(NXToolTip, int, ShowDelayMsec)
+Q_PROPERTY_CREATE_CPP(NXToolTip, int, HideDelayMsec)
 
 NXToolTip::NXToolTip(QWidget *parent)
     : QWidget { parent }
@@ -38,15 +38,12 @@ NXToolTip::NXToolTip(QWidget *parent)
   d->_toolTipText->setWordWrap(false);
   d->_toolTipText->setTextPixelSize(17);
   d->_mainLayout = new QVBoxLayout(this);
-  d->_mainLayout->setContentsMargins(
-      d->_shadowBorderWidth * 2, d->_shadowBorderWidth * 2, d->_shadowBorderWidth * 2, d->_shadowBorderWidth * 2);
+  d->_mainLayout->setContentsMargins(d->_shadowBorderWidth * 2, d->_shadowBorderWidth * 2, d->_shadowBorderWidth * 2,
+                                     d->_shadowBorderWidth * 2);
   d->_mainLayout->addWidget(d->_toolTipText);
 
   d->_themeMode = nxTheme->getThemeMode();
-  connect(nxTheme,
-          &NXTheme::themeModeChanged,
-          this,
-          [=](NXThemeType::ThemeMode themeMode)
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
     d->_themeMode = themeMode;
     update();
@@ -56,13 +53,13 @@ NXToolTip::NXToolTip(QWidget *parent)
 
 NXToolTip::~NXToolTip() { }
 
-void NXToolTip::updatePos()
+void NXToolTip::updatePos() noexcept
 {
   Q_D(NXToolTip);
   d->_updatePos();
 }
 
-void NXToolTip::setToolTip(const QString& toolTip)
+void NXToolTip::setToolTip(const QString& toolTip) noexcept
 {
   Q_D(NXToolTip);
   d->_toolTipText->setText(toolTip);
@@ -74,13 +71,13 @@ void NXToolTip::setToolTip(const QString& toolTip)
   Q_EMIT pToolTipChanged();
 }
 
-QString NXToolTip::getToolTip() const
+QString NXToolTip::getToolTip() const noexcept
 {
   Q_D(const NXToolTip);
   return d->_toolTipText->text();
 }
 
-void NXToolTip::setCustomWidget(QWidget *customWidget)
+void NXToolTip::setCustomWidget(QWidget *customWidget) noexcept
 {
   Q_D(NXToolTip);
   if (!customWidget || customWidget == this) { return; }
@@ -95,7 +92,7 @@ void NXToolTip::setCustomWidget(QWidget *customWidget)
   Q_EMIT pCustomWidgetChanged();
 }
 
-QWidget *NXToolTip::getCustomWidget() const
+QWidget *NXToolTip::getCustomWidget() const noexcept
 {
   Q_D(const NXToolTip);
   return d->_pCustomWidget;

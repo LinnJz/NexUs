@@ -21,7 +21,7 @@ NXApplicationPrivate::NXApplicationPrivate(QObject *parent)
 
 NXApplicationPrivate::~NXApplicationPrivate() { }
 
-void NXApplicationPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode)
+void NXApplicationPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   _themeMode = themeMode;
   switch (_pWindowDisplayMode)
@@ -107,10 +107,7 @@ void NXApplicationPrivate::_initMicaBaseImage(const QImage& img)
   QThread *initThread              = new QThread();
   NXMicaBaseInitObject *initObject = new NXMicaBaseInitObject(this);
   connect(initThread, &QThread::finished, initObject, &NXMicaBaseInitObject::deleteLater);
-  connect(initObject,
-          &NXMicaBaseInitObject::initFinished,
-          initThread,
-          [=]()
+  connect(initObject, &NXMicaBaseInitObject::initFinished, initThread, [=]()
   {
     Q_EMIT q->pWindowDisplayModeChanged();
     _updateAllMicaWidget();
@@ -124,7 +121,7 @@ void NXApplicationPrivate::_initMicaBaseImage(const QImage& img)
   Q_EMIT initMicaBase(img);
 }
 
-QRect NXApplicationPrivate::_calculateWindowVirtualGeometry(QWidget *widget)
+QRect NXApplicationPrivate::_calculateWindowVirtualGeometry(QWidget *widget) noexcept
 {
   QRect geometry    = widget->geometry();
   qreal xImageRatio = 1, yImageRatio = 1;
@@ -137,10 +134,9 @@ QRect NXApplicationPrivate::_calculateWindowVirtualGeometry(QWidget *widget)
       QRect screenGeometry = currentScreen->availableGeometry();
       xImageRatio          = (qreal) _lightBaseImage.width() / screenGeometry.width();
       yImageRatio          = (qreal) _lightBaseImage.height() / screenGeometry.height();
-      relativeGeometry     = QRect((geometry.x() - screenGeometry.x()) * xImageRatio,
-                               (geometry.y() - screenGeometry.y()) * yImageRatio,
-                               geometry.width() * xImageRatio,
-                               geometry.height() * yImageRatio);
+      relativeGeometry =
+          QRect((geometry.x() - screenGeometry.x()) * xImageRatio, (geometry.y() - screenGeometry.y()) * yImageRatio,
+                geometry.width() * xImageRatio, geometry.height() * yImageRatio);
       return relativeGeometry;
     }
   }
@@ -148,35 +144,32 @@ QRect NXApplicationPrivate::_calculateWindowVirtualGeometry(QWidget *widget)
   xImageRatio                 = (qreal) _lightBaseImage.width() / primaryScreenGeometry.width();
   yImageRatio                 = (qreal) _lightBaseImage.height() / primaryScreenGeometry.height();
   relativeGeometry            = QRect((geometry.x() - primaryScreenGeometry.x()) * xImageRatio,
-                           (geometry.y() - primaryScreenGeometry.y()) * yImageRatio,
-                           geometry.width() * xImageRatio,
-                           geometry.height() * yImageRatio);
+                                      (geometry.y() - primaryScreenGeometry.y()) * yImageRatio, geometry.width() * xImageRatio,
+                                      geometry.height() * yImageRatio);
   return relativeGeometry;
 }
 
-void NXApplicationPrivate::_updateMica(QWidget *widget, bool isProcessEvent)
+void NXApplicationPrivate::_updateMica(QWidget *widget, bool isProcessEvent) noexcept
 {
   if (widget->isVisible())
   {
     QPalette palette = widget->palette();
     if (_themeMode == NXThemeType::Light)
     {
-      palette.setBrush(QPalette::Window,
-                       _lightBaseImage.copy(_calculateWindowVirtualGeometry(widget))
-                           .scaled(widget->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+      palette.setBrush(QPalette::Window, _lightBaseImage.copy(_calculateWindowVirtualGeometry(widget))
+                                             .scaled(widget->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     }
     else
     {
-      palette.setBrush(QPalette::Window,
-                       _darkBaseImage.copy(_calculateWindowVirtualGeometry(widget))
-                           .scaled(widget->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+      palette.setBrush(QPalette::Window, _darkBaseImage.copy(_calculateWindowVirtualGeometry(widget))
+                                             .scaled(widget->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     }
     widget->setPalette(palette);
     if (isProcessEvent) { QApplication::processEvents(); }
   }
 }
 
-void NXApplicationPrivate::_updateAllMicaWidget()
+void NXApplicationPrivate::_updateAllMicaWidget() noexcept
 {
   if (_pWindowDisplayMode == NXApplicationType::WindowDisplayMode::NXMica)
   {
@@ -184,7 +177,7 @@ void NXApplicationPrivate::_updateAllMicaWidget()
   }
 }
 
-void NXApplicationPrivate::_resetAllMicaWidget()
+void NXApplicationPrivate::_resetAllMicaWidget() noexcept
 {
   for (auto widget : _micaWidgetList)
   {
@@ -194,9 +187,9 @@ void NXApplicationPrivate::_resetAllMicaWidget()
   }
 }
 
-void NXApplicationPrivate::onSystemPaletteChanged() { syncSystemTheme(); }
+void NXApplicationPrivate::onSystemPaletteChanged() noexcept { syncSystemTheme(); }
 
-void NXApplicationPrivate::syncSystemTheme()
+void NXApplicationPrivate::syncSystemTheme() noexcept
 {
   bool systemIsDark                  = _isSystemDarkMode();
   NXThemeType::ThemeMode currentMode = nxTheme->getThemeMode();
@@ -205,7 +198,7 @@ void NXApplicationPrivate::syncSystemTheme()
   if (currentMode != targetMode) { nxTheme->setThemeMode(targetMode); }
 }
 
-bool NXApplicationPrivate::_isSystemDarkMode() const
+bool NXApplicationPrivate::_isSystemDarkMode() const noexcept
 {
   QPalette palette   = qApp->palette();
   QColor windowColor = palette.color(QPalette::Window);

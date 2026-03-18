@@ -50,10 +50,7 @@ T_NXScreen::T_NXScreen(QWidget *parent)
   _outputComboBox->addItems(dxgiManager->getOutputDeviceList());
   _outputComboBox->setCurrentIndex(dxgiManager->getOutputDeviceID());
 
-  connect(_dxComboBox,
-          QOverload<int>::of(&NXComboBox::currentIndexChanged),
-          this,
-          [=](int index)
+  connect(_dxComboBox, QOverload<int>::of(&NXComboBox::currentIndexChanged), this, [=](int index)
   {
     dxgiManager->setDxDeviceID(index);
     _outputComboBox->blockSignals(true);
@@ -63,20 +60,14 @@ T_NXScreen::T_NXScreen(QWidget *parent)
     _outputComboBox->blockSignals(false);
     _dxgiScreen->update();
   });
-  connect(_outputComboBox,
-          QOverload<int>::of(&NXComboBox::currentIndexChanged),
-          this,
-          [=](int index)
+  connect(_outputComboBox, QOverload<int>::of(&NXComboBox::currentIndexChanged), this, [=](int index)
   {
     dxgiManager->setOutputDeviceID(index);
     _dxgiScreen->update();
   });
 
   NXToggleButton *startButton = new NXToggleButton("捕获", this);
-  connect(startButton,
-          &NXToggleButton::toggled,
-          this,
-          [=](bool isToggled)
+  connect(startButton, &NXToggleButton::toggled, this, [=](bool isToggled)
   {
     if (isToggled) { dxgiManager->startGrabScreen(); }
     else
@@ -116,10 +107,7 @@ T_NXScreen::T_NXScreen(QWidget *parent)
   interfaceIPEdit->setText("192.168.1");
 
   NXToggleButton *sendButton2 = new NXToggleButton("初始发送", this);
-  connect(sendButton2,
-          &NXToggleButton::toggled,
-          this,
-          [=](bool isToggled)
+  connect(sendButton2, &NXToggleButton::toggled, this, [=](bool isToggled)
   {
     if (isToggled) { _initSendThread(interfaceIPEdit->text().trimmed()); }
     else
@@ -128,10 +116,7 @@ T_NXScreen::T_NXScreen(QWidget *parent)
     }
   });
   NXToggleButton *recvButton = new NXToggleButton("初始接收", this);
-  connect(recvButton,
-          &NXToggleButton::toggled,
-          this,
-          [=](bool isToggled)
+  connect(recvButton, &NXToggleButton::toggled, this, [=](bool isToggled)
   {
     if (isToggled) { _initRecvThread(interfaceIPEdit->text().trimmed()); }
     else
@@ -177,20 +162,14 @@ T_NXScreen::T_NXScreen(QWidget *parent)
   _displayComboBox->addItems(captureManager->getDisplayList());
   _displayComboBox->setCurrentIndex(captureManager->getDisplayID());
 
-  connect(_displayComboBox,
-          QOverload<int>::of(&NXComboBox::currentIndexChanged),
-          this,
-          [=](int index)
+  connect(_displayComboBox, QOverload<int>::of(&NXComboBox::currentIndexChanged), this, [=](int index)
   {
     captureManager->setDisplayID(index);
     _captureScreen->update();
   });
 
   NXToggleButton *startButton = new NXToggleButton("捕获", this);
-  connect(startButton,
-          &NXToggleButton::toggled,
-          this,
-          [=](bool isToggled)
+  connect(startButton, &NXToggleButton::toggled, this, [=](bool isToggled)
   {
     if (isToggled) { captureManager->startGrabScreen(); }
     else
@@ -239,9 +218,7 @@ void T_NXScreen::_initSendThread(QString interfaceIP)
 void T_NXScreen::_initRecvThread(QString interfaceIP)
 {
   // 原则上一个程序最好只初始化一个XIO 但如果需要多个XIO 则控制初始化间隔 不能同时进行初始化
-  QTimer::singleShot(1000,
-                     this,
-                     [=]()
+  QTimer::singleShot(1000, this, [=]()
   {
     _packetIORecvThread = new QThread(this);
     _packetRecvIO       = new T_NXPacketIO();

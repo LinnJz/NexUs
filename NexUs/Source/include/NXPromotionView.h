@@ -12,22 +12,22 @@ class NX_EXPORT NXPromotionView : public QWidget
 {
   Q_OBJECT
   Q_Q_CREATE(NXPromotionView)
-  Q_PROPERTY_CREATE_Q_H(bool, IsAutoScroll)
-  Q_PROPERTY_CREATE_Q_H(int, CardExpandWidth)
-  Q_PROPERTY_CREATE_Q_H(int, CardCollapseWidth)
-  Q_PROPERTY_CREATE_Q_H(int, CurrentIndex)
-  Q_PROPERTY_CREATE_Q_H(int, AutoScrollInterval)
+  Q_PROPERTY_CREATE_H(bool, IsAutoScroll)
+  Q_PROPERTY_CREATE_H(int, CardExpandWidth)
+  Q_PROPERTY_CREATE_H(int, CardCollapseWidth)
+  Q_PROPERTY_CREATE_H(int, CurrentIndex)
+  Q_PROPERTY_CREATE_H(int, AutoScrollInterval)
 
 public:
   explicit NXPromotionView(QWidget *parent = nullptr);
   ~NXPromotionView();
 
-  void appendPromotionCard(NXPromotionCard *card);
+  void appendPromotionCard(NXPromotionCard *card) noexcept;
 
 protected:
-  virtual void wheelEvent(QWheelEvent *event) override;
-  virtual void resizeEvent(QResizeEvent *event) override;
-  virtual void paintEvent(QPaintEvent *event) override;
+  void wheelEvent(QWheelEvent *event) override;
+  void resizeEvent(QResizeEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // NXPROMOTIONVIEW_H

@@ -9,7 +9,7 @@ NXStatusBar::NXStatusBar(QWidget *parent)
     : QStatusBar(parent)
 {
   setObjectName("NXStatusBar");
-  setStyleSheet("#NXStatusBar{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXStatusBar{background-color:transparent;}"));
   setFixedHeight(28);
   setContentsMargins(20, 0, 0, 0);
   setStyle(new NXStatusBarStyle(style()));

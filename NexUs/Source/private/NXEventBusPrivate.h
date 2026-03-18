@@ -11,9 +11,9 @@ class NXEventPrivate : public QObject
 {
   Q_OBJECT
   Q_D_CREATE(NXEvent)
-  Q_PROPERTY_CREATE_D(QString, EventName);
-  Q_PROPERTY_CREATE_D(QString, FunctionName);
-  Q_PROPERTY_CREATE_D(Qt::ConnectionType, ConnectionType);
+  Q_PROPERTY_CREATE_D(QString, EventName)
+  Q_PROPERTY_CREATE_D(QString, FunctionName)
+  Q_PROPERTY_CREATE_D(Qt::ConnectionType, ConnectionType)
 
 public:
   explicit NXEventPrivate(QObject *parent = nullptr);
@@ -30,8 +30,8 @@ class NXEventBusPrivate : public QObject
 public:
   explicit NXEventBusPrivate(QObject *parent = nullptr);
   ~NXEventBusPrivate();
-  NXEventBusType::EventBusReturnType registerEvent(NXEvent *event);
-  void unRegisterEvent(NXEvent *event);
+  NXEventBusType::EventBusReturnType registerEvent(NXEvent *event) noexcept;
+  void unRegisterEvent(NXEvent *event) noexcept;
 
 private:
   QMap<QString, QList<NXEvent *>> _eventMap;

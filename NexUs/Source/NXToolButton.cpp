@@ -29,46 +29,46 @@ NXToolButton::~NXToolButton()
   delete d->_toolButtonStyle;
 }
 
-void NXToolButton::setBorderRadius(int borderRadius)
+void NXToolButton::setBorderRadius(int borderRadius) noexcept
 {
   Q_D(NXToolButton);
   d->_toolButtonStyle->setBorderRadius(borderRadius);
   Q_EMIT pBorderRadiusChanged();
 }
 
-int NXToolButton::getBorderRadius() const
+int NXToolButton::getBorderRadius() const noexcept
 {
   Q_D(const NXToolButton);
   return d->_toolButtonStyle->getBorderRadius();
 }
 
-void NXToolButton::setIsSelected(bool isSelected)
+void NXToolButton::setIsSelected(bool isSelected) noexcept
 {
   Q_D(NXToolButton);
   d->_toolButtonStyle->setIsSelected(isSelected);
   Q_EMIT pIsSelectedChanged();
 }
 
-bool NXToolButton::getIsSelected() const
+bool NXToolButton::getIsSelected() const noexcept
 {
   Q_D(const NXToolButton);
   return d->_toolButtonStyle->getIsSelected();
 }
 
-void NXToolButton::setIsTransparent(bool isTransparent)
+void NXToolButton::setIsTransparent(bool isTransparent) noexcept
 {
   Q_D(NXToolButton);
   d->_toolButtonStyle->setIsTransparent(isTransparent);
   update();
 }
 
-bool NXToolButton::getIsTransparent() const
+bool NXToolButton::getIsTransparent() const noexcept
 {
   Q_D(const NXToolButton);
   return d->_toolButtonStyle->getIsTransparent();
 }
 
-void NXToolButton::setMenu(NXMenu *menu)
+void NXToolButton::setMenu(NXMenu *menu) noexcept
 {
   if (!menu || menu == this->menu()) { return; }
   menu->setMenuItemHeight(27);
@@ -76,13 +76,13 @@ void NXToolButton::setMenu(NXMenu *menu)
   menu->installEventFilter(this);
 }
 
-void NXToolButton::setNXIcon(NXIconType::IconName icon)
+void NXToolButton::setNXIcon(NXIconType::IconName icon) noexcept
 {
   setProperty("NXIconType", QChar((unsigned short) icon));
   setIcon(NXIcon::getInstance()->getNXIcon(NXIconType::Broom, 1));
 }
 
-void NXToolButton::setNXIcon(NXIconType::IconName icon, int rotate)
+void NXToolButton::setNXIcon(NXIconType::IconName icon, int rotate) noexcept
 {
   setNXIcon(icon);
   setProperty("NXIconRotate", rotate);
@@ -117,8 +117,8 @@ bool NXToolButton::eventFilter(QObject *watched, QEvent *event)
       rotateAnimation->setStartValue(d->_toolButtonStyle->getExpandIconRotate());
       rotateAnimation->setEndValue(0);
       rotateAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-      QMouseEvent focusEvent(
-          QEvent::MouseButtonPress, QPoint(-1, -1), QPoint(-1, -1), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
+      QMouseEvent focusEvent(QEvent::MouseButtonPress, QPoint(-1, -1), QPoint(-1, -1), Qt::NoButton, Qt::NoButton,
+                             Qt::NoModifier);
       QApplication::sendEvent(parentWidget(), &focusEvent);
       break;
     }

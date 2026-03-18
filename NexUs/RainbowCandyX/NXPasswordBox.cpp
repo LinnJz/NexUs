@@ -1,0 +1,246 @@
+﻿#include "NXPasswordBox.h"
+
+#include <QAction>
+#include <QClipboard>
+#include <QContextMenuEvent>
+#include <QGuiApplication>
+#include <QPainter>
+#include <QPainterPath>
+#include <QPropertyAnimation>
+
+#include "NXApplication.h"
+#include "NXDef.h"
+#include "NXEventBus.h"
+#include "NXIcon.h"
+#include "NXLineEditStyle.h"
+#include "NXMenu.h"
+#include "NXTheme.h"
+#include "private/NXPasswordBoxPrivate.h"
+Q_PROPERTY_CREATE_CPP(NXPasswordBox, int, BorderRadius)
+
+NXPasswordBox::NXPasswordBox(QWidget *parent)
+	: QLineEdit(parent), d_ptr(new NXPasswordBoxPrivate())
+{
+	Q_D(NXPasswordBox);
+	d->q_ptr = this;
+	setObjectName("NXPasswordBox");
+	setFixedHeight(35);
+	d->_themeMode = nxTheme->getThemeMode();
+	d->_pBorderRadius = 6;
+	d->_pExpandMarkWidth = 0;
+	d->_pIsPasswordVisible = false;
+	setEchoMode(QLineEdit::Password);
+	setFocusPolicy(Qt::StrongFocus);
+	// 事件总线
+	d->_focusEvent = new NXEvent("WMWindowClicked", "onWMWindowClickedEvent", d);
+	d->_focusEvent->registerAndInit();
+	setMouseTracking(true);
+	QFont textFont = font();
+	textFont.setLetterSpacing(QFont::AbsoluteSpacing, d->_textSpacing);
+	setFont(textFont);
+	setStyle(new NXLineEditStyle(style()));
+	setStyleSheet("#NXPasswordBox{background-color:transparent;padding-left: 10px;padding-right: 36px;}");
+	// Toggle action for password visibility
+	d->_toggleAction = new QAction(this);
+	d->_toggleAction->setIcon(NXIcon::getInstance()->getNXIcon(NXIconType::Eye, 22, 32, 32, NXThemeColor(d->_themeMode, BasicText)));
+	addAction(d->_toggleAction, QLineEdit::TrailingPosition);
+	connect(d->_toggleAction, &QAction::triggered, this, [=]()
+	{
+		setIsPasswordVisible(!getIsPasswordVisible());
+	});
+	d->onThemeChanged(nxTheme->getThemeMode());
+	connect(nxTheme, &NXTheme::themeModeChanged, d, &NXPasswordBoxPrivate::onThemeChanged);
+	setVisible(true);
+}
+
+NXPasswordBox::~NXPasswordBox()
+{
+	delete this->style();
+}
+
+void NXPasswordBox::setIsPasswordVisible(bool isPasswordVisible)
+{
+	Q_D(NXPasswordBox);
+	d->_pIsPasswordVisible = isPasswordVisible;
+	if (isPasswordVisible)
+	{
+		setEchoMode(QLineEdit::Normal);
+		d->_toggleAction->setIcon(NXIcon::getInstance()->getNXIcon(NXIconType::EyeSlash, 22, 32, 32, NXThemeColor(d->_themeMode, BasicText)));
+	}
+	else
+	{
+		setEchoMode(QLineEdit::Password);
+		d->_toggleAction->setIcon(NXIcon::getInstance()->getNXIcon(NXIconType::Eye, 22, 32, 32, NXThemeColor(d->_themeMode, BasicText)));
+	}
+	Q_EMIT pIsPasswordVisibleChanged();
+}
+
+bool NXPasswordBox::getIsPasswordVisible() const
+{
+	Q_D(const NXPasswordBox);
+	return d->_pIsPasswordVisible;
+}
+
+void NXPasswordBox::focusInEvent(QFocusEvent *event)
+{
+	Q_D(NXPasswordBox);
+	Q_EMIT focusIn(this->text());
+	if (event->reason() == Qt::MouseFocusReason)
+	{
+		QPropertyAnimation *markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
+		connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+		{
+			update();
+		});
+		markAnimation->setDuration(300);
+		markAnimation->setEasingCurve(QEasingCurve::InOutSine);
+		markAnimation->setStartValue(d->_pExpandMarkWidth);
+		markAnimation->setEndValue(width() / 2 - d->_pBorderRadius / 2);
+		markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+	}
+	QLineEdit::focusInEvent(event);
+}
+
+void NXPasswordBox::focusOutEvent(QFocusEvent *event)
+{
+	Q_D(NXPasswordBox);
+	Q_EMIT focusOut(this->text());
+	if (event->reason() != Qt::PopupFocusReason)
+	{
+		QPropertyAnimation *markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
+		connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+		{
+			update();
+		});
+		markAnimation->setDuration(300);
+		markAnimation->setEasingCurve(QEasingCurve::InOutSine);
+		markAnimation->setStartValue(d->_pExpandMarkWidth);
+		markAnimation->setEndValue(0);
+		markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+		Q_EMIT wmFocusOut(text());
+	}
+	QLineEdit::focusOutEvent(event);
+}
+
+void NXPasswordBox::paintEvent(QPaintEvent *event)
+{
+	Q_D(NXPasswordBox);
+	if (palette().color(QPalette::Text) != NXThemeColor(d->_themeMode, BasicText))
+	{
+		d->onThemeChanged(d->_themeMode);
+	}
+	QLineEdit::paintEvent(event);
+	QPainter painter(this);
+	painter.save();
+	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+	painter.setPen(Qt::NoPen);
+	painter.setBrush(NXThemeColor(d->_themeMode, PrimaryNormal));
+	painter.drawRoundedRect(QRectF(width() / 2 - d->_pExpandMarkWidth, height() - 2.5, d->_pExpandMarkWidth * 2, 2.5), 2, 2);
+	painter.restore();
+}
+
+void NXPasswordBox::contextMenuEvent(QContextMenuEvent *event)
+{
+	NXMenu *menu = new NXMenu(this);
+	menu->setMenuItemHeight(27);
+	menu->setAttribute(Qt::WA_DeleteOnClose);
+	QAction *action = nullptr;
+	if (!isReadOnly())
+	{
+		action = menu->addNXIconAction(NXIconType::ArrowRotateLeft, tr("撤销"), QKeySequence::Undo);
+		action->setEnabled(isUndoAvailable());
+		connect(action, &QAction::triggered, this, &NXPasswordBox::undo);
+
+		action = menu->addNXIconAction(NXIconType::ArrowRotateRight, tr("恢复"), QKeySequence::Redo);
+		action->setEnabled(isRedoAvailable());
+		connect(action, &QAction::triggered, this, &NXPasswordBox::redo);
+		menu->addSeparator();
+	}
+#ifndef QT_NO_CLIPBOARD
+	if (!isReadOnly())
+	{
+		action = menu->addNXIconAction(NXIconType::Paste, tr("粘贴"), QKeySequence::Paste);
+		action->setEnabled(!isReadOnly() && !QGuiApplication::clipboard()->text().isEmpty());
+		connect(action, &QAction::triggered, this, &NXPasswordBox::paste);
+	}
+#endif
+	if (!isReadOnly())
+	{
+		action = menu->addNXIconAction(NXIconType::DeleteLeft, tr("删除"));
+		action->setEnabled(!isReadOnly() && !text().isEmpty() && hasSelectedText());
+		connect(action, &QAction::triggered, this, [=](bool checked)
+		{
+			if (hasSelectedText())
+			{
+				int startIndex = selectionStart();
+				int endIndex = selectionEnd();
+				setText(text().remove(startIndex, endIndex - startIndex));
+			}
+		});
+	}
+	if (!menu->isEmpty())
+	{
+		menu->addSeparator();
+	}
+	action = menu->addAction(tr("全选"));
+	action->setShortcut(QKeySequence::SelectAll);
+	action->setEnabled(!text().isEmpty() && !(selectedText() == text()));
+	connect(action, &QAction::triggered, this, &NXPasswordBox::selectAll);
+	menu->popup(event->globalPos());
+}
+
+// NXPasswordBoxPrivate
+NXPasswordBoxPrivate::NXPasswordBoxPrivate(QObject *parent)
+	: QObject{parent}
+{
+}
+
+NXPasswordBoxPrivate::~NXPasswordBoxPrivate()
+{
+}
+
+void NXPasswordBoxPrivate::onWMWindowClickedEvent(QVariantMap data)
+{
+	Q_Q(NXPasswordBox);
+	NXAppBarType::WMMouseActionType actionType = data.value("WMClickType").value<NXAppBarType::WMMouseActionType>();
+	if (actionType == NXAppBarType::WMLBUTTONDOWN)
+	{
+		if (q->hasSelectedText() && q->hasFocus())
+		{
+			q->clearFocus();
+		}
+	}
+	else if (actionType == NXAppBarType::WMLBUTTONUP || actionType == NXAppBarType::WMNCLBUTTONDOWN)
+	{
+		if (NXApplication::containsCursorToItem(q) || (actionType == NXAppBarType::WMLBUTTONUP && q->hasSelectedText()))
+		{
+			return;
+		}
+		if (q->hasFocus())
+		{
+			q->clearFocus();
+		}
+	}
+}
+
+void NXPasswordBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
+{
+	Q_Q(NXPasswordBox);
+	_themeMode = themeMode;
+	QPalette palette = q->palette();
+	palette.setColor(QPalette::Text, NXThemeColor(_themeMode, BasicText));
+	palette.setColor(QPalette::PlaceholderText, _themeMode == NXThemeType::Light ? QColor(0x00, 0x00, 0x00, 128) : QColor(0xBA, 0xBA, 0xBA));
+	q->setPalette(palette);
+	// Update toggle icon color for new theme
+	if (_toggleAction)
+	{
+		if (_pIsPasswordVisible)
+		{
+			_toggleAction->setIcon(NXIcon::getInstance()->getNXIcon(NXIconType::EyeSlash, 22, 32, 32, NXThemeColor(_themeMode, BasicText)));
+		}
+		else
+		{
+			_toggleAction->setIcon(NXIcon::getInstance()->getNXIcon(NXIconType::Eye, 22, 32, 32, NXThemeColor(_themeMode, BasicText)));
+		}
+	}
+}

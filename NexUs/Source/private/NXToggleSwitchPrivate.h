@@ -26,9 +26,9 @@ private:
   qreal _circleCenterX { 0 };
   qreal _circleRadius { 0 };
 
-  void _startPosAnimation(qreal startX, qreal endX, bool isToggle);
-  void _startRadiusAnimation(qreal startRadius, qreal endRadius);
-  void _adjustCircleCenterX();
+  void _startPosAnimation(qreal startX, qreal endX, bool isToggle) noexcept;
+  void _startRadiusAnimation(qreal startRadius, qreal endRadius) noexcept;
+  void _adjustCircleCenterX() noexcept;
 };
 
 #endif // NXTOGGLESWITCHPRIVATE_H

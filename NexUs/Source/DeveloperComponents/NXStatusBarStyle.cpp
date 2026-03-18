@@ -45,11 +45,9 @@ void NXStatusBarStyle::drawPrimitive(PrimitiveElement element,
       painter->setPen(Qt::NoPen);
       painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
       painter->drawRoundedRect(QRectF(statusBarItemRect.right() - 3,
-                                      statusBarItemRect.y() + statusBarItemRect.height() * 0.1,
-                                      3,
+                                      statusBarItemRect.y() + statusBarItemRect.height() * 0.1, 3,
                                       statusBarItemRect.height() - statusBarItemRect.height() * 0.2),
-                               2,
-                               2);
+                               2, 2);
       painter->restore();
     }
     return;

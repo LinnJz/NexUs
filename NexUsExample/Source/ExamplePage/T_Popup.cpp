@@ -1,4 +1,4 @@
-#include "T_Popup.h"
+﻿#include "T_Popup.h"
 
 #include <QDateTime>
 #include <QDebug>
@@ -12,7 +12,6 @@
 #include "NXInputDialog.h"
 #include "NXKeyBinder.h"
 #include "NXMenu.h"
-#include "NXMessageCard.h"
 #include "NXMessageDialog.h"
 #include "NXPushButton.h"
 #include "NXRoller.h"
@@ -66,10 +65,7 @@ T_Popup::T_Popup(QWidget *parent)
   colorDialogButton->setDarkHoverColor(_colorDialog->getCurrentColor());
   colorDialogButton->setDarkPressColor(_colorDialog->getCurrentColor());
   connect(colorDialogButton, &NXPushButton::clicked, this, [=]() { _colorDialog->exec(); });
-  connect(_colorDialog,
-          &NXColorDialog::colorSelected,
-          this,
-          [=](const QColor& color)
+  connect(_colorDialog, &NXColorDialog::colorSelected, this, [=](const QColor& color)
   {
     colorDialogButton->setLightDefaultColor(color);
     colorDialogButton->setLightHoverColor(color);
@@ -97,10 +93,7 @@ T_Popup::T_Popup(QWidget *parent)
 
   NXPushButton *textInputButton = new NXPushButton("文本", this);
   textInputButton->setFixedSize(80, 38);
-  connect(textInputButton,
-          &NXPushButton::clicked,
-          this,
-          [=]()
+  connect(textInputButton, &NXPushButton::clicked, this, [=]()
   {
     bool ok;
     QString text = NXInputDialog::getText(this, "输入对话框", "请输入您的信息", "名称:", "", &ok);
@@ -110,10 +103,7 @@ T_Popup::T_Popup(QWidget *parent)
 
   NXPushButton *intInputButton = new NXPushButton("整数", this);
   intInputButton->setFixedSize(80, 38);
-  connect(intInputButton,
-          &NXPushButton::clicked,
-          this,
-          [=]()
+  connect(intInputButton, &NXPushButton::clicked, this, [=]()
   {
     bool ok;
     int value = NXInputDialog::getInt(this, "输入年龄", "请提供您的个人信息", "年龄:", 18, 0, 150, 1, &ok);
@@ -123,10 +113,7 @@ T_Popup::T_Popup(QWidget *parent)
 
   NXPushButton *doubleInputButton = new NXPushButton("小数", this);
   doubleInputButton->setFixedSize(80, 38);
-  connect(doubleInputButton,
-          &NXPushButton::clicked,
-          this,
-          [=]()
+  connect(doubleInputButton, &NXPushButton::clicked, this, [=]()
   {
     bool ok;
     double value = NXInputDialog::getDouble(this, "输入价格", "商品定价系统", "价格:", 99.99, 0.0, 9999.99, 2, &ok);
@@ -136,10 +123,7 @@ T_Popup::T_Popup(QWidget *parent)
 
   NXPushButton *multiLineInputButton = new NXPushButton("多行", this);
   multiLineInputButton->setFixedSize(80, 38);
-  connect(multiLineInputButton,
-          &NXPushButton::clicked,
-          this,
-          [=]()
+  connect(multiLineInputButton, &NXPushButton::clicked, this, [=]()
   {
     bool ok;
     QString text = NXInputDialog::getMultiLineText(this, "输入备注", "请详细描述您的需求", "详细描述:", "", &ok);
@@ -224,10 +208,7 @@ T_Popup::T_Popup(QWidget *parent)
   NXToggleSwitch *drawerSwitch = new NXToggleSwitch(this);
   NXText *drawerSwitchText     = new NXText("关", this);
   drawerSwitchText->setTextPixelSize(15);
-  connect(drawerSwitch,
-          &NXToggleSwitch::toggled,
-          this,
-          [=](bool toggled)
+  connect(drawerSwitch, &NXToggleSwitch::toggled, this, [=](bool toggled)
   {
     if (toggled)
     {
@@ -240,8 +221,8 @@ T_Popup::T_Popup(QWidget *parent)
       _drawer->collapse();
     }
   });
-  connect(
-      _drawer, &NXDrawerArea::expandStateChanged, this, [=](bool isExpand) { drawerSwitch->setIsToggled(isExpand); });
+  connect(_drawer, &NXDrawerArea::expandStateChanged, this,
+          [=](bool isExpand) { drawerSwitch->setIsToggled(isExpand); });
 
   drawerHeaderLayout->addWidget(drawerIcon);
   drawerHeaderLayout->addWidget(drawerText);
@@ -275,35 +256,6 @@ T_Popup::T_Popup(QWidget *parent)
   _drawer->addDrawer(drawerWidget2);
   _drawer->addDrawer(drawerWidget3);
 
-  // NXMessageCard 示例
-  _messageCard = new NXMessageCard(this);
-  _messageCard->setIsCompleted(true);
-  _messageCard->setTitle("Test");
-  _messageCard->setContent("相信回旋吧，只管相信就是了!");
-  _messageCard->setFixedSize(250, 75);
-  _messageCard->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
-  _messageCard->setAttribute(Qt::WA_TranslucentBackground);
-
-  NXScrollPageArea *messageCardArea = new NXScrollPageArea(this);
-  QHBoxLayout *messageCardLayout    = new QHBoxLayout(messageCardArea);
-  NXText *messageCardText           = new NXText("NXMessageCard", this);
-  messageCardText->setTextPixelSize(15);
-  messageCardLayout->addWidget(messageCardText);
-
-  NXPushButton *showMessageCardButton = new NXPushButton("显示浮出控件", this);
-  showMessageCardButton->setFixedSize(120, 38);
-  connect(showMessageCardButton,
-          &NXPushButton::clicked,
-          this,
-          [=]()
-  {
-    QPoint globalPos = showMessageCardButton->mapToGlobal(QPoint(0, showMessageCardButton->height() + 5));
-    _messageCard->move(globalPos);
-    _messageCard->show();
-  });
-  messageCardLayout->addWidget(showMessageCardButton);
-  messageCardLayout->addStretch();
-
   // NXMessageDialog 示例
   _messageDialog = new NXMessageDialog(this);
   _messageDialog->setTitle("标题");
@@ -324,10 +276,7 @@ T_Popup::T_Popup(QWidget *parent)
 
   NXPushButton *showMessageDialogButton = new NXPushButton("显示对话框", this);
   showMessageDialogButton->setFixedSize(120, 38);
-  connect(showMessageDialogButton,
-          &NXPushButton::clicked,
-          this,
-          [=]()
+  connect(showMessageDialogButton, &NXPushButton::clicked, this, [=]()
   {
     QPoint globalPos = showMessageDialogButton->mapToGlobal(QPoint(0, showMessageDialogButton->height() + 5));
     _messageDialog->move(globalPos);
@@ -345,7 +294,6 @@ T_Popup::T_Popup(QWidget *parent)
   centerVLayout->addWidget(_calendar);
   centerVLayout->addWidget(keyBinderArea);
   centerVLayout->addWidget(_drawer);
-  centerVLayout->addWidget(messageCardArea);
   centerVLayout->addWidget(messageDialogArea);
   centerVLayout->addWidget(rollerArea);
   centerVLayout->addStretch();

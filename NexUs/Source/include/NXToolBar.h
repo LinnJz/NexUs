@@ -16,14 +16,14 @@ public:
   explicit NXToolBar(const QString& title, QWidget *parent = nullptr);
   ~NXToolBar();
 
-  void setToolBarSpacing(int spacing);
-  int getToolBarSpacing() const;
+  void setToolBarSpacing(int spacing) noexcept;
+  int getToolBarSpacing() const noexcept;
 
-  QAction *addNXIconAction(NXIconType::IconName icon, const QString& text);
-  QAction *addNXIconAction(NXIconType::IconName icon, const QString& text, const QKeySequence& shortcut);
+  QAction *addNXIconAction(NXIconType::IconName icon, const QString& text) noexcept;
+  QAction *addNXIconAction(NXIconType::IconName icon, const QString& text, const QKeySequence& shortcut) noexcept;
 
 protected:
-  virtual void paintEvent(QPaintEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // NXTOOLBAR_H

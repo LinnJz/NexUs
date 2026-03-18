@@ -12,20 +12,20 @@ class NXDrawerContainer : public QWidget
 {
   Q_OBJECT
   Q_PROPERTY_CREATE(qreal, Opacity)
-  Q_PRIVATE_CREATE(QPixmap, ContainerPix)
+  Q_PRIVATE_CREATE_2(const QPixmap&, QPixmap, ContainerPix)
   Q_PRIVATE_CREATE(int, BorderRadius)
 
 public:
   explicit NXDrawerContainer(QWidget *parent = nullptr);
   ~NXDrawerContainer() override;
 
-  void addWidget(QWidget *widget);
-  void removeWidget(QWidget *widget);
+  void addWidget(QWidget *widget) noexcept;
+  void removeWidget(QWidget *widget) noexcept;
 
   void doDrawerAnimation(bool isExpand);
 
 protected:
-  virtual void paintEvent(QPaintEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 
 private:
   NXThemeType::ThemeMode _themeMode;

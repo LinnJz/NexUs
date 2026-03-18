@@ -102,13 +102,13 @@ void NXScrollBarStyle::drawComplexControl(ComplexControl control,
       painter->setBrush(NXThemeColor(_themeMode, ScrollBarHandle));
       if (sopt->orientation == Qt::Horizontal)
       {
-        sliderRect.setRect(
-            sliderRect.x(), sliderRect.bottom() - _sliderMargin - _pSliderExtent, sliderRect.width(), _pSliderExtent);
+        sliderRect.setRect(sliderRect.x(), sliderRect.bottom() - _sliderMargin - _pSliderExtent, sliderRect.width(),
+                           _pSliderExtent);
       }
       else
       {
-        sliderRect.setRect(
-            sliderRect.right() - _sliderMargin - _pSliderExtent, sliderRect.y(), _pSliderExtent, sliderRect.height());
+        sliderRect.setRect(sliderRect.right() - _sliderMargin - _pSliderExtent, sliderRect.y(), _pSliderExtent,
+                           sliderRect.height());
       }
       painter->drawRoundedRect(sliderRect, _pSliderExtent / 2.0, _pSliderExtent / 2.0);
       painter->restore();
@@ -149,7 +149,7 @@ int NXScrollBarStyle::styleHint(StyleHint hint,
   return QProxyStyle::styleHint(hint, option, widget, returnData);
 }
 
-void NXScrollBarStyle::startExpandAnimation(bool isExpand)
+void NXScrollBarStyle::startExpandAnimation(bool isExpand) noexcept
 {
   if (isExpand)
   {

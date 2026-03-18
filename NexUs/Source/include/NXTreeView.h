@@ -11,13 +11,13 @@ class NX_EXPORT NXTreeView : public QTreeView
 {
   Q_OBJECT
   Q_Q_CREATE(NXTreeView)
-  Q_PROPERTY_CREATE_Q_H(int, ItemHeight)
-  Q_PROPERTY_CREATE_Q_H(int, HeaderMargin)
+  Q_PROPERTY_CREATE_H(int, ItemHeight)
+  Q_PROPERTY_CREATE_H(int, HeaderMargin)
 
 public:
   explicit NXTreeView(QWidget *parent = nullptr);
   ~NXTreeView();
-  void setNXIcon(NXIconType::IconName icon);
+  void setNXIcon(NXIconType::IconName icon) noexcept;
 };
 
 #endif // NXTREEVIEW_H

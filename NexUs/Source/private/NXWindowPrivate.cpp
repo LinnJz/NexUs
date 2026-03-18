@@ -21,7 +21,7 @@ NXWindowPrivate::NXWindowPrivate(QObject *parent)
 
 NXWindowPrivate::~NXWindowPrivate() { }
 
-void NXWindowPrivate::onNavigationButtonClicked()
+void NXWindowPrivate::onNavigationButtonClicked() noexcept
 {
   if (_isNavigationBarFloat) { return; }
   auto currentDisplayMode = _navigationBar->getDisplayMode();
@@ -52,19 +52,17 @@ void NXWindowPrivate::onNavigationButtonClicked()
   }
 }
 
-void NXWindowPrivate::onWMWindowClickedEvent(QVariantMap data)
+void NXWindowPrivate::onWMWindowClickedEvent(const QVariantMap& data)
 {
-  NXAppBarType::WMMouseActionType actionType = data.value("WMClickType").value<NXAppBarType::WMMouseActionType>();
+  NXAppBarType::WMMouseActionType actionType =
+      data.value(QStringLiteral("WMClickType")).value<NXAppBarType::WMMouseActionType>();
   if (actionType == NXAppBarType::WMLBUTTONDBLCLK || actionType == NXAppBarType::WMLBUTTONUP)
   {
     if (NXApplication::containsCursorToItem(_navigationBar)) { return; }
     if (_isNavigationBarExpanded)
     {
       QPropertyAnimation *navigationMoveAnimation = new QPropertyAnimation(_navigationBar, "pos");
-      connect(navigationMoveAnimation,
-              &QPropertyAnimation::valueChanged,
-              this,
-              [=]()
+      connect(navigationMoveAnimation, &QPropertyAnimation::valueChanged, this, [=]()
       {
         if (_isNavigationDisplayModeChanged)
         {
@@ -73,10 +71,7 @@ void NXWindowPrivate::onWMWindowClickedEvent(QVariantMap data)
           navigationMoveAnimation->deleteLater();
         }
       });
-      connect(navigationMoveAnimation,
-              &QPropertyAnimation::finished,
-              this,
-              [=]()
+      connect(navigationMoveAnimation, &QPropertyAnimation::finished, this, [=]()
       {
         if (!_isNavigationDisplayModeChanged)
         {
@@ -95,7 +90,7 @@ void NXWindowPrivate::onWMWindowClickedEvent(QVariantMap data)
   }
 }
 
-void NXWindowPrivate::onThemeReadyChange()
+void NXWindowPrivate::onThemeReadyChange() noexcept
 {
   Q_Q(NXWindow);
   // 主题变更绘制窗口
@@ -118,10 +113,7 @@ void NXWindowPrivate::onThemeReadyChange()
     {
       QPoint centerPos = q->mapFromGlobal(QCursor::pos());
       _animationWidget = new NXThemeAnimationWidget(q);
-      connect(_animationWidget,
-              &NXThemeAnimationWidget::animationFinished,
-              this,
-              [=]()
+      connect(_animationWidget, &NXThemeAnimationWidget::animationFinished, this, [=]()
       {
         _appBar->setIsOnlyAllowMinAndClose(false);
         _animationWidget = nullptr;
@@ -159,7 +151,7 @@ void NXWindowPrivate::onThemeReadyChange()
   }
 }
 
-void NXWindowPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode)
+void NXWindowPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_Q(NXWindow);
   _themeMode = themeMode;
@@ -172,7 +164,7 @@ void NXWindowPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode)
   q->update();
 }
 
-void NXWindowPrivate::onWindowDisplayModeChanged()
+void NXWindowPrivate::onWindowDisplayModeChanged() noexcept
 {
   Q_Q(NXWindow);
   _windowDisplayMode = nxApp->getWindowDisplayMode();
@@ -187,7 +179,7 @@ void NXWindowPrivate::onWindowDisplayModeChanged()
 
 void NXWindowPrivate::onNavigationNodeClicked(NXNavigationType::NavigationNodeType nodeType,
                                               const QString& nodeKey,
-                                              bool isRouteBack)
+                                              bool isRouteBack) noexcept
 {
   Q_Q(NXWindow);
   QWidget *page = _routeMap.value(nodeKey);
@@ -208,14 +200,15 @@ void NXWindowPrivate::onNavigationNodeClicked(NXNavigationType::NavigationNodeTy
 
 void NXWindowPrivate::onNavigationNodeAdded(NXNavigationType::NavigationNodeType nodeType,
                                             const QString& nodeKey,
-                                            QWidget *page)
+                                            QWidget *page) noexcept
 {
   if (nodeType == NXNavigationType::CategoryNode) { return; }
   _routeMap.insert(nodeKey, page);
   if (page) { _navigationCenterStackedWidget->getContainerStackedWidget()->addWidget(page); }
 }
 
-void NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey)
+void NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType,
+                                              const QString& nodeKey) noexcept
 {
   Q_Q(NXWindow);
   if (!_routeMap.contains(nodeKey)) { return; }
@@ -236,7 +229,7 @@ void NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeTy
   }
 }
 
-void NXWindowPrivate::onNavigationRouterStateChanged(NXNavigationRouterType::RouteMode routeMode)
+void NXWindowPrivate::onNavigationRouterStateChanged(NXNavigationRouterType::RouteMode routeMode) noexcept
 {
   switch (routeMode)
   {
@@ -263,15 +256,15 @@ void NXWindowPrivate::onNavigationRouterStateChanged(NXNavigationRouterType::Rou
   }
 }
 
-void NXWindowPrivate::onNavigationRoute(QVariantMap routeData)
+void NXWindowPrivate::onNavigationRoute(const QVariantMap& routeData)
 {
   int routeIndex           = -1;
   _centralStackTargetIndex = routeIndex;
-  bool isRouteBack         = routeData.value("NXRouteBackMode").toBool();
-  if (isRouteBack) { routeIndex = routeData.value("NXBackCentralStackIndex").toUInt(); }
+  bool isRouteBack         = routeData.value(QStringLiteral("NXRouteBackMode")).toBool();
+  if (isRouteBack) { routeIndex = routeData.value(QStringLiteral("NXBackCentralStackIndex")).toUInt(); }
   else
   {
-    routeIndex = routeData.value("NXForwardCentralStackIndex").toUInt();
+    routeIndex = routeData.value(QStringLiteral("NXForwardCentralStackIndex")).toUInt();
   }
   if (routeIndex != _centerStackedWidget->getContainerStackedWidget()->currentIndex())
   {
@@ -279,13 +272,13 @@ void NXWindowPrivate::onNavigationRoute(QVariantMap routeData)
   }
 }
 
-qreal NXWindowPrivate::_distance(QPoint point1, QPoint point2)
+qreal NXWindowPrivate::_distance(QPoint point1, QPoint point2) noexcept
 {
   return std::sqrt((point1.x() - point2.x()) * (point1.x() - point2.x()) +
                    (point1.y() - point2.y()) * (point1.y() - point2.y()));
 }
 
-void NXWindowPrivate::_resetWindowLayout(bool isAnimation)
+void NXWindowPrivate::_resetWindowLayout(bool isAnimation) noexcept
 {
   if (isAnimation)
   {
@@ -303,7 +296,7 @@ void NXWindowPrivate::_resetWindowLayout(bool isAnimation)
   }
 }
 
-void NXWindowPrivate::_doNavigationDisplayModeChange()
+void NXWindowPrivate::_doNavigationDisplayModeChange() noexcept
 {
   Q_Q(NXWindow);
   if (_isWindowClosing || !_isNavigationEnable || !_isInitFinished) { return; }

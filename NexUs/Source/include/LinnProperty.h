@@ -75,8 +75,8 @@ private:                                 \
 
 #  define PROPERTY_CREATE(TYPE, NAME, ...) PROPERTY_CREATE_X(TYPE, TYPE, NAME __VA_OPT__(, ) __VA_ARGS__)
 
-#  define PROPERTY_CREATE_2(TYPE, NAME, ...)                                            \
-    PROPERTY_CREATE_X(TYPE, std::remove_cvref_t<TYPE>, NAME __VA_OPT__(, ) __VA_ARGS__)
+#  define PROPERTY_CREATE_2(SET_TYPE, GET_TYPE, NAME, ...)                 \
+    PROPERTY_CREATE_X(SET_TYPE, GET_TYPE, NAME __VA_OPT__(, ) __VA_ARGS__)
 #endif
 
 #define LINN_PROPERTY_CREATE_X(SET_TYPE, GET_TYPE, NAME, ...)                                                    \
@@ -84,12 +84,12 @@ private:                                 \
 
 #define LINN_PROPERTY_CREATE(TYPE, NAME, ...) LINN_PROPERTY_CREATE_X(TYPE, TYPE, NAME __VA_OPT__(, ) __VA_ARGS__)
 
-#define LINN_PROPERTY_CREATE_2(TYPE, NAME, ...)                                            \
-  LINN_PROPERTY_CREATE_X(TYPE, std::remove_cvref_t<TYPE>, NAME __VA_OPT__(, ) __VA_ARGS__)
+#define LINN_PROPERTY_CREATE_2(SET_TYPE, GET_TYPE, NAME, ...)                 \
+  LINN_PROPERTY_CREATE_X(SET_TYPE, GET_TYPE, NAME __VA_OPT__(, ) __VA_ARGS__)
 
-#define LINN_PROPERTY_CREATE_X_FROM_PAIR(SET_TYPE, GET_TYPE, PAIR, ...)                                                \
-  LINN_PROPERTY_CREATE_X_FROM_PAIR_UNPACK(                                                                             \
-      SET_TYPE, GET_TYPE, LINN_PROPERTY_NAME_ID(PAIR), LINN_PROPERTY_NAME_ASSIGN_TAG(PAIR) __VA_OPT__(, ) __VA_ARGS__)
+#define LINN_PROPERTY_CREATE_X_FROM_PAIR(SET_TYPE, GET_TYPE, PAIR, ...)                                   \
+  LINN_PROPERTY_CREATE_X_FROM_PAIR_UNPACK(SET_TYPE, GET_TYPE, LINN_PROPERTY_NAME_ID(PAIR),                \
+                                          LINN_PROPERTY_NAME_ASSIGN_TAG(PAIR) __VA_OPT__(, ) __VA_ARGS__)
 
 #define LINN_PROPERTY_CREATE_X_FROM_PAIR_UNPACK(SET_TYPE, GET_TYPE, NAME, ASSIGN_TAG, ...)   \
                                                                                              \
@@ -186,9 +186,9 @@ private:                                                                        
 #define LINN_CONTRACT_CHECK_FROM_TAG_0(NAME, EXPR)
 #define LINN_CONTRACT_CHECK_FROM_TAG_1(NAME, EXPR)                                                       \
   LINN_CONTRACT_ASSERT_ALWAYS((EXPR), "Critical invariant violated in " LINN_STRINGIFY(NAME) " setter");
-#define LINN_CONTRACT_CHECK_FROM_TAG_2(NAME, EXPR)                                                         \
-  LINN_CONTRACT_ASSERT_DEBUG(                                                                              \
-      (EXPR), "Precondition failed for " LINN_STRINGIFY(NAME) " setter", std::source_location::current());
+#define LINN_CONTRACT_CHECK_FROM_TAG_2(NAME, EXPR)                                              \
+  LINN_CONTRACT_ASSERT_DEBUG((EXPR), "Precondition failed for " LINN_STRINGIFY(NAME) " setter", \
+                             std::source_location::current());
 #define LINN_CONTRACT_CHECK_FROM_TAG_3(NAME, EXPR)
 #define LINN_CONTRACT_CHECK_FROM_TAG_4(NAME, EXPR)
 

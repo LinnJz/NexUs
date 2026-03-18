@@ -16,17 +16,18 @@ public:
   explicit NXDrawerHeader(QWidget *parent = nullptr);
   ~NXDrawerHeader() override;
 
-  void setHeaderWidget(QWidget *widget);
+  void setHeaderWidget(QWidget *widget) noexcept;
   void doExpandOrCollapseAnimation();
+
 Q_SIGNALS:
-  Q_SIGNAL void drawerHeaderClicked(bool isExpand);
+  void drawerHeaderClicked(bool isExpand);
 
 protected:
-  virtual bool event(QEvent *event) override;
-  virtual void mousePressEvent(QMouseEvent *event) override;
-  virtual void mouseReleaseEvent(QMouseEvent *event) override;
-  virtual void mouseMoveEvent(QMouseEvent *event) override;
-  virtual void paintEvent(QPaintEvent *event) override;
+  bool event(QEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 
 private:
   bool _isPressed { false };

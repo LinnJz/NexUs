@@ -6,10 +6,10 @@
 #include <QtMath>
 #include "NXTheme.h"
 #include "private/NXProgressRingPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(NXProgressRing, bool, IsTransparent)
-Q_PROPERTY_CREATE_Q_CPP(NXProgressRing, bool, IsDisplayValue)
-Q_PROPERTY_CREATE_Q_CPP(NXProgressRing, NXProgressRingType::ValueDisplayMode, ValueDisplayMode)
-Q_PROPERTY_CREATE_Q_CPP(NXProgressRing, int, ValuePixelSize)
+Q_PROPERTY_CREATE_CPP(NXProgressRing, bool, IsTransparent)
+Q_PROPERTY_CREATE_CPP(NXProgressRing, bool, IsDisplayValue)
+Q_PROPERTY_CREATE_CPP(NXProgressRing, NXProgressRingType::ValueDisplayMode, ValueDisplayMode)
+Q_PROPERTY_CREATE_CPP(NXProgressRing, int, ValuePixelSize)
 
 NXProgressRing::NXProgressRing(QWidget *parent)
     : QWidget(parent)
@@ -32,7 +32,7 @@ NXProgressRing::NXProgressRing(QWidget *parent)
   d->_pIsTransparent       = false;
   setFixedSize(70, 70);
   setObjectName("NXProgressRing");
-  setStyleSheet("#NXProgressRing{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXProgressRing{background-color:transparent;}"));
 
   d->_busyStartDegAnimation = new QPropertyAnimation(d, "pBusyStartDeg");
   connect(d->_busyStartDegAnimation, &QPropertyAnimation::valueChanged, this, [=]() { update(); });
@@ -51,10 +51,7 @@ NXProgressRing::NXProgressRing(QWidget *parent)
   d->_busyContentDegAnimation->setLoopCount(-1);
 
   d->_themeMode = nxTheme->getThemeMode();
-  connect(nxTheme,
-          &NXTheme::themeModeChanged,
-          this,
-          [=](NXThemeType::ThemeMode themeMode)
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
     d->_themeMode = themeMode;
     update();
@@ -63,7 +60,7 @@ NXProgressRing::NXProgressRing(QWidget *parent)
 
 NXProgressRing::~NXProgressRing() { }
 
-void NXProgressRing::setIsBusying(bool isBusying)
+void NXProgressRing::setIsBusying(bool isBusying) noexcept
 {
   Q_D(NXProgressRing);
   d->_pIsBusying = isBusying;
@@ -81,13 +78,13 @@ void NXProgressRing::setIsBusying(bool isBusying)
   Q_EMIT pIsBusyingChanged();
 }
 
-bool NXProgressRing::getIsBusying() const
+bool NXProgressRing::getIsBusying() const noexcept
 {
   Q_D(const NXProgressRing);
   return d->_pIsBusying;
 }
 
-void NXProgressRing::setBusyingWidth(int width)
+void NXProgressRing::setBusyingWidth(int width) noexcept
 {
   Q_D(NXProgressRing);
   d->_pBusyingWidth = width;
@@ -95,13 +92,13 @@ void NXProgressRing::setBusyingWidth(int width)
   Q_EMIT pBusyingWidthChanged();
 }
 
-int NXProgressRing::getBusyingWidth() const
+int NXProgressRing::getBusyingWidth() const noexcept
 {
   Q_D(const NXProgressRing);
   return d->_pBusyingWidth;
 }
 
-void NXProgressRing::setBusyingDurationTime(int busyingDurationTime)
+void NXProgressRing::setBusyingDurationTime(int busyingDurationTime) noexcept
 {
   Q_D(NXProgressRing);
   d->_pBusyingDurationTime = busyingDurationTime;
@@ -109,13 +106,13 @@ void NXProgressRing::setBusyingDurationTime(int busyingDurationTime)
   Q_EMIT pBusyingDurationTimeChanged();
 }
 
-int NXProgressRing::getBusyingDurationTime() const
+int NXProgressRing::getBusyingDurationTime() const noexcept
 {
   Q_D(const NXProgressRing);
   return d->_pBusyingDurationTime;
 }
 
-void NXProgressRing::setMinimum(int minimum)
+void NXProgressRing::setMinimum(int minimum) noexcept
 {
   Q_D(NXProgressRing);
   d->_pMinimum = minimum;
@@ -124,13 +121,13 @@ void NXProgressRing::setMinimum(int minimum)
   Q_EMIT rangeChanged(d->_pMinimum, d->_pMaximum);
 }
 
-int NXProgressRing::getMinimum() const
+int NXProgressRing::getMinimum() const noexcept
 {
   Q_D(const NXProgressRing);
   return d->_pMinimum;
 }
 
-void NXProgressRing::setMaximum(int maximum)
+void NXProgressRing::setMaximum(int maximum) noexcept
 {
   Q_D(NXProgressRing);
   d->_pMaximum = maximum;
@@ -139,13 +136,13 @@ void NXProgressRing::setMaximum(int maximum)
   Q_EMIT rangeChanged(d->_pMinimum, d->_pMaximum);
 }
 
-int NXProgressRing::getMaximum() const
+int NXProgressRing::getMaximum() const noexcept
 {
   Q_D(const NXProgressRing);
   return d->_pMaximum;
 }
 
-void NXProgressRing::setValue(int value)
+void NXProgressRing::setValue(int value) noexcept
 {
   Q_D(NXProgressRing);
   if (value < d->_pMinimum || value > d->_pMaximum) { return; }
@@ -154,13 +151,13 @@ void NXProgressRing::setValue(int value)
   Q_EMIT pValueChanged();
 }
 
-int NXProgressRing::getValue() const
+int NXProgressRing::getValue() const noexcept
 {
   Q_D(const NXProgressRing);
   return d->_pValue;
 }
 
-void NXProgressRing::setRange(int min, int max)
+void NXProgressRing::setRange(int min, int max) noexcept
 {
   Q_D(NXProgressRing);
   if (min < 0 || max < 0 || min > max) { return; }
@@ -189,7 +186,7 @@ void NXProgressRing::paintEvent(QPaintEvent *event)
     }
     else
     {
-      valueText = QString::number(d->_pValue / (qreal) (d->_pMaximum - d->_pMinimum) * 100) + "%";
+      valueText = QString::number(d->_pValue / (qreal) (d->_pMaximum - d->_pMinimum) * 100) + QStringLiteral("%");
     }
     painter.drawText(rect(), Qt::AlignCenter | Qt::TextSingleLine, valueText);
   }

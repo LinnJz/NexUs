@@ -18,10 +18,10 @@ public:
   ~NXPlainTextEdit() override;
 
 protected:
-  virtual void focusInEvent(QFocusEvent *event) override;
-  virtual void focusOutEvent(QFocusEvent *event) override;
-  virtual void contextMenuEvent(QContextMenuEvent *event) override;
-  virtual void paintEvent(QPaintEvent *event) override;
+  void focusInEvent(QFocusEvent *event) override;
+  void focusOutEvent(QFocusEvent *event) override;
+  void contextMenuEvent(QContextMenuEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // NXPLAINTEXTEDIT_H

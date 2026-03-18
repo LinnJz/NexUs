@@ -15,7 +15,7 @@ NXMenuBar::NXMenuBar(QWidget *parent)
   setObjectName("NXMenuBar");
   setStyle(new NXMenuBarStyle(style()));
   QToolButton *tool = this->findChild<QToolButton *>();
-  if (tool->objectName() == "qt_menubar_ext_button")
+  if (tool->objectName() == QStringLiteral("qt_menubar_ext_button"))
   {
     QMenu *oldMenu = tool->menu();
     NXMenu *menu   = new NXMenu(this);
@@ -28,14 +28,14 @@ NXMenuBar::NXMenuBar(QWidget *parent)
 
 NXMenuBar::~NXMenuBar() { delete this->style(); }
 
-QAction *NXMenuBar::addMenu(QMenu *menu)
+QAction *NXMenuBar::addMenu(QMenu *menu) noexcept
 {
   NXMenu *elaMenu = dynamic_cast<NXMenu *>(menu);
   if (elaMenu) { elaMenu->setMenuItemHeight(27); }
   return QMenuBar::addMenu(menu);
 }
 
-NXMenu *NXMenuBar::addMenu(const QString& title)
+NXMenu *NXMenuBar::addMenu(const QString& title) noexcept
 {
   NXMenu *menu = new NXMenu(title, this);
   menu->setMenuItemHeight(27);
@@ -43,7 +43,7 @@ NXMenu *NXMenuBar::addMenu(const QString& title)
   return menu;
 }
 
-NXMenu *NXMenuBar::addMenu(const QIcon& icon, const QString& title)
+NXMenu *NXMenuBar::addMenu(const QIcon& icon, const QString& title) noexcept
 {
   NXMenu *menu = new NXMenu(title, this);
   menu->setMenuItemHeight(27);
@@ -52,7 +52,7 @@ NXMenu *NXMenuBar::addMenu(const QIcon& icon, const QString& title)
   return menu;
 }
 
-NXMenu *NXMenuBar::addMenu(NXIconType::IconName icon, const QString& title)
+NXMenu *NXMenuBar::addMenu(NXIconType::IconName icon, const QString& title) noexcept
 {
   NXMenu *menu = new NXMenu(title, this);
   menu->setMenuItemHeight(27);
@@ -62,7 +62,7 @@ NXMenu *NXMenuBar::addMenu(NXIconType::IconName icon, const QString& title)
   return menu;
 }
 
-QAction *NXMenuBar::addNXIconAction(NXIconType::IconName icon, const QString& text)
+QAction *NXMenuBar::addNXIconAction(NXIconType::IconName icon, const QString& text) noexcept
 {
   QAction *action = new QAction(text, this);
   action->setProperty("NXIconType", QChar((unsigned short) icon));
@@ -71,7 +71,8 @@ QAction *NXMenuBar::addNXIconAction(NXIconType::IconName icon, const QString& te
   return action;
 }
 
-QAction *NXMenuBar::addNXIconAction(NXIconType::IconName icon, const QString& text, const QKeySequence& shortcut)
+QAction *
+NXMenuBar::addNXIconAction(NXIconType::IconName icon, const QString& text, const QKeySequence& shortcut) noexcept
 {
   QAction *action = new QAction(text, this);
   action->setShortcut(shortcut);

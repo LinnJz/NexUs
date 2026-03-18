@@ -9,7 +9,7 @@
 class NXPivotStyle : public QProxyStyle
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE(QModelIndex, PressIndex)
+  Q_PRIVATE_CREATE_2(const QModelIndex&, QModelIndex, PressIndex)
   Q_PRIVATE_CREATE(int, CurrentIndex)
   Q_PRIVATE_CREATE(int, PivotSpacing)
 
@@ -28,7 +28,7 @@ public:
                   const QStyleOption *option = nullptr,
                   const QWidget *widget      = nullptr) const override;
 
-  const QColor& getMarkColor();
+  const QColor& getMarkColor() const noexcept;
 
 private:
   NXThemeType::ThemeMode _themeMode;

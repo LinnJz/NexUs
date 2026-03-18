@@ -13,9 +13,9 @@ class NXSuggestion : public QObject
 {
   Q_OBJECT
   Q_PROPERTY_CREATE(NXIconType::IconName, NXIcon)
-  Q_PROPERTY_CREATE(QString, SuggestText)
-  Q_PROPERTY_CREATE(QString, SuggestKey)
-  Q_PROPERTY_CREATE(QVariantMap, SuggestData)
+  Q_PROPERTY_CREATE_2(const QString&, QString, SuggestText)
+  Q_PROPERTY_CREATE_2(const QString&, QString, SuggestKey)
+  Q_PROPERTY_CREATE_2(const QVariantMap&, QVariantMap, SuggestData)
 
 public:
   explicit NXSuggestion(QObject *parent = nullptr);
@@ -41,9 +41,9 @@ class NXSuggestBoxPrivate : public QObject
 public:
   explicit NXSuggestBoxPrivate(QObject *parent = nullptr);
   ~NXSuggestBoxPrivate();
-  Q_SLOT void onThemeModeChanged(NXThemeType::ThemeMode themeMode);
-  Q_SLOT void onSearchEditTextEdit(const QString& searchText);
-  Q_SLOT void onSearchViewClicked(const QModelIndex& index);
+  Q_SLOT void onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept;
+  Q_SLOT void onSearchEditTextEdit(const QString& searchText) noexcept;
+  Q_SLOT void onSearchViewClicked(const QModelIndex& index) noexcept;
 
 private:
   bool _isExpandAnimationFinished { true };
@@ -60,9 +60,9 @@ private:
   NXSuggestDelegate *_searchDelegate { nullptr };
   QVBoxLayout *_shadowLayout { nullptr };
 
-  void _startSizeAnimation(QSize oldSize, QSize newSize);
-  void _startExpandAnimation();
-  void _startCloseAnimation();
+  void _startSizeAnimation(QSize oldSize, QSize newSize) noexcept;
+  void _startExpandAnimation() noexcept;
+  void _startCloseAnimation() noexcept;
 };
 
 #endif // NXSUGGESTBOXPRIVATE_H

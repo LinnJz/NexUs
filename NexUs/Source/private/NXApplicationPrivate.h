@@ -19,16 +19,16 @@ class NXApplicationPrivate : public QObject
 public:
   explicit NXApplicationPrivate(QObject *parent = nullptr);
   ~NXApplicationPrivate() override;
-  Q_SLOT void onThemeModeChanged(NXThemeType::ThemeMode themeMode);
+  Q_SLOT void onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept;
 
-  Q_SLOT void onSystemPaletteChanged();
-  void syncSystemTheme();
+  Q_SLOT void onSystemPaletteChanged() noexcept;
+  void syncSystemTheme() noexcept;
 
 Q_SIGNALS:
-  Q_SIGNAL void initMicaBase(const QImage& img);
+  void initMicaBase(const QImage& img);
 
 protected:
-  virtual bool eventFilter(QObject *watched, QEvent *event) override;
+  bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
   NXThemeType::ThemeMode _themeMode;
@@ -36,11 +36,11 @@ private:
   QImage _lightBaseImage;
   QImage _darkBaseImage;
   void _initMicaBaseImage(const QImage& img);
-  QRect _calculateWindowVirtualGeometry(QWidget *widget);
-  void _updateMica(QWidget *widget, bool isProcessEvent = true);
-  void _updateAllMicaWidget();
-  void _resetAllMicaWidget();
-  bool _isSystemDarkMode() const;
+  QRect _calculateWindowVirtualGeometry(QWidget *widget) noexcept;
+  void _updateMica(QWidget *widget, bool isProcessEvent = true) noexcept;
+  void _updateAllMicaWidget() noexcept;
+  void _resetAllMicaWidget() noexcept;
+  bool _isSystemDarkMode() const noexcept;
 };
 
 #endif // NXAPPLICATIONPRIVATE_H

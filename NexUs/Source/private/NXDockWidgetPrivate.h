@@ -15,7 +15,7 @@ class NXDockWidgetPrivate : public QObject
 public:
   explicit NXDockWidgetPrivate(QObject *parent = nullptr);
   ~NXDockWidgetPrivate();
-  Q_SLOT void onThemeModeChanged(NXThemeType::ThemeMode themeMode);
+  Q_SLOT void onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept;
 
 private:
   qint64 _currentWinID { 0 };

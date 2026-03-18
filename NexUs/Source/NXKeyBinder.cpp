@@ -6,7 +6,7 @@
 #include "NXKeyBinder.h"
 #include "NXTheme.h"
 #include "private/NXKeyBinderPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(NXKeyBinder, int, BorderRadius)
+Q_PROPERTY_CREATE_CPP(NXKeyBinder, int, BorderRadius)
 
 NXKeyBinder::NXKeyBinder(QWidget *parent)
     : QLabel(parent)
@@ -17,22 +17,19 @@ NXKeyBinder::NXKeyBinder(QWidget *parent)
   d->_pBorderRadius = 5;
   setFixedHeight(35);
   setMouseTracking(true);
-  setStyleSheet("#NXKeyBinder{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXKeyBinder{background-color:transparent;}"));
   QFont textFont = font();
   textFont.setLetterSpacing(QFont::AbsoluteSpacing, 0.5);
   textFont.setPixelSize(15);
   setFont(textFont);
   d->_binderContainer = new NXKeyBinderContainer(this);
-  setText(u8"  按键: " + QString(u8"未绑定") + "      ");
+  setText(QStringLiteral("  按键: 未绑定      "));
   d->_binderDialog = new NXContentDialog(window());
   d->_binderDialog->setCentralWidget(d->_binderContainer);
-  d->_binderDialog->setButtonText(NXContentDialog::LeftButton, u8"取消");
-  d->_binderDialog->setButtonText(NXContentDialog::MiddleButton, u8"重置");
-  d->_binderDialog->setButtonText(NXContentDialog::RightButton, u8"确认");
-  connect(d->_binderDialog,
-          &NXContentDialog::buttonClicked,
-          this,
-          [=](NXContentDialog::ButtonType buttonType)
+  d->_binderDialog->setButtonText(NXContentDialog::LeftButton, QStringLiteral("取消"));
+  d->_binderDialog->setButtonText(NXContentDialog::MiddleButton, QStringLiteral("重置"));
+  d->_binderDialog->setButtonText(NXContentDialog::RightButton, QStringLiteral("确认"));
+  connect(d->_binderDialog, &NXContentDialog::buttonClicked, this, [=](NXContentDialog::ButtonType buttonType)
   {
     if (buttonType == NXContentDialog::MiddleButton) { d->_binderContainer->logOrResetHistoryData(false); }
     else if (buttonType == NXContentDialog::RightButton) { d->_binderContainer->saveBinderChanged(); }
@@ -43,26 +40,26 @@ NXKeyBinder::NXKeyBinder(QWidget *parent)
 
 NXKeyBinder::~NXKeyBinder() { }
 
-void NXKeyBinder::setBinderKeyText(const QString& binderKeyText)
+void NXKeyBinder::setBinderKeyText(const QString& binderKeyText) noexcept
 {
   Q_D(NXKeyBinder);
   d->_binderContainer->setBinderKeyText(binderKeyText);
-  setText(u8"  按键: " + binderKeyText + "      ");
+  setText(QStringLiteral("  按键: ") + binderKeyText + QStringLiteral("      "));
 }
 
-QString NXKeyBinder::getBinderKeyText() const
+QString NXKeyBinder::getBinderKeyText() const noexcept
 {
   Q_D(const NXKeyBinder);
   return d->_binderContainer->getBinderKeyText();
 }
 
-void NXKeyBinder::setNativeVirtualBinderKey(quint32 binderKey)
+void NXKeyBinder::setNativeVirtualBinderKey(quint32 binderKey) noexcept
 {
   Q_D(NXKeyBinder);
   d->_binderContainer->setNativeVirtualBinderKey(binderKey);
 }
 
-quint32 NXKeyBinder::getNativeVirtualBinderKey() const
+quint32 NXKeyBinder::getNativeVirtualBinderKey() const noexcept
 {
   Q_D(const NXKeyBinder);
   return d->_binderContainer->getNativeVirtualBinderKey();
@@ -114,7 +111,7 @@ void NXKeyBinder::paintEvent(QPaintEvent *event)
   borderRect.adjust(1, 1, -1, -1);
   painter.drawRoundedRect(borderRect, d->_pBorderRadius, d->_pBorderRadius);
   // 图标绘制
-  QFont iconFont = QFont("NXAwesome");
+  QFont iconFont = QFont(QStringLiteral("NXAwesome"));
   iconFont.setPixelSize(16);
   painter.setFont(iconFont);
   painter.setPen(NXThemeColor(d->_themeMode, BasicText));

@@ -19,7 +19,7 @@ public:
   explicit NXComboBoxPrivate(QObject *parent = nullptr);
   ~NXComboBoxPrivate() override;
 
-  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
+  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept;
 
 private:
   NXThemeType::ThemeMode _themeMode;

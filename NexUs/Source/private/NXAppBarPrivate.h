@@ -26,10 +26,10 @@ class NXAppBarPrivate : public QObject
 public:
   explicit NXAppBarPrivate(QObject *parent = nullptr);
   ~NXAppBarPrivate() override;
-  Q_SLOT void onMinButtonClicked();
-  Q_SLOT void onMaxButtonClicked();
-  Q_SLOT void onCloseButtonClicked();
-  Q_SLOT void onStayTopButtonClicked();
+  Q_SLOT void onMinButtonClicked() noexcept;
+  Q_SLOT void onMaxButtonClicked() noexcept;
+  Q_SLOT void onCloseButtonClicked() noexcept;
+  Q_SLOT void onStayTopButtonClicked() noexcept;
 
 private:
   NXThemeType::ThemeMode _themeMode;
@@ -58,16 +58,16 @@ private:
   QLabel *_iconLabel { nullptr };
   QList<QWidget *> _customAreaWidgetList { nullptr, nullptr, nullptr };
   QList<QObject *> _customAreaHitTestObjectList { nullptr, nullptr, nullptr };
-  QStringList _customAreaHitTestFunctionNameList { "", "", "" };
+  QStringList _customAreaHitTestFunctionNameList { {}, {}, {} };
   QList<QWidget *> _clientWidgetList;
 
-  void _changeMaxButtonAwesome(bool isMaximized);
-  void _showAppBarMenu(QPoint point);
-  void _updateCursor(int edges);
-  bool _containsCursorToItem(QWidget *item);
-  void _onThemeModeChange(NXThemeType::ThemeMode themeMode);
-  int _calculateMinimumWidth();
-  QVBoxLayout *_createVLayout(QWidget *widget);
+  void _changeMaxButtonAwesome(bool isMaximized) noexcept;
+  void _showAppBarMenu(QPoint point) noexcept;
+  void _updateCursor(int edges) noexcept;
+  bool _containsCursorToItem(QWidget *item) noexcept;
+  void _onThemeModeChange(NXThemeType::ThemeMode themeMode) noexcept;
+  int _calculateMinimumWidth() noexcept;
+  QVBoxLayout *_createVLayout(QWidget *widget) noexcept;
 };
 
 #endif // NXAPPBARPRIVATE_H

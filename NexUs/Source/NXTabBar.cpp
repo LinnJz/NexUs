@@ -18,7 +18,7 @@ NXTabBar::NXTabBar(QWidget *parent)
   d->q_ptr = this;
   setObjectName("NXTabBar");
   setMouseTracking(true);
-  setStyleSheet("#NXTabBar{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXTabBar{background-color:transparent;}"));
   setTabsClosable(true);
   setMovable(true);
   setAcceptDrops(true);
@@ -33,49 +33,49 @@ NXTabBar::~NXTabBar()
   delete d->_style;
 }
 
-void NXTabBar::setTabSize(QSize tabSize)
+void NXTabBar::setTabSize(QSize tabSize) noexcept
 {
   Q_D(NXTabBar);
   d->_style->setTabSize(tabSize);
 }
 
-QSize NXTabBar::getTabSize() const
+QSize NXTabBar::getTabSize() const noexcept
 {
   Q_D(const NXTabBar);
   return d->_style->getTabSize();
 }
 
-void NXTabBar::setTabBarStyle(NXTabBarType::TabBarStyle style)
+void NXTabBar::setTabBarStyle(NXTabBarType::TabBarStyle style) noexcept
 {
   Q_D(NXTabBar);
   d->_style->setTabBarStyle(style);
 }
 
-NXTabBarType::TabBarStyle NXTabBar::getTabBarStyle() const
+NXTabBarType::TabBarStyle NXTabBar::getTabBarStyle() const noexcept
 {
   Q_D(const NXTabBar);
   return d->_style->getTabBarStyle();
 }
 
-void NXTabBar::setTabCornerRadius(int radius)
+void NXTabBar::setTabCornerRadius(int radius) noexcept
 {
   Q_D(NXTabBar);
   d->_style->setTabCornerRadius(radius);
 }
 
-int NXTabBar::getTabCornerRadius() const
+int NXTabBar::getTabCornerRadius() const noexcept
 {
   Q_D(const NXTabBar);
   return d->_style->getTabCornerRadius();
 }
 
-void NXTabBar::setIsSelectedIndicatorVisible(bool isVisible)
+void NXTabBar::setIsSelectedIndicatorVisible(bool isVisible) noexcept
 {
   Q_D(NXTabBar);
   d->_style->setIsSelectedIndicatorVisible(isVisible);
 }
 
-bool NXTabBar::getIsSelectedIndicatorVisible() const
+bool NXTabBar::getIsSelectedIndicatorVisible() const noexcept
 {
   Q_D(const NXTabBar);
   return d->_style->getIsSelectedIndicatorVisible();
@@ -96,7 +96,7 @@ void NXTabBar::mouseMoveEvent(QMouseEvent *event)
   if (d->_tabBarPrivate->pressedIndex >= 0)
   {
     QPoint currentPos = event->pos();
-    if (objectName() == "NXCustomTabBar" && count() == 1)
+    if (objectName() == QStringLiteral("NXCustomTabBar") && count() == 1)
     {
       if (!d->_mimeData)
       {
@@ -182,12 +182,8 @@ void NXTabBar::dragEnterEvent(QDragEnterEvent *event)
     QPoint globalPressPos = mapToGlobal(localPressPos);
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
-    QMouseEvent pressEvent(QEvent::MouseButtonPress,
-                           QPointF(localPressPos),
-                           QPointF(globalPressPos),
-                           Qt::LeftButton,
-                           Qt::LeftButton,
-                           Qt::NoModifier);
+    QMouseEvent pressEvent(QEvent::MouseButtonPress, QPointF(localPressPos), QPointF(globalPressPos), Qt::LeftButton,
+                           Qt::LeftButton, Qt::NoModifier);
 #else
     QMouseEvent pressEvent(QEvent::MouseButtonPress, localPressPos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
 #endif
@@ -203,12 +199,8 @@ void NXTabBar::dragEnterEvent(QDragEnterEvent *event)
 #endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
-    QMouseEvent moveEvent(QEvent::MouseMove,
-                          QPointF(localMovePos),
-                          QPointF(globalMovePos),
-                          Qt::LeftButton,
-                          Qt::LeftButton,
-                          Qt::NoModifier);
+    QMouseEvent moveEvent(QEvent::MouseMove, QPointF(localMovePos), QPointF(globalMovePos), Qt::LeftButton,
+                          Qt::LeftButton, Qt::NoModifier);
 #else
     QMouseEvent moveEvent(QEvent::MouseMove, localMovePos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
 #endif
@@ -223,11 +215,11 @@ void NXTabBar::dragMoveEvent(QDragMoveEvent *event)
   {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     QPoint movePos(event->position().toPoint().x(), 0);
-    QMouseEvent moveEvent(
-        QEvent::MouseMove, movePos, mapToGlobal(movePos), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    QMouseEvent moveEvent(QEvent::MouseMove, movePos, mapToGlobal(movePos), Qt::LeftButton, Qt::LeftButton,
+                          Qt::NoModifier);
 #else
-    QMouseEvent moveEvent(
-        QEvent::MouseMove, QPoint(event->pos().x(), 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    QMouseEvent moveEvent(QEvent::MouseMove, QPoint(event->pos().x(), 0), Qt::LeftButton, Qt::LeftButton,
+                          Qt::NoModifier);
 #endif
     QApplication::sendEvent(this, &moveEvent);
   }
@@ -242,8 +234,8 @@ void NXTabBar::dragLeaveEvent(QDragLeaveEvent *event)
     Q_EMIT tabDragLeave(d->_mimeData);
     d->_mimeData = nullptr;
   }
-  QMouseEvent releaseEvent(
-      QEvent::MouseButtonRelease, QPoint(-1, -1), QPoint(-1, -1), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+  QMouseEvent releaseEvent(QEvent::MouseButtonRelease, QPoint(-1, -1), QPoint(-1, -1), Qt::LeftButton, Qt::LeftButton,
+                           Qt::NoModifier);
   QApplication::sendEvent(this, &releaseEvent);
   QTabBar::dragLeaveEvent(event);
 }
@@ -252,10 +244,10 @@ void NXTabBar::dropEvent(QDropEvent *event)
 {
   Q_D(NXTabBar);
   d->_mimeData = nullptr;
-  QMouseEvent releaseEvent(
-      QEvent::MouseButtonRelease, QPoint(-1, -1), QPoint(-1, -1), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+  QMouseEvent releaseEvent(QEvent::MouseButtonRelease, QPoint(-1, -1), QPoint(-1, -1), Qt::LeftButton, Qt::LeftButton,
+                           Qt::NoModifier);
   QApplication::sendEvent(this, &releaseEvent);
-  if (objectName() != "NXCustomTabBar")
+  if (objectName() != QStringLiteral("NXCustomTabBar"))
   {
     QMimeData *data = const_cast<QMimeData *>(event->mimeData());
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)

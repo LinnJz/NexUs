@@ -16,7 +16,7 @@ NXEventBusPrivate::NXEventBusPrivate(QObject *parent)
 
 NXEventBusPrivate::~NXEventBusPrivate() { }
 
-NXEventBusType::EventBusReturnType NXEventBusPrivate::registerEvent(NXEvent *event)
+NXEventBusType::EventBusReturnType NXEventBusPrivate::registerEvent(NXEvent *event) noexcept
 {
   if (!event) { return NXEventBusType::EventBusReturnType::EventInvalid; }
   if (event->getEventName().isEmpty()) { return NXEventBusType::EventBusReturnType::EventNameInvalid; }
@@ -36,7 +36,7 @@ NXEventBusType::EventBusReturnType NXEventBusPrivate::registerEvent(NXEvent *eve
   return NXEventBusType::EventBusReturnType::Success;
 }
 
-void NXEventBusPrivate::unRegisterEvent(NXEvent *event)
+void NXEventBusPrivate::unRegisterEvent(NXEvent *event) noexcept
 {
   if (!event) { return; }
   if (event->getEventName().isEmpty()) { return; }

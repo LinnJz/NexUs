@@ -25,7 +25,7 @@ public:
   ~T_BaseComponents() override;
 
 protected:
-  virtual void mouseReleaseEvent(QMouseEvent *event);
+  void mouseReleaseEvent(QMouseEvent *event);
 
 private:
   NXToggleSwitch *_toggleSwitch { nullptr };

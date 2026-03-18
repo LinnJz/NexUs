@@ -7,13 +7,13 @@
 #include "NXMessageBar.h"
 #include "NXTheme.h"
 #include "private/NXMessageButtonPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(NXMessageButton, int, BorderRadius)
-Q_PROPERTY_CREATE_Q_CPP(NXMessageButton, QString, BarTitle);
-Q_PROPERTY_CREATE_Q_CPP(NXMessageButton, QString, BarText);
-Q_PROPERTY_CREATE_Q_CPP(NXMessageButton, int, DisplayMsec);
-Q_PROPERTY_CREATE_Q_CPP(NXMessageButton, QWidget *, MessageTargetWidget)
-Q_PROPERTY_CREATE_Q_CPP(NXMessageButton, NXMessageBarType::MessageMode, MessageMode);
-Q_PROPERTY_CREATE_Q_CPP(NXMessageButton, NXMessageBarType::PositionPolicy, PositionPolicy);
+Q_PROPERTY_CREATE_CPP(NXMessageButton, int, BorderRadius)
+Q_PROPERTY_CREATE_CPP(NXMessageButton, int, DisplayMsec)
+Q_PROPERTY_CREATE_CPP(NXMessageButton, QWidget *, MessageTargetWidget)
+Q_PROPERTY_CREATE_CPP(NXMessageButton, NXMessageBarType::MessageMode, MessageMode)
+Q_PROPERTY_CREATE_CPP(NXMessageButton, NXMessageBarType::PositionPolicy, PositionPolicy)
+Q_PROPERTY_CREATE_2_CPP(NXMessageButton, const QString&, QString, BarTitle)
+Q_PROPERTY_CREATE_2_CPP(NXMessageButton, const QString&, QString, BarText)
 
 NXMessageButton::NXMessageButton(QWidget *parent)
     : QPushButton(parent)
@@ -27,16 +27,16 @@ NXMessageButton::NXMessageButton(QWidget *parent)
   QFont font = this->font();
   font.setPixelSize(15);
   setFont(font);
-  setText("Message");
+  setText(QStringLiteral("Message"));
   setObjectName("NXMessageButton");
-  setStyleSheet("#NXMessageButton{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXMessageButton{background-color:transparent;}"));
   d->_pDisplayMsec         = 2000;
   d->_pMessageMode         = NXMessageBarType::Success;
   d->_pPositionPolicy      = NXMessageBarType::TopRight;
   d->_themeMode            = nxTheme->getThemeMode();
   d->_pMessageTargetWidget = parent;
-  connect(
-      nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this,
+          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
   connect(this, &NXMessageButton::clicked, d, &NXMessageButtonPrivate::_showMessage);
   connect(this, &NXMessageButton::showMessage, d, &NXMessageButtonPrivate::_showMessage);
 }
@@ -49,7 +49,7 @@ NXMessageButton::NXMessageButton(const QString& text, QWidget *parent)
 
 NXMessageButton::~NXMessageButton() { }
 
-void NXMessageButton::disconnectInternalSignalOfClicked()
+void NXMessageButton::disconnectInternalSignalOfClicked() noexcept
 {
   Q_D(NXMessageButton);
   disconnect(this, &NXMessageButton::clicked, d, &NXMessageButtonPrivate::_showMessage);
@@ -79,8 +79,7 @@ void NXMessageButton::paintEvent(QPaintEvent *event)
 
   // 背景绘制
   painter.save();
-  QRect foregroundRect(d->_penBorderWidth + d->_shadowBorderWidth,
-                       d->_penBorderWidth + d->_shadowBorderWidth,
+  QRect foregroundRect(d->_penBorderWidth + d->_shadowBorderWidth, d->_penBorderWidth + d->_shadowBorderWidth,
                        width() - 2 * (d->_penBorderWidth + d->_shadowBorderWidth),
                        height() - 2 * (d->_penBorderWidth + d->_shadowBorderWidth));
   painter.setPen(QPen(NXThemeColor(d->_themeMode, BasicBorder), d->_penBorderWidth));

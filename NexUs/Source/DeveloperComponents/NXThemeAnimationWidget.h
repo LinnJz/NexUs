@@ -11,17 +11,17 @@ class NXThemeAnimationWidget : public QWidget
   Q_PROPERTY_CREATE(qreal, Radius)
   Q_PROPERTY_CREATE(qreal, EndRadius)
   Q_PROPERTY_CREATE(QPoint, Center)
-  Q_PROPERTY_CREATE(QImage, OldWindowBackground)
+  Q_PROPERTY_CREATE_2(const QImage&, QImage, OldWindowBackground)
 
 public:
   explicit NXThemeAnimationWidget(QWidget *parent = nullptr);
   ~NXThemeAnimationWidget() override;
-  void startAnimation(int msec);
+  void startAnimation(int msec) noexcept;
 Q_SIGNALS:
-  Q_SIGNAL void animationFinished();
+  void animationFinished();
 
 protected:
-  virtual void paintEvent(QPaintEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // NXTHEMEANIMATIONWIDGET_H

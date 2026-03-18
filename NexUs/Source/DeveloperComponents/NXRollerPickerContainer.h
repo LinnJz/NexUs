@@ -18,18 +18,18 @@ public:
   explicit NXRollerPickerContainer(QWidget *parent = nullptr);
   ~NXRollerPickerContainer() override;
 
-  void doPickerAnimation();
+  void doPickerAnimation() noexcept;
 
 Q_SIGNALS:
-  Q_SIGNAL void overButtonClicked();
-  Q_SIGNAL void cancelButtonClicked();
+  void overButtonClicked();
+  void cancelButtonClicked();
 
 protected:
-  virtual void mouseMoveEvent(QMouseEvent *event) override;
-  virtual void mouseReleaseEvent(QMouseEvent *event) override;
-  virtual void leaveEvent(QEvent *event) override;
-  virtual void hideEvent(QHideEvent *event) override;
-  virtual void paintEvent(QPaintEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
+  void leaveEvent(QEvent *event) override;
+  void hideEvent(QHideEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 
 private:
   int _buttonMargin { 5 };

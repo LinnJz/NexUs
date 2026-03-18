@@ -12,7 +12,7 @@ NXDockWidgetPrivate::NXDockWidgetPrivate(QObject *parent)
 
 NXDockWidgetPrivate::~NXDockWidgetPrivate() { }
 
-void NXDockWidgetPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode)
+void NXDockWidgetPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_Q(NXDockWidget);
   q->update();

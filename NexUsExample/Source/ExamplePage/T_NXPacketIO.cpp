@@ -30,8 +30,7 @@ void T_NXPacketIO::handleGrabImage()
   udp_target._connectionId = 30;
   _interface->addUDP_Target(udp_target);
   _interface->setApplicationName("T_NXPacketIO_Send");
-  CONNECT_HANDLE_FUNC_DEFINE(_interface,
-                             [this](NXXIO_Connection *connection)
+  CONNECT_HANDLE_FUNC_DEFINE(_interface, [this](NXXIO_Connection *connection)
   {
     if (connection->isReliable())
     {
@@ -40,8 +39,7 @@ void T_NXPacketIO::handleGrabImage()
       if (connection->getApplicationName() == "T_NXPacketIO_Recv") { _connection = connection; }
     }
   });
-  DISCONNECT_HANDLE_FUNC_DEFINE(_interface,
-                                [this](NXXIO_Connection *connection)
+  DISCONNECT_HANDLE_FUNC_DEFINE(_interface, [this](NXXIO_Connection *connection)
   {
     qDebug() << "Recv DisConnect Message! ApplicationName: "
              << QString::fromLocal8Bit(connection->getApplicationName().data());
@@ -119,8 +117,7 @@ void T_NXPacketIO::handleImagePacket()
   _interface->setApplicationName("T_NXPacketIO_Recv");
 
   PACKET_HANDLE_FUNC_DEFINE(_interface, &T_NXPacketIO::_handleScreenPkt, this);
-  CONNECT_HANDLE_FUNC_DEFINE(_interface,
-                             [this](NXXIO_Connection *connection)
+  CONNECT_HANDLE_FUNC_DEFINE(_interface, [this](NXXIO_Connection *connection)
   {
     if (connection->isReliable())
     {

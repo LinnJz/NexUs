@@ -8,8 +8,8 @@ NXBaseListView::NXBaseListView(QWidget *parent)
     : QListView(parent)
 {
   setObjectName("NXBaseListView");
-  setStyleSheet("NXBaseListView{background-color: transparent;border:0px;}"
-                "NXBaseListView::item{border:none;}");
+  setStyleSheet(QStringLiteral("NXBaseListView{background-color: transparent;border:0px;}"
+                "NXBaseListView::item{border:none;}"));
   setAutoScroll(false);
   setFocusPolicy(Qt::NoFocus);
   setVerticalScrollBar(new NXScrollBar(this));

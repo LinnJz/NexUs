@@ -13,7 +13,7 @@ NXMicaBaseInitObject::NXMicaBaseInitObject(NXApplicationPrivate *appPrivate, QOb
 
 NXMicaBaseInitObject::~NXMicaBaseInitObject() { }
 
-void NXMicaBaseInitObject::onInitMicaBase(const QImage& img)
+void NXMicaBaseInitObject::onInitMicaBase(const QImage& img) noexcept
 {
   // QColorDialog
   // 统一处理为1920*1080以节省空间

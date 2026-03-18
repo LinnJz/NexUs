@@ -8,8 +8,8 @@
 class NXMenuStyle : public QProxyStyle
 {
   Q_OBJECT
-  Q_PROPERTY_CREATE(int, MenuItemHeight);
-  Q_PROPERTY_CREATE(int, BorderRadius);
+  Q_PROPERTY_CREATE(int, MenuItemHeight)
+  Q_PROPERTY_CREATE(int, BorderRadius)
 
 public:
   explicit NXMenuStyle(QStyle *style = nullptr);

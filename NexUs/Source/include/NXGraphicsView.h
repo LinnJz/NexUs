@@ -10,8 +10,8 @@ class NX_EXPORT NXGraphicsView : public QGraphicsView
 {
   Q_OBJECT
   Q_Q_CREATE(NXGraphicsView)
-  Q_PROPERTY_CREATE_Q_H(qreal, MaxTransform);
-  Q_PROPERTY_CREATE_Q_H(qreal, MinTransform);
+  Q_PROPERTY_CREATE_H(qreal, MaxTransform)
+  Q_PROPERTY_CREATE_H(qreal, MinTransform)
 
 public:
   explicit NXGraphicsView(QWidget *parent = nullptr);

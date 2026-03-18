@@ -21,18 +21,18 @@ class NXLineEditPrivate : public QObject
 public:
   explicit NXLineEditPrivate(QObject *parent = nullptr);
   ~NXLineEditPrivate() override;
-  Q_INVOKABLE void onWMWindowClickedEvent(QVariantMap data);
-  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
-  void resetTextRoute();
-  void pushTextRoute();
-  bool canTextRouteBack() const;
-  bool canTextRouteForward() const;
-  void textRouteBack();
-  void textRouteForward();
-  bool canOverallUndo() const;
-  bool canOverallRedo() const;
-  void overallUndo();
-  void overallRedo();
+  Q_INVOKABLE void onWMWindowClickedEvent(const QVariantMap& data);
+  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept;
+  void resetTextRoute() noexcept;
+  void pushTextRoute() noexcept;
+  bool canTextRouteBack() const noexcept;
+  bool canTextRouteForward() const noexcept;
+  void textRouteBack() noexcept;
+  void textRouteForward() noexcept;
+  bool canOverallUndo() const noexcept;
+  bool canOverallRedo() const noexcept;
+  void overallUndo() noexcept;
+  void overallRedo() noexcept;
 
 private:
   struct TextRouteState
@@ -55,8 +55,8 @@ private:
 
   QList<TextRouteState> _textRouteList;
 
-  TextRouteState _currentTextRouteState() const;
-  void _applyTextRouteState(const TextRouteState& state);
+  TextRouteState _currentTextRouteState() const noexcept;
+  void _applyTextRouteState(const TextRouteState& state) noexcept;
 };
 
 #endif // NXLINEEDITPRIVATE_H

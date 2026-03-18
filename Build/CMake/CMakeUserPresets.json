@@ -1,10 +1,10 @@
-{
+﻿{
   "version": 3,
   "configurePresets": [
     {
       "name": "Qt-Debug",
       "inherits": "Qt-Default",
-      "binaryDir": "${sourceDir}/out/build/debug",
+      "binaryDir": "${sourceDir}/Bin/Build/Debug",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_CXX_FLAGS": "-DQT_QML_DEBUG"
@@ -16,7 +16,7 @@
     {
       "name": "Qt-Release",
       "inherits": "Qt-Default",
-      "binaryDir": "${sourceDir}/out/build/release",
+      "binaryDir": "${sourceDir}/Bin/Build/Release",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
@@ -24,7 +24,7 @@
     {
       "name": "Qt-RelWithDebInfo",
       "inherits": "Qt-Default",
-      "binaryDir": "${sourceDir}/out/build/relwithdebinfo",
+      "binaryDir": "${sourceDir}/Bin/Build/RelWithDebInfo",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo"
       },
@@ -61,7 +61,7 @@
   ],
   "vendor": {
     "qt-project.org/Presets": {
-      "checksum": "DOEUhH+jZvnkJS5Ni66xhTaDNlA="
+      "checksum": "KlBFgJhsG8X6wsU9uWVk4iOQvwQ="
     }
   }
 }

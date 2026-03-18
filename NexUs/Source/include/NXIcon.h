@@ -7,19 +7,20 @@
 
 class NX_EXPORT NXIcon
 {
-  LINN_SINGLETON_CREATE(LINN_SINGLETON_UNIQUE(NXIcon))
+  Q_SINGLETON_CREATE(QS_S_UNIQUE(NXIcon))
 
 private:
   explicit NXIcon();
   ~NXIcon();
 
 public:
-  QIcon getNXIcon(NXIconType::IconName awesome);
-  QIcon getNXIcon(NXIconType::IconName awesome, QColor iconColor);
-  QIcon getNXIcon(NXIconType::IconName awesome, int pixelSize);
-  QIcon getNXIcon(NXIconType::IconName awesome, int pixelSize, QColor iconColor);
-  QIcon getNXIcon(NXIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight);
-  QIcon getNXIcon(NXIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight, QColor iconColor);
+  QIcon getNXIcon(NXIconType::IconName awesome) noexcept;
+  QIcon getNXIcon(NXIconType::IconName awesome, const QColor& iconColor) noexcept;
+  QIcon getNXIcon(NXIconType::IconName awesome, int pixelSize) noexcept;
+  QIcon getNXIcon(NXIconType::IconName awesome, int pixelSize, const QColor& iconColor) noexcept;
+  QIcon getNXIcon(NXIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight) noexcept;
+  QIcon getNXIcon(
+      NXIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight, const QColor& iconColor) noexcept;
 };
 
 #endif // NXICON_H

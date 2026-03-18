@@ -10,8 +10,8 @@
 #include "DeveloperComponents/NXScrollBarStyle.h"
 #include "NXMenu.h"
 #include "private/NXScrollBarPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(NXScrollBar, bool, IsAnimation)
-Q_PROPERTY_CREATE_Q_CPP(NXScrollBar, qreal, SpeedLimit)
+Q_PROPERTY_CREATE_CPP(NXScrollBar, bool, IsAnimation)
+Q_PROPERTY_CREATE_CPP(NXScrollBar, qreal, SpeedLimit)
 
 NXScrollBar::NXScrollBar(QWidget *parent)
     : QScrollBar(parent)
@@ -35,10 +35,7 @@ NXScrollBar::NXScrollBar(QWidget *parent)
   connect(d->_slideSmoothAnimation, &QPropertyAnimation::finished, this, [=]() { d->_scrollValue = value(); });
 
   d->_expandTimer = new QTimer(this);
-  connect(d->_expandTimer,
-          &QTimer::timeout,
-          this,
-          [=]()
+  connect(d->_expandTimer, &QTimer::timeout, this, [=]()
   {
     d->_expandTimer->stop();
     d->_isExpand = underMouse();
@@ -71,15 +68,12 @@ NXScrollBar::NXScrollBar(QScrollBar *originScrollBar, QAbstractScrollArea *paren
   d->_originScrollBar = originScrollBar;
   d->_initAllConfig();
 
-  connect(d->_originScrollBar, &QScrollBar::valueChanged, this, [=](int value) {
-    d->_handleScrollBarValueChanged(this, value);
-  });
-  connect(this, &QScrollBar::valueChanged, this, [=](int value) {
-    d->_handleScrollBarValueChanged(d->_originScrollBar, value);
-  });
-  connect(d->_originScrollBar, &QScrollBar::rangeChanged, this, [=](int min, int max) {
-    d->_handleScrollBarRangeChanged(min, max);
-  });
+  connect(d->_originScrollBar, &QScrollBar::valueChanged, this,
+          [=](int value) { d->_handleScrollBarValueChanged(this, value); });
+  connect(this, &QScrollBar::valueChanged, this,
+          [=](int value) { d->_handleScrollBarValueChanged(d->_originScrollBar, value); });
+  connect(d->_originScrollBar, &QScrollBar::rangeChanged, this,
+          [=](int min, int max) { d->_handleScrollBarRangeChanged(min, max); });
 }
 
 NXScrollBar::~NXScrollBar() { delete this->style(); }

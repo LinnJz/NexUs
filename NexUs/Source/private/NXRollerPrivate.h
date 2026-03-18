@@ -42,7 +42,7 @@ private:
   QTimer *_pressSustainTimer { nullptr };
   QTimer *_repeatScrollTimer { nullptr };
 
-  void _scroll(int delta);
+  void _scroll(int delta) noexcept;
 };
 
 #endif // NXFRAMEWORK_NEXUS_PRIVATE_NXROLLERPRIVATE_H_

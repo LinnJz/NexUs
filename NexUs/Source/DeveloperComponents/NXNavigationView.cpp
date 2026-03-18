@@ -23,7 +23,7 @@ NXNavigationView::NXNavigationView(QWidget *parent)
     , _pIsLeftButtonPressedToggleNavigation(false)
 {
   setObjectName("NXNavigationView");
-  setStyleSheet("#NXNavigationView{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXNavigationView{background-color:transparent;}"));
   setAnimated(true);
   setHeaderHidden(true);
   setRootIsDecorated(false);
@@ -59,10 +59,7 @@ NXNavigationView::NXNavigationView(QWidget *parent)
   properties.setScrollMetric(QScrollerProperties::FrameRate, QScrollerProperties::Fps60);
   scroller->setScrollerProperties(properties);
 
-  connect(scroller,
-          &QScroller::stateChanged,
-          this,
-          [=](QScroller::State newstate)
+  connect(scroller, &QScroller::stateChanged, this, [=](QScroller::State newstate)
   {
     if (newstate == QScroller::Pressed)
     {
@@ -81,14 +78,14 @@ NXNavigationView::NXNavigationView(QWidget *parent)
 
 NXNavigationView::~NXNavigationView() { }
 
-NXToolTip *NXNavigationView::getCompactToolTip() const { return _compactToolTip; }
+NXToolTip *NXNavigationView::getCompactToolTip() const noexcept { return _compactToolTip; }
 
-void NXNavigationView::navigationNodeStateChange(QVariantMap data)
+void NXNavigationView::navigationNodeStateChange(const QVariantMap& data) noexcept
 {
   this->_navigationStyle->navigationNodeStateChange(data);
 }
 
-void NXNavigationView::setNavigationNodeDragAndDropEnable(bool isEnable)
+void NXNavigationView::setNavigationNodeDragAndDropEnable(bool isEnable) noexcept
 {
   setDragEnabled(isEnable);
   setAcceptDrops(isEnable);
@@ -112,7 +109,7 @@ NXNavigationView::_dropIndicatorPosition(const QModelIndex& dropTargetIndex) con
   }
 }
 
-void NXNavigationView::onCustomContextMenuRequested(const QPoint& pos)
+void NXNavigationView::onCustomContextMenuRequested(const QPoint& pos) noexcept
 {
   if (!_pNavigationBarPrivate->_pIsAllowPageOpenInNewWindow) { return; }
   QModelIndex posIndex = indexAt(pos);
@@ -122,11 +119,11 @@ void NXNavigationView::onCustomContextMenuRequested(const QPoint& pos)
   {
     NXMenu menu;
     menu.setMenuItemHeight(27);
-    QAction *openAction = menu.addNXIconAction(NXIconType::ObjectGroup, "在新窗口中打开");
+    QAction *openAction = menu.addNXIconAction(NXIconType::ObjectGroup, QStringLiteral("在新窗口中打开"));
     connect(openAction, &QAction::triggered, this, [=]() { Q_EMIT navigationOpenNewWindow(posNode->getNodeKey()); });
-    QAction *closeAction = menu.addNXIconAction(NXIconType::FilmSlash, "关闭当前导航窗口");
-    connect(
-        closeAction, &QAction::triggered, this, [=]() { Q_EMIT navigationCloseCurrentWindow(posNode->getNodeKey()); });
+    QAction *closeAction = menu.addNXIconAction(NXIconType::FilmSlash, QStringLiteral("关闭当前导航窗口"));
+    connect(closeAction, &QAction::triggered, this,
+            [=]() { Q_EMIT navigationCloseCurrentWindow(posNode->getNodeKey()); });
     menu.exec(mapToGlobal(pos));
   }
 }
@@ -168,7 +165,7 @@ void NXNavigationView::mouseReleaseEvent(QMouseEvent *event)
 
 void NXNavigationView::dragEnterEvent(QDragEnterEvent *event)
 {
-  event->setAccepted(event->mimeData()->hasFormat("application/x-nxnavigation-node"));
+  event->setAccepted(event->mimeData()->hasFormat(QStringLiteral("application/x-nxnavigation-node")));
 }
 
 void NXNavigationView::dragLeaveEvent(QDragLeaveEvent *event)
@@ -188,7 +185,7 @@ void NXNavigationView::dragMoveEvent(QDragMoveEvent *event)
   //  且当前点击拖拽的PageNode，触发dropIndicatorPosition()Above和Below时效果不好
   //  所以这里需要重写dragMoveEvent，自定义dropIndicatorPosition方法和绘制指示器
   NXNavigationModel *model = qobject_cast<NXNavigationModel *>(this->model());
-  if (!event->mimeData()->hasFormat("application/x-nxnavigation-node"))
+  if (!event->mimeData()->hasFormat(QStringLiteral("application/x-nxnavigation-node")))
   {
     event->ignore();
     return;
@@ -254,8 +251,8 @@ void NXNavigationView::dropEvent(QDropEvent *event)
       event->ignore();
       return;
     }
-    draggedNode->swapVisual(targetNode);
-    model->swapNodes(draggedNode->getNodeKey(), targetNode->getNodeKey());
+    draggedNode->swap(targetNode);
+    model->swapTwoNodes(draggedNode->getNodeKey(), targetNode->getNodeKey());
     Q_EMIT navigationPositionSwapped(draggedIndex, targetIndex);
     _navigationStyle->setPressIndex(QModelIndex());
   }

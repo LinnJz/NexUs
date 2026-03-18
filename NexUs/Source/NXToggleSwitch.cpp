@@ -22,13 +22,13 @@ NXToggleSwitch::NXToggleSwitch(QWidget *parent)
   d->_themeMode     = nxTheme->getThemeMode();
   setProperty("circleCenterX", 0.01);
   setProperty("circleRadius", 0.01);
-  connect(
-      nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this,
+          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXToggleSwitch::~NXToggleSwitch() { }
 
-void NXToggleSwitch::setIsToggled(bool isToggled)
+void NXToggleSwitch::setIsToggled(bool isToggled) noexcept
 {
   Q_D(NXToggleSwitch);
   if (d->_isToggled == isToggled) { return; }
@@ -39,7 +39,7 @@ void NXToggleSwitch::setIsToggled(bool isToggled)
   }
 }
 
-bool NXToggleSwitch::getIsToggled() const { return d_ptr->_isToggled; }
+bool NXToggleSwitch::getIsToggled() const noexcept { return d_ptr->_isToggled; }
 
 bool NXToggleSwitch::event(QEvent *event)
 {
@@ -138,11 +138,10 @@ void NXToggleSwitch::paintEvent(QPaintEvent *event)
   path.moveTo(width() - height() - d->_margin, height() - d->_margin);
   path.arcTo(QRectF(QPointF(width() - height() - d->_margin, d->_margin),
                     QSize(height() - d->_margin * 2, height() - d->_margin * 2)),
-             -90,
-             180);
+             -90, 180);
   path.lineTo(height() / 2 + d->_margin, d->_margin);
-  path.arcTo(
-      QRectF(QPointF(d->_margin, d->_margin), QSize(height() - d->_margin * 2, height() - d->_margin * 2)), 90, 180);
+  path.arcTo(QRectF(QPointF(d->_margin, d->_margin), QSize(height() - d->_margin * 2, height() - d->_margin * 2)), 90,
+             180);
   path.lineTo(width() - height() - d->_margin, height() - d->_margin);
   path.closeSubpath();
   painter.drawPath(path);

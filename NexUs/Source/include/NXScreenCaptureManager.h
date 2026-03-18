@@ -12,7 +12,7 @@ class NX_EXPORT NXScreenCaptureManager : public QObject
 {
   Q_OBJECT
   Q_Q_CREATE(NXScreenCaptureManager)
-  LINN_SINGLETON_CREATE(LINN_SINGLETON_UNIQUE(NXScreenCaptureManager))
+  Q_SINGLETON_CREATE(QS_S_UNIQUE(NXScreenCaptureManager))
 
 private:
   explicit NXScreenCaptureManager(QObject *parent = nullptr);
@@ -31,8 +31,9 @@ public:
   QRect getGrabArea() const;
   void setGrabFrameRate(int frameRateValue);
   int getGrabFrameRate() const;
+
 Q_SIGNALS:
-  Q_SIGNAL void grabImageUpdate(QImage img);
+  void grabImageUpdate(QImage img);
 };
 
 class NXScreenCaptureScreenPrivate;
@@ -41,7 +42,7 @@ class NX_EXPORT NXScreenCaptureScreen : public QWidget
 {
   Q_OBJECT
   Q_Q_CREATE(NXScreenCaptureScreen)
-  Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
+  Q_PROPERTY_CREATE_H(int, BorderRadius)
 
 public:
   explicit NXScreenCaptureScreen(QWidget *parent = nullptr);

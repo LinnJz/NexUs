@@ -10,13 +10,13 @@
 #include "NXPushButton.h"
 #include "NXTheme.h"
 #include "private/NXPopularCardPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(NXPopularCard, int, BorderRadius)
-Q_PROPERTY_CREATE_Q_CPP(NXPopularCard, QPixmap, CardPixmap)
-Q_PROPERTY_CREATE_Q_CPP(NXPopularCard, QString, Title)
-Q_PROPERTY_CREATE_Q_CPP(NXPopularCard, QString, SubTitle)
-Q_PROPERTY_CREATE_Q_CPP(NXPopularCard, QString, InteractiveTips)
-Q_PROPERTY_CREATE_Q_CPP(NXPopularCard, QString, DetailedText)
-Q_PROPERTY_CREATE_Q_CPP(NXPopularCard, QPixmap, CardFloatPixmap)
+Q_PROPERTY_CREATE_CPP(NXPopularCard, int, BorderRadius)
+Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QPixmap&, QPixmap, CardPixmap)
+Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QString&, QString, Title)
+Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QString&, QString, SubTitle)
+Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QString&, QString, InteractiveTips)
+Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QString&, QString, DetailedText)
+Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QPixmap&, QPixmap, CardFloatPixmap)
 
 NXPopularCard::NXPopularCard(QWidget *parent)
     : QWidget { parent }
@@ -29,7 +29,7 @@ NXPopularCard::NXPopularCard(QWidget *parent)
   d->_pHoverYOffset = 0;
   d->_pHoverOpacity = 0;
   setObjectName("NXPopularCard");
-  setStyleSheet("#NXPopularCard{background-color:transparent}");
+  setStyleSheet(QStringLiteral("#NXPopularCard{background-color:transparent}"));
   setMouseTracking(true);
 
   d->_pCardFloatArea = parentWidget();
@@ -38,13 +38,13 @@ NXPopularCard::NXPopularCard(QWidget *parent)
   connect(d->_floatTimer, &QTimer::timeout, d, &NXPopularCardPrivate::_showFloater);
 
   d->_themeMode = nxTheme->getThemeMode();
-  connect(
-      nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this,
+          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXPopularCard::~NXPopularCard() { }
 
-void NXPopularCard::setCardButtonText(QString cardButtonText)
+void NXPopularCard::setCardButtonText(const QString& cardButtonText) noexcept
 {
   Q_D(NXPopularCard);
   if (cardButtonText.isEmpty()) { return; }
@@ -53,13 +53,13 @@ void NXPopularCard::setCardButtonText(QString cardButtonText)
   Q_EMIT pCardButtonTextChanged();
 }
 
-QString NXPopularCard::getCardButtonText() const
+QString NXPopularCard::getCardButtonText() const noexcept
 {
   Q_D(const NXPopularCard);
   return d->_pCardButtonText;
 }
 
-void NXPopularCard::setCardFloatArea(QWidget *floatArea)
+void NXPopularCard::setCardFloatArea(QWidget *floatArea) noexcept
 {
   Q_D(NXPopularCard);
   if (!floatArea || floatArea == this) { return; }
@@ -68,7 +68,7 @@ void NXPopularCard::setCardFloatArea(QWidget *floatArea)
   Q_EMIT pCardFloatAreaChanged();
 }
 
-QWidget *NXPopularCard::getCardFloatArea() const
+QWidget *NXPopularCard::getCardFloatArea() const noexcept
 {
   Q_D(const NXPopularCard);
   return d->_pCardFloatArea;
@@ -138,10 +138,8 @@ void NXPopularCard::paintEvent(QPaintEvent *event)
     QRect shadowRect = rect().adjusted(0, -d->_pHoverYOffset, 0, -d->_pHoverYOffset);
     nxTheme->drawEffectShadow(&painter, shadowRect, d->_shadowBorderWidth, d->_pBorderRadius);
   }
-  QRectF foregroundRect(d->_shadowBorderWidth,
-                        d->_shadowBorderWidth - d->_pHoverYOffset + 1,
-                        width() - 2 * d->_shadowBorderWidth,
-                        height() - 2 * d->_shadowBorderWidth);
+  QRectF foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth - d->_pHoverYOffset + 1,
+                        width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);
   // 背景绘制
   painter.setOpacity(1);
   painter.setPen(underMouse() ? NXThemeColor(d->_themeMode, PopupBorderHover)
@@ -151,8 +149,7 @@ void NXPopularCard::paintEvent(QPaintEvent *event)
   // 图片绘制
   painter.save();
   QRectF pixRect(foregroundRect.x() + foregroundRect.height() * 0.15,
-                 foregroundRect.y() + foregroundRect.height() * 0.15,
-                 foregroundRect.height() * 0.7,
+                 foregroundRect.y() + foregroundRect.height() * 0.15, foregroundRect.height() * 0.7,
                  foregroundRect.height() * 0.7);
   QPainterPath pixPath;
   pixPath.addRoundedRect(pixRect, 4, 4);
@@ -178,8 +175,7 @@ void NXPopularCard::paintEvent(QPaintEvent *event)
   font.setPixelSize(15);
   painter.setFont(font);
   int titleHeight = painter.fontMetrics().height();
-  QRectF titleRect(pixRect.right() + d->_textHSpacing,
-                   pixRect.y(),
+  QRectF titleRect(pixRect.right() + d->_textHSpacing, pixRect.y(),
                    d->_floater->_floatGeometryOffset * 2 + foregroundRect.width() - pixRect.width() -
                        d->_textHSpacing * 2 - foregroundRect.height() * 0.15 - buttonTargetWidth,
                    titleHeight);
@@ -191,8 +187,7 @@ void NXPopularCard::paintEvent(QPaintEvent *event)
   font.setPixelSize(13);
   painter.setFont(font);
   int subTitleHeight = painter.fontMetrics().height();
-  QRectF subTitleRect(pixRect.right() + d->_textHSpacing,
-                      titleRect.bottom() + d->_textVSpacing,
+  QRectF subTitleRect(pixRect.right() + d->_textHSpacing, titleRect.bottom() + d->_textVSpacing,
                       d->_floater->_floatGeometryOffset * 2 + foregroundRect.width() - pixRect.width() -
                           d->_textHSpacing * 2 - foregroundRect.height() * 0.15 - buttonTargetWidth,
                       subTitleHeight);
@@ -210,8 +205,7 @@ void NXPopularCard::paintEvent(QPaintEvent *event)
     // 覆盖背景绘制
     QRectF tipRect(foregroundRect.right() - d->_textHSpacing - tipWidth,
                    foregroundRect.bottom() - d->_textHSpacing - tipHeight,
-                   foregroundRect.width() / 2 - d->_textHSpacing,
-                   tipHeight);
+                   foregroundRect.width() / 2 - d->_textHSpacing, tipHeight);
     painter.setPen(Qt::NoPen);
     painter.setBrush(NXThemeColor(d->_themeMode, BasicBaseDeep));
     QRectF baseRect = tipRect;
@@ -227,8 +221,7 @@ void NXPopularCard::paintEvent(QPaintEvent *event)
   {
     QRectF tipRect(foregroundRect.right() - d->_textHSpacing - 50,
                    foregroundRect.bottom() - d->_textHSpacing - tipHeight,
-                   foregroundRect.width() / 2 - d->_textHSpacing,
-                   tipHeight);
+                   foregroundRect.width() / 2 - d->_textHSpacing, tipHeight);
     tipRect.setRight(tipRect.x() + tipWidth);
     tipRect.adjust(-7, -3, 4, 3);
     d->_interactiveTipsBaseRect = tipRect;

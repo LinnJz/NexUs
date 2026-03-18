@@ -1,6 +1,7 @@
 ﻿#ifndef NXNAVIGATIONROUTERPRIVATE_H
 #define NXNAVIGATIONROUTERPRIVATE_H
 #include <QList>
+#include <QMap>
 #include <QObject>
 #include <QVariantMap>
 
@@ -20,6 +21,14 @@ public:
 private:
   int _currentIndex { -1 };
   QList<QVariantMap> _routeList;
+
+  struct RouteContext
+  {
+    int currentIndex { -1 };
+    QVector<QVariantMap> routeList;
+  };
+
+  QMap<QObject *, RouteContext> _contextMap;
 };
 
 #endif // NXNAVIGATIONROUTERPRIVATE_H

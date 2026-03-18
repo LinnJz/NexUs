@@ -1,10 +1,12 @@
-#include "NXGroupBox.h"
+﻿#include "NXGroupBox.h"
 
 #include <QLayout>
 
 #include "DeveloperComponents/NXGroupBoxStyle.h"
 #include "NXTheme.h"
 #include "private/NXGroupBoxPrivate.h"
+
+Q_PROPERTY_CREATE_CPP(NXGroupBox, int, BorderRadius)
 
 NXGroupBox::NXGroupBox(QWidget *parent)
     : QGroupBox(parent)
@@ -42,5 +44,3 @@ void NXGroupBox::paintEvent(QPaintEvent *event)
   }
   QGroupBox::paintEvent(event);
 }
-
-Q_PROPERTY_CREATE_Q_CPP(NXGroupBox, int, BorderRadius)

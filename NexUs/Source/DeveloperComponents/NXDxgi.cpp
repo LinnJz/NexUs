@@ -25,11 +25,11 @@ bool NXDxgi::initialize(int dxID, int outputID)
   ID3D11Device *d3dDevice         = nullptr;
   ID3D11DeviceContext *d3dContext = nullptr;
   D3D_FEATURE_LEVEL feat          = D3D_FEATURE_LEVEL_11_0;
-  HRESULT hr                      = D3D11CreateDevice(
-      nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, nullptr, 0, D3D11_SDK_VERSION, &d3dDevice, &feat, &d3dContext);
+  HRESULT hr = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, nullptr, 0, D3D11_SDK_VERSION,
+                                 &d3dDevice, &feat, &d3dContext);
   if (FAILED(hr))
   {
-    _pLastError = "Failed to D3D11CreateDevice ErrorCode = " + QString::number(uint(hr), 16);
+    _pLastError = QStringLiteral("Failed to D3D11CreateDevice ErrorCode = ") + QString::number(uint(hr), 16);
     qDebug() << _pLastError;
     if (d3dDevice) { d3dDevice->Release(); }
     if (d3dContext) { d3dContext->Release(); }
@@ -58,7 +58,7 @@ bool NXDxgi::initialize(int dxID, int outputID)
 
   if (!dxgiAdapter)
   {
-    _pLastError = "Failed to found gpu";
+    _pLastError = QStringLiteral("Failed to found gpu");
     qDebug() << _pLastError;
     d3dDevice->Release();
     d3dContext->Release();
@@ -86,7 +86,7 @@ bool NXDxgi::initialize(int dxID, int outputID)
 
   if (!dxgiOutput)
   {
-    _pLastError = "Failed to found screen!";
+    _pLastError = QStringLiteral("Failed to found screen!");
     qDebug() << _pLastError;
     d3dDevice->Release();
     d3dContext->Release();
@@ -98,7 +98,7 @@ bool NXDxgi::initialize(int dxID, int outputID)
   for (auto output : dxgiOutputVector) { output->Release(); }
   if (FAILED(hr))
   {
-    _pLastError = "Failed to QueryInterface IDXGIOutput6 ErrorCode = " + QString::number(uint(hr), 16);
+    _pLastError = QStringLiteral("Failed to QueryInterface IDXGIOutput6 ErrorCode = ") + QString::number(uint(hr), 16);
     qDebug() << _pLastError;
     d3dDevice->Release();
     d3dContext->Release();
@@ -111,7 +111,7 @@ bool NXDxgi::initialize(int dxID, int outputID)
   dxgiOutput6->Release();
   if (FAILED(hr))
   {
-    _pLastError = "Failed to DuplicateOutput ErrorCode = " + QString::number(uint(hr), 16);
+    _pLastError = QStringLiteral("Failed to DuplicateOutput ErrorCode = ") + QString::number(uint(hr), 16);
     qDebug() << _pLastError;
     d3dDevice->Release();
     d3dContext->Release();
@@ -128,15 +128,13 @@ bool NXDxgi::initialize(int dxID, int outputID)
   return true;
 }
 
-QImage NXDxgi::getGrabImage() const
+QImage NXDxgi::getGrabImage() const noexcept
 {
   QImage grabImage(_imageBits, _descWidth, _descHeight, QImage::Format_ARGB32);
   if (_pIsGrabCenter)
   {
-    return grabImage.copy(QRect((_descWidth - _pGrabArea.width()) / 2,
-                                (_descHeight - _pGrabArea.height()) / 2,
-                                _pGrabArea.width(),
-                                _pGrabArea.height()));
+    return grabImage.copy(QRect((_descWidth - _pGrabArea.width()) / 2, (_descHeight - _pGrabArea.height()) / 2,
+                                _pGrabArea.width(), _pGrabArea.height()));
   }
   else
   {
@@ -195,7 +193,7 @@ void NXDxgi::onGrabScreen()
     desktopRes->Release();
     if (FAILED(hr))
     {
-      qDebug() << "Failed to ID3D11Texture2D result =" << QString::number(uint(hr), 16);
+      qDebug() << QStringLiteral("Failed to ID3D11Texture2D result =") << QString::number(uint(hr), 16);
       continue;
     }
     textrueRes->GetDesc(&desc);
@@ -218,7 +216,7 @@ void NXDxgi::onGrabScreen()
     hr                     = _texture->QueryInterface(__uuidof(IDXGISurface1), reinterpret_cast<void **>(&surface));
     if (FAILED(hr))
     {
-      qDebug() << "Failed to QueryInterface IDXGISurface1 ErrorCode =" << QString::number(uint(hr), 16);
+      qDebug() << QStringLiteral("Failed to QueryInterface IDXGISurface1 ErrorCode =") << QString::number(uint(hr), 16);
       continue;
     }
     DXGI_MAPPED_RECT map;
@@ -232,10 +230,9 @@ void NXDxgi::onGrabScreen()
     QImage grabImage(_imageBits, _descWidth, _descHeight, QImage::Format_ARGB32);
     if (_pIsGrabCenter)
     {
-      Q_EMIT grabScreenOver(std::move(grabImage.copy(QRect((_descWidth - _pGrabArea.width()) / 2,
-                                                           (_descHeight - _pGrabArea.height()) / 2,
-                                                           _pGrabArea.width(),
-                                                           _pGrabArea.height()))));
+      Q_EMIT grabScreenOver(
+          std::move(grabImage.copy(QRect((_descWidth - _pGrabArea.width()) / 2, (_descHeight - _pGrabArea.height()) / 2,
+                                         _pGrabArea.width(), _pGrabArea.height()))));
     }
     else
     {

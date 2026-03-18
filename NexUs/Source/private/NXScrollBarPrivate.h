@@ -21,7 +21,7 @@ class NXScrollBarPrivate : public QObject
 public:
   explicit NXScrollBarPrivate(QObject *parent = nullptr);
   ~NXScrollBarPrivate();
-  Q_SLOT void onRangeChanged(int min, int max);
+  Q_SLOT void onRangeChanged(int min, int max) noexcept;
 
 private:
   bool _isExpand { false };
@@ -31,14 +31,14 @@ private:
   QTimer *_expandTimer { nullptr };
   QPropertyAnimation *_slideSmoothAnimation { nullptr };
 
-  void _scroll(Qt::KeyboardModifiers modifiers, int value);
-  int _pixelPosToRangeValue(int pos) const;
+  void _scroll(Qt::KeyboardModifiers modifiers, int value) noexcept;
+  int _pixelPosToRangeValue(int pos) const noexcept;
 
   // 映射处理函数
-  void _initAllConfig();
-  void _handleScrollBarValueChanged(QScrollBar *scrollBar, int value);
-  void _handleScrollBarRangeChanged(int min, int max);
-  void _handleScrollBarGeometry();
+  void _initAllConfig() noexcept;
+  void _handleScrollBarValueChanged(QScrollBar *scrollBar, int value) noexcept;
+  void _handleScrollBarRangeChanged(int min, int max) noexcept;
+  void _handleScrollBarGeometry() noexcept;
 };
 
 #endif // NXSCROLLBARPRIVATE_H

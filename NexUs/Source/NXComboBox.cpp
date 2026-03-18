@@ -13,7 +13,7 @@
 #include "NXScrollBar.h"
 #include "NXTheme.h"
 #include "private/NXComboBoxPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(NXComboBox, int, BorderRadius)
+Q_PROPERTY_CREATE_CPP(NXComboBox, int, BorderRadius)
 
 NXComboBox::NXComboBox(QWidget *parent)
     : QComboBox(parent)
@@ -39,7 +39,7 @@ NXComboBox::NXComboBox(QWidget *parent)
   comboBoxView->setAutoScroll(false);
   comboBoxView->setSelectionMode(QAbstractItemView::NoSelection);
   comboBoxView->setObjectName("NXComboBoxView");
-  comboBoxView->setStyleSheet("#NXComboBoxView{background-color:transparent;}");
+  comboBoxView->setStyleSheet(QStringLiteral("#NXComboBoxView{background-color:transparent;}"));
   comboBoxView->setStyle(d->_comboBoxStyle);
   auto *container = qobject_cast<QWidget *>(view()->parentWidget());
   if (!container || container == this) { container = qobject_cast<QWidget *>(view()->window()); }
@@ -56,7 +56,7 @@ NXComboBox::NXComboBox(QWidget *parent)
     layout->setContentsMargins(6, 0, 6, 6);
 #ifndef Q_OS_WIN
 #  if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    container->setStyleSheet("background-color:transparent;");
+    container->setStyleSheet(QStringLiteral("background-color:transparent;"));
 #  endif
 #endif
   }
@@ -118,9 +118,8 @@ void NXComboBox::showPopup()
       if (!layout) { layout = new QVBoxLayout(container); }
       while (layout->count()) { layout->takeAt(0); }
       QPropertyAnimation *fixedSizeAnimation = new QPropertyAnimation(container, "maximumHeight");
-      connect(fixedSizeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-        container->setFixedHeight(value.toUInt());
-      });
+      connect(fixedSizeAnimation, &QPropertyAnimation::valueChanged, this,
+              [=](const QVariant& value) { container->setFixedHeight(value.toUInt()); });
       fixedSizeAnimation->setStartValue(1);
       fixedSizeAnimation->setEndValue(containerHeight);
       fixedSizeAnimation->setEasingCurve(QEasingCurve::OutCubic);
@@ -128,10 +127,7 @@ void NXComboBox::showPopup()
       fixedSizeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
       QPropertyAnimation *viewPosAnimation = new QPropertyAnimation(view(), "pos");
-      connect(viewPosAnimation,
-              &QPropertyAnimation::finished,
-              this,
-              [=]()
+      connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]()
       {
         d->_isAllowHidePopup = true;
         layout->addWidget(view());
@@ -174,14 +170,11 @@ void NXComboBox::hidePopup()
       while (layout->count()) { layout->takeAt(0); }
       QPoint viewPos                       = view()->pos();
       QPropertyAnimation *viewPosAnimation = new QPropertyAnimation(view(), "pos");
-      connect(viewPosAnimation,
-              &QPropertyAnimation::finished,
-              this,
-              [=]()
+      connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]()
       {
         layout->addWidget(view());
-        QMouseEvent focusEvent(
-            QEvent::MouseButtonPress, QPoint(-1, -1), QPoint(-1, -1), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
+        QMouseEvent focusEvent(QEvent::MouseButtonPress, QPoint(-1, -1), QPoint(-1, -1), Qt::NoButton, Qt::NoButton,
+                               Qt::NoModifier);
         QApplication::sendEvent(parentWidget(), &focusEvent);
         QComboBox::hidePopup();
         container->setFixedHeight(containerHeight);
@@ -193,9 +186,8 @@ void NXComboBox::hidePopup()
       viewPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
       QPropertyAnimation *fixedSizeAnimation = new QPropertyAnimation(container, "maximumHeight");
-      connect(fixedSizeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-        container->setFixedHeight(value.toUInt());
-      });
+      connect(fixedSizeAnimation, &QPropertyAnimation::valueChanged, this,
+              [=](const QVariant& value) { container->setFixedHeight(value.toUInt()); });
       fixedSizeAnimation->setStartValue(container->height());
       fixedSizeAnimation->setEndValue(1);
       fixedSizeAnimation->setEasingCurve(QEasingCurve::InCubic);

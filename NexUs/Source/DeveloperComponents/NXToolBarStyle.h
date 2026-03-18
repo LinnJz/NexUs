@@ -27,9 +27,12 @@ public:
 
 private:
   NXThemeType::ThemeMode _themeMode;
-  void _drawIndicator(QPainter *painter, const QStyleOptionToolButton *bopt, const QWidget *widget) const;
-  void _drawIcon(QPainter *painter, QRectF iconRect, const QStyleOptionToolButton *bopt, const QWidget *widget) const;
-  void _drawText(QPainter *painter, QRect contentRect, const QStyleOptionToolButton *bopt) const;
+  void _drawIndicator(QPainter *painter, const QStyleOptionToolButton *bopt, const QWidget *widget) const noexcept;
+  void _drawIcon(QPainter *painter,
+                 QRectF iconRect,
+                 const QStyleOptionToolButton *bopt,
+                 const QWidget *widget) const noexcept;
+  void _drawText(QPainter *painter, QRect contentRect, const QStyleOptionToolButton *bopt) const noexcept;
 };
 
 #endif // NXTOOLBARSTYLE_H

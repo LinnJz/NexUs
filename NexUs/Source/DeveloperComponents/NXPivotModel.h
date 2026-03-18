@@ -11,10 +11,10 @@ public:
   explicit NXPivotModel(QObject *parent = nullptr);
   ~NXPivotModel();
 
-  void appendPivot(const QString& pivot);
-  void removePivot(const QString& pivot);
+  void appendPivot(const QString& pivot) noexcept;
+  void removePivot(const QString& pivot) noexcept;
 
-  int getPivotListCount() const;
+  int getPivotListCount() const noexcept;
 
 protected:
   int rowCount(const QModelIndex& parent = QModelIndex()) const override;

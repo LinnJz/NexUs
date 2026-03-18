@@ -19,7 +19,7 @@ public:
   explicit NXLCDNumberPrivate(QObject *parent = nullptr);
   ~NXLCDNumberPrivate() override;
 
-  Q_SLOT void onThemeModeChanged(NXThemeType::ThemeMode themeMode);
+  Q_SLOT void onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept;
 
 private:
   NXThemeType::ThemeMode _themeMode;

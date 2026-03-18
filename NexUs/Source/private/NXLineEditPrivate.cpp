@@ -13,7 +13,7 @@ NXLineEditPrivate::NXLineEditPrivate(QObject *parent)
 
 NXLineEditPrivate::~NXLineEditPrivate() { }
 
-void NXLineEditPrivate::resetTextRoute()
+void NXLineEditPrivate::resetTextRoute() noexcept
 {
   _overallRedoRouteIndex = -1;
   _textRouteCurrentIndex = 0;
@@ -21,7 +21,7 @@ void NXLineEditPrivate::resetTextRoute()
   _textRouteList.append(_currentTextRouteState());
 }
 
-void NXLineEditPrivate::pushTextRoute()
+void NXLineEditPrivate::pushTextRoute() noexcept
 {
   _overallRedoRouteIndex = -1;
 
@@ -56,25 +56,28 @@ void NXLineEditPrivate::pushTextRoute()
   if (_overallRedoRouteIndex >= 0) { _overallRedoRouteIndex = std::max(-1, _overallRedoRouteIndex - removeCount); }
 }
 
-bool NXLineEditPrivate::canTextRouteBack() const { return _textRouteCurrentIndex > 0; }
+bool NXLineEditPrivate::canTextRouteBack() const noexcept { return _textRouteCurrentIndex > 0; }
 
-bool NXLineEditPrivate::canTextRouteForward() const { return _textRouteCurrentIndex + 1 < _textRouteList.size(); }
+bool NXLineEditPrivate::canTextRouteForward() const noexcept
+{
+  return _textRouteCurrentIndex + 1 < _textRouteList.size();
+}
 
-void NXLineEditPrivate::textRouteBack()
+void NXLineEditPrivate::textRouteBack() noexcept
 {
   if (!canTextRouteBack()) { return; }
   _textRouteCurrentIndex -= 1;
   _applyTextRouteState(_textRouteList[_textRouteCurrentIndex]);
 }
 
-void NXLineEditPrivate::textRouteForward()
+void NXLineEditPrivate::textRouteForward() noexcept
 {
   if (!canTextRouteForward()) { return; }
   _textRouteCurrentIndex += 1;
   _applyTextRouteState(_textRouteList[_textRouteCurrentIndex]);
 }
 
-bool NXLineEditPrivate::canOverallUndo() const
+bool NXLineEditPrivate::canOverallUndo() const noexcept
 {
   Q_Q(const NXLineEdit);
   if (_overallRedoRouteIndex >= 0) { return false; }
@@ -82,13 +85,13 @@ bool NXLineEditPrivate::canOverallUndo() const
   return q->text() != _textRouteList.first().text;
 }
 
-bool NXLineEditPrivate::canOverallRedo() const
+bool NXLineEditPrivate::canOverallRedo() const noexcept
 {
   if (_textRouteList.isEmpty()) { return false; }
   return _overallRedoRouteIndex >= 0 && _overallRedoRouteIndex < _textRouteList.size();
 }
 
-void NXLineEditPrivate::overallUndo()
+void NXLineEditPrivate::overallUndo() noexcept
 {
   if (!canOverallUndo()) { return; }
   _overallRedoRouteIndex = _textRouteCurrentIndex;
@@ -97,7 +100,7 @@ void NXLineEditPrivate::overallUndo()
   _applyTextRouteState(_textRouteList[_textRouteCurrentIndex]);
 }
 
-void NXLineEditPrivate::overallRedo()
+void NXLineEditPrivate::overallRedo() noexcept
 {
   if (!canOverallRedo()) { return; }
   _textRouteCurrentIndex = std::clamp(_overallRedoRouteIndex, 0, (int) _textRouteList.size() - 1);
@@ -105,7 +108,7 @@ void NXLineEditPrivate::overallRedo()
   _applyTextRouteState(_textRouteList[_textRouteCurrentIndex]);
 }
 
-void NXLineEditPrivate::onWMWindowClickedEvent(QVariantMap data)
+void NXLineEditPrivate::onWMWindowClickedEvent(const QVariantMap& data)
 {
   Q_Q(NXLineEdit);
   NXAppBarType::WMMouseActionType actionType = data.value("WMClickType").value<NXAppBarType::WMMouseActionType>();
@@ -123,7 +126,7 @@ void NXLineEditPrivate::onWMWindowClickedEvent(QVariantMap data)
   }
 }
 
-void NXLineEditPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
+void NXLineEditPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_Q(NXLineEdit);
   _themeMode       = themeMode;
@@ -134,7 +137,7 @@ void NXLineEditPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
   q->setPalette(palette);
 }
 
-NXLineEditPrivate::TextRouteState NXLineEditPrivate::_currentTextRouteState() const
+NXLineEditPrivate::TextRouteState NXLineEditPrivate::_currentTextRouteState() const noexcept
 {
   Q_Q(const NXLineEdit);
   TextRouteState state;
@@ -145,7 +148,7 @@ NXLineEditPrivate::TextRouteState NXLineEditPrivate::_currentTextRouteState() co
   return state;
 }
 
-void NXLineEditPrivate::_applyTextRouteState(const TextRouteState& state)
+void NXLineEditPrivate::_applyTextRouteState(const TextRouteState& state) noexcept
 {
   Q_Q(NXLineEdit);
   q->setText(state.text);

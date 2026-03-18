@@ -8,7 +8,7 @@
 
 NXCheckBoxStyle::NXCheckBoxStyle(QStyle *style)
 {
-  _pIndicatorWidth = 21;
+  _pCheckIndicatorWidth = 21;
   _pBorderRadius   = 2;
   _themeMode       = nxTheme->getThemeMode();
   connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
@@ -32,9 +32,8 @@ void NXCheckBoxStyle::drawControl(ControlElement element,
       painter->save();
       painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
       QRect checkBoxRect = bopt->rect;
-      QRect checkRect(checkBoxRect.x(), checkBoxRect.y(), _pIndicatorWidth, _pIndicatorWidth);
-      int yAdjust = (checkBoxRect.height() - _pIndicatorWidth) / 2;
-      checkRect.moveTop(checkBoxRect.top() + yAdjust);
+      int yOffset = (checkBoxRect.height() - _pCheckIndicatorWidth) / 2;
+      QRect checkRect(checkBoxRect.x(), checkBoxRect.y() + yOffset, _pCheckIndicatorWidth, _pCheckIndicatorWidth);
       checkRect.adjust(1, 1, -1, -1);
       // 复选框绘制
       painter->setPen(Qt::NoPen);
@@ -80,8 +79,8 @@ void NXCheckBoxStyle::drawControl(ControlElement element,
       if (bopt->state.testFlag(QStyle::State_On))
       {
         painter->save();
-        QFont iconFont = QFont("NXAwesome");
-        iconFont.setPixelSize(_pIndicatorWidth * 0.75);
+        QFont iconFont = QFont(QStringLiteral("NXAwesome"));
+        iconFont.setPixelSize(_pCheckIndicatorWidth * 0.75);
         painter->setFont(iconFont);
         painter->drawText(checkRect, Qt::AlignCenter, QChar((unsigned short) NXIconType::Check));
         painter->restore();
@@ -93,7 +92,8 @@ void NXCheckBoxStyle::drawControl(ControlElement element,
       }
       // 文字绘制
       painter->setPen(isEnabled ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));
-      QRect textRect(checkRect.right() + 10, checkRect.y(), checkBoxRect.width(), checkRect.height());
+      QRect textRect(checkRect.right() + 10, checkBoxRect.y() + yOffset, checkBoxRect.width() - checkRect.right() - 10,
+                     _pCheckIndicatorWidth);
       painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, bopt->text);
       painter->restore();
     }
@@ -115,11 +115,11 @@ int NXCheckBoxStyle::pixelMetric(PixelMetric metric, const QStyleOption *option,
   {
   case QStyle::PM_IndicatorWidth :
   {
-    return _pIndicatorWidth;
+    return _pCheckIndicatorWidth;
   }
   case QStyle::PM_IndicatorHeight :
   {
-    return _pIndicatorWidth;
+    return _pCheckIndicatorWidth;
   }
   case QStyle::PM_CheckBoxLabelSpacing :
   {

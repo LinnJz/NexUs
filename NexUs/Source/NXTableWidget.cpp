@@ -1,4 +1,4 @@
-#include "NXTableWidget.h"
+﻿#include "NXTableWidget.h"
 
 #include <QHeaderView>
 #include <QMouseEvent>
@@ -15,8 +15,8 @@ NXTableWidget::NXTableWidget(QWidget *parent)
   d->q_ptr = this;
   setMouseTracking(true);
   setObjectName("NXTableWidget");
-  setStyleSheet("QTableWidget{background-color:transparent;}"
-                "QHeaderView{background-color:transparent;border:0px;}");
+  setStyleSheet(QStringLiteral("QTableWidget{background-color:transparent;}"
+                "QHeaderView{background-color:transparent;border:0px;}"));
   setShowGrid(false);
   setVerticalScrollBar(new NXScrollBar(this));
   setHorizontalScrollBar(new NXScrollBar(this));
@@ -34,14 +34,14 @@ NXTableWidget::~NXTableWidget()
   delete d->_tableWidgetStyle;
 }
 
-void NXTableWidget::insertRows(int row, int count)
+void NXTableWidget::insertRows(int row, int count) noexcept
 {
   if (row < 0 || count <= 0 || row > rowCount()) { return; }
 
   for (int i = 0; i < count; ++i) { insertRow(row); }
 }
 
-void NXTableWidget::removeRows(int row, int count)
+void NXTableWidget::removeRows(int row, int count) noexcept
 {
   if (row < 0 || count <= 0 || row >= rowCount()) { return; }
 
@@ -50,14 +50,14 @@ void NXTableWidget::removeRows(int row, int count)
   for (int i = row + actualCount - 1; i >= row; --i) { removeRow(i); }
 }
 
-void NXTableWidget::insertColumns(int column, int count)
+void NXTableWidget::insertColumns(int column, int count) noexcept
 {
   if (column < 0 || count <= 0 || column > columnCount()) { return; }
 
   for (int i = 0; i < count; ++i) { insertColumn(column); }
 }
 
-void NXTableWidget::removeColumns(int column, int count)
+void NXTableWidget::removeColumns(int column, int count) noexcept
 {
   if (column < 0 || count <= 0 || column >= columnCount()) { return; }
 
@@ -66,7 +66,7 @@ void NXTableWidget::removeColumns(int column, int count)
   for (int i = column + actualCount - 1; i >= column; --i) { removeColumn(i); }
 }
 
-void NXTableWidget::setItemText(int row, int column, const QString& text)
+void NXTableWidget::setItemText(int row, int column, const QString& text) noexcept
 {
   if (row < 0 || row >= rowCount() || column < 0 || column >= columnCount()) { return; }
 
@@ -79,7 +79,7 @@ void NXTableWidget::setItemText(int row, int column, const QString& text)
   }
 }
 
-QString NXTableWidget::getItemText(int row, int column) const
+QString NXTableWidget::getItemText(int row, int column) const noexcept
 {
   if (row < 0 || row >= rowCount() || column < 0 || column >= columnCount()) { return QString(); }
 
@@ -87,7 +87,7 @@ QString NXTableWidget::getItemText(int row, int column) const
   return currentItem ? currentItem->text() : QString();
 }
 
-void NXTableWidget::setRowData(int row, const QStringList& data)
+void NXTableWidget::setRowData(int row, const QStringList& data) noexcept
 {
   if (row < 0 || row >= rowCount()) { return; }
 
@@ -95,7 +95,7 @@ void NXTableWidget::setRowData(int row, const QStringList& data)
   for (int col = 0; col < maxCol; ++col) { setItemText(row, col, data[col]); }
 }
 
-QStringList NXTableWidget::getRowData(int row) const
+QStringList NXTableWidget::getRowData(int row) const noexcept
 {
   QStringList data;
   if (row < 0 || row >= rowCount()) { return data; }
@@ -104,7 +104,7 @@ QStringList NXTableWidget::getRowData(int row) const
   return data;
 }
 
-void NXTableWidget::setItemHeight(int itemHeight)
+void NXTableWidget::setItemHeight(int itemHeight) noexcept
 {
   Q_D(NXTableWidget);
   if (itemHeight > 0)
@@ -114,13 +114,13 @@ void NXTableWidget::setItemHeight(int itemHeight)
   }
 }
 
-int NXTableWidget::getItemHeight() const
+int NXTableWidget::getItemHeight() const noexcept
 {
   Q_D(const NXTableWidget);
   return d->_tableWidgetStyle->getItemHeight();
 }
 
-void NXTableWidget::setHeaderMargin(int headerMargin)
+void NXTableWidget::setHeaderMargin(int headerMargin) noexcept
 {
   Q_D(NXTableWidget);
   if (headerMargin >= 0)
@@ -130,20 +130,20 @@ void NXTableWidget::setHeaderMargin(int headerMargin)
   }
 }
 
-int NXTableWidget::getHeaderMargin() const
+int NXTableWidget::getHeaderMargin() const noexcept
 {
   Q_D(const NXTableWidget);
   return d->_tableWidgetStyle->getHeaderMargin();
 }
 
-void NXTableWidget::setIsTransparent(bool isTransparent)
+void NXTableWidget::setIsTransparent(bool isTransparent) noexcept
 {
   Q_D(NXTableWidget);
   d->_tableWidgetStyle->setIsTransparent(isTransparent);
   update();
 }
 
-bool NXTableWidget::getIsTransparent() const
+bool NXTableWidget::getIsTransparent() const noexcept
 {
   Q_D(const NXTableWidget);
   return d->_tableWidgetStyle->getIsTransparent();
@@ -166,8 +166,21 @@ void NXTableWidget::mouseMoveEvent(QMouseEvent *event)
   Q_D(NXTableWidget);
   if (selectionBehavior() == QAbstractItemView::SelectRows)
   {
-    d->_tableWidgetStyle->setCurrentHoverRow(rowAt(event->pos().y()));
-    update();
+    const QModelIndex& currentIndex  = indexAt(event->pos());
+    const QModelIndex& oldHoverIndex = d->_tableWidgetStyle->getCurrentHoverIndex();
+    d->_tableWidgetStyle->setCurrentHoverIndex(currentIndex);
+    if (currentIndex.isValid() && currentIndex.row() != oldHoverIndex.row())
+    {
+      QRect rowRect = visualRect(oldHoverIndex);
+      rowRect.setX(0);
+      rowRect.setWidth(viewport()->width());
+
+      rowRect = visualRect(currentIndex);
+      rowRect.setX(0);
+      rowRect.setWidth(viewport()->width());
+      update(rowRect);
+    }
+    Q_EMIT hoverIndexChanged(currentIndex);
   }
   QTableWidget::mouseMoveEvent(event);
 }
@@ -177,7 +190,7 @@ void NXTableWidget::leaveEvent(QEvent *event)
   Q_D(NXTableWidget);
   if (selectionBehavior() == QAbstractItemView::SelectRows)
   {
-    d->_tableWidgetStyle->setCurrentHoverRow(-1);
+    d->_tableWidgetStyle->setCurrentHoverIndex({});
     update();
   }
   QTableWidget::leaveEvent(event);

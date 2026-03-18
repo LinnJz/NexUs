@@ -5,8 +5,8 @@
 
 #include "NXTheme.h"
 #include "private/NXTextPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(NXText, bool, IsAllowClick)
-Q_PROPERTY_CREATE_Q_CPP(NXText, NXTextType::DisplayMode, DisplayMode)
+Q_PROPERTY_CREATE_CPP(NXText, bool, IsAllowClick)
+Q_PROPERTY_CREATE_CPP(NXText, NXTextType::DisplayMode, DisplayMode)
 
 NXText::NXText(QWidget *parent)
     : QLabel(parent)
@@ -21,7 +21,7 @@ NXText::NXText(QWidget *parent)
   d->_pDisplayMode    = NXTextType::FollowStyle;
 
   setObjectName("NXText");
-  setStyleSheet("#NXText{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXText{background-color:transparent;}"));
   QFont textFont = font();
   textFont.setLetterSpacing(QFont::AbsoluteSpacing, d->_textSpacing);
   textFont.setPixelSize(28);
@@ -48,38 +48,38 @@ NXText::NXText(const QString& text, int pixelSize, QWidget *parent)
 
 NXText::~NXText() { }
 
-void NXText::setIsWrapAnywhere(bool isWrapAnywhere)
+void NXText::setIsWrapAnywhere(bool isWrapAnywhere) noexcept
 {
   Q_D(NXText);
   setWordWrap(isWrapAnywhere);
   d->_pIsWrapAnywhere = isWrapAnywhere;
 }
 
-bool NXText::getIsWrapAnywhere() const
+bool NXText::getIsWrapAnywhere() const noexcept
 {
   Q_D(const NXText);
   return d->_pIsWrapAnywhere;
 }
 
-void NXText::setTextPixelSize(int size)
+void NXText::setTextPixelSize(int size) noexcept
 {
   QFont font = this->font();
   font.setPixelSize(size);
   setFont(font);
 }
 
-int NXText::getTextPixelSize() const { return this->font().pixelSize(); }
+int NXText::getTextPixelSize() const noexcept { return this->font().pixelSize(); }
 
-void NXText::setTextPointSize(int size)
+void NXText::setTextPointSize(int size) noexcept
 {
   QFont font = this->font();
   font.setPointSize(size);
   setFont(font);
 }
 
-int NXText::getTextPointSize() const { return this->font().pointSize(); }
+int NXText::getTextPointSize() const noexcept { return this->font().pointSize(); }
 
-void NXText::setTextStyle(NXTextType::TextStyle textStyle)
+void NXText::setTextStyle(NXTextType::TextStyle textStyle) noexcept
 {
   Q_D(NXText);
   QFont textFont = font();
@@ -138,13 +138,13 @@ void NXText::setTextStyle(NXTextType::TextStyle textStyle)
   setFont(textFont);
 }
 
-NXTextType::TextStyle NXText::getTextStyle() const
+NXTextType::TextStyle NXText::getTextStyle() const noexcept
 {
   Q_D(const NXText);
   return d->_pTextStyle;
 }
 
-void NXText::setNXIcon(NXIconType::IconName icon)
+void NXText::setNXIcon(NXIconType::IconName icon) noexcept
 {
   Q_D(NXText);
   d->_pNXIcon = icon;
@@ -152,7 +152,7 @@ void NXText::setNXIcon(NXIconType::IconName icon)
   Q_EMIT pNXIconChanged();
 }
 
-NXIconType::IconName NXText::getNXIcon() const
+NXIconType::IconName NXText::getNXIcon() const noexcept
 {
   Q_D(const NXText);
   return d->_pNXIcon;

@@ -17,7 +17,7 @@ NXTextPrivate::NXTextPrivate(QObject *parent)
 
 NXTextPrivate::~NXTextPrivate() { }
 
-void NXTextPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
+void NXTextPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_Q(NXText);
   _themeMode       = themeMode;
@@ -27,7 +27,7 @@ void NXTextPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
 }
 
 std::unique_ptr<QTextDocument>
-NXTextPrivate::_createDocument(const QString& htmlText, qreal maxWidth, Qt::Alignment alignment) const
+NXTextPrivate::_createDocument(const QString& htmlText, qreal maxWidth, Qt::Alignment alignment) const noexcept
 {
   Q_Q(const NXText);
   std::unique_ptr<QTextDocument> doc = std::make_unique<QTextDocument>();
@@ -37,7 +37,7 @@ NXTextPrivate::_createDocument(const QString& htmlText, qreal maxWidth, Qt::Alig
   option.setWrapMode(_pIsWrapAnywhere ? QTextOption::WrapAnywhere : QTextOption::WrapAtWordBoundaryOrAnywhere);
   option.setAlignment(alignment);
   doc->setDefaultTextOption(option);
-  doc->setDefaultStyleSheet(QString("body{color:%1;}").arg(NXThemeColor(_themeMode, BasicText).name()));
+  doc->setDefaultStyleSheet(QStringLiteral("body{color:%1;}").arg(NXThemeColor(_themeMode, BasicText).name()));
   doc->setHtml(htmlText);
   qreal textWidth = doc->idealWidth();
   if (maxWidth > 0) { textWidth = std::min(textWidth, maxWidth); }
@@ -46,11 +46,11 @@ NXTextPrivate::_createDocument(const QString& htmlText, qreal maxWidth, Qt::Alig
   return doc;
 }
 
-void NXTextPrivate::_drawNXIcon(QPainter& painter, const QRectF& targetRect) const
+void NXTextPrivate::_drawNXIcon(QPainter& painter, const QRectF& targetRect) const noexcept
 {
   Q_Q(const NXText);
   if (_pNXIcon == NXIconType::None) { return; }
-  QFont iconFont("NXAwesome");
+  QFont iconFont(QStringLiteral("NXAwesome"));
   iconFont.setPixelSize(q->font().pixelSize());
   painter.save();
   painter.setFont(iconFont);
@@ -59,7 +59,9 @@ void NXTextPrivate::_drawNXIcon(QPainter& painter, const QRectF& targetRect) con
   painter.restore();
 }
 
-void NXTextPrivate::_drawTextCentered(QPainter& painter, const QRectF& targetRect, const QString& htmlText) const
+void NXTextPrivate::_drawTextCentered(QPainter& painter,
+                                      const QRectF& targetRect,
+                                      const QString& htmlText) const noexcept
 {
   _drawTextDocumentHorizontal(painter, targetRect, htmlText, Qt::AlignCenter);
 }
@@ -67,7 +69,7 @@ void NXTextPrivate::_drawTextCentered(QPainter& painter, const QRectF& targetRec
 void NXTextPrivate::_drawTextDocumentHorizontal(QPainter& painter,
                                                 const QRectF& targetRect,
                                                 const QString& htmlText,
-                                                Qt::Alignment alignment) const
+                                                Qt::Alignment alignment) const noexcept
 {
   if (htmlText.isEmpty() || targetRect.isEmpty()) { return; }
   std::unique_ptr<QTextDocument> doc = _createDocument(htmlText, targetRect.width(), alignment);
@@ -80,7 +82,7 @@ void NXTextPrivate::_drawTextDocumentHorizontal(QPainter& painter,
   painter.restore();
 }
 
-bool NXTextPrivate::drawByDisplayMode(QPainter& painter) const
+bool NXTextPrivate::drawByDisplayMode(QPainter& painter) const noexcept
 {
   Q_Q(const NXText);
   if (_pDisplayMode == NXTextType::FollowStyle || _pDisplayMode == NXTextType::TextOnly) { return false; }
@@ -91,7 +93,7 @@ bool NXTextPrivate::drawByDisplayMode(QPainter& painter) const
   const bool hasIcon     = _pNXIcon != NXIconType::None;
   const qreal spacing    = 6.0;
 
-  QFont iconFont("NXAwesome");
+  QFont iconFont(QStringLiteral("NXAwesome"));
   iconFont.setPixelSize(q->font().pixelSize());
   QFontMetricsF iconMetrics(iconFont);
   const QSizeF iconSize(hasIcon ? iconMetrics.horizontalAdvance(QChar((unsigned short) _pNXIcon)) : 0,
@@ -115,13 +117,11 @@ bool NXTextPrivate::drawByDisplayMode(QPainter& painter) const
       QRectF iconRect(viewport.left() + (viewport.width() - totalWidth) / 2.0,
                       viewport.top() + (viewport.height() - totalHeight) / 2.0 +
                           (totalHeight - iconSize.height()) / 2.0,
-                      iconSize.width(),
-                      iconSize.height());
+                      iconSize.width(), iconSize.height());
       QRectF textRect(iconRect.right() + spacing,
                       viewport.top() + (viewport.height() - totalHeight) / 2.0 +
                           (totalHeight - textSize.height()) / 2.0,
-                      textSize.width(),
-                      textSize.height());
+                      textSize.width(), textSize.height());
       _drawNXIcon(painter, iconRect);
       _drawTextDocumentHorizontal(painter, textRect, htmlText, Qt::AlignLeft);
       return true;
@@ -155,8 +155,8 @@ bool NXTextPrivate::drawByDisplayMode(QPainter& painter) const
       qreal startY      = viewport.top() + (viewport.height() - totalHeight) / 2.0;
       qreal centerX     = viewport.left() + viewport.width() / 2.0;
       QRectF iconRect(centerX - iconSize.width() / 2.0, startY, iconSize.width(), iconSize.height());
-      QRectF textRect(
-          centerX - textSize.width() / 2.0, startY + iconSize.height() + spacing, textSize.width(), textSize.height());
+      QRectF textRect(centerX - textSize.width() / 2.0, startY + iconSize.height() + spacing, textSize.width(),
+                      textSize.height());
       _drawNXIcon(painter, iconRect);
       _drawTextDocumentHorizontal(painter, textRect, htmlText, Qt::AlignCenter);
     }

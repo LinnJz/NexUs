@@ -17,7 +17,7 @@ NXPivotView::NXPivotView(QWidget *parent)
   _pCurrentIndexRect    = QRect();
   _pIsAnimationFinished = true;
   setObjectName("NXPivotView");
-  setStyleSheet("#NXPivotView{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXPivotView{background-color:transparent;}"));
   setMouseTracking(true);
   setVerticalScrollBar(new NXScrollBar(this));
   setHorizontalScrollBar(new NXScrollBar(this));
@@ -35,10 +35,7 @@ void NXPivotView::doCurrentIndexChangedAnimation(const QModelIndex& index)
     _pCurrentIndexRect                = visualRect(index);
     QPropertyAnimation *markAnimation = new QPropertyAnimation(this, "pMarkX");
     connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=]() { update(); });
-    connect(markAnimation,
-            &QPropertyAnimation::finished,
-            this,
-            [=]()
+    connect(markAnimation, &QPropertyAnimation::finished, this, [=]()
     {
       _pIsAnimationFinished = true;
       update();
@@ -69,10 +66,7 @@ void NXPivotView::doCurrentIndexChangedAnimation(const QModelIndex& index)
     _pCurrentIndexRect                = visualRect(model()->index(_pPivotStyle->getCurrentIndex(), 0));
     QPropertyAnimation *markAnimation = new QPropertyAnimation(this, "pMarkX");
     connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=]() { update(); });
-    connect(markAnimation,
-            &QPropertyAnimation::finished,
-            this,
-            [=]()
+    connect(markAnimation, &QPropertyAnimation::finished, this, [=]()
     {
       _pIsAnimationFinished = true;
       update();
@@ -130,8 +124,7 @@ void NXPivotView::paintEvent(QPaintEvent *event)
   if (_pIsAnimationFinished)
   {
     painter.drawRoundedRect(
-        QRect(currentIndexRect.center().x() - _pMarkWidth / 2, viewPortRect.bottom() - 4, _pMarkAnimationWidth, 3),
-        3,
+        QRect(currentIndexRect.center().x() - _pMarkWidth / 2, viewPortRect.bottom() - 4, _pMarkAnimationWidth, 3), 3,
         3);
   }
   else

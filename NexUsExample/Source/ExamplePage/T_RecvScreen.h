@@ -14,7 +14,7 @@ public:
   Q_SLOT void onSendHandleResult(QPixmap pix);
 
 protected:
-  virtual void paintEvent(QPaintEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 
 private:
   QPixmap _pix;

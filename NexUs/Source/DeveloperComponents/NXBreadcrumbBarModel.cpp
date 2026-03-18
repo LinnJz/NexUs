@@ -20,20 +20,20 @@ QVariant NXBreadcrumbBarModel::data(const QModelIndex& index, int role) const
     if (index.row() % 2 == 0) { return _breadcrumbList[index.row() / 2]; }
     else
     {
-      return ">";
+      return QStringLiteral(">");
     }
   }
   else if (role == Qt::UserRole)
   {
     if (index.row() == _breadcrumbList.count() * 2 - 2 || index.row() == _breadcrumbList.count() * 2 - 3)
     {
-      return QString("LastBreadcrumb");
+      return QStringLiteral("LastBreadcrumb");
     }
   }
   return QVariant();
 }
 
-void NXBreadcrumbBarModel::appendBreadcrumb(const QString& breadcrumb)
+void NXBreadcrumbBarModel::appendBreadcrumb(const QString& breadcrumb) noexcept
 {
   if (!breadcrumb.isEmpty())
   {
@@ -51,7 +51,7 @@ void NXBreadcrumbBarModel::appendBreadcrumb(const QString& breadcrumb)
   }
 }
 
-void NXBreadcrumbBarModel::removeBreadcrumb(const QString& breadcrumb)
+void NXBreadcrumbBarModel::removeBreadcrumb(const QString& breadcrumb) noexcept
 {
   if (_breadcrumbList.contains(breadcrumb))
   {
@@ -61,7 +61,7 @@ void NXBreadcrumbBarModel::removeBreadcrumb(const QString& breadcrumb)
   }
 }
 
-void NXBreadcrumbBarModel::removeBreadcrumb(int index)
+void NXBreadcrumbBarModel::removeBreadcrumb(int index) noexcept
 {
   if (index >= _breadcrumbList.count()) { return; }
   beginResetModel();
@@ -77,13 +77,13 @@ void NXBreadcrumbBarModel::removeBreadcrumb(int index)
   endResetModel();
 }
 
-void NXBreadcrumbBarModel::setBreadcrumbList(QStringList breadcrumbList)
+void NXBreadcrumbBarModel::setBreadcrumbList(const QStringList& breadcrumbList) noexcept
 {
   beginResetModel();
   this->_breadcrumbList = breadcrumbList;
   endResetModel();
 }
 
-int NXBreadcrumbBarModel::getBreadcrumbListCount() { return _breadcrumbList.count(); }
+int NXBreadcrumbBarModel::getBreadcrumbListCount() const noexcept { return _breadcrumbList.count(); }
 
-QStringList NXBreadcrumbBarModel::getBreadcrumbList() { return _breadcrumbList; }
+QStringList NXBreadcrumbBarModel::getBreadcrumbList() const noexcept { return _breadcrumbList; }

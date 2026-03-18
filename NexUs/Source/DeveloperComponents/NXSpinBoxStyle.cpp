@@ -79,17 +79,15 @@ void NXSpinBoxStyle::drawComplexControl(ComplexControl control,
     painter->drawPath(path);
 
     // 添加图标
-    QFont iconFont = QFont("NXAwesome");
+    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     iconFont.setPixelSize(17);
     painter->setFont(iconFont);
     painter->setPen(NXThemeColor(_themeMode, BasicText));
-    painter->drawText(addLineRect,
-                      Qt::AlignCenter,
+    painter->drawText(addLineRect, Qt::AlignCenter,
                       _pButtonMode == NXSpinBoxType::PMSide ? QChar((unsigned short) NXIconType::Plus)
                                                             : QChar((unsigned short) NXIconType::AngleUp));
     // 减小图标
-    painter->drawText(subLineRect,
-                      Qt::AlignCenter,
+    painter->drawText(subLineRect, Qt::AlignCenter,
                       _pButtonMode == NXSpinBoxType::PMSide ? QChar((unsigned short) NXIconType::Minus)
                                                             : QChar((unsigned short) NXIconType::AngleDown));
     painter->restore();
@@ -123,26 +121,20 @@ QRect NXSpinBoxStyle::subControlRect(ComplexControl cc,
       {
       case NXSpinBoxType::Inline :
       {
-        return QRect(spinBoxRect.width() - spinBoxRect.height(),
-                     spinBoxRect.y(),
-                     spinBoxRect.height(),
+        return QRect(spinBoxRect.width() - spinBoxRect.height(), spinBoxRect.y(), spinBoxRect.height(),
                      spinBoxRect.height())
             .adjusted(3, 4, -3, -5);
       }
       case NXSpinBoxType::Compact :
       {
-        return QRect(spinBoxRect.width() - spinBoxRect.height(),
-                     spinBoxRect.y(),
-                     spinBoxRect.height(),
+        return QRect(spinBoxRect.width() - spinBoxRect.height(), spinBoxRect.y(), spinBoxRect.height(),
                      spinBoxRect.height() / 2)
             .adjusted(3, 4, -3, 0);
       }
       case NXSpinBoxType::Side :
       case NXSpinBoxType::PMSide :
       {
-        return QRect(spinBoxRect.width() - spinBoxRect.height(),
-                     spinBoxRect.y(),
-                     spinBoxRect.height(),
+        return QRect(spinBoxRect.width() - spinBoxRect.height(), spinBoxRect.y(), spinBoxRect.height(),
                      spinBoxRect.height())
             .adjusted(3, 4, -3, -5);
       }
@@ -156,17 +148,13 @@ QRect NXSpinBoxStyle::subControlRect(ComplexControl cc,
       {
       case NXSpinBoxType::Inline :
       {
-        return QRect(spinBoxRect.width() - 2 * spinBoxRect.height(),
-                     spinBoxRect.y(),
-                     spinBoxRect.height(),
+        return QRect(spinBoxRect.width() - 2 * spinBoxRect.height(), spinBoxRect.y(), spinBoxRect.height(),
                      spinBoxRect.height())
             .adjusted(6, 4, 0, -5);
       }
       case NXSpinBoxType::Compact :
       {
-        return QRect(spinBoxRect.width() - spinBoxRect.height(),
-                     spinBoxRect.center().y(),
-                     spinBoxRect.height(),
+        return QRect(spinBoxRect.width() - spinBoxRect.height(), spinBoxRect.center().y(), spinBoxRect.height(),
                      spinBoxRect.height() / 2)
             .adjusted(3, 0, -3, -5);
       }
@@ -185,22 +173,19 @@ QRect NXSpinBoxStyle::subControlRect(ComplexControl cc,
       {
       case NXSpinBoxType::Inline :
       {
-        return {
-          spinBoxRect.x(), spinBoxRect.y(), spinBoxRect.width() - 2 * spinBoxRect.height() + 6, spinBoxRect.height()
-        };
+        return { spinBoxRect.x(), spinBoxRect.y(), spinBoxRect.width() - 2 * spinBoxRect.height() + 6,
+                 spinBoxRect.height() };
       }
       case NXSpinBoxType::Compact :
       {
-        return {
-          spinBoxRect.x(), spinBoxRect.y(), spinBoxRect.width() - spinBoxRect.height() + 3, spinBoxRect.height()
-        };
+        return { spinBoxRect.x(), spinBoxRect.y(), spinBoxRect.width() - spinBoxRect.height() + 3,
+                 spinBoxRect.height() };
       }
       case NXSpinBoxType::Side :
       case NXSpinBoxType::PMSide :
       {
-        return {
-          spinBoxRect.height(), spinBoxRect.y(), spinBoxRect.width() - 2 * spinBoxRect.height(), spinBoxRect.height()
-        };
+        return { spinBoxRect.height(), spinBoxRect.y(), spinBoxRect.width() - 2 * spinBoxRect.height(),
+                 spinBoxRect.height() };
       }
       }
     }

@@ -3,6 +3,15 @@
 #include "NXTheme.h"
 #include "private/NXShadowGraphicsEffectPrivate.h"
 
+Q_PROPERTY_CREATE_CPP(NXShadowGraphicsEffect, NXShadowGraphicsEffectType::RotateMode, RotateMode)
+Q_PROPERTY_CREATE_CPP(NXShadowGraphicsEffect, NXShadowGraphicsEffectType::ProjectionMode, ProjectionMode)
+Q_PROPERTY_CREATE_CPP(NXShadowGraphicsEffect, qreal, Blur)
+Q_PROPERTY_CREATE_CPP(NXShadowGraphicsEffect, qreal, Spread)
+Q_PROPERTY_CREATE_CPP(NXShadowGraphicsEffect, QPointF, LightOffset)
+Q_PROPERTY_CREATE_CPP(NXShadowGraphicsEffect, QPointF, DarkOffset)
+Q_PROPERTY_CREATE_2_CPP(NXShadowGraphicsEffect, const QColor&, QColor, LightColor)
+Q_PROPERTY_CREATE_2_CPP(NXShadowGraphicsEffect, const QColor&, QColor, DarkColor)
+
 NXShadowGraphicsEffect::NXShadowGraphicsEffect(QObject *parent /*= nullptr*/)
     : QGraphicsEffect { parent }
     , d_ptr(new NXShadowGraphicsEffectPrivate())
@@ -29,110 +38,6 @@ NXShadowGraphicsEffect::NXShadowGraphicsEffect(QObject *parent /*= nullptr*/)
 }
 
 NXShadowGraphicsEffect::~NXShadowGraphicsEffect() { }
-
-void NXShadowGraphicsEffect::setDarkOffset(QPointF size)
-{
-  Q_D(NXShadowGraphicsEffect);
-  d->_pDarkOffset = size;
-  update();
-}
-
-QPointF NXShadowGraphicsEffect::getDarkOffset() const
-{
-  Q_D(const NXShadowGraphicsEffect);
-  return d->_pDarkOffset;
-}
-
-void NXShadowGraphicsEffect::setLightOffset(QPointF size)
-{
-  Q_D(NXShadowGraphicsEffect);
-  d->_pLightOffset = size;
-  update();
-}
-
-QPointF NXShadowGraphicsEffect::getLightOffset() const
-{
-  Q_D(const NXShadowGraphicsEffect);
-  return d->_pLightOffset;
-}
-
-void NXShadowGraphicsEffect::setRotateMode(NXShadowGraphicsEffectType::RotateMode mode)
-{
-  Q_D(NXShadowGraphicsEffect);
-  d->_pRotateMode = mode;
-  update();
-}
-
-NXShadowGraphicsEffectType::RotateMode NXShadowGraphicsEffect::getRotateMode() const
-{
-  Q_D(const NXShadowGraphicsEffect);
-  return d->_pRotateMode;
-}
-
-void NXShadowGraphicsEffect::setProjectionMode(NXShadowGraphicsEffectType::ProjectionMode mode)
-{
-  Q_D(NXShadowGraphicsEffect);
-  d->_pProjectionMode = mode;
-  update();
-}
-
-NXShadowGraphicsEffectType::ProjectionMode NXShadowGraphicsEffect::getProjectionMode() const
-{
-  Q_D(const NXShadowGraphicsEffect);
-  return d->_pProjectionMode;
-}
-
-void NXShadowGraphicsEffect::setBlur(qreal blur)
-{
-  Q_D(NXShadowGraphicsEffect);
-  d->_pBlur = blur;
-  update();
-}
-
-qreal NXShadowGraphicsEffect::getBlur() const
-{
-  Q_D(const NXShadowGraphicsEffect);
-  return d->_pBlur;
-}
-
-void NXShadowGraphicsEffect::setSpread(qreal spread)
-{
-  Q_D(NXShadowGraphicsEffect);
-  d->_pSpread = spread;
-  update();
-}
-
-qreal NXShadowGraphicsEffect::getSpread() const
-{
-  Q_D(const NXShadowGraphicsEffect);
-  return d->_pSpread;
-}
-
-void NXShadowGraphicsEffect::setLightColor(const QColor& color)
-{
-  Q_D(NXShadowGraphicsEffect);
-  d->_pLightColor = color;
-  update();
-}
-
-QColor NXShadowGraphicsEffect::getLightColor() const
-{
-  Q_D(const NXShadowGraphicsEffect);
-  return d->_pLightColor;
-}
-
-void NXShadowGraphicsEffect::setDarkColor(const QColor& color)
-{
-  Q_D(NXShadowGraphicsEffect);
-  d->_pDarkColor = color;
-  update();
-}
-
-QColor NXShadowGraphicsEffect::getDarkColor() const
-{
-  Q_D(const NXShadowGraphicsEffect);
-  return d->_pDarkColor;
-}
 
 QRectF NXShadowGraphicsEffect::boundingRectFor(const QRectF& rect) const
 {

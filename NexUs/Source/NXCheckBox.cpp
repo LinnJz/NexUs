@@ -28,25 +28,25 @@ NXCheckBox::NXCheckBox(const QString& text, QWidget *parent)
 
 NXCheckBox::~NXCheckBox() { delete this->style(); }
 
-void NXCheckBox::setTextPixelSize(int size)
+void NXCheckBox::setTextPixelSize(int size) noexcept
 {
   QFont font = this->font();
   font.setPixelSize(size);
   setFont(font);
 }
 
-int NXCheckBox::getTextPixelSize() const { return this->font().pixelSize(); }
+int NXCheckBox::getTextPixelSize() const noexcept { return this->font().pixelSize(); }
 
-void NXCheckBox::setTextPointSize(int size)
+void NXCheckBox::setTextPointSize(int size) noexcept
 {
   QFont font = this->font();
   font.setPointSize(size);
   setFont(font);
 }
 
-int NXCheckBox::getTextPointSize() const { return this->font().pointSize(); }
+int NXCheckBox::getTextPointSize() const noexcept { return this->font().pointSize(); }
 
-void NXCheckBox::setTextStyle(NXTextType::TextStyle textStyle)
+void NXCheckBox::setTextStyle(NXTextType::TextStyle textStyle) noexcept
 {
   Q_D(NXCheckBox);
   QFont textFont = font();
@@ -105,32 +105,32 @@ void NXCheckBox::setTextStyle(NXTextType::TextStyle textStyle)
   setFont(textFont);
 }
 
-NXTextType::TextStyle NXCheckBox::getTextStyle() const
+NXTextType::TextStyle NXCheckBox::getTextStyle() const noexcept
 {
   Q_D(const NXCheckBox);
   return d->_textStyle;
 }
 
-void NXCheckBox::setBorderRadius(int borderRadius)
+void NXCheckBox::setBorderRadius(int borderRadius) noexcept
 {
   Q_D(const NXCheckBox);
   d->_checkBoxStyle->setBorderRadius(borderRadius);
 }
 
-int NXCheckBox::getBorderRadius() const
+int NXCheckBox::getBorderRadius() const noexcept
 {
   Q_D(const NXCheckBox);
   return d->_checkBoxStyle->getBorderRadius();
 }
 
-void NXCheckBox::setIndicatorWidth(int indicatorWidth)
+void NXCheckBox::setCheckIndicatorWidth(int indicatorWidth) noexcept
 {
   Q_D(const NXCheckBox);
-  d->_checkBoxStyle->setIndicatorWidth(indicatorWidth);
+  d->_checkBoxStyle->setCheckIndicatorWidth(indicatorWidth);
 }
 
-int NXCheckBox::getIndicatorWidth() const
+int NXCheckBox::getCheckIndicatorWidth() const noexcept
 {
   Q_D(const NXCheckBox);
-  return d->_checkBoxStyle->getIndicatorWidth();
+  return d->_checkBoxStyle->getCheckIndicatorWidth();
 }

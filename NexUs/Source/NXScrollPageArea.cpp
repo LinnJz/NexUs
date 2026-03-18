@@ -5,7 +5,7 @@
 
 #include "NXTheme.h"
 #include "private/NXScrollPageAreaPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(NXScrollPageArea, int, BorderRadius)
+Q_PROPERTY_CREATE_CPP(NXScrollPageArea, int, BorderRadius)
 
 NXScrollPageArea::NXScrollPageArea(QWidget *parent)
     : QWidget { parent }
@@ -16,8 +16,8 @@ NXScrollPageArea::NXScrollPageArea(QWidget *parent)
   d->_pBorderRadius = 6;
   setFixedHeight(75);
   d->_themeMode = nxTheme->getThemeMode();
-  connect(
-      nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this,
+          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXScrollPageArea::~NXScrollPageArea() { }

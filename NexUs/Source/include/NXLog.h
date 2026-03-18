@@ -16,17 +16,18 @@ class NX_EXPORT NXLog : public QObject
 {
   Q_OBJECT
   Q_Q_CREATE(NXLog)
-  Q_PROPERTY_CREATE_Q_H(QString, LogSavePath)
-  Q_PROPERTY_CREATE_Q_H(QString, LogFileName)
-  Q_PROPERTY_CREATE_Q_H(bool, IsLogFileNameWithTime)
-  LINN_SINGLETON_CREATE(LINN_SINGLETON_UNIQUE(NXLog))
+  Q_SINGLETON_CREATE(QS_S_UNIQUE(NXLog))
+  Q_PROPERTY_CREATE_H(bool, IsLogFileNameWithTime)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, LogSavePath)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, LogFileName)
 
 private:
   explicit NXLog(QObject *parent = nullptr);
   ~NXLog();
 
 public:
-  void initMessageLog(bool isEnable);
+  void initMessageLog(bool isEnable) noexcept;
+
 Q_SIGNALS:
   void logMessage(const QString& log);
 };

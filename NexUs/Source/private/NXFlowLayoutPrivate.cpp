@@ -82,7 +82,7 @@ int NXFlowLayoutPrivate::_doLayout(const QRect& rect, bool testOnly) const
   return y + lineHeight - rect.y() + bottom;
 }
 
-int NXFlowLayoutPrivate::_smartSpacing(QStyle::PixelMetric pm) const
+int NXFlowLayoutPrivate::_smartSpacing(QStyle::PixelMetric pm) const noexcept
 {
   Q_Q(const NXFlowLayout);
   QObject *parent = q->parent();

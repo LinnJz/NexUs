@@ -117,10 +117,7 @@ T_TableWidget::T_TableWidget(QWidget *parent)
   }
 
   // 设置列宽
-  connect(_tableWidget,
-          &NXTableWidget::tableWidgetShow,
-          this,
-          [=]()
+  connect(_tableWidget, &NXTableWidget::tableWidgetShow, this, [=]()
   {
     _tableWidget->setColumnWidth(0, 60);
     _tableWidget->setColumnWidth(1, 205);

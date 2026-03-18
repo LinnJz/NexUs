@@ -16,7 +16,7 @@ NXDoubleSpinBoxPrivate::NXDoubleSpinBoxPrivate(QObject *parent)
 
 NXDoubleSpinBoxPrivate::~NXDoubleSpinBoxPrivate() { }
 
-void NXDoubleSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
+void NXDoubleSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_Q(NXDoubleSpinBox);
   _themeMode = themeMode;
@@ -27,7 +27,7 @@ void NXDoubleSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
   }
 }
 
-NXMenu *NXDoubleSpinBoxPrivate::_createStandardContextMenu()
+NXMenu *NXDoubleSpinBoxPrivate::_createStandardContextMenu() noexcept
 {
   Q_Q(NXDoubleSpinBox);
   QLineEdit *lineEdit = q->lineEdit();
@@ -70,10 +70,7 @@ NXMenu *NXDoubleSpinBoxPrivate::_createStandardContextMenu()
   {
     action = menu->addNXIconAction(NXIconType::DeleteLeft, tr("删除"));
     action->setEnabled(!lineEdit->isReadOnly() && !lineEdit->text().isEmpty() && lineEdit->hasSelectedText());
-    connect(action,
-            &QAction::triggered,
-            this,
-            [=](bool checked)
+    connect(action, &QAction::triggered, this, [=](bool checked)
     {
       if (lineEdit->hasSelectedText())
       {
@@ -91,7 +88,7 @@ NXMenu *NXDoubleSpinBoxPrivate::_createStandardContextMenu()
   return menu;
 }
 
-void NXDoubleSpinBoxPrivate::_changnxTheme()
+void NXDoubleSpinBoxPrivate::_changnxTheme() noexcept
 {
   Q_Q(NXDoubleSpinBox);
   QPalette palette;

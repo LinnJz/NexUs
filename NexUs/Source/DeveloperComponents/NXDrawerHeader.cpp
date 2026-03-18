@@ -14,7 +14,7 @@ NXDrawerHeader::NXDrawerHeader(QWidget *parent)
   setFixedHeight(75);
   setMouseTracking(true);
   setObjectName("NXDrawerHeader");
-  setStyleSheet("#NXDrawerHeader{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXDrawerHeader{background-color:transparent;}"));
 
   _mainLayout = new QVBoxLayout(this);
   _mainLayout->setContentsMargins(0, 0, 0, 0);
@@ -26,7 +26,7 @@ NXDrawerHeader::NXDrawerHeader(QWidget *parent)
 
 NXDrawerHeader::~NXDrawerHeader() { }
 
-void NXDrawerHeader::setHeaderWidget(QWidget *widget)
+void NXDrawerHeader::setHeaderWidget(QWidget *widget) noexcept
 {
   if (!widget) { return; }
   if (_headerWidget)
@@ -116,16 +116,15 @@ void NXDrawerHeader::paintEvent(QPaintEvent *event)
   else
   {
     painter.drawLine(_pBorderRadius, height() - 1, width() - _pBorderRadius, height() - 1);
-    painter.drawArc(
-        QRectF(1, height() - 1 - 2 * _pBorderRadius, 2 * _pBorderRadius, 2 * _pBorderRadius), 240 * 16, 30 * 16);
+    painter.drawArc(QRectF(1, height() - 1 - 2 * _pBorderRadius, 2 * _pBorderRadius, 2 * _pBorderRadius), 240 * 16,
+                    30 * 16);
     painter.drawArc(
         QRectF(width() - 2 * _pBorderRadius, height() - 1 - 2 * _pBorderRadius, 2 * _pBorderRadius, 2 * _pBorderRadius),
-        -90 * 16,
-        30 * 16);
+        -90 * 16, 30 * 16);
   }
 
   // 展开图标绘制
-  QFont iconFont = QFont("NXAwesome");
+  QFont iconFont = QFont(QStringLiteral("NXAwesome"));
   iconFont.setPixelSize(17);
   painter.setFont(iconFont);
   painter.setPen(isEnabled() ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));

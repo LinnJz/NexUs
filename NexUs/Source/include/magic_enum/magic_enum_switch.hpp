@@ -206,8 +206,8 @@ constexpr decltype(auto) enum_switch(F&& f, E value, Result&& result)
   return detail::constexpr_switch<&detail::values_v<D, S>, detail::case_call_t::value>(
       std::forward<F>(f), value, [&result]() -> R { return std::forward<Result>(result); });
 #else
-  return detail::constexpr_switch<R, D, S>(
-      std::forward<F>(f), value, [&result]() -> R { return std::forward<Result>(result); });
+  return detail::constexpr_switch<R, D, S>(std::forward<F>(f), value,
+                                           [&result]() -> R { return std::forward<Result>(result); });
 #endif
 }
 

@@ -28,32 +28,32 @@ public:
   explicit NXContentDialog(QWidget *parent);
   ~NXContentDialog() override;
 
-  void setCentralWidget(QWidget *centralWidget);
+  void setCentralWidget(QWidget *centralWidget) noexcept;
 
-  NXPushButton *leftButton() const;
-  NXPushButton *middleButton() const;
-  NXPushButton *rightButton() const;
-  NXPushButton *button(ButtonType button) const;
+  NXPushButton *leftButton() const noexcept;
+  NXPushButton *middleButton() const noexcept;
+  NXPushButton *rightButton() const noexcept;
+  NXPushButton *button(ButtonType button) const noexcept;
 
-  void setButtonText(ButtonType button, const QString& text);
-  QString getButtonText(ButtonType button) const;
+  void setButtonText(ButtonType button, const QString& text) noexcept;
+  QString getButtonText(ButtonType button) const noexcept;
 
-  void setIsButtonVisible(ButtonType button, bool visible);
-  bool getIsButtonVisible(ButtonType button) const;
+  void setIsButtonVisible(ButtonType button, bool visible) noexcept;
+  bool getIsButtonVisible(ButtonType button) const noexcept;
 
-  void setButtonDoneCode(ButtonType button, int doneCode);
-  int getButtonDoneCode(ButtonType button) const;
+  void setButtonDoneCode(ButtonType button, int doneCode) noexcept;
+  int getButtonDoneCode(ButtonType button) const noexcept;
 
-  void doneWithAnimation(int code);
+  void doneWithAnimation(int code) noexcept;
 
-  NXAppBar *appBar() const;
+  NXAppBar *appBar() const noexcept;
 Q_SIGNALS:
-  Q_SIGNAL void buttonClicked(ButtonType buttonType);
+  void buttonClicked(ButtonType buttonType);
 
 protected:
-  virtual void showEvent(QShowEvent *event) override;
-  virtual void paintEvent(QPaintEvent *event) override;
-  virtual void keyPressEvent(QKeyEvent *event) override;
+  void showEvent(QShowEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
+  void keyPressEvent(QKeyEvent *event) override;
 };
 
 #endif // NXCONTENTDIALOG_H

@@ -21,7 +21,7 @@ class NXMessageBar;
 class NXMessageBarManager : public QObject
 {
   Q_OBJECT
-  LINN_SINGLETON_CREATE(LINN_SINGLETON_UNIQUE(NXMessageBarManager))
+  Q_SINGLETON_CREATE(QS_S_UNIQUE(NXMessageBarManager))
 
 private:
   explicit NXMessageBarManager(QObject *parent = nullptr);
@@ -29,17 +29,17 @@ private:
 
 public:
   // 请求事件堆栈调用
-  void requestMessageBarEvent(NXMessageBar *messageBar);
+  void requestMessageBarEvent(NXMessageBar *messageBar) noexcept;
   // 发布创建事件
-  void postMessageBarCreateEvent(NXMessageBar *messageBar);
+  void postMessageBarCreateEvent(NXMessageBar *messageBar) noexcept;
   // 发布终止事件
-  void postMessageBarEndEvent(NXMessageBar *messageBar);
+  void postMessageBarEndEvent(NXMessageBar *messageBar) noexcept;
   // 强制发布终止事件
-  void forcePostMessageBarEndEvent(NXMessageBar *messageBar);
+  void forcePostMessageBarEndEvent(NXMessageBar *messageBar) noexcept;
   // 获取当前事件数量
-  int getMessageBarEventCount(NXMessageBar *messageBar);
+  int getMessageBarEventCount(NXMessageBar *messageBar) noexcept;
   // 更新活动序列
-  void updateActiveMap(NXMessageBar *messageBar, bool isActive);
+  void updateActiveMap(NXMessageBar *messageBar, bool isActive) noexcept;
 
 private:
   QMap<NXMessageBar *, QList<QVariantMap>> _messageBarEventMap;
@@ -59,19 +59,19 @@ class NXMessageBarPrivate : public QObject
 public:
   explicit NXMessageBarPrivate(QObject *parent = nullptr);
   ~NXMessageBarPrivate() override;
-  void tryToRequestMessageBarEvent();
-  WorkStatus getWorkMode() const;
-  Q_INVOKABLE void onOtherMessageBarEnd(QVariantMap eventData);
-  Q_INVOKABLE void messageBarEnd(QVariantMap eventData);
-  Q_SLOT void onCloseButtonClicked();
-  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
+  void tryToRequestMessageBarEvent() noexcept;
+  WorkStatus getWorkMode() const noexcept;
+  Q_INVOKABLE void onOtherMessageBarEnd(const QVariantMap& eventData);
+  Q_INVOKABLE void messageBarEnd(const QVariantMap& eventData);
+  Q_SLOT void onCloseButtonClicked() noexcept;
+  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept;
 
 private:
   qreal _createTime { 0 };
   qreal _timePercentHeight { 2 };
 
-  QString _title { "" };
-  QString _text { "" };
+  QString _title { };
+  QString _text { };
   NXThemeType::ThemeMode _themeMode;
   int _borderRadius { 6 };
   NXMessageBarType::PositionPolicy _policy;
@@ -97,23 +97,23 @@ private:
   bool _isMessageBarEventAnimationStart { false };
   NXIconButton *_closeButton { nullptr };
 
-  Q_INVOKABLE void _messageBarCreate(int displayMsec);
+  Q_INVOKABLE void _messageBarCreate(int displayMsec) noexcept;
 
   // 初始坐标计算
-  void _calculateInitialPos(int& startX, int& startY, int& endX, int& endY);
+  void _calculateInitialPos(int& startX, int& startY, int& endX, int& endY) noexcept;
   // 获取总高度和次序信息
-  QList<int> _getOtherMessageBarTotalData(bool isJudgeCreateOrder = false);
+  QList<int> _getOtherMessageBarTotalData(bool isJudgeCreateOrder = false) noexcept;
   // 计算目标坐标
-  qreal _calculateTargetPosY();
+  qreal _calculateTargetPosY() noexcept;
 
   // 创建次序判断
-  bool _judgeCreateOrder(NXMessageBar *otherMessageBar);
+  bool _judgeCreateOrder(NXMessageBar *otherMessageBar) noexcept;
 
   // 绘制函数
-  void _drawSuccess(QPainter *painter);
-  void _drawWarning(QPainter *painter);
-  void _drawInformation(QPainter *painter);
-  void _drawError(QPainter *painter);
+  void _drawSuccess(QPainter *painter) noexcept;
+  void _drawWarning(QPainter *painter) noexcept;
+  void _drawInformation(QPainter *painter) noexcept;
+  void _drawError(QPainter *painter) noexcept;
 };
 
 #endif // NXMESSAGEBARPRIVATE_H

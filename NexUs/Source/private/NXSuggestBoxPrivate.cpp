@@ -14,8 +14,8 @@ NXSuggestion::NXSuggestion(QObject *parent)
     : QObject(parent)
 {
   _pNXIcon      = NXIconType::None;
-  _pSuggestText = "";
-  _pSuggestKey  = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
+  _pSuggestText = {};
+  _pSuggestKey  = QUuid::createUuid().toString().remove(QStringLiteral("{")).remove(QStringLiteral("}")).remove(QStringLiteral("-"));
   _pSuggestData = QVariantMap();
 }
 
@@ -28,7 +28,7 @@ NXSuggestBoxPrivate::NXSuggestBoxPrivate(QObject *parent)
 
 NXSuggestBoxPrivate::~NXSuggestBoxPrivate() { }
 
-void NXSuggestBoxPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode)
+void NXSuggestBoxPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   _themeMode = themeMode;
   _searchEdit->removeAction(_themeMode == NXThemeType::Light ? _darkSearchAction : _lightSearchAction);
@@ -37,7 +37,7 @@ void NXSuggestBoxPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode)
   _searchEdit->update();
 }
 
-void NXSuggestBoxPrivate::onSearchEditTextEdit(const QString& searchText)
+void NXSuggestBoxPrivate::onSearchEditTextEdit(const QString& searchText) noexcept
 {
   Q_Q(NXSuggestBox);
   if (searchText.isEmpty())
@@ -77,7 +77,7 @@ void NXSuggestBoxPrivate::onSearchEditTextEdit(const QString& searchText)
   }
 }
 
-void NXSuggestBoxPrivate::onSearchViewClicked(const QModelIndex& index)
+void NXSuggestBoxPrivate::onSearchViewClicked(const QModelIndex& index) noexcept
 {
   Q_Q(NXSuggestBox);
   _searchEdit->clear();
@@ -90,14 +90,13 @@ void NXSuggestBoxPrivate::onSearchViewClicked(const QModelIndex& index)
   _startCloseAnimation();
 }
 
-void NXSuggestBoxPrivate::_startSizeAnimation(QSize oldSize, QSize newSize)
+void NXSuggestBoxPrivate::_startSizeAnimation(QSize oldSize, QSize newSize) noexcept
 {
   if (_lastSize.isValid() && _lastSize == newSize) { return; }
   _shadowLayout->removeWidget(_searchView);
   QPropertyAnimation *expandAnimation = new QPropertyAnimation(_searchViewBaseWidget, "size");
-  connect(expandAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
-    _searchView->resize(_searchViewBaseWidget->size());
-  });
+  connect(expandAnimation, &QPropertyAnimation::valueChanged, this,
+          [=]() { _searchView->resize(_searchViewBaseWidget->size()); });
   connect(expandAnimation, &QPropertyAnimation::finished, this, [=]() { _shadowLayout->addWidget(_searchView); });
   expandAnimation->setDuration(300);
   expandAnimation->setEasingCurve(QEasingCurve::InOutSine);
@@ -107,16 +106,13 @@ void NXSuggestBoxPrivate::_startSizeAnimation(QSize oldSize, QSize newSize)
   _lastSize = newSize;
 }
 
-void NXSuggestBoxPrivate::_startExpandAnimation()
+void NXSuggestBoxPrivate::_startExpandAnimation() noexcept
 {
   if (!_isExpandAnimationFinished) { return; }
   _isCloseAnimationFinished           = true;
   _isExpandAnimationFinished          = false;
   QPropertyAnimation *expandAnimation = new QPropertyAnimation(_searchView, "pos");
-  connect(expandAnimation,
-          &QPropertyAnimation::finished,
-          this,
-          [=]()
+  connect(expandAnimation, &QPropertyAnimation::finished, this, [=]()
   {
     _isExpandAnimationFinished = true;
     _searchView->clearSelection();
@@ -128,7 +124,7 @@ void NXSuggestBoxPrivate::_startExpandAnimation()
   expandAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXSuggestBoxPrivate::_startCloseAnimation()
+void NXSuggestBoxPrivate::_startCloseAnimation() noexcept
 {
   if (!_isCloseAnimationFinished) { return; }
   _isExpandAnimationFinished               = true;
@@ -140,10 +136,7 @@ void NXSuggestBoxPrivate::_startCloseAnimation()
   baseWidgetsAnimation->setEndValue(QSize(_searchViewBaseWidget->width(), 0));
   baseWidgetsAnimation->start(QAbstractAnimation::DeleteWhenStopped);
   QPropertyAnimation *closeAnimation = new QPropertyAnimation(_searchView, "pos");
-  connect(closeAnimation,
-          &QPropertyAnimation::finished,
-          this,
-          [=]()
+  connect(closeAnimation, &QPropertyAnimation::finished, this, [=]()
   {
     _isCloseAnimationFinished = true;
     _searchModel->clearSearchNode();

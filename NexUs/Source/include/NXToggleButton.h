@@ -10,27 +10,28 @@ class NX_EXPORT NXToggleButton : public QWidget
 {
   Q_OBJECT
   Q_Q_CREATE(NXToggleButton)
-  Q_PROPERTY_CREATE_Q_H(bool, IsIconVisible)
-  Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
-  Q_PROPERTY_CREATE_Q_H(QString, Text)
+  Q_PROPERTY_CREATE_H(bool, IsIconVisible)
+  Q_PROPERTY_CREATE_H(int, BorderRadius)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, Text)
 
 public:
   explicit NXToggleButton(QWidget *parent = nullptr);
-  explicit NXToggleButton(QString text, QWidget *parent = nullptr);
+  explicit NXToggleButton(const QString& text, QWidget *parent = nullptr);
   ~NXToggleButton() override;
 
-  void setIsToggled(bool isToggled);
-  bool getIsToggled() const;
+  void setIsToggled(bool isToggled) noexcept;
+  bool getIsToggled() const noexcept;
 
-  void setNXIcon(NXIconType::IconName icon);
+  void setNXIcon(NXIconType::IconName icon) noexcept;
+
 Q_SIGNALS:
-  Q_SIGNAL void toggled(bool checked);
+  void toggled(bool checked);
 
 protected:
-  virtual bool event(QEvent *event) override;
-  virtual void mousePressEvent(QMouseEvent *event) override;
-  virtual void mouseReleaseEvent(QMouseEvent *event) override;
-  virtual void paintEvent(QPaintEvent *event) override;
+  bool event(QEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // NXTOGGLEBUTTON_H

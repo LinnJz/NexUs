@@ -13,7 +13,7 @@ NXListView::NXListView(QWidget *parent)
   Q_D(NXListView);
   d->q_ptr = this;
   setObjectName("NXListView");
-  setStyleSheet("#NXListView{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXListView{background-color:transparent;}"));
   d->_listViewStyle = new NXListViewStyle(style());
   setStyle(d->_listViewStyle);
   setMouseTracking(true);
@@ -31,7 +31,7 @@ NXListView::~NXListView()
   delete d->_listViewStyle;
 }
 
-void NXListView::setItemHeight(int itemHeight)
+void NXListView::setItemHeight(int itemHeight) noexcept
 {
   Q_D(NXListView);
   if (itemHeight > 0)
@@ -41,20 +41,20 @@ void NXListView::setItemHeight(int itemHeight)
   }
 }
 
-int NXListView::getItemHeight() const
+int NXListView::getItemHeight() const noexcept
 {
   Q_D(const NXListView);
   return d->_listViewStyle->getItemHeight();
 }
 
-void NXListView::setIsTransparent(bool isTransparent)
+void NXListView::setIsTransparent(bool isTransparent) noexcept
 {
   Q_D(NXListView);
   d->_listViewStyle->setIsTransparent(isTransparent);
   update();
 }
 
-bool NXListView::getIsTransparent() const
+bool NXListView::getIsTransparent() const noexcept
 {
   Q_D(const NXListView);
   return d->_listViewStyle->getIsTransparent();

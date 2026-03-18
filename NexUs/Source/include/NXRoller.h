@@ -10,30 +10,31 @@ class NX_EXPORT NXRoller : public QWidget
 {
   Q_OBJECT
   Q_Q_CREATE(NXRoller)
-  Q_PROPERTY_CREATE_Q_H(bool, IsContainer)
-  Q_PROPERTY_CREATE_Q_H(bool, IsEnableLoop)
-  Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
-  Q_PROPERTY_CREATE_Q_H(int, ItemHeight)
-  Q_PROPERTY_CREATE_Q_H(int, MaxVisibleItems)
-  Q_PROPERTY_CREATE_Q_H(int, CurrentIndex)
-  Q_PROPERTY_CREATE_Q_H(QStringList, ItemList)
+  Q_PROPERTY_CREATE_H(bool, IsContainer)
+  Q_PROPERTY_CREATE_H(bool, IsEnableLoop)
+  Q_PROPERTY_CREATE_H(int, BorderRadius)
+  Q_PROPERTY_CREATE_H(int, ItemHeight)
+  Q_PROPERTY_CREATE_H(int, MaxVisibleItems)
+  Q_PROPERTY_CREATE_H(int, CurrentIndex)
+  Q_PROPERTY_CREATE_2_H(const QStringList&, QStringList, ItemList)
 
 public:
   explicit NXRoller(QWidget *parent = nullptr);
   ~NXRoller() override;
 
-  void setCurrentData(const QString& data);
-  QString getCurrentData() const;
+  void setCurrentData(const QString& data) noexcept;
+  QString getCurrentData() const noexcept;
+
 Q_SIGNALS:
-  Q_SIGNAL void currentDataChanged(const QString& data);
+  void currentDataChanged(const QString& data);
 
 protected:
-  virtual void wheelEvent(QWheelEvent *event) override;
-  virtual void mousePressEvent(QMouseEvent *event) override;
-  virtual void mouseReleaseEvent(QMouseEvent *event) override;
-  virtual void mouseMoveEvent(QMouseEvent *event);
-  virtual void leaveEvent(QEvent *event);
-  virtual void paintEvent(QPaintEvent *event) override;
+  void wheelEvent(QWheelEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event);
+  void leaveEvent(QEvent *event);
+  void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // NXFRAMEWORK_NEXUS_INCLUDE_NXROLLER_H_

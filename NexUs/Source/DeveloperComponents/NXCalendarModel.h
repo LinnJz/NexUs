@@ -19,7 +19,7 @@ struct NXCalendarData : public QObjectData
 public:
   NXCalendarData() { };
   ~NXCalendarData() { };
-  NXCalendarData(int year, int month, int day, QString desText = "")
+  NXCalendarData(int year, int month, int day, const QString& desText = {})
       : year(year)
       , month(month)
       , day(day)
@@ -36,7 +36,7 @@ public:
   int year  = 1924;
   int month = 1;
   int day   = 1;
-  QString desText { "" };
+  QString desText {};
 };
 
 Q_DECLARE_METATYPE(NXCalendarData);
@@ -44,26 +44,24 @@ Q_DECLARE_METATYPE(NXCalendarData);
 class NXCalendarModel : public QAbstractListModel
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE_Q_H(QDate, MinimumDate)
-  Q_PRIVATE_CREATE_Q_H(QDate, MaximumDate)
+  Q_PRIVATE_CREATE_H(QDate, MinimumDate)
+  Q_PRIVATE_CREATE_H(QDate, MaximumDate)
+  Q_PRIVATE_CREATE_H(NXCalendarType, DisplayMode)
 
 public:
   explicit NXCalendarModel(QObject *parent = nullptr);
   ~NXCalendarModel();
 
-  void setDisplayMode(NXCalendarType displayType);
-  NXCalendarType getDisplayMode() const;
-
-  QModelIndex getIndexFromDate(QDate date);
-  QDate getDateFromIndex(const QModelIndex& index) const;
-  virtual QVariant data(const QModelIndex& index, int role) const override;
+  QModelIndex getIndexFromDate(QDate date) const noexcept;
+  QDate getDateFromIndex(const QModelIndex& index) const noexcept;
+  QVariant data(const QModelIndex& index, int role) const override;
 
 Q_SIGNALS:
-  Q_SIGNAL void currentYearMonthChanged(const QString& date);
-  Q_SIGNAL void displayModeChanged();
+  void currentYearMonthChanged(const QString& date);
+  void displayModeChanged();
 
 protected:
-  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+  int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
 private:
   NXCalendarType _displayMode { NXCalendarType::DayMode };

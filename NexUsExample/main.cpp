@@ -10,6 +10,12 @@
 #include <QVBoxLayout>
 #include "NXText.h"
 #include "NXTabWidget.h"
+
+struct A
+{
+  Q_PROPERTY_CREATE(QString, Text)
+};
+
 int main(int argc, char* argv[])
 {
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))

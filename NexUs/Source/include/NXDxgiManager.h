@@ -16,32 +16,32 @@ class NX_EXPORT NXDxgiManager : public QObject
 {
   Q_OBJECT
   Q_Q_CREATE(NXDxgiManager)
-  LINN_SINGLETON_CREATE(LINN_SINGLETON_UNIQUE(NXDxgiManager))
+  Q_SINGLETON_CREATE(QS_S_UNIQUE(NXDxgiManager))
 
 private:
   explicit NXDxgiManager(QObject *parent = nullptr);
   ~NXDxgiManager();
 
 public:
-  QStringList getDxDeviceList() const;
-  QStringList getOutputDeviceList() const;
-  QImage grabScreenToImage() const;
-  void startGrabScreen();
-  void stopGrabScreen();
-  bool getIsGrabScreen() const;
-  bool setDxDeviceID(int dxID);
-  int getDxDeviceID() const;
-  bool setOutputDeviceID(int deviceID);
-  int getOutputDeviceID() const;
-  void setGrabArea(int width, int height); // 从屏幕中心向外延伸
-  void setGrabArea(int x, int y, int width, int height);
-  QRect getGrabArea() const;
-  void setGrabFrameRate(int frameRateValue);
-  int getGrabFrameRate() const;
-  void setTimeoutMsValue(int timeoutValue);
-  int getTimeoutMsValue() const;
+  QStringList getDxDeviceList() const noexcept;
+  QStringList getOutputDeviceList() const noexcept;
+  QImage grabScreenToImage() const noexcept;
+  void startGrabScreen() noexcept;
+  void stopGrabScreen() noexcept;
+  bool getIsGrabScreen() const noexcept;
+  bool setDxDeviceID(int dxID) noexcept;
+  int getDxDeviceID() const noexcept;
+  bool setOutputDeviceID(int deviceID) noexcept;
+  int getOutputDeviceID() const noexcept;
+  void setGrabArea(int width, int height) noexcept; // 从屏幕中心向外延伸
+  void setGrabArea(int x, int y, int width, int height) noexcept;
+  QRect getGrabArea() const noexcept;
+  void setGrabFrameRate(int frameRateValue) noexcept;
+  int getGrabFrameRate() const noexcept;
+  void setTimeoutMsValue(int timeoutValue) noexcept;
+  int getTimeoutMsValue() const noexcept;
 Q_SIGNALS:
-  Q_SIGNAL void grabImageUpdate(QImage img);
+  void grabImageUpdate(const QImage& img);
 };
 
 #  pragma pop_macro("Q_DISABLE_COPY")
@@ -52,13 +52,13 @@ class NX_EXPORT NXDxgiScreen : public QWidget
 {
   Q_OBJECT
   Q_Q_CREATE(NXDxgiScreen)
-  Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
+  Q_PROPERTY_CREATE_H(int, BorderRadius)
 
 public:
   explicit NXDxgiScreen(QWidget *parent = nullptr);
   ~NXDxgiScreen();
-  void setIsSyncGrabSize(bool isSyncGrabSize);
-  bool getIsSyncGrabSize() const;
+  void setIsSyncGrabSize(bool isSyncGrabSize) noexcept;
+  bool getIsSyncGrabSize() const noexcept;
 
 protected:
   void paintEvent(QPaintEvent *event) override;

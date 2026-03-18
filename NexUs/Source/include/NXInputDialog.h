@@ -1,4 +1,4 @@
-#ifndef NXINPUTDIALOG_H
+﻿#ifndef NXINPUTDIALOG_H
 #define NXINPUTDIALOG_H
 
 #include <QAbstractNativeEventFilter>
@@ -15,17 +15,17 @@ class NX_EXPORT NXInputDialog : public QDialog
   Q_OBJECT
   Q_Q_CREATE(NXInputDialog)
   Q_TAKEOVER_NATIVEEVENT_H
-  Q_PROPERTY_CREATE_Q_H(QString, TitleText)
-  Q_PROPERTY_CREATE_Q_H(QString, SubTitleText)
-  Q_PROPERTY_CREATE_Q_H(QString, LabelText)
-  Q_PROPERTY_CREATE_Q_H(QString, TextValue)
-  Q_PROPERTY_CREATE_Q_H(int, IntValue)
-  Q_PROPERTY_CREATE_Q_H(double, DoubleValue)
-  Q_PROPERTY_CREATE_Q_H(QString, OkButtonText)
-  Q_PROPERTY_CREATE_Q_H(QString, CancelButtonText)
-  Q_PROPERTY_CREATE_Q_H(QString, PlaceholderText)
-  Q_PROPERTY_CREATE_Q_H(int, InputMinimumWidth)
-  Q_PROPERTY_CREATE_Q_H(int, InputMaximumWidth)
+  Q_PROPERTY_CREATE_H(int, InputMinimumWidth)
+  Q_PROPERTY_CREATE_H(int, InputMaximumWidth)
+  Q_PROPERTY_CREATE_H(int, IntValue)
+  Q_PROPERTY_CREATE_H(double, DoubleValue)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, TitleText)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, SubTitleText)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, LabelText)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, TextValue)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, OkButtonText)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, CancelButtonText)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, PlaceholderText)
 
 public:
   explicit NXInputDialog(QWidget *parent = nullptr);
@@ -37,10 +37,10 @@ public:
                          const QString& label,
                          const QString& text             = QString(),
                          bool *ok                        = nullptr,
-                         const QString& okButtonText     = "确定",
-                         const QString& cancelButtonText = "取消",
+                         const QString& okButtonText     = QStringLiteral("确定"),
+                         const QString& cancelButtonText = QStringLiteral("取消"),
                          int inputMinWidth               = 100,
-                         int inputMaxWidth               = QWIDGETSIZE_MAX);
+                         int inputMaxWidth               = QWIDGETSIZE_MAX) noexcept;
 
   static int getInt(QWidget *parent,
                     const QString& title,
@@ -51,10 +51,10 @@ public:
                     int maxValue                    = 2147483647,
                     int step                        = 1,
                     bool *ok                        = nullptr,
-                    const QString& okButtonText     = "确定",
-                    const QString& cancelButtonText = "取消",
+                    const QString& okButtonText     = QStringLiteral("确定"),
+                    const QString& cancelButtonText = QStringLiteral("取消"),
                     int inputMinWidth               = 100,
-                    int inputMaxWidth               = QWIDGETSIZE_MAX);
+                    int inputMaxWidth               = QWIDGETSIZE_MAX) noexcept;
 
   static double getDouble(QWidget *parent,
                           const QString& title,
@@ -65,10 +65,10 @@ public:
                           double maxValue                 = 2147483647.0,
                           int decimals                    = 2,
                           bool *ok                        = nullptr,
-                          const QString& okButtonText     = "确定",
-                          const QString& cancelButtonText = "取消",
+                          const QString& okButtonText     = QStringLiteral("确定"),
+                          const QString& cancelButtonText = QStringLiteral("取消"),
                           int inputMinWidth               = 100,
-                          int inputMaxWidth               = QWIDGETSIZE_MAX);
+                          int inputMaxWidth               = QWIDGETSIZE_MAX) noexcept;
 
   static QString getMultiLineText(QWidget *parent,
                                   const QString& title,
@@ -76,32 +76,32 @@ public:
                                   const QString& label,
                                   const QString& text             = QString(),
                                   bool *ok                        = nullptr,
-                                  const QString& okButtonText     = "确定",
-                                  const QString& cancelButtonText = "取消",
+                                  const QString& okButtonText     = QStringLiteral("确定"),
+                                  const QString& cancelButtonText = QStringLiteral("取消"),
                                   int inputMinWidth               = 100,
-                                  int inputMaxWidth               = QWIDGETSIZE_MAX);
+                                  int inputMaxWidth               = QWIDGETSIZE_MAX) noexcept;
 
-  void setTextEchoMode(QLineEdit::EchoMode mode);
-  QLineEdit::EchoMode textEchoMode() const;
+  void setTextEchoMode(QLineEdit::EchoMode mode) noexcept;
+  QLineEdit::EchoMode textEchoMode() const noexcept;
 
-  void setIntRange(int minValue, int maxValue, int step = 1);
-  void setDoubleRange(double minValue, double maxValue, int decimals = 2);
-  void setMultiLine(bool multiLine);
+  void setIntRange(int minValue, int maxValue, int step = 1) noexcept;
+  void setDoubleRange(double minValue, double maxValue, int decimals = 2) noexcept;
+  void setMultiLine(bool multiLine) noexcept;
 
 protected:
-  virtual void showEvent(QShowEvent *event) override;
-  virtual void paintEvent(QPaintEvent *event) override;
-  virtual void keyPressEvent(QKeyEvent *event) override;
+  void showEvent(QShowEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
+  void keyPressEvent(QKeyEvent *event) override;
 
 Q_SIGNALS:
-  Q_SIGNAL void textValueChanged(QString text);
-  Q_SIGNAL void intValueChanged(int value);
-  Q_SIGNAL void doubleValueChanged(double value);
+  void textValueChanged(const QString& text);
+  void intValueChanged(int value);
+  void doubleValueChanged(double value);
 
 private:
-  Q_SLOT void onOkButtonClicked();
-  Q_SLOT void onCancelButtonClicked();
-  void updateLabels();
+  Q_SLOT void onOkButtonClicked() noexcept;
+  Q_SLOT void onCancelButtonClicked() noexcept;
+  void updateLabels() noexcept;
 };
 
 #endif // NXINPUTDIALOG_H

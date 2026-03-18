@@ -21,7 +21,6 @@ class NXToolTipPrivate : public QObject
   Q_PROPERTY_CREATE_D(int, DisplayMsec)
   Q_PROPERTY_CREATE_D(int, ShowDelayMsec)
   Q_PROPERTY_CREATE_D(int, HideDelayMsec)
-  Q_PROPERTY_CREATE_D(QString, ToolTip)
   Q_PROPERTY_CREATE_D(QWidget *, CustomWidget)
 
 public:
@@ -32,9 +31,9 @@ protected:
   bool eventFilter(QObject *watched, QEvent *event) override;
 
 private Q_SLOTS:
-  void onShowTimeout();
-  void onHideTimeout();
-  void onAutoHideTimeout();
+  void onShowTimeout() noexcept;
+  void onHideTimeout() noexcept;
+  void onAutoHideTimeout() noexcept;
 
 private:
   NXThemeType::ThemeMode _themeMode;
@@ -46,9 +45,9 @@ private:
   QTimer *_hideTimer;
   QTimer *_autoHideTimer;
 
-  void _doShowAnimation();
-  void _updatePos();
-  void _stopAllTimers();
+  void _doShowAnimation() noexcept;
+  void _updatePos() noexcept;
+  void _stopAllTimers() noexcept;
 };
 
 #endif // NXTOOLTIPPRIVATE_H

@@ -1,4 +1,4 @@
-#ifndef NXTABLEWIDGETSTYLE_H
+﻿#ifndef NXTABLEWIDGETSTYLE_H
 #define NXTABLEWIDGETSTYLE_H
 
 #include <QModelIndex>
@@ -11,9 +11,9 @@ class QStyleOptionViewItem;
 class NXTableWidgetStyle : public QProxyStyle
 {
   Q_OBJECT
+  Q_PROPERTY_CREATE_2(const QModelIndex&, QModelIndex, CurrentHoverIndex)
   Q_PROPERTY_CREATE(int, ItemHeight)
   Q_PROPERTY_CREATE(int, HeaderMargin)
-  Q_PROPERTY_CREATE(int, CurrentHoverRow)
   Q_PROPERTY_CREATE(bool, IsTransparent)
 
 public:

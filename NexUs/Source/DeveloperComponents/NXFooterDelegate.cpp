@@ -21,10 +21,7 @@ NXFooterDelegate::NXFooterDelegate(QObject *parent)
   setProperty("selectMarkBottom", 10.0);
   // Mark向上
   _lastSelectMarkTopAnimation = new QPropertyAnimation(this, "lastSelectMarkTop");
-  connect(_lastSelectMarkTopAnimation,
-          &QPropertyAnimation::valueChanged,
-          this,
-          [=](const QVariant& value)
+  connect(_lastSelectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value)
   {
     _lastSelectMarkTop = value.toReal();
     _pNXListView->viewport()->update();
@@ -33,20 +30,14 @@ NXFooterDelegate::NXFooterDelegate(QObject *parent)
   _lastSelectMarkTopAnimation->setEasingCurve(QEasingCurve::InOutSine);
 
   _selectMarkBottomAnimation = new QPropertyAnimation(this, "selectMarkBottom");
-  connect(_selectMarkBottomAnimation,
-          &QPropertyAnimation::valueChanged,
-          this,
-          [=](const QVariant& value)
+  connect(_selectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value)
   {
     _selectMarkBottom = value.toReal();
     _pNXListView->viewport()->update();
   });
   _selectMarkBottomAnimation->setDuration(300);
   _selectMarkBottomAnimation->setEasingCurve(QEasingCurve::InOutSine);
-  connect(_lastSelectMarkTopAnimation,
-          &QPropertyAnimation::finished,
-          this,
-          [=]()
+  connect(_lastSelectMarkTopAnimation, &QPropertyAnimation::finished, this, [=]()
   {
     _isSelectMarkDisplay = true;
     _lastSelectedNode    = nullptr;
@@ -57,10 +48,7 @@ NXFooterDelegate::NXFooterDelegate(QObject *parent)
 
   // Mark向下
   _lastSelectMarkBottomAnimation = new QPropertyAnimation(this, "lastSelectMarkBottom");
-  connect(_lastSelectMarkBottomAnimation,
-          &QPropertyAnimation::valueChanged,
-          this,
-          [=](const QVariant& value)
+  connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value)
   {
     _lastSelectMarkBottom = value.toReal();
     _pNXListView->viewport()->update();
@@ -69,20 +57,14 @@ NXFooterDelegate::NXFooterDelegate(QObject *parent)
   _lastSelectMarkBottomAnimation->setEasingCurve(QEasingCurve::InOutSine);
 
   _selectMarkTopAnimation = new QPropertyAnimation(this, "selectMarkTop");
-  connect(_selectMarkTopAnimation,
-          &QPropertyAnimation::valueChanged,
-          this,
-          [=](const QVariant& value)
+  connect(_selectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value)
   {
     _selectMarkTop = value.toReal();
     _pNXListView->viewport()->update();
   });
   _selectMarkTopAnimation->setDuration(300);
   _selectMarkTopAnimation->setEasingCurve(QEasingCurve::InOutSine);
-  connect(_lastSelectMarkBottomAnimation,
-          &QPropertyAnimation::finished,
-          this,
-          [=]()
+  connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::finished, this, [=]()
   {
     _isSelectMarkDisplay = true;
     _lastSelectedNode    = nullptr;
@@ -94,12 +76,12 @@ NXFooterDelegate::NXFooterDelegate(QObject *parent)
 
 NXFooterDelegate::~NXFooterDelegate() { }
 
-void NXFooterDelegate::navigationNodeStateChange(QVariantMap data)
+void NXFooterDelegate::navigationNodeStateChange(const QVariantMap& data) noexcept
 {
-  if (data.contains("SelectMarkChanged"))
+  if (data.contains(QStringLiteral("SelectMarkChanged")))
   {
-    _lastSelectedNode              = data.value("LastSelectedNode").value<NXNavigationNode *>();
-    NXNavigationNode *selectedNode = data.value("SelectedNode").value<NXNavigationNode *>();
+    _lastSelectedNode              = data.value(QStringLiteral("LastSelectedNode")).value<NXNavigationNode *>();
+    NXNavigationNode *selectedNode = data.value(QStringLiteral("SelectedNode")).value<NXNavigationNode *>();
     bool direction                 = _compareItemY(selectedNode, _lastSelectedNode);
     _lastSelectMarkTop             = 10;
     _lastSelectMarkBottom          = 10;
@@ -197,11 +179,10 @@ void NXFooterDelegate::paint(QPainter *painter, const QStyleOptionViewItem& opti
   if (node->getAwesome() != NXIconType::None)
   {
     painter->save();
-    QFont iconFont = QFont("NXAwesome");
+    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     iconFont.setPixelSize(17);
     painter->setFont(iconFont);
-    painter->drawText(QRect(itemRect.x(), itemRect.y(), _iconAreaWidth, itemRect.height()),
-                      Qt::AlignCenter,
+    painter->drawText(QRect(itemRect.x(), itemRect.y(), _iconAreaWidth, itemRect.height()), Qt::AlignCenter,
                       QChar((unsigned short) node->getAwesome()));
     painter->restore();
   }
@@ -236,17 +217,14 @@ void NXFooterDelegate::paint(QPainter *painter, const QStyleOptionViewItem& opti
   QRect textRect;
   if (node->getAwesome() != NXIconType::None)
   {
-    textRect = QRect(itemRect.x() + _iconAreaWidth,
-                     itemRect.y(),
-                     itemRect.width() - _textRightSpacing - _indicatorIconAreaWidth - _iconAreaWidth,
-                     itemRect.height());
+    textRect =
+        QRect(itemRect.x() + _iconAreaWidth, itemRect.y(),
+              itemRect.width() - _textRightSpacing - _indicatorIconAreaWidth - _iconAreaWidth, itemRect.height());
   }
   else
   {
-    textRect = QRect(itemRect.x() + _leftPadding,
-                     itemRect.y(),
-                     itemRect.width() - _textRightSpacing - _indicatorIconAreaWidth - _leftPadding,
-                     itemRect.height());
+    textRect = QRect(itemRect.x() + _leftPadding, itemRect.y(),
+                     itemRect.width() - _textRightSpacing - _indicatorIconAreaWidth - _leftPadding, itemRect.height());
   }
   QString text = painter->fontMetrics().elidedText(node->getNodeTitle(), Qt::ElideRight, textRect.width());
   painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, text);
@@ -255,22 +233,17 @@ void NXFooterDelegate::paint(QPainter *painter, const QStyleOptionViewItem& opti
   {
     painter->setPen(Qt::NoPen);
     painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
-    painter->drawRoundedRect(
-        QRectF(
-            itemRect.x() + 3, itemRect.y() + _selectMarkTop, 3, itemRect.height() - _selectMarkTop - _selectMarkBottom),
-        3,
-        3);
+    painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _selectMarkTop, 3,
+                                    itemRect.height() - _selectMarkTop - _selectMarkBottom),
+                             3, 3);
   }
   if (node == _lastSelectedNode)
   {
     painter->setPen(Qt::NoPen);
     painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
-    painter->drawRoundedRect(QRectF(itemRect.x() + 3,
-                                    itemRect.y() + _lastSelectMarkTop,
-                                    3,
+    painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _lastSelectMarkTop, 3,
                                     itemRect.height() - _lastSelectMarkTop - _lastSelectMarkBottom),
-                             3,
-                             3);
+                             3, 3);
   }
   painter->restore();
 }

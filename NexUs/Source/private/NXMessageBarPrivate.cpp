@@ -17,7 +17,7 @@ NXMessageBarManager::NXMessageBarManager(QObject *parent) { }
 
 NXMessageBarManager::~NXMessageBarManager() { }
 
-void NXMessageBarManager::requestMessageBarEvent(NXMessageBar *messageBar)
+void NXMessageBarManager::requestMessageBarEvent(NXMessageBar *messageBar) noexcept
 {
   if (!messageBar) { return; }
   if (_messageBarEventMap.contains(messageBar))
@@ -31,16 +31,14 @@ void NXMessageBarManager::requestMessageBarEvent(NXMessageBar *messageBar)
       _messageBarEventMap[messageBar] = eventList;
     }
     // 触发事件
-    QString functionName     = eventData.value("EventFunctionName").toString();
-    QVariantMap functionData = eventData.value("EventFunctionData").toMap();
-    QMetaObject::invokeMethod(messageBar->d_func(),
-                              functionName.toLocal8Bit().constData(),
-                              Qt::AutoConnection,
+    QString functionName     = eventData.value(QStringLiteral("EventFunctionName")).toString();
+    QVariantMap functionData = eventData.value(QStringLiteral("EventFunctionData")).toMap();
+    QMetaObject::invokeMethod(messageBar->d_func(), functionName.toLocal8Bit().constData(), Qt::AutoConnection,
                               Q_ARG(QVariantMap, functionData));
   }
 }
 
-void NXMessageBarManager::postMessageBarCreateEvent(NXMessageBar *messageBar)
+void NXMessageBarManager::postMessageBarCreateEvent(NXMessageBar *messageBar) noexcept
 {
   if (!messageBar) { return; }
   updateActiveMap(messageBar, true); // 计算坐标前增加
@@ -48,13 +46,13 @@ void NXMessageBarManager::postMessageBarCreateEvent(NXMessageBar *messageBar)
   {
     QList<QVariantMap> eventList;
     QVariantMap eventData;
-    eventData.insert("EventFunctionName", "messageBarEnd");
+    eventData.insert(QStringLiteral("EventFunctionName"), QStringLiteral("messageBarEnd"));
     eventList.append(eventData);
     _messageBarEventMap.insert(messageBar, eventList);
   }
 }
 
-void NXMessageBarManager::postMessageBarEndEvent(NXMessageBar *messageBar)
+void NXMessageBarManager::postMessageBarEndEvent(NXMessageBar *messageBar) noexcept
 {
   if (!messageBar) { return; }
   updateActiveMap(messageBar, false);
@@ -68,10 +66,10 @@ void NXMessageBarManager::postMessageBarEndEvent(NXMessageBar *messageBar)
       QList<QVariantMap> eventList = _messageBarEventMap[otherMessageBar];
       // 优先执行先触发的事件 End事件保持首位
       QVariantMap eventData;
-      eventData.insert("EventFunctionName", "onOtherMessageBarEnd");
+      eventData.insert(QStringLiteral("EventFunctionName"), QStringLiteral("onOtherMessageBarEnd"));
       QVariantMap functionData;
-      functionData.insert("TargetPosY", otherMessageBar->d_ptr->_calculateTargetPosY());
-      eventData.insert("EventFunctionData", functionData);
+      functionData.insert(QStringLiteral("TargetPosY"), otherMessageBar->d_ptr->_calculateTargetPosY());
+      eventData.insert(QStringLiteral("EventFunctionData"), functionData);
       // 若处于创建动画阶段  则合并事件动画
       if (otherMessageBar->d_ptr->getWorkMode() == WorkStatus::CreateAnimation)
       {
@@ -84,7 +82,7 @@ void NXMessageBarManager::postMessageBarEndEvent(NXMessageBar *messageBar)
   }
 }
 
-void NXMessageBarManager::forcePostMessageBarEndEvent(NXMessageBar *messageBar)
+void NXMessageBarManager::forcePostMessageBarEndEvent(NXMessageBar *messageBar) noexcept
 {
   if (!messageBar) { return; }
   // 清除事件堆栈记录
@@ -93,7 +91,7 @@ void NXMessageBarManager::forcePostMessageBarEndEvent(NXMessageBar *messageBar)
   postMessageBarEndEvent(messageBar);
 }
 
-int NXMessageBarManager::getMessageBarEventCount(NXMessageBar *messageBar)
+int NXMessageBarManager::getMessageBarEventCount(NXMessageBar *messageBar) noexcept
 {
   if (!messageBar) { return -1; }
   if (!_messageBarEventMap.contains(messageBar)) { return -1; }
@@ -101,7 +99,7 @@ int NXMessageBarManager::getMessageBarEventCount(NXMessageBar *messageBar)
   return eventList.count();
 }
 
-void NXMessageBarManager::updateActiveMap(NXMessageBar *messageBar, bool isActive)
+void NXMessageBarManager::updateActiveMap(NXMessageBar *messageBar, bool isActive) noexcept
 {
   if (!messageBar) { return; }
   NXMessageBarType::PositionPolicy policy = messageBar->d_ptr->_policy;
@@ -135,33 +133,29 @@ NXMessageBarPrivate::NXMessageBarPrivate(QObject *parent)
 
 NXMessageBarPrivate::~NXMessageBarPrivate() { }
 
-void NXMessageBarPrivate::tryToRequestMessageBarEvent()
+void NXMessageBarPrivate::tryToRequestMessageBarEvent() noexcept
 {
   Q_Q(NXMessageBar);
   if (!_isMessageBarCreateAnimationFinished || _isMessageBarEventAnimationStart) { return; }
   NXMessageBarManager::getInstance()->requestMessageBarEvent(q);
 }
 
-WorkStatus NXMessageBarPrivate::getWorkMode() const
+WorkStatus NXMessageBarPrivate::getWorkMode() const noexcept
 {
   if (!_isMessageBarCreateAnimationFinished) { return WorkStatus::CreateAnimation; }
   if (_isMessageBarEventAnimationStart) { return WorkStatus::OtherEventAnimation; }
   return WorkStatus::Idle;
 }
 
-void NXMessageBarPrivate::onOtherMessageBarEnd(QVariantMap eventData)
+void NXMessageBarPrivate::onOtherMessageBarEnd(const QVariantMap& eventData)
 {
   Q_Q(NXMessageBar);
   _isMessageBarEventAnimationStart      = true;
-  qreal targetPosY                      = eventData.value("TargetPosY").toReal();
+  qreal targetPosY                      = eventData.value(QStringLiteral("TargetPosY")).toReal();
   QPropertyAnimation *closePosAnimation = new QPropertyAnimation(this, "MessageBarClosedY");
-  connect(closePosAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-    q->move(q->pos().x(), value.toUInt());
-  });
-  connect(closePosAnimation,
-          &QPropertyAnimation::finished,
-          this,
-          [=]()
+  connect(closePosAnimation, &QPropertyAnimation::valueChanged, this,
+          [=](const QVariant& value) { q->move(q->pos().x(), value.toUInt()); });
+  connect(closePosAnimation, &QPropertyAnimation::finished, this, [=]()
   {
     _isMessageBarEventAnimationStart = false;
     if (NXMessageBarManager::getInstance()->getMessageBarEventCount(q) > 1)
@@ -177,15 +171,12 @@ void NXMessageBarPrivate::onOtherMessageBarEnd(QVariantMap eventData)
   closePosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXMessageBarPrivate::messageBarEnd(QVariantMap eventData)
+void NXMessageBarPrivate::messageBarEnd(const QVariantMap& eventData)
 {
   Q_Q(NXMessageBar);
   NXMessageBarManager::getInstance()->postMessageBarEndEvent(q);
   QPropertyAnimation *barFinishedOpacityAnimation = new QPropertyAnimation(this, "pOpacity");
-  connect(barFinishedOpacityAnimation,
-          &QPropertyAnimation::valueChanged,
-          this,
-          [=]()
+  connect(barFinishedOpacityAnimation, &QPropertyAnimation::valueChanged, this, [=]()
   {
     _closeButton->setOpacity(_pOpacity);
     q->update();
@@ -198,7 +189,7 @@ void NXMessageBarPrivate::messageBarEnd(QVariantMap eventData)
   barFinishedOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXMessageBarPrivate::onCloseButtonClicked()
+void NXMessageBarPrivate::onCloseButtonClicked() noexcept
 {
   Q_Q(NXMessageBar);
   if (_isReadyToEnd) { return; }
@@ -206,10 +197,7 @@ void NXMessageBarPrivate::onCloseButtonClicked()
   _isNormalDisplay = false;
   NXMessageBarManager::getInstance()->forcePostMessageBarEndEvent(q);
   QPropertyAnimation *opacityAnimation = new QPropertyAnimation(this, "pOpacity");
-  connect(opacityAnimation,
-          &QPropertyAnimation::valueChanged,
-          this,
-          [=]()
+  connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]()
   {
     _closeButton->setOpacity(_pOpacity);
     q->update();
@@ -222,14 +210,14 @@ void NXMessageBarPrivate::onCloseButtonClicked()
   opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXMessageBarPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
+void NXMessageBarPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_Q(NXMessageBar);
   _themeMode = themeMode;
   q->update();
 }
 
-void NXMessageBarPrivate::_messageBarCreate(int displayMsec)
+void NXMessageBarPrivate::_messageBarCreate(int displayMsec) noexcept
 {
   Q_Q(NXMessageBar);
   q->show();
@@ -253,10 +241,7 @@ void NXMessageBarPrivate::_messageBarCreate(int displayMsec)
   _calculateInitialPos(startX, startY, endX, endY);
   // 滑入动画
   QPropertyAnimation *barPosAnimation = new QPropertyAnimation(q, "pos");
-  connect(barPosAnimation,
-          &QPropertyAnimation::finished,
-          q,
-          [=]()
+  connect(barPosAnimation, &QPropertyAnimation::finished, q, [=]()
   {
     _isNormalDisplay                     = true;
     _isMessageBarCreateAnimationFinished = true;
@@ -264,9 +249,7 @@ void NXMessageBarPrivate::_messageBarCreate(int displayMsec)
     {
       NXMessageBarManager::getInstance()->requestMessageBarEvent(q);
     }
-    QTimer::singleShot(displayMsec,
-                       q,
-                       [=]()
+    QTimer::singleShot(displayMsec, q, [=]()
     {
       _isReadyToEnd = true;
       NXMessageBarManager::getInstance()->requestMessageBarEvent(q);
@@ -299,7 +282,7 @@ void NXMessageBarPrivate::_messageBarCreate(int displayMsec)
   barPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXMessageBarPrivate::_calculateInitialPos(int& startX, int& startY, int& endX, int& endY)
+void NXMessageBarPrivate::_calculateInitialPos(int& startX, int& startY, int& endX, int& endY) noexcept
 {
   Q_Q(NXMessageBar);
   QList<int> resultList  = _getOtherMessageBarTotalData();
@@ -391,7 +374,7 @@ void NXMessageBarPrivate::_calculateInitialPos(int& startX, int& startY, int& en
   }
 }
 
-QList<int> NXMessageBarPrivate::_getOtherMessageBarTotalData(bool isJudgeCreateOrder)
+QList<int> NXMessageBarPrivate::_getOtherMessageBarTotalData(bool isJudgeCreateOrder) noexcept
 {
   Q_Q(NXMessageBar);
   QList<int> resultList;
@@ -412,7 +395,7 @@ QList<int> NXMessageBarPrivate::_getOtherMessageBarTotalData(bool isJudgeCreateO
   return resultList;
 }
 
-qreal NXMessageBarPrivate::_calculateTargetPosY()
+qreal NXMessageBarPrivate::_calculateTargetPosY() noexcept
 {
   Q_Q(NXMessageBar);
   QList<int> resultList  = _getOtherMessageBarTotalData(true);
@@ -442,7 +425,7 @@ qreal NXMessageBarPrivate::_calculateTargetPosY()
   return 0;
 }
 
-bool NXMessageBarPrivate::_judgeCreateOrder(NXMessageBar *otherMessageBar)
+bool NXMessageBarPrivate::_judgeCreateOrder(NXMessageBar *otherMessageBar) noexcept
 {
   if (otherMessageBar->d_ptr->_createTime < _createTime)
   {
@@ -455,14 +438,12 @@ bool NXMessageBarPrivate::_judgeCreateOrder(NXMessageBar *otherMessageBar)
   }
 }
 
-void NXMessageBarPrivate::_drawSuccess(QPainter *painter)
+void NXMessageBarPrivate::_drawSuccess(QPainter *painter) noexcept
 {
   Q_Q(NXMessageBar);
   painter->save();
   painter->setBrush(_themeMode == NXThemeType::Light ? QColor(0xE0, 0xF6, 0xDD) : QColor(0x39, 0x4D, 0x37));
-  QRect foregroundRect(_shadowBorderWidth,
-                       _shadowBorderWidth,
-                       q->width() - 2 * _shadowBorderWidth,
+  QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth,
                        q->height() - 2 * _shadowBorderWidth);
   painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
   // 图标绘制
@@ -471,36 +452,31 @@ void NXMessageBarPrivate::_drawSuccess(QPainter *painter)
   textPath.addEllipse(QPoint(_leftPadding + 6, q->height() / 2), 9, 9);
   painter->setClipPath(textPath);
   painter->fillPath(textPath, _themeMode == NXThemeType::Light ? QColor(0x11, 0x77, 0x10) : QColor(0x4C, 0xAF, 0x50));
-  QFont iconFont = QFont("NXAwesome");
+  QFont iconFont = QFont(QStringLiteral("NXAwesome"));
   iconFont.setPixelSize(12);
   painter->setFont(iconFont);
-  painter->drawText(
-      _leftPadding, 0, q->width(), q->height(), Qt::AlignVCenter, QChar((unsigned short) NXIconType::Check));
+  painter->drawText(QRect(_leftPadding + 6 - 9, q->height() / 2 - 9, 18, 18), Qt::AlignCenter,
+                    QChar((unsigned short) NXIconType::Check));
   // 时间进度条绘制
   QPainterPath clipPath;
   clipPath.addRoundedRect(foregroundRect, _borderRadius, _borderRadius);
   painter->setClipPath(clipPath);
   painter->setPen(Qt::NoPen);
   painter->setBrush(QColor(0x3C, 0x96, 0x4B));
-  painter->drawRoundedRect(QRectF(foregroundRect.x(),
-                                  foregroundRect.bottom() - _timePercentHeight,
-                                  foregroundRect.width() * _pTimePercent / 100.0,
-                                  _timePercentHeight + 1),
-                           2,
-                           2);
+  painter->drawRoundedRect(QRectF(foregroundRect.x(), foregroundRect.bottom() - _timePercentHeight,
+                                  foregroundRect.width() * _pTimePercent / 100.0, _timePercentHeight + 1),
+                           2, 2);
   painter->restore();
   // 文字颜色
   painter->setPen(_themeMode == NXThemeType::Light ? QPen(Qt::black) : QPen(QColor(0xE0, 0xF6, 0xDD)));
 }
 
-void NXMessageBarPrivate::_drawWarning(QPainter *painter)
+void NXMessageBarPrivate::_drawWarning(QPainter *painter) noexcept
 {
   Q_Q(NXMessageBar);
   painter->save();
   painter->setBrush(_themeMode == NXThemeType::Light ? QColor(0x6B, 0x56, 0x27) : QColor(0x5A, 0x4A, 0x1F));
-  QRect foregroundRect(_shadowBorderWidth,
-                       _shadowBorderWidth,
-                       q->width() - 2 * _shadowBorderWidth,
+  QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth,
                        q->height() - 2 * _shadowBorderWidth);
   painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
   // 图标绘制
@@ -510,32 +486,27 @@ void NXMessageBarPrivate::_drawWarning(QPainter *painter)
   textPath.addEllipse(QPoint(_leftPadding + 6, q->height() / 2), 9, 9);
   painter->setClipPath(textPath);
   painter->fillPath(textPath, QColor(0xF8, 0xE2, 0x23));
-  painter->drawText(_leftPadding + 4, 0, q->width(), q->height(), Qt::AlignVCenter, "!");
+  painter->drawText(QRect(_leftPadding + 6 - 9, q->height() / 2 - 9, 18, 18), Qt::AlignCenter, QStringLiteral("!"));
   // 时间进度条绘制
   QPainterPath clipPath;
   clipPath.addRoundedRect(foregroundRect, _borderRadius, _borderRadius);
   painter->setClipPath(clipPath);
   painter->setPen(Qt::NoPen);
   painter->fillPath(textPath, _themeMode == NXThemeType::Light ? QColor(0xF8, 0xE2, 0x23) : QColor(0xFF, 0xEB, 0x3B));
-  painter->drawRoundedRect(QRectF(foregroundRect.x(),
-                                  foregroundRect.bottom() - _timePercentHeight,
-                                  foregroundRect.width() * _pTimePercent / 100.0,
-                                  _timePercentHeight + 1),
-                           2,
-                           2);
+  painter->drawRoundedRect(QRectF(foregroundRect.x(), foregroundRect.bottom() - _timePercentHeight,
+                                  foregroundRect.width() * _pTimePercent / 100.0, _timePercentHeight + 1),
+                           2, 2);
   painter->restore();
   // 文字颜色
   painter->setPen(_themeMode == NXThemeType::Light ? QColor(0xFA, 0xFA, 0xFA) : QColor(0xFF, 0xF3, 0xCD));
 }
 
-void NXMessageBarPrivate::_drawInformation(QPainter *painter)
+void NXMessageBarPrivate::_drawInformation(QPainter *painter) noexcept
 {
   Q_Q(NXMessageBar);
   painter->save();
   painter->setBrush(_themeMode == NXThemeType::Light ? QColor(0xF4, 0xF4, 0xF4) : QColor(0x37, 0x47, 0x4F));
-  QRect foregroundRect(_shadowBorderWidth,
-                       _shadowBorderWidth,
-                       q->width() - 2 * _shadowBorderWidth,
+  QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth,
                        q->height() - 2 * _shadowBorderWidth);
   painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
   // 图标绘制
@@ -544,32 +515,27 @@ void NXMessageBarPrivate::_drawInformation(QPainter *painter)
   textPath.addEllipse(QPoint(_leftPadding + 6, q->height() / 2), 9, 9);
   painter->setClipPath(textPath);
   painter->fillPath(textPath, _themeMode == NXThemeType::Light ? QColor(0x00, 0x66, 0xB4) : QColor(0x42, 0xA5, 0xF5));
-  painter->drawText(_leftPadding + 4, 0, q->width(), q->height(), Qt::AlignVCenter, "i");
+  painter->drawText(QRect(_leftPadding + 6 - 9, q->height() / 2 - 9, 18, 18), Qt::AlignCenter, QStringLiteral("i"));
   // 时间进度条绘制
   QPainterPath clipPath;
   clipPath.addRoundedRect(foregroundRect, _borderRadius, _borderRadius);
   painter->setClipPath(clipPath);
   painter->setPen(Qt::NoPen);
   painter->setBrush(QColor(0x00, 0x66, 0xB4));
-  painter->drawRoundedRect(QRectF(foregroundRect.x(),
-                                  foregroundRect.bottom() - _timePercentHeight,
-                                  foregroundRect.width() * _pTimePercent / 100.0,
-                                  _timePercentHeight + 1),
-                           2,
-                           2);
+  painter->drawRoundedRect(QRectF(foregroundRect.x(), foregroundRect.bottom() - _timePercentHeight,
+                                  foregroundRect.width() * _pTimePercent / 100.0, _timePercentHeight + 1),
+                           2, 2);
   painter->restore();
   // 文字颜色
   painter->setPen(_themeMode == NXThemeType::Light ? Qt::black : QColor(0xE1, 0xF5, 0xFE));
 }
 
-void NXMessageBarPrivate::_drawError(QPainter *painter)
+void NXMessageBarPrivate::_drawError(QPainter *painter) noexcept
 {
   Q_Q(NXMessageBar);
   painter->save();
   painter->setBrush(_themeMode == NXThemeType::Light ? QColor(0xFE, 0xE7, 0xEA) : QColor(0x4E, 0x34, 0x2E));
-  QRect foregroundRect(_shadowBorderWidth,
-                       _shadowBorderWidth,
-                       q->width() - 2 * _shadowBorderWidth,
+  QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth,
                        q->height() - 2 * _shadowBorderWidth);
   painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
   // 图标绘制
@@ -578,23 +544,20 @@ void NXMessageBarPrivate::_drawError(QPainter *painter)
   textPath.addEllipse(QPoint(_leftPadding + 6, q->height() / 2), 9, 9);
   painter->setClipPath(textPath);
   painter->fillPath(textPath, _themeMode == NXThemeType::Light ? QColor(0xBA, 0x2D, 0x20) : QColor(0xEF, 0x53, 0x50));
-  QFont iconFont = QFont("NXAwesome");
+  QFont iconFont = QFont(QStringLiteral("NXAwesome"));
   iconFont.setPixelSize(13);
   painter->setFont(iconFont);
-  painter->drawText(
-      _leftPadding + 1, 0, q->width(), q->height(), Qt::AlignVCenter, QChar((unsigned short) NXIconType::Xmark));
+  painter->drawText(QRect(_leftPadding + 6 - 9, q->height() / 2 - 9, 18, 18), Qt::AlignCenter,
+                    QChar((unsigned short) NXIconType::Xmark));
   // 时间进度条绘制
   QPainterPath clipPath;
   clipPath.addRoundedRect(foregroundRect, _borderRadius, _borderRadius);
   painter->setClipPath(clipPath);
   painter->setPen(Qt::NoPen);
   painter->setBrush(QColor(0xCC, 0x5C, 0x65));
-  painter->drawRoundedRect(QRectF(foregroundRect.x(),
-                                  foregroundRect.bottom() - _timePercentHeight,
-                                  foregroundRect.width() * _pTimePercent / 100.0,
-                                  _timePercentHeight + 1),
-                           2,
-                           2);
+  painter->drawRoundedRect(QRectF(foregroundRect.x(), foregroundRect.bottom() - _timePercentHeight,
+                                  foregroundRect.width() * _pTimePercent / 100.0, _timePercentHeight + 1),
+                           2, 2);
   painter->restore();
   // 文字颜色
   painter->setPen(_themeMode == NXThemeType::Light ? Qt::black : QColor(0xFF, 0xCD, 0xD2));

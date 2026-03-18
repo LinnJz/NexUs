@@ -22,7 +22,7 @@ class NXMultiSelectComboBoxPrivate : public QObject
 public:
   explicit NXMultiSelectComboBoxPrivate(QObject *parent = nullptr);
   ~NXMultiSelectComboBoxPrivate() override;
-  Q_SLOT void onItemPressed(const QModelIndex& index);
+  Q_SLOT void onItemPressed(const QModelIndex& index) noexcept;
 
 private:
   bool _isFirstPopup { false };
@@ -33,8 +33,8 @@ private:
   QList<bool> _itemSelection;
   QString _currentText;
   QStringList _selectedTextList;
-  void _refreshCurrentIndexs();
-  void _adjustSelectedVector();
+  void _refreshCurrentIndexs() noexcept;
+  void _adjustSelectedVector() noexcept;
   NXThemeType::ThemeMode _themeMode;
 };
 

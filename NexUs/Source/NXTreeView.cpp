@@ -11,8 +11,8 @@ NXTreeView::NXTreeView(QWidget *parent)
   Q_D(NXTreeView);
   d->q_ptr = this;
   setObjectName("NXTreeView");
-  setStyleSheet("#NXTreeView{background-color:transparent;}"
-                "QHeaderView{background-color:transparent;border:0px;}");
+  setStyleSheet(QStringLiteral("#NXTreeView{background-color:transparent;}"
+                "QHeaderView{background-color:transparent;border:0px;}"));
 
   setAnimated(true);
   setMouseTracking(true);
@@ -39,13 +39,13 @@ NXTreeView::~NXTreeView()
   delete d->_treeViewStyle;
 }
 
-void NXTreeView::setNXIcon(NXIconType::IconName icon)
+void NXTreeView::setNXIcon(NXIconType::IconName icon) noexcept
 {
   Q_D(NXTreeView);
   d->_treeViewStyle->setIconName(icon);
 }
 
-void NXTreeView::setItemHeight(int itemHeight)
+void NXTreeView::setItemHeight(int itemHeight) noexcept
 {
   Q_D(NXTreeView);
   if (itemHeight > 0)
@@ -55,13 +55,13 @@ void NXTreeView::setItemHeight(int itemHeight)
   }
 }
 
-int NXTreeView::getItemHeight() const
+int NXTreeView::getItemHeight() const noexcept
 {
   Q_D(const NXTreeView);
   return d->_treeViewStyle->getItemHeight();
 }
 
-void NXTreeView::setHeaderMargin(int headerMargin)
+void NXTreeView::setHeaderMargin(int headerMargin) noexcept
 {
   Q_D(NXTreeView);
   if (headerMargin >= 0)
@@ -71,7 +71,7 @@ void NXTreeView::setHeaderMargin(int headerMargin)
   }
 }
 
-int NXTreeView::getHeaderMargin() const
+int NXTreeView::getHeaderMargin() const noexcept
 {
   Q_D(const NXTreeView);
   return d->_treeViewStyle->getHeaderMargin();

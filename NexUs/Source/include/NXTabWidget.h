@@ -13,23 +13,23 @@ class NX_EXPORT NXTabWidget : public QTabWidget
 
   Q_OBJECT
   Q_Q_CREATE(NXTabWidget)
-  Q_PROPERTY_CREATE_Q_H(bool, IsSelectedIndicatorVisible)
-  Q_PROPERTY_CREATE_Q_H(bool, IsTabTransparent);
-  Q_PROPERTY_CREATE_Q_H(bool, IsContainerAcceptDrops);
-  Q_PROPERTY_CREATE_Q_H(int, TabCornerRadius)
-  Q_PROPERTY_CREATE_Q_H(NXTabBarType::TabBarStyle, TabBarStyle)
-  Q_PROPERTY_CREATE_Q_H(QSize, TabSize)
+  Q_PROPERTY_CREATE_H(bool, IsSelectedIndicatorVisible)
+  Q_PROPERTY_CREATE_H(bool, IsTabTransparent)
+  Q_PROPERTY_CREATE_H(bool, IsContainerAcceptDrops)
+  Q_PROPERTY_CREATE_H(int, TabCornerRadius)
+  Q_PROPERTY_CREATE_H(NXTabBarType::TabBarStyle, TabBarStyle)
+  Q_PROPERTY_CREATE_H(QSize, TabSize)
 
 public:
   explicit NXTabWidget(QWidget *parent = nullptr);
   ~NXTabWidget() override;
-  void setTabPosition(TabPosition position);
+  void setTabPosition(TabPosition position) noexcept;
 
 protected:
-  virtual void paintEvent(QPaintEvent *event) override;
-  virtual void dragEnterEvent(QDragEnterEvent *event) override;
-  virtual void dropEvent(QDropEvent *event) override;
-  virtual void tabInserted(int index);
+  void paintEvent(QPaintEvent *event) override;
+  void dragEnterEvent(QDragEnterEvent *event) override;
+  void dropEvent(QDropEvent *event) override;
+  void tabInserted(int index);
 };
 
 #endif // NXTABWIDGET_H

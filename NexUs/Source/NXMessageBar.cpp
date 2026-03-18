@@ -13,8 +13,8 @@
 
 NXMessageBar::NXMessageBar(NXMessageBarType::PositionPolicy policy,
                            NXMessageBarType::MessageMode messageMode,
-                           QString& title,
-                           QString& text,
+                           const QString& title,
+                           const QString& text,
                            int displayMsec,
                            QWidget *parent)
     : QWidget { parent }
@@ -77,15 +77,18 @@ NXMessageBar::NXMessageBar(NXMessageBarType::PositionPolicy policy,
   mainLayout->addStretch();
   mainLayout->addWidget(d->_closeButton);
   setObjectName("NXMessageBar");
-  setStyleSheet("#NXMessageBar{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXMessageBar{background-color:transparent;}"));
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXMessageBarPrivate::onThemeChanged);
   d->_messageBarCreate(displayMsec);
 }
 
 NXMessageBar::~NXMessageBar() { }
 
-void NXMessageBar::success(
-    NXMessageBarType::PositionPolicy policy, QString title, QString text, int displayMsec, QWidget *parent)
+void NXMessageBar::success(NXMessageBarType::PositionPolicy policy,
+                           const QString& title,
+                           const QString& text,
+                           int displayMsec,
+                           QWidget *parent) noexcept
 {
   // qDebug() << QApplication::topLevelWidgets();
   if (!parent)
@@ -102,8 +105,11 @@ void NXMessageBar::success(
   Q_UNUSED(bar);
 }
 
-void NXMessageBar::warning(
-    NXMessageBarType::PositionPolicy policy, QString title, QString text, int displayMsec, QWidget *parent)
+void NXMessageBar::warning(NXMessageBarType::PositionPolicy policy,
+                           const QString& title,
+                           const QString& text,
+                           int displayMsec,
+                           QWidget *parent) noexcept
 {
   if (!parent)
   {
@@ -118,8 +124,11 @@ void NXMessageBar::warning(
   Q_UNUSED(bar);
 }
 
-void NXMessageBar::information(
-    NXMessageBarType::PositionPolicy policy, QString title, QString text, int displayMsec, QWidget *parent)
+void NXMessageBar::information(NXMessageBarType::PositionPolicy policy,
+                               const QString& title,
+                               const QString& text,
+                               int displayMsec,
+                               QWidget *parent) noexcept
 {
   if (!parent)
   {
@@ -134,8 +143,11 @@ void NXMessageBar::information(
   Q_UNUSED(bar);
 }
 
-void NXMessageBar::error(
-    NXMessageBarType::PositionPolicy policy, QString title, QString text, int displayMsec, QWidget *parent)
+void NXMessageBar::error(NXMessageBarType::PositionPolicy policy,
+                         const QString& title,
+                         const QString& text,
+                         int displayMsec,
+                         QWidget *parent) noexcept
 {
   if (!parent)
   {
@@ -199,22 +211,18 @@ void NXMessageBar::paintEvent(QPaintEvent *event)
   font.setWeight(QFont::Light);
   font.setPixelSize(15);
   painter.setFont(font);
-  painter.drawText(QRect(d->_leftPadding + d->_titleLeftSpacing + titleTextWidth + d->_textLeftSpacing,
-                         0,
+  painter.drawText(QRect(d->_leftPadding + d->_titleLeftSpacing + titleTextWidth + d->_textLeftSpacing, 0,
                          width() - (d->_leftPadding + d->_titleLeftSpacing + titleTextWidth + d->_textLeftSpacing +
                                     d->_closeButtonWidth + d->_closeButtonLeftRightMargin / 2),
-                         height()),
-                   textFlags,
-                   d->_text);
+                         height() - d->_timePercentHeight),
+                   textFlags, d->_text);
   int textHeight =
       painter.fontMetrics()
-          .boundingRect(QRect(d->_leftPadding + d->_titleLeftSpacing + titleTextWidth + d->_textLeftSpacing,
-                              0,
+          .boundingRect(QRect(d->_leftPadding + d->_titleLeftSpacing + titleTextWidth + d->_textLeftSpacing, 0,
                               width() - (d->_leftPadding + d->_titleLeftSpacing + titleTextWidth + d->_textLeftSpacing +
                                          d->_closeButtonWidth + d->_closeButtonLeftRightMargin),
                               height()),
-                        textFlags,
-                        d->_text)
+                        textFlags, d->_text)
           .height();
   if (textHeight >= minimumHeight() - 20) { setMinimumHeight(textHeight + 20); }
   painter.restore();

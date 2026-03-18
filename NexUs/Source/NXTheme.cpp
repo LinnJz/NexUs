@@ -16,81 +16,22 @@ NXTheme::NXTheme(QObject *parent)
 
 NXTheme::~NXTheme() { }
 
-void NXTheme::setThemeMode(NXThemeType::ThemeMode themeMode)
+void NXTheme::setThemeMode(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_D(NXTheme);
   d->_themeMode = themeMode;
   Q_EMIT themeModeChanged(d->_themeMode);
 }
 
-NXThemeType::ThemeMode NXTheme::getThemeMode() const
+NXThemeType::ThemeMode NXTheme::getThemeMode() const noexcept
 {
   Q_D(const NXTheme);
   return d->_themeMode;
 }
 
-void NXTheme::drawEffectShadow(QPainter *painter, QRect widgetRect, int shadowBorderWidth, int borderRadius)
-{
-  Q_D(NXTheme);
-  painter->save();
-  painter->setRenderHints(QPainter::Antialiasing);
-  QPainterPath path;
-  path.setFillRule(Qt::WindingFill);
-  QColor color = d->_themeMode == NXThemeType::Light ? QColor(0x70, 0x70, 0x70) : QColor(0x9C, 0x9B, 0x9E);
-  for (int i = 0; i < shadowBorderWidth; i++)
-  {
-    path.addRoundedRect(widgetRect.x() + shadowBorderWidth - i,
-                        widgetRect.y() + shadowBorderWidth - i,
-                        widgetRect.width() - (shadowBorderWidth - i) * 2,
-                        widgetRect.height() - (shadowBorderWidth - i) * 2,
-                        borderRadius + i,
-                        borderRadius + i);
-    int alpha = 1 * (shadowBorderWidth - i + 1);
-    color.setAlpha(alpha > 255 ? 255 : alpha);
-    painter->setPen(color);
-    painter->drawPath(path);
-  }
-  painter->restore();
-}
-
-void NXTheme::drawEffectShadow(QPainter *painter,
-                               QRect widgetRect,
-                               int shadowBorderWidth,
-                               int borderRadius,
-                               int maxAlpha,
-                               int extendPixels,
-                               const QColor& lightColor,
-                               const QColor& darkColor)
-{
-  Q_D(NXTheme);
-  painter->save();
-  painter->setRenderHints(QPainter::Antialiasing);
-
-  QColor color = d->_themeMode == NXThemeType::Light ? lightColor : darkColor;
-
-  for (int i = 0; i < shadowBorderWidth; ++i)
-  {
-    int expansion = i + extendPixels;
-
-    QRect rect = widgetRect.adjusted(-expansion, -expansion, expansion, expansion);
-
-    int currentRadius = borderRadius + expansion / 2;
-
-    QPainterPath path;
-    path.addRoundedRect(rect, currentRadius, currentRadius);
-
-    int alpha = maxAlpha * (shadowBorderWidth - i) / shadowBorderWidth;
-    alpha     = qBound(0, alpha, 255);
-    color.setAlpha(alpha);
-
-    painter->setBrush(color);
-    painter->setPen(Qt::NoPen);
-    painter->drawPath(path);
-  }
-  painter->restore();
-}
-
-void NXTheme::setThemeColor(NXThemeType::ThemeMode themeMode, NXThemeType::ThemeColor themeColor, QColor newColor)
+void NXTheme::setThemeColor(NXThemeType::ThemeMode themeMode,
+                            NXThemeType::ThemeColor themeColor,
+                            const QColor& newColor) noexcept
 {
   Q_D(NXTheme);
   if (themeMode == NXThemeType::Light) { d->_lightThemeColorList[themeColor] = newColor; }
@@ -100,12 +41,50 @@ void NXTheme::setThemeColor(NXThemeType::ThemeMode themeMode, NXThemeType::Theme
   }
 }
 
-const QColor& NXTheme::getThemeColor(NXThemeType::ThemeMode themeMode, NXThemeType::ThemeColor themeColor)
+const QColor& NXTheme::getThemeColor(NXThemeType::ThemeMode themeMode,
+                                     NXThemeType::ThemeColor themeColor) const noexcept
 {
-  Q_D(NXTheme);
+  Q_D(const NXTheme);
   if (themeMode == NXThemeType::Light) { return d->_lightThemeColorList[themeColor]; }
   else
   {
     return d->_darkThemeColorList[themeColor];
   }
+}
+
+void NXTheme::drawEffectShadow(QPainter *painter,
+                               QRect widgetRect,
+                               int shadowBorderWidth,
+                               int borderRadius,
+                               int maxAlpha,
+                               int extendPixels,
+                               const QColor& lightColor,
+                               const QColor& darkColor) noexcept
+{
+  Q_D(NXTheme);
+  painter->save();
+  painter->setRenderHints(QPainter::Antialiasing);
+  painter->setPen(Qt::NoPen);
+
+  QColor color = d->_themeMode == NXThemeType::Light ? lightColor : darkColor;
+
+  QPainterPath path;
+  path.setFillRule(Qt::WindingFill);
+
+  for (int i = 0; i < shadowBorderWidth; ++i)
+  {
+    int expansion          = i + 1;
+    qreal currentRadius    = borderRadius + expansion / 2;
+    int currentBorderWidth = shadowBorderWidth - i;
+
+    path.addRoundedRect(widgetRect.x() + currentBorderWidth, widgetRect.y() + currentBorderWidth,
+                        widgetRect.width() - currentBorderWidth * 2, widgetRect.height() - currentBorderWidth * 2,
+                        currentRadius, currentRadius);
+    int alpha = maxAlpha * currentBorderWidth / shadowBorderWidth;
+    color.setAlpha(alpha);
+
+    painter->setBrush(color);
+    painter->drawPath(path);
+  }
+  painter->restore();
 }

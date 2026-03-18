@@ -11,22 +11,22 @@ class NX_EXPORT NXToolButton : public QToolButton
 {
   Q_OBJECT
   Q_Q_CREATE(NXToolButton)
-  Q_PROPERTY_CREATE_Q_H(int, BorderRadius);
-  Q_PROPERTY_CREATE_Q_H(bool, IsSelected);
+  Q_PROPERTY_CREATE_H(int, BorderRadius)
+  Q_PROPERTY_CREATE_H(bool, IsSelected)
 
 public:
   explicit NXToolButton(QWidget *parent = nullptr);
   ~NXToolButton() override;
 
-  void setIsTransparent(bool isTransparent);
-  bool getIsTransparent() const;
+  void setIsTransparent(bool isTransparent) noexcept;
+  bool getIsTransparent() const noexcept;
 
-  void setMenu(NXMenu *menu);
-  void setNXIcon(NXIconType::IconName icon);
-  void setNXIcon(NXIconType::IconName icon, int rotate);
+  void setMenu(NXMenu *menu) noexcept;
+  void setNXIcon(NXIconType::IconName icon) noexcept;
+  void setNXIcon(NXIconType::IconName icon, int rotate) noexcept;
 
 protected:
-  virtual bool eventFilter(QObject *watched, QEvent *event) override;
+  bool eventFilter(QObject *watched, QEvent *event) override;
 };
 
 #endif // NXTOOLBUTTON_H

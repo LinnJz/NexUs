@@ -1,4 +1,4 @@
-#ifndef NXMESSAGEDIALOG_H
+﻿#ifndef NXMESSAGEDIALOG_H
 #define NXMESSAGEDIALOG_H
 
 #include <QWidget>
@@ -12,11 +12,11 @@ class NX_EXPORT NXMessageDialog : public QWidget
 {
   Q_OBJECT
   Q_Q_CREATE(NXMessageDialog)
-  Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
-  Q_PROPERTY_CREATE_Q_H(QString, Title)
-  Q_PROPERTY_CREATE_Q_H(QString, Content)
-  Q_PROPERTY_CREATE_Q_H(int, TitlePixelSize)
-  Q_PROPERTY_CREATE_Q_H(int, ContentPixelSize)
+  Q_PROPERTY_CREATE_H(int, BorderRadius)
+  Q_PROPERTY_CREATE_H(int, TitlePixelSize)
+  Q_PROPERTY_CREATE_H(int, ContentPixelSize)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, Title)
+  Q_PROPERTY_CREATE_2_H(const QString&, QString, Content)
 
 public:
   explicit NXMessageDialog(QWidget *parent = nullptr);

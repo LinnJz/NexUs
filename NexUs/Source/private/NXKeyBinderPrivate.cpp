@@ -9,7 +9,7 @@ NXKeyBinderPrivate::NXKeyBinderPrivate(QObject *parent)
 
 NXKeyBinderPrivate::~NXKeyBinderPrivate() { }
 
-void NXKeyBinderPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
+void NXKeyBinderPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_Q(NXKeyBinder);
   _themeMode       = themeMode;

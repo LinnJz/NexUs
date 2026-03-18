@@ -21,25 +21,19 @@ NXToolBar::NXToolBar(QWidget *parent)
   layout()->setContentsMargins(3, 3, 3, 3);
 
   d->_themeMode = nxTheme->getThemeMode();
-  connect(nxTheme,
-          &NXTheme::themeModeChanged,
-          this,
-          [=](NXThemeType::ThemeMode themeMode)
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
     d->_themeMode = themeMode;
     if (this->isFloating()) { update(); }
   });
   setAttribute(Qt::WA_TranslucentBackground);
 
-  connect(this,
-          &NXToolBar::topLevelChanged,
-          this,
-          [=](bool topLevel)
+  connect(this, &NXToolBar::topLevelChanged, this, [=](bool topLevel)
   {
     if (topLevel)
     {
-      layout()->setContentsMargins(
-          d->_shadowBorderWidth + 3, d->_shadowBorderWidth + 3, d->_shadowBorderWidth + 3, d->_shadowBorderWidth + 3);
+      layout()->setContentsMargins(d->_shadowBorderWidth + 3, d->_shadowBorderWidth + 3, d->_shadowBorderWidth + 3,
+                                   d->_shadowBorderWidth + 3);
     }
     else
     {
@@ -56,11 +50,11 @@ NXToolBar::NXToolBar(const QString& title, QWidget *parent)
 
 NXToolBar::~NXToolBar() { delete this->style(); }
 
-void NXToolBar::setToolBarSpacing(int spacing) { layout()->setSpacing(spacing); }
+void NXToolBar::setToolBarSpacing(int spacing) noexcept { layout()->setSpacing(spacing); }
 
-int NXToolBar::getToolBarSpacing() const { return layout()->spacing(); }
+int NXToolBar::getToolBarSpacing() const noexcept { return layout()->spacing(); }
 
-QAction *NXToolBar::addNXIconAction(NXIconType::IconName icon, const QString& text)
+QAction *NXToolBar::addNXIconAction(NXIconType::IconName icon, const QString& text) noexcept
 {
   QAction *action = new QAction(text, this);
   action->setProperty("NXIconType", QChar((unsigned short) icon));
@@ -69,7 +63,8 @@ QAction *NXToolBar::addNXIconAction(NXIconType::IconName icon, const QString& te
   return action;
 }
 
-QAction *NXToolBar::addNXIconAction(NXIconType::IconName icon, const QString& text, const QKeySequence& shortcut)
+QAction *
+NXToolBar::addNXIconAction(NXIconType::IconName icon, const QString& text, const QKeySequence& shortcut) noexcept
 {
   QAction *action = new QAction(text, this);
   action->setShortcut(shortcut);
@@ -92,9 +87,7 @@ void NXToolBar::paintEvent(QPaintEvent *event)
     // 背景
     painter.setPen(NXThemeColor(d->_themeMode, PopupBorder));
     painter.setBrush(NXThemeColor(d->_themeMode, DialogBase));
-    QRect foregroundRect(d->_shadowBorderWidth,
-                         d->_shadowBorderWidth,
-                         width() - 2 * d->_shadowBorderWidth,
+    QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * d->_shadowBorderWidth,
                          height() - 2 * d->_shadowBorderWidth);
     painter.drawRoundedRect(foregroundRect, 5, 5);
     QStyle *style = this->style();

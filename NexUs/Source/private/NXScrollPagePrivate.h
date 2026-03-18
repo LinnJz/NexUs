@@ -22,7 +22,7 @@ class NXScrollPagePrivate : public QObject
 public:
   explicit NXScrollPagePrivate(QObject *parent = nullptr);
   ~NXScrollPagePrivate();
-  Q_INVOKABLE void onNavigationRoute(QVariantMap routeData);
+  Q_INVOKABLE void onNavigationRoute(const QVariantMap& routeData);
 
 private:
   QHBoxLayout *_pageTitleLayout { nullptr };
@@ -33,7 +33,7 @@ private:
   int _navigationTargetIndex { 0 };
   int _pageTitleSpacing { 0 };
   bool _isGrabGesture { false };
-  void _switchCentralStackIndex(int targetIndex, int lastIndex);
+  void _switchCentralStackIndex(int targetIndex, int lastIndex) noexcept;
 };
 
 #endif // NXSCROLLPAGEPRIVATE_H

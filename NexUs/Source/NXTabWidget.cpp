@@ -7,8 +7,8 @@
 #include <QPainter>
 #include "NXTabBar.h"
 #include "NXTabWidgetPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(NXTabWidget, bool, IsTabTransparent);
-Q_PROPERTY_CREATE_Q_CPP(NXTabWidget, bool, IsContainerAcceptDrops);
+Q_PROPERTY_CREATE_CPP(NXTabWidget, bool, IsTabTransparent)
+Q_PROPERTY_CREATE_CPP(NXTabWidget, bool, IsContainerAcceptDrops)
 
 NXTabWidget::NXTabWidget(QWidget *parent)
     : QTabWidget(parent)
@@ -35,58 +35,58 @@ NXTabWidget::~NXTabWidget()
   d->_clearAllTabWidgetList();
 }
 
-void NXTabWidget::setTabSize(QSize tabSize)
+void NXTabWidget::setTabSize(QSize tabSize) noexcept
 {
   Q_D(NXTabWidget);
   d->_tabBar->setTabSize(tabSize);
 }
 
-QSize NXTabWidget::getTabSize() const
+QSize NXTabWidget::getTabSize() const noexcept
 {
   Q_D(const NXTabWidget);
   return d->_tabBar->getTabSize();
 }
 
-void NXTabWidget::setTabBarStyle(NXTabBarType::TabBarStyle style)
+void NXTabWidget::setTabBarStyle(NXTabBarType::TabBarStyle style) noexcept
 {
   Q_D(NXTabWidget);
   if (d->_tabBar) { d->_tabBar->setTabBarStyle(style); }
   if (d->_customTabBar) { d->_customTabBar->setTabBarStyle(style); }
 }
 
-NXTabBarType::TabBarStyle NXTabWidget::getTabBarStyle() const
+NXTabBarType::TabBarStyle NXTabWidget::getTabBarStyle() const noexcept
 {
   Q_D(const NXTabWidget);
   return d->_tabBar->getTabBarStyle();
 }
 
-void NXTabWidget::setTabCornerRadius(int radius)
+void NXTabWidget::setTabCornerRadius(int radius) noexcept
 {
   Q_D(NXTabWidget);
   if (d->_tabBar) { d->_tabBar->setTabCornerRadius(radius); }
   if (d->_customTabBar) { d->_customTabBar->setTabCornerRadius(radius); }
 }
 
-int NXTabWidget::getTabCornerRadius() const
+int NXTabWidget::getTabCornerRadius() const noexcept
 {
   Q_D(const NXTabWidget);
   return d->_tabBar->getTabCornerRadius();
 }
 
-void NXTabWidget::setIsSelectedIndicatorVisible(bool isVisible)
+void NXTabWidget::setIsSelectedIndicatorVisible(bool isVisible) noexcept
 {
   Q_D(NXTabWidget);
   if (d->_tabBar) { d->_tabBar->setIsSelectedIndicatorVisible(isVisible); }
   if (d->_customTabBar) { d->_customTabBar->setIsSelectedIndicatorVisible(isVisible); }
 }
 
-bool NXTabWidget::getIsSelectedIndicatorVisible() const
+bool NXTabWidget::getIsSelectedIndicatorVisible() const noexcept
 {
   Q_D(const NXTabWidget);
   return d->_tabBar->getIsSelectedIndicatorVisible();
 }
 
-void NXTabWidget::setTabPosition(TabPosition position)
+void NXTabWidget::setTabPosition(TabPosition position) noexcept
 {
   if (position == QTabWidget::North || position == QTabWidget::South) { QTabWidget::setTabPosition(position); }
 }
@@ -99,7 +99,8 @@ void NXTabWidget::paintEvent(QPaintEvent *event)
 
 void NXTabWidget::dragEnterEvent(QDragEnterEvent *event)
 {
-  if (event->mimeData()->property("DragType").toString() == "NXTabBarDrag") { event->acceptProposedAction(); }
+  if (event->mimeData()->property("DragType").toString() == QStringLiteral("NXTabBarDrag")) {
+    event->acceptProposedAction(); }
   QTabWidget::dragEnterEvent(event);
 }
 

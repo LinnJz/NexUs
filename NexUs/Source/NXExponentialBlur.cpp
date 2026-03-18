@@ -18,7 +18,7 @@ NXExponentialBlur::NXExponentialBlur(QObject *parent)
 
 NXExponentialBlur::~NXExponentialBlur() { }
 
-QPixmap NXExponentialBlur::doExponentialBlur(QImage img, const quint16& blurRadius)
+QPixmap NXExponentialBlur::doExponentialBlur(const QImage& img, const quint16& blurRadius) noexcept
 {
   QImage shadowImage = img.convertToFormat(QImage::Format_ARGB32);
   NXExponentialBlur::getInstance()->d_ptr->_drawExponentialBlur(shadowImage, blurRadius);

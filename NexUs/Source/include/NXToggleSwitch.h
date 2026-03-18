@@ -14,17 +14,18 @@ class NX_EXPORT NXToggleSwitch : public QWidget
 public:
   explicit NXToggleSwitch(QWidget *parent = nullptr);
   ~NXToggleSwitch() override;
-  void setIsToggled(bool isToggled);
-  bool getIsToggled() const;
+  void setIsToggled(bool isToggled) noexcept;
+  bool getIsToggled() const noexcept;
+
 Q_SIGNALS:
-  Q_SIGNAL void toggled(bool checked);
+  void toggled(bool checked);
 
 protected:
-  virtual bool event(QEvent *event) override;
-  virtual void mousePressEvent(QMouseEvent *event) override;
-  virtual void mouseReleaseEvent(QMouseEvent *event) override;
-  virtual void mouseMoveEvent(QMouseEvent *event) override;
-  virtual void paintEvent(QPaintEvent *event) override;
+  bool event(QEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // NXTOGGLESWITCH_H

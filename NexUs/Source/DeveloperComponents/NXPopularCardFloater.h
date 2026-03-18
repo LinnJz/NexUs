@@ -13,8 +13,8 @@ class NXPopularCardFloater : public QWidget
 {
   friend class NXPopularCard;
   Q_OBJECT
-  Q_PROPERTY_CREATE(qreal, HoverYOffset);
-  Q_PROPERTY_CREATE(qreal, HoverOpacity);
+  Q_PROPERTY_CREATE(qreal, HoverYOffset)
+  Q_PROPERTY_CREATE(qreal, HoverOpacity)
 
 public:
   explicit NXPopularCardFloater(NXPopularCard *card, NXPopularCardPrivate *cardPrivate, QWidget *parent = nullptr);
@@ -23,8 +23,8 @@ public:
   void hideFloater();
 
 protected:
-  virtual bool event(QEvent *event) override;
-  virtual void paintEvent(QPaintEvent *event) override;
+  bool event(QEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 
 private:
   int _floatGeometryOffset { 25 };

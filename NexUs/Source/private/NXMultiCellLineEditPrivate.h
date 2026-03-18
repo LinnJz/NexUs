@@ -32,29 +32,29 @@ public:
 
   Q_INVOKABLE void onWMWindowClickedEvent(QVariantMap data);
 
-  void rebuildCells(int cellCount);
-  void rebuildLayout();
-  void updateFocusCell(int cellIndex);
+  void rebuildCells(int cellCount) noexcept;
+  void rebuildLayout() noexcept;
+  void updateFocusCell(int cellIndex) noexcept;
 
-  void pushGlobalRoute();
-  bool canGlobalUndo() const;
-  bool canGlobalRedo() const;
-  void globalUndo();
-  void globalRedo();
+  void pushGlobalRoute() noexcept;
+  bool canGlobalUndo() const noexcept;
+  bool canGlobalRedo() const noexcept;
+  void globalUndo() noexcept;
+  void globalRedo() noexcept;
 
-  QLineEdit *createCell();
-  void setupCell(QLineEdit *cell, bool preserveClearAllowed);
-  void resetGlobalRoute();
-  bool isAllNormalEcho() const;
-  bool isAnyEditable() const;
-  void copyAllCells() const;
-  void clearAllEditableCells();
-  void selectAllCells() const;
-  void updateClearButtonState(QLineEdit *focusCell);
-  void updateCellObjectNames();
+  QLineEdit *createCell() noexcept;
+  void setupCell(QLineEdit *cell, bool preserveClearAllowed) noexcept;
+  void resetGlobalRoute() noexcept;
+  bool isAllNormalEcho() const noexcept;
+  bool isAnyEditable() const noexcept;
+  void copyAllCells() const noexcept;
+  void clearAllEditableCells() noexcept;
+  void selectAllCells() const noexcept;
+  void updateClearButtonState(QLineEdit *focusCell) noexcept;
+  void updateCellObjectNames() noexcept;
 
-  void animateCellMarkIn(int cellIndex);
-  void animateCellMarkOut(int cellIndex);
+  void animateCellMarkIn(int cellIndex) noexcept;
+  void animateCellMarkOut(int cellIndex) noexcept;
 
 private:
   struct GlobalTextRouteState
@@ -84,13 +84,13 @@ private:
   QList<bool> _cellValidStates;
   QList<GlobalTextRouteState> _globalRouteList;
 
-  QLineEdit *_cellAt(int cellIndex) const;
-  int _cellIndex(QObject *watched) const;
-  void _connectCellSignals(int cellIndex, QLineEdit *cell);
-  void _updateCellValidState(int cellIndex);
+  QLineEdit *_cellAt(int cellIndex) const noexcept;
+  int _cellIndex(QObject *watched) const noexcept;
+  void _connectCellSignals(int cellIndex, QLineEdit *cell) noexcept;
+  void _updateCellValidState(int cellIndex) noexcept;
 
-  GlobalTextRouteState _currentGlobalTextRouteState() const;
-  void _applyGlobalTextRouteState(const GlobalTextRouteState& state);
+  GlobalTextRouteState _currentGlobalTextRouteState() const noexcept;
+  void _applyGlobalTextRouteState(const GlobalTextRouteState& state) noexcept;
 };
 
 #endif // NXMULTICELLLINEEDITPRIVATE_H

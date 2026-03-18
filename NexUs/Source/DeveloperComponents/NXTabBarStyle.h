@@ -11,7 +11,7 @@ class NXTabBarStyle : public QProxyStyle
   Q_PRIVATE_CREATE(bool, IsSelectedIndicatorVisible)
   Q_PRIVATE_CREATE(int, TabCornerRadius)
   Q_PRIVATE_CREATE_D(NXTabBarType::TabBarStyle, TabBarStyle)
-  Q_PRIVATE_CREATE_Q_H(NXTabBarType::TabBarStyle, TabBarStyle)
+  Q_PRIVATE_CREATE_H(NXTabBarType::TabBarStyle, TabBarStyle)
   Q_PRIVATE_CREATE(QSize, TabSize)
 
 public:

@@ -98,9 +98,8 @@ T_Home::T_Home(QWidget *parent)
   flowTextLayout->addWidget(flowText);
   // NXFlowLayout
   NXPopularCard *homeCard = new NXPopularCard(this);
-  connect(homeCard, &NXPopularCard::popularCardButtonClicked, this, [=]() {
-    QDesktopServices::openUrl(QUrl("https://github.com/Liniyous/NXWidgetTools"));
-  });
+  connect(homeCard, &NXPopularCard::popularCardButtonClicked, this,
+          [=]() { QDesktopServices::openUrl(QUrl("https://github.com/Liniyous/NXWidgetTools")); });
   homeCard->setCardPixmap(QPixmap(":/Resource/Image/Cirno.jpg"));
   homeCard->setTitle("NXWidgetTool");
   homeCard->setSubTitle("5.0⭐ 实用程序与工具");

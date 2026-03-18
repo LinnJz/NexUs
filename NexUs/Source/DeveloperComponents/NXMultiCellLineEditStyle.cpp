@@ -52,8 +52,7 @@ void NXMultiCellLineEditStyle::drawPrimitive(PrimitiveElement element,
       }
       painter->drawRoundedRect(
           QRectF(lineEditRect.x() + 1.5, lineEditRect.y() + 1.5, lineEditRect.width() - 3, lineEditRect.height() - 3),
-          _pBorderRadius,
-          _pBorderRadius);
+          _pBorderRadius, _pBorderRadius);
 
       painter->setBrush(NXThemeColor(_themeMode, BasicHemline));
       QPainterPath path;

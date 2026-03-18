@@ -8,20 +8,20 @@ class NXKeyBinder;
 class NXKeyBinderContainer : public QWidget
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE(QString, BinderKeyText)
+  Q_PRIVATE_CREATE_2(const QString&, QString, BinderKeyText)
   Q_PRIVATE_CREATE(quint32, NativeVirtualBinderKey)
 
 public:
   explicit NXKeyBinderContainer(QWidget *parent = nullptr);
   ~NXKeyBinderContainer() override;
-  void logOrResetHistoryData(bool isLog);
-  void saveBinderChanged();
+  void logOrResetHistoryData(bool isLog) noexcept;
+  void saveBinderChanged() noexcept;
 
 protected:
   bool event(QEvent *event) override;
-  virtual void mousePressEvent(QMouseEvent *event) override;
-  virtual void focusOutEvent(QFocusEvent *event) override;
-  virtual void paintEvent(QPaintEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
+  void focusOutEvent(QFocusEvent *event) override;
+  void paintEvent(QPaintEvent *event) override;
 
 private:
   QString _historyBinderKeyText;

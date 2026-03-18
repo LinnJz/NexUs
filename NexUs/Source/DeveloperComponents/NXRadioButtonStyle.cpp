@@ -45,8 +45,7 @@ void NXRadioButtonStyle::drawPrimitive(PrimitiveElement element,
       painter->setPen(Qt::NoPen);
       // 外圆形
       painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
-      painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1),
-                           buttonRect.width() / 2,
+      painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), buttonRect.width() / 2,
                            buttonRect.width() / 2);
       // 内圆形
       painter->setBrush(NXThemeColor(_themeMode, BasicTextInvert));
@@ -55,8 +54,7 @@ void NXRadioButtonStyle::drawPrimitive(PrimitiveElement element,
         if (bopt->state & QStyle::State_MouseOver)
         {
           painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1),
-                               buttonRect.width() / 4.5,
-                               buttonRect.width() / 4.5);
+                               buttonRect.width() / 4.5, buttonRect.width() / 4.5);
         }
       }
       else
@@ -64,14 +62,12 @@ void NXRadioButtonStyle::drawPrimitive(PrimitiveElement element,
         if (bopt->state & QStyle::State_MouseOver)
         {
           painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1),
-                               buttonRect.width() / 3.5,
-                               buttonRect.width() / 3.5);
+                               buttonRect.width() / 3.5, buttonRect.width() / 3.5);
         }
         else
         {
           painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1),
-                               buttonRect.width() / 4,
-                               buttonRect.width() / 4);
+                               buttonRect.width() / 4, buttonRect.width() / 4);
         }
       }
     }

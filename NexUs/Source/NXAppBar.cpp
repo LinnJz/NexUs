@@ -26,9 +26,9 @@
 #include "NXIconButton.h"
 #include "NXTheme.h"
 #include "private/NXAppBarPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(NXAppBar, bool, IsStayTop)
-Q_PROPERTY_CREATE_Q_CPP(NXAppBar, bool, IsDefaultClosed)
-Q_PROPERTY_CREATE_Q_CPP(NXAppBar, bool, IsOnlyAllowMinAndClose)
+Q_PROPERTY_CREATE_CPP(NXAppBar, bool, IsStayTop)
+Q_PROPERTY_CREATE_CPP(NXAppBar, bool, IsDefaultClosed)
+Q_PROPERTY_CREATE_CPP(NXAppBar, bool, IsOnlyAllowMinAndClose)
 
 NXAppBar::NXAppBar(QWidget *parent)
     : QWidget { parent }
@@ -61,7 +61,7 @@ NXAppBar::NXAppBar(QWidget *parent)
 #endif
   setMouseTracking(true);
   setObjectName("NXAppBar");
-  setStyleSheet("#NXAppBar{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXAppBar{background-color:transparent;}"));
   d->_routeBackButton = new NXToolButton(this);
   d->_routeBackButton->setNXIcon(NXIconType::ArrowLeft);
   d->_routeBackButton->setFixedSize(35, 30);
@@ -100,10 +100,7 @@ NXAppBar::NXAppBar(QWidget *parent)
     d->_iconLabel->setPixmap(parent->windowIcon().pixmap(18, 18));
     d->_iconLabelLayout->setContentsMargins(10, 0, 0, 0);
   }
-  connect(parent,
-          &QWidget::windowIconChanged,
-          this,
-          [=](const QIcon& icon)
+  connect(parent, &QWidget::windowIconChanged, this, [=](const QIcon& icon)
   {
     d->_iconLabel->setPixmap(icon.pixmap(18, 18));
     d->_iconLabel->setVisible(!icon.isNull());
@@ -121,10 +118,7 @@ NXAppBar::NXAppBar(QWidget *parent)
     d->_titleLabel->setText(parent->windowTitle());
     d->_titleLabelLayout->setContentsMargins(10, 0, 0, 0);
   }
-  connect(parent,
-          &QWidget::windowTitleChanged,
-          this,
-          [=](const QString& title)
+  connect(parent, &QWidget::windowTitleChanged, this, [=](const QString& title)
   {
     d->_titleLabel->setText(title);
     d->_titleLabel->setVisible(!title.isEmpty());
@@ -136,9 +130,8 @@ NXAppBar::NXAppBar(QWidget *parent)
   d->_themeChangeButton->setNXIcon(NXIconType::MoonStars);
   d->_themeChangeButton->setFixedSize(40, 30);
   connect(d->_themeChangeButton, &NXToolButton::clicked, this, &NXAppBar::themeChangeButtonClicked);
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) {
-    d->_onThemeModeChange(themeMode);
-  });
+  connect(nxTheme, &NXTheme::themeModeChanged, this,
+          [=](NXThemeType::ThemeMode themeMode) { d->_onThemeModeChange(themeMode); });
 
   d->_minButton = new NXToolButton(this);
   d->_minButton->setNXIcon(NXIconType::Dash);
@@ -206,10 +199,7 @@ NXAppBar::NXAppBar(QWidget *parent)
 #ifdef Q_OS_WIN
   for (int i = 0; i < qApp->screens().count(); i++)
   {
-    connect(qApp->screens().at(i),
-            &QScreen::logicalDotsPerInchChanged,
-            this,
-            [=]
+    connect(qApp->screens().at(i), &QScreen::logicalDotsPerInchChanged, this, [=]
     {
       if (d->_pIsFixedSize)
       {
@@ -219,24 +209,18 @@ NXAppBar::NXAppBar(QWidget *parent)
     });
   }
   // 主屏幕变更处理
-  connect(qApp,
-          &QApplication::primaryScreenChanged,
-          this,
-          [=]()
+  connect(qApp, &QApplication::primaryScreenChanged, this, [=]()
   {
     HWND hwnd = (HWND) (d->_currentWinID);
-    ::SetWindowPos(
-        hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+    ::SetWindowPos(hwnd, nullptr, 0, 0, 0, 0,
+                   SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
     ::RedrawWindow(hwnd, nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW);
   });
   d->_lastScreen = qApp->screenAt(window()->geometry().center());
 #endif
 
   d->_themeMode = nxTheme->getThemeMode();
-  connect(nxTheme,
-          &NXTheme::themeModeChanged,
-          this,
-          [=](NXThemeType::ThemeMode themeMode)
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
     d->_themeMode = themeMode;
     update();
@@ -245,7 +229,7 @@ NXAppBar::NXAppBar(QWidget *parent)
 
 NXAppBar::~NXAppBar() { }
 
-void NXAppBar::setAppBarHeight(int height)
+void NXAppBar::setAppBarHeight(int height) noexcept
 {
   Q_D(NXAppBar);
   d->_pAppBarHeight = height;
@@ -254,7 +238,7 @@ void NXAppBar::setAppBarHeight(int height)
   Q_EMIT pAppBarHeightChanged();
 }
 
-int NXAppBar::getAppBarHeight() const
+int NXAppBar::getAppBarHeight() const noexcept
 {
   Q_D(const NXAppBar);
   return d->_pAppBarHeight;
@@ -263,7 +247,7 @@ int NXAppBar::getAppBarHeight() const
 void NXAppBar::setCustomWidget(NXAppBarType::CustomArea customArea,
                                QWidget *widget,
                                QObject *hitTestObject,
-                               const QString& hitTestFunctionName)
+                               const QString& hitTestFunctionName) noexcept
 {
   Q_D(NXAppBar);
   if (!widget || widget == this) { return; }
@@ -279,27 +263,27 @@ void NXAppBar::setCustomWidget(NXAppBarType::CustomArea customArea,
   Q_EMIT customWidgetChanged();
 }
 
-QWidget *NXAppBar::getCustomWidget(NXAppBarType::CustomArea customArea) const
+QWidget *NXAppBar::getCustomWidget(NXAppBarType::CustomArea customArea) const noexcept
 {
   Q_D(const NXAppBar);
   int customAreaIndex = (int) customArea - 1;
   return d->_customAreaWidgetList[customAreaIndex];
 }
 
-void NXAppBar::setCustomMenu(QMenu *customMenu)
+void NXAppBar::setCustomMenu(QMenu *customMenu) noexcept
 {
   Q_D(NXAppBar);
   d->_pCustomMenu = customMenu;
   Q_EMIT customMenuChanged();
 }
 
-QMenu *NXAppBar::getCustomMenu() const
+QMenu *NXAppBar::getCustomMenu() const noexcept
 {
   Q_D(const NXAppBar);
   return d->_pCustomMenu;
 }
 
-void NXAppBar::setIsFixedSize(bool isFixedSize)
+void NXAppBar::setIsFixedSize(bool isFixedSize) noexcept
 {
   Q_D(NXAppBar);
   d->_pIsFixedSize = isFixedSize;
@@ -326,13 +310,13 @@ void NXAppBar::setIsFixedSize(bool isFixedSize)
   Q_EMIT pIsFixedSizeChanged();
 }
 
-bool NXAppBar::getIsFixedSize() const
+bool NXAppBar::getIsFixedSize() const noexcept
 {
   Q_D(const NXAppBar);
   return d->_pIsFixedSize;
 }
 
-void NXAppBar::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable)
+void NXAppBar::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable) noexcept
 {
   Q_D(NXAppBar);
   if (isEnable) { setWindowButtonFlags(d->_buttonFlags | buttonFlag); }
@@ -342,7 +326,7 @@ void NXAppBar::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isE
   }
 }
 
-void NXAppBar::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags)
+void NXAppBar::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags) noexcept
 {
   Q_D(NXAppBar);
   d->_buttonFlags = buttonFlags;
@@ -370,21 +354,21 @@ void NXAppBar::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags)
   }
 }
 
-NXAppBarType::ButtonFlags NXAppBar::getWindowButtonFlags() const { return d_ptr->_buttonFlags; }
+NXAppBarType::ButtonFlags NXAppBar::getWindowButtonFlags() const noexcept { return d_ptr->_buttonFlags; }
 
-void NXAppBar::setRouteBackButtonEnable(bool isEnable)
+void NXAppBar::setRouteBackButtonEnable(bool isEnable) noexcept
 {
   Q_D(NXAppBar);
   d->_routeBackButton->setEnabled(isEnable);
 }
 
-void NXAppBar::setRouteForwardButtonEnable(bool isEnable)
+void NXAppBar::setRouteForwardButtonEnable(bool isEnable) noexcept
 {
   Q_D(NXAppBar);
   d->_routeForwardButton->setEnabled(isEnable);
 }
 
-void NXAppBar::closeWindow()
+void NXAppBar::closeWindow() noexcept
 {
   Q_D(NXAppBar);
   QPropertyAnimation *closeOpacityAnimation = new QPropertyAnimation(window(), "windowOpacity");
@@ -399,8 +383,8 @@ void NXAppBar::closeWindow()
   geometryAnimation->setStartValue(geometry);
   qreal targetWidth  = (geometry.width() - d->_lastMinTrackWidth) * 0.7 + d->_lastMinTrackWidth;
   qreal targetHeight = (geometry.height() - window()->minimumHeight()) * 0.7 + window()->minimumHeight();
-  geometryAnimation->setEndValue(QRectF(
-      geometry.center().x() - targetWidth / 2, geometry.center().y() - targetHeight / 2, targetWidth, targetHeight));
+  geometryAnimation->setEndValue(QRectF(geometry.center().x() - targetWidth / 2,
+                                        geometry.center().y() - targetHeight / 2, targetWidth, targetHeight));
   geometryAnimation->setEasingCurve(QEasingCurve::InOutSine);
   geometryAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
@@ -534,8 +518,8 @@ int NXAppBar::takeOverNativeEvent(const QByteArray& eventType, void *message, lo
     {
       if (d->_lastScreen)
       {
-        ::SetWindowPos(
-            hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+        ::SetWindowPos(hwnd, nullptr, 0, 0, 0, 0,
+                       SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
         ::RedrawWindow(hwnd, nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW);
       }
       d->_lastScreen = currentScreen;

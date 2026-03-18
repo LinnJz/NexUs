@@ -12,14 +12,14 @@ NXDrawerContainer::NXDrawerContainer(QWidget *parent)
   _pOpacity      = 0;
   _pContainerPix = QPixmap();
   setObjectName("NXDrawerContainer");
-  setStyleSheet("#NXDrawerContainer{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXDrawerContainer{background-color:transparent;}"));
 
   _mainLayout = new QVBoxLayout(this);
   _mainLayout->setContentsMargins(0, 0, 0, 0);
 
   _containerWidget = new QWidget(this);
   _containerWidget->setObjectName("NXDrawerContainerWidget");
-  _containerWidget->setStyleSheet("#NXDrawerContainerWidget{background-color:transparent;}");
+  _containerWidget->setStyleSheet(QStringLiteral("#NXDrawerContainerWidget{background-color:transparent;}"));
   setMaximumHeight(0);
 
   _containerLayout = new QVBoxLayout(_containerWidget);
@@ -29,10 +29,7 @@ NXDrawerContainer::NXDrawerContainer(QWidget *parent)
   _mainLayout->addWidget(_containerWidget);
 
   _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme,
-          &NXTheme::themeModeChanged,
-          this,
-          [=](NXThemeType::ThemeMode themeMode)
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
     _themeMode = themeMode;
     update();
@@ -41,14 +38,14 @@ NXDrawerContainer::NXDrawerContainer(QWidget *parent)
 
 NXDrawerContainer::~NXDrawerContainer() { }
 
-void NXDrawerContainer::addWidget(QWidget *widget)
+void NXDrawerContainer::addWidget(QWidget *widget) noexcept
 {
   if (!widget || _drawerWidgetList.contains(widget)) { return; }
   _containerLayout->addWidget(widget);
   _drawerWidgetList.append(widget);
 }
 
-void NXDrawerContainer::removeWidget(QWidget *widget)
+void NXDrawerContainer::removeWidget(QWidget *widget) noexcept
 {
   if (!widget) { return; }
   _containerLayout->removeWidget(widget);
@@ -64,10 +61,7 @@ void NXDrawerContainer::doDrawerAnimation(bool isExpand)
   _pContainerPix                       = grab(rect());
   QPropertyAnimation *opacityAnimation = new QPropertyAnimation(this, "pOpacity");
   connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
-  connect(opacityAnimation,
-          &QPropertyAnimation::finished,
-          this,
-          [=]()
+  connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]()
   {
     _pContainerPix = QPixmap();
     if (isExpand)

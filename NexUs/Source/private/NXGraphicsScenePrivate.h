@@ -38,10 +38,10 @@ private:
   NXGraphicsLineItem *_linkLineItem { nullptr };
 
 
-  QList<NXGraphicsItem *> _serializeItem(int count);
+  QList<NXGraphicsItem *> _serializeItem(int count) noexcept;
 
-  void _removeLinkLineItem();
-  void _deserializeLink();
+  void _removeLinkLineItem() noexcept;
+  void _deserializeLink() noexcept;
 };
 
 #endif // NXGRAPHICSSCENEPRIVATE_H

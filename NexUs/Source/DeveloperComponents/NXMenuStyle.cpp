@@ -32,9 +32,7 @@ void NXMenuStyle::drawPrimitive(PrimitiveElement element,
     painter->setRenderHint(QPainter::Antialiasing);
     nxTheme->drawEffectShadow(painter, option->rect, _shadowBorderWidth, 6);
     // 背景绘制
-    QRect foregroundRect(_shadowBorderWidth,
-                         _shadowBorderWidth,
-                         option->rect.width() - 2 * _shadowBorderWidth,
+    QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, option->rect.width() - 2 * _shadowBorderWidth,
                          option->rect.height() - 2 * _shadowBorderWidth);
     painter->setPen(NXThemeColor(_themeMode, PopupBorder));
     painter->setBrush(NXThemeColor(_themeMode, PopupBase));
@@ -73,12 +71,9 @@ void NXMenuStyle::drawControl(ControlElement element,
         painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
         painter->setPen(Qt::NoPen);
         painter->setBrush(NXThemeColor(_themeMode, BasicBaseLine));
-        painter->drawRoundedRect(QRectF(separatorRect.x() + separatorRect.width() * 0.055,
-                                        separatorRect.center().y(),
-                                        separatorRect.width() - separatorRect.width() * 0.11,
-                                        1.5),
-                                 1,
-                                 1);
+        painter->drawRoundedRect(QRectF(separatorRect.x() + separatorRect.width() * 0.055, separatorRect.center().y(),
+                                        separatorRect.width() - separatorRect.width() * 0.11, 1.5),
+                                 1, 1);
         painter->restore();
         return;
       }
@@ -115,13 +110,12 @@ void NXMenuStyle::drawControl(ControlElement element,
           painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? Qt::gray
                           : _themeMode == NXThemeType::Light           ? Qt::black
                                                                        : Qt::white);
-          QFont iconFont = QFont("NXAwesome");
+          QFont iconFont = QFont(QStringLiteral("NXAwesome"));
           iconFont.setPixelSize(_pMenuItemHeight * 0.57);
           painter->setFont(iconFont);
-          painter->drawText(QRectF(menuRect.x() + contentPadding, menuRect.y(), _iconWidth, menuRect.height()),
-                            Qt::AlignCenter,
-                            mopt->checked ? QChar((unsigned short) NXIconType::Check)
-                                          : QChar((unsigned short) NXIconType::None));
+          painter->drawText(
+              QRectF(menuRect.x() + contentPadding, menuRect.y(), _iconWidth, menuRect.height()), Qt::AlignCenter,
+              mopt->checked ? QChar((unsigned short) NXIconType::Check) : QChar((unsigned short) NXIconType::None));
           painter->restore();
         }
         else
@@ -146,12 +140,9 @@ void NXMenuStyle::drawControl(ControlElement element,
             iconFont.setPixelSize(_pMenuItemHeight * 0.57);
             painter->setFont(iconFont);
 
-            painter->drawText(QRectF(menuRect.x() + contentPadding + ditherOffset,
-                                     menuRect.y() - ditherOffset * 1.5,
-                                     _iconWidth,
-                                     menuRect.height()),
-                              Qt::AlignCenter,
-                              iconText);
+            painter->drawText(QRectF(menuRect.x() + contentPadding + ditherOffset, menuRect.y() - ditherOffset * 1.5,
+                                     _iconWidth, menuRect.height()),
+                              Qt::AlignCenter, iconText);
             painter->restore();
           }
           else
@@ -176,19 +167,15 @@ void NXMenuStyle::drawControl(ControlElement element,
                                                                              : Qt::white);
           painter->drawText(QRectF(menuRect.x() + (_isAnyoneItemHasIcon ? contentPadding + textLeftSpacing : 0) +
                                        _iconWidth + ditherOffset,
-                                   menuRect.y() - ditherOffset,
-                                   menuRect.width(),
-                                   menuRect.height()),
-                            Qt::AlignLeft | Qt::AlignVCenter | Qt::TextSingleLine,
-                            textList[0]);
+                                   menuRect.y() - ditherOffset, menuRect.width(), menuRect.height()),
+                            Qt::AlignLeft | Qt::AlignVCenter | Qt::TextSingleLine, textList[0]);
           if (textList.count() > 1)
           {
             painter->drawText(QRectF(menuRect.x() + contentPadding + _iconWidth + textLeftSpacing + ditherOffset,
                                      menuRect.y() - ditherOffset,
                                      menuRect.width() - (contentPadding * 2 + _iconWidth + textLeftSpacing),
                                      menuRect.height()),
-                              Qt::AlignRight | Qt::AlignVCenter | Qt::TextSingleLine,
-                              textList[1]);
+                              Qt::AlignRight | Qt::AlignVCenter | Qt::TextSingleLine, textList[1]);
           }
         }
         // 展开图标
@@ -198,11 +185,10 @@ void NXMenuStyle::drawControl(ControlElement element,
           painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? Qt::gray
                           : _themeMode == NXThemeType::Light           ? Qt::black
                                                                        : Qt::white);
-          QFont iconFont = QFont("NXAwesome");
+          QFont iconFont = QFont(QStringLiteral("NXAwesome"));
           iconFont.setPixelSize(18);
           painter->setFont(iconFont);
-          painter->drawText(QRect(menuRect.right() - 25, menuRect.y(), 25, menuRect.height()),
-                            Qt::AlignVCenter,
+          painter->drawText(QRect(menuRect.right() - 25, menuRect.y(), 25, menuRect.height()), Qt::AlignVCenter,
                             QChar((unsigned short) NXIconType::AngleRight));
           painter->restore();
         }

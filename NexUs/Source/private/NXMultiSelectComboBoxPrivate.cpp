@@ -12,7 +12,7 @@ NXMultiSelectComboBoxPrivate::NXMultiSelectComboBoxPrivate(QObject *parent)
 
 NXMultiSelectComboBoxPrivate::~NXMultiSelectComboBoxPrivate() { }
 
-void NXMultiSelectComboBoxPrivate::onItemPressed(const QModelIndex& index)
+void NXMultiSelectComboBoxPrivate::onItemPressed(const QModelIndex& index) noexcept
 {
   Q_Q(NXMultiSelectComboBox);
   if (!_comboView->selectionModel()->isSelected(index)) { _itemSelection[index.row()] = true; }
@@ -31,7 +31,7 @@ void NXMultiSelectComboBoxPrivate::onItemPressed(const QModelIndex& index)
   markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs()
+void NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs() noexcept
 {
   Q_Q(NXMultiSelectComboBox);
   QString str;
@@ -44,7 +44,7 @@ void NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs()
     if (_itemSelection[i])
     {
       _comboView->selectionModel()->select(index, QItemSelectionModel::Select | QItemSelectionModel::Rows);
-      if (!str.isEmpty()) { str.append(","); }
+      if (!str.isEmpty()) {str.append(QStringLiteral(",")); }
       str.append(q->itemText(i));
       selectedIndexVector.append(true);
     }
@@ -59,9 +59,9 @@ void NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs()
     q->update();
     _currentText = str;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    _selectedTextList = _currentText.split(",", Qt::SkipEmptyParts);
+    _selectedTextList = _currentText.split(QStringLiteral(","), Qt::SkipEmptyParts);
 #else
-    _selectedTextList = _currentText.split(",");
+    _selectedTextList = _currentText.split(QStringLiteral(","));
     if (_selectedTextList.count() == 1 && _selectedTextList[0].isEmpty()) { _selectedTextList.clear(); }
 #endif
     q->setCurrentIndex(-1);
@@ -70,7 +70,7 @@ void NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs()
   }
 }
 
-void NXMultiSelectComboBoxPrivate::_adjustSelectedVector()
+void NXMultiSelectComboBoxPrivate::_adjustSelectedVector() noexcept
 {
   Q_Q(NXMultiSelectComboBox);
   while (_itemSelection.count() < q->count()) { _itemSelection.append(false); }

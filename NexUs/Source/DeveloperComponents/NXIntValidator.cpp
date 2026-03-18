@@ -19,7 +19,7 @@ QValidator::State NXIntValidator::validate(QString& input, int& pos) const
   QString inputCopy = input;
   if (_pIsHexMode)
   {
-    inputCopy.remove("#");
+    inputCopy.remove(QStringLiteral("#"));
     if (!inputCopy.isEmpty())
     {
       bool isInt = false;
@@ -29,7 +29,7 @@ QValidator::State NXIntValidator::validate(QString& input, int& pos) const
       int topLength = QString::number(top(), 16).length();
       if (inputCopy.length() > topLength) { return QValidator::Invalid; }
     }
-    inputCopy.prepend("#");
+    inputCopy.prepend(QStringLiteral("#"));
   }
   else
   {
@@ -48,7 +48,7 @@ void NXIntValidator::fixup(QString& input) const
   if (_pIsHexMode)
   {
     QString inputComplete = _completeInput(input, QString::number(top(), 16).length());
-    input                 = QString("#") + inputComplete;
+    input                 = QStringLiteral("#") + inputComplete;
   }
   else
   {
@@ -58,6 +58,6 @@ void NXIntValidator::fixup(QString& input) const
 
 QString NXIntValidator::_completeInput(QString input, int length) const
 {
-  while (input.length() < length) { input.prepend("0"); }
+  while (input.length() < length) {input.prepend(QStringLiteral("0")); }
   return input;
 }

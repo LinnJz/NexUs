@@ -128,14 +128,9 @@ template<typename Cmp = std::less<>, typename BidirIt, typename E>
 constexpr auto equal_range(BidirIt begin, BidirIt end, E&& e, Cmp&& comp = {})
 {
   const auto first = lower_bound(begin, end, e, comp);
-  return std::pair { first,
-                     lower_bound(std::make_reverse_iterator(end),
-                                 std::make_reverse_iterator(first),
-                                 e,
-                                 [&comp](auto&& lhs, auto&& rhs)
-  {
-    return comp(rhs, lhs);
-  }).base() };
+  return std::pair { first, lower_bound(std::make_reverse_iterator(end), std::make_reverse_iterator(first), e,
+                                        [&comp](auto&& lhs, auto&& rhs)
+  { return comp(rhs, lhs); }).base() };
 }
 
 template<typename E = void, typename Cmp = std::less<E>, typename = void>
@@ -1191,8 +1186,7 @@ public:
   {
     size_type c = 0;
     for (auto [first, last] = detail::equal_range(index_type::begin(), index_type::end(), x, key_compare {});
-         first != last;
-         ++first)
+         first != last; ++first)
     {
       c += count(*first);
     }
@@ -1212,8 +1206,7 @@ public:
   [[nodiscard]] constexpr std::enable_if_t<detail::is_transparent_v<KC>, const_iterator> find(const K& x) const
   {
     for (auto [first, last] = detail::equal_range(index_type::begin(), index_type::end(), x, key_compare {});
-         first != last;
-         ++first)
+         first != last; ++first)
     {
       if (a.test(*first)) { return find(*first); }
     }

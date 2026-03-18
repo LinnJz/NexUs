@@ -34,7 +34,7 @@ NXColorPicker::NXColorPicker(QWidget *parent)
 
 NXColorPicker::~NXColorPicker() { }
 
-void NXColorPicker::setSelectedColor(QColor color)
+void NXColorPicker::setSelectedColor(const QColor& color) noexcept
 {
   _selectedColor = std::move(color);
   _selectedPoint =
@@ -42,7 +42,7 @@ void NXColorPicker::setSelectedColor(QColor color)
   update();
 }
 
-QColor NXColorPicker::getSelectedColor() const { return _selectedColor; }
+QColor NXColorPicker::getSelectedColor() const noexcept { return _selectedColor; }
 
 void NXColorPicker::mousePressEvent(QMouseEvent *event)
 {

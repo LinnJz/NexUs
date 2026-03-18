@@ -20,12 +20,12 @@ NXPlainTextEdit::NXPlainTextEdit(QWidget *parent)
   Q_D(NXPlainTextEdit);
   d->q_ptr = this;
   setObjectName("NXPlainTextEdit");
-  setStyleSheet("#NXPlainTextEdit{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXPlainTextEdit{background-color:transparent;}"));
   setHorizontalScrollBar(new NXScrollBar(this));
   setVerticalScrollBar(new NXScrollBar(this));
   setMouseTracking(true);
   // 事件总线
-  d->_focusEvent = new NXEvent("WMWindowClicked", "onWMWindowClickedEvent", d);
+  d->_focusEvent = new NXEvent(QStringLiteral("WMWindowClicked"), QStringLiteral("onWMWindowClickedEvent"), d);
   d->_focusEvent->registerAndInit();
 
   d->_style = new NXPlainTextEditStyle(style());
@@ -86,11 +86,11 @@ void NXPlainTextEdit::contextMenuEvent(QContextMenuEvent *event)
   QAction *action = nullptr;
   if (!isReadOnly())
   {
-    action = menu->addNXIconAction(NXIconType::ArrowRotateLeft, "撤销", QKeySequence::Undo);
+    action = menu->addNXIconAction(NXIconType::ArrowRotateLeft, QStringLiteral("撤销"), QKeySequence::Undo);
     action->setEnabled(isUndoRedoEnabled() ? document()->isUndoAvailable() : false);
     connect(action, &QAction::triggered, this, &NXPlainTextEdit::undo);
 
-    action = menu->addNXIconAction(NXIconType::ArrowRotateRight, "恢复", QKeySequence::Redo);
+    action = menu->addNXIconAction(NXIconType::ArrowRotateRight, QStringLiteral("恢复"), QKeySequence::Redo);
     action->setEnabled(isUndoRedoEnabled() ? document()->isRedoAvailable() : false);
     connect(action, &QAction::triggered, this, &NXPlainTextEdit::redo);
     menu->addSeparator();
@@ -98,30 +98,27 @@ void NXPlainTextEdit::contextMenuEvent(QContextMenuEvent *event)
 #ifndef QT_NO_CLIPBOARD
   if (!isReadOnly())
   {
-    action = menu->addNXIconAction(NXIconType::KnifeKitchen, "剪切", QKeySequence::Cut);
+    action = menu->addNXIconAction(NXIconType::KnifeKitchen, QStringLiteral("剪切"), QKeySequence::Cut);
     action->setEnabled(!isReadOnly() && !textCursor().selectedText().isEmpty());
     connect(action, &QAction::triggered, this, &NXPlainTextEdit::cut);
   }
 
-  action = menu->addNXIconAction(NXIconType::Copy, "复制", QKeySequence::Copy);
+  action = menu->addNXIconAction(NXIconType::Copy, QStringLiteral("复制"), QKeySequence::Copy);
   action->setEnabled(!textCursor().selectedText().isEmpty());
   connect(action, &QAction::triggered, this, &NXPlainTextEdit::copy);
 
   if (!isReadOnly())
   {
-    action = menu->addNXIconAction(NXIconType::Paste, "粘贴", QKeySequence::Paste);
+    action = menu->addNXIconAction(NXIconType::Paste, QStringLiteral("粘贴"), QKeySequence::Paste);
     action->setEnabled(!isReadOnly() && !QGuiApplication::clipboard()->text().isEmpty());
     connect(action, &QAction::triggered, this, &NXPlainTextEdit::paste);
   }
 #endif
   if (!isReadOnly())
   {
-    action = menu->addNXIconAction(NXIconType::DeleteLeft, "删除");
+    action = menu->addNXIconAction(NXIconType::DeleteLeft, QStringLiteral("删除"));
     action->setEnabled(!isReadOnly() && !toPlainText().isEmpty() && !textCursor().selectedText().isEmpty());
-    connect(action,
-            &QAction::triggered,
-            this,
-            [=](bool checked)
+    connect(action, &QAction::triggered, this, [=](bool checked)
     {
       if (!textCursor().selectedText().isEmpty()) { textCursor().deleteChar(); }
     });

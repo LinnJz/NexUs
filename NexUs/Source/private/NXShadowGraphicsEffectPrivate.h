@@ -26,8 +26,8 @@ public:
   ~NXShadowGraphicsEffectPrivate();
 
 private:
-  void _drawInsetShadow(QPainter *painter, const QPixmap& pixmap, const QPoint& pos);
-  void _drawOutsetShadow(QPainter *painter, const QPixmap& pixmap, const QPoint& pos);
+  void _drawInsetShadow(QPainter *painter, const QPixmap& pixmap, const QPoint& pos) noexcept;
+  void _drawOutsetShadow(QPainter *painter, const QPixmap& pixmap, const QPoint& pos) noexcept;
 
   NXThemeType::ThemeMode _themeMode { NXThemeType::ThemeMode::Light };
 };

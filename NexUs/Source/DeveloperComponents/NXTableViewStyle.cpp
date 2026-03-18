@@ -22,16 +22,16 @@ NXTableViewStyle::NXTableViewStyle(QStyle *style)
 
 NXTableViewStyle::~NXTableViewStyle() { }
 
-void NXTableViewStyle::setHorizontalPadding(int column, int padding)
+void NXTableViewStyle::setHorizontalPadding(int column, int padding) noexcept
 {
   if (column < 0) { return; }
   if (column >= _horizontalPaddings.size()) { syncHorizontalPaddings(column + 1); }
   _horizontalPaddings[column] = padding;
 }
 
-int NXTableViewStyle::getHorizontalPadding(int column) const { return _horizontalPaddingForColumn(column); }
+int NXTableViewStyle::getHorizontalPadding(int column) const noexcept { return _horizontalPaddingForColumn(column); }
 
-void NXTableViewStyle::syncHorizontalPaddings(int columnCount)
+void NXTableViewStyle::syncHorizontalPaddings(int columnCount) noexcept
 {
   if (columnCount <= 0) [[unlikely]]
   {
@@ -44,7 +44,7 @@ void NXTableViewStyle::syncHorizontalPaddings(int columnCount)
   if (oldSize == 0 && !_horizontalPaddings.isEmpty()) { _horizontalPaddings[0] = 11; }
 }
 
-int NXTableViewStyle::_horizontalPaddingForColumn(int column) const
+int NXTableViewStyle::_horizontalPaddingForColumn(int column) const noexcept
 {
   if (column >= 0 && column < _horizontalPaddings.size()) { return _horizontalPaddings[column]; }
   if (column == 0) { return 11; }
@@ -59,6 +59,23 @@ void NXTableViewStyle::drawPrimitive(PrimitiveElement element,
   // qDebug() << element << option->rect << widget->objectName();
   switch (element)
   {
+  case QStyle::PE_IndicatorItemViewItemDrop :
+  {
+    if (option->rect.isNull()) return;
+
+    QPen pen;
+    pen.setColor(NXThemeColor(_themeMode, PrimaryNormal));
+    pen.setWidth(2);
+    painter->save();
+    painter->setPen(pen);
+    painter->setRenderHint(QPainter::Antialiasing);
+
+    painter->drawEllipse(QPoint { 8, option->rect.top() }, 5, 5);
+    painter->drawLine(8, option->rect.top(), widget->width() - 8, option->rect.top());
+    painter->restore();
+
+    return;
+  }
   case QStyle::PE_PanelItemViewItem :
   {
     // 行覆盖绘制
@@ -140,6 +157,7 @@ void NXTableViewStyle::drawControl(ControlElement element,
                                    const QWidget *widget) const
 {
   // qDebug() << element << option->rect;
+
   switch (element)
   {
   case QStyle::CE_ShapedFrame :
@@ -329,7 +347,7 @@ int NXTableViewStyle::pixelMetric(PixelMetric metric, const QStyleOption *option
   return QProxyStyle::pixelMetric(metric, option, widget);
 }
 
-void NXTableViewStyle::_drawCheckIndicator(QPainter *painter, const QRect& rect, Qt::CheckState state) const
+void NXTableViewStyle::_drawCheckIndicator(QPainter *painter, const QRect& rect, Qt::CheckState state) const noexcept
 {
   painter->save();
 

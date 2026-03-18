@@ -8,7 +8,7 @@ NXNavigationNode::NXNavigationNode(const QString& nodeTitle, NXNavigationNode *p
 {
   _pDepth           = 0;
   _pKeyPoints       = 0;
-  _pNodeKey         = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
+  _pNodeKey         = QUuid::createUuid().toString().remove(QStringLiteral("{")).remove(QStringLiteral("}")).remove(QStringLiteral("-"));
   _pNodeTitle       = nodeTitle;
   _pIsExpanded      = false;
   _pIsRootNode      = false;
@@ -29,17 +29,17 @@ NXNavigationNode::~NXNavigationNode()
   // qDebug() << _pNodeTitle + " Already delete " __FUNCTION__ "\n";
 }
 
-QString NXNavigationNode::getNodeKey() const { return _pNodeKey; }
+QString NXNavigationNode::getNodeKey() const noexcept { return _pNodeKey; }
 
-void NXNavigationNode::setIsExpanded(bool isExpanded)
+void NXNavigationNode::setIsExpanded(bool isExpanded) noexcept
 {
   _pIsExpanded = isExpanded;
   setChildVisible(isExpanded);
 }
 
-bool NXNavigationNode::getIsExpanded() const { return _pIsExpanded; }
+bool NXNavigationNode::getIsExpanded() const noexcept { return _pIsExpanded; }
 
-void NXNavigationNode::setChildVisible(bool isVisible)
+void NXNavigationNode::setChildVisible(bool isVisible) noexcept
 {
   if (isVisible)
   {
@@ -60,13 +60,13 @@ void NXNavigationNode::setChildVisible(bool isVisible)
   }
 }
 
-bool NXNavigationNode::getIsHasChild() const
+bool NXNavigationNode::getIsHasChild() const noexcept
 {
   if (_pChildrenNodes.count() > 0) { return true; }
   return false;
 }
 
-bool NXNavigationNode::getIsHasPageChild() const
+bool NXNavigationNode::getIsHasPageChild() const noexcept
 {
   if (_pChildrenNodes.count() == 0) { return false; }
   for (auto childNode : _pChildrenNodes)
@@ -77,7 +77,7 @@ bool NXNavigationNode::getIsHasPageChild() const
   return false;
 }
 
-void NXNavigationNode::appendChildNode(NXNavigationNode *childNode)
+void NXNavigationNode::appendChildNode(NXNavigationNode *childNode) noexcept
 {
   if (_pIsExpanderNode) // 根节点也是ExpanderNode
   {
@@ -85,12 +85,12 @@ void NXNavigationNode::appendChildNode(NXNavigationNode *childNode)
   }
 }
 
-void NXNavigationNode::removeChildNode(NXNavigationNode *childNode)
+void NXNavigationNode::removeChildNode(NXNavigationNode *childNode) noexcept
 {
   if (_pIsExpanderNode) { _pChildrenNodes.removeOne(childNode); }
 }
 
-void NXNavigationNode::insertChildNode(int row, NXNavigationNode *childNode)
+void NXNavigationNode::insertChildNode(int row, NXNavigationNode *childNode) noexcept
 {
   if (row < 0 || row > _pChildrenNodes.count()) return;
   _pChildrenNodes.insert(row, childNode);
@@ -98,7 +98,7 @@ void NXNavigationNode::insertChildNode(int row, NXNavigationNode *childNode)
   childNode->setParent(this);
 }
 
-bool NXNavigationNode::getIsChildHasKeyPoints() const
+bool NXNavigationNode::getIsChildHasKeyPoints() const noexcept
 {
   for (auto childNnode : _pChildrenNodes)
   {
@@ -108,7 +108,7 @@ bool NXNavigationNode::getIsChildHasKeyPoints() const
   return false;
 }
 
-NXNavigationNode *NXNavigationNode::getOriginalNode()
+NXNavigationNode *NXNavigationNode::getOriginalNode() noexcept
 {
   if (this->getParentNode()->getIsRootNode()) { return this; }
   else
@@ -122,7 +122,7 @@ NXNavigationNode *NXNavigationNode::getOriginalNode()
   }
 }
 
-bool NXNavigationNode::getIsChildNode(NXNavigationNode *node) const
+bool NXNavigationNode::getIsChildNode(NXNavigationNode *node) const noexcept
 {
   if (_pChildrenNodes.count() > 0)
   {
@@ -135,13 +135,13 @@ bool NXNavigationNode::getIsChildNode(NXNavigationNode *node) const
   return false;
 }
 
-int NXNavigationNode::getRow() const
+int NXNavigationNode::getRow() const noexcept
 {
   if (_pParentNode) { return _pParentNode->getChildrenNodes().indexOf(const_cast<NXNavigationNode *>(this)); }
   return 0;
 }
 
-QList<NXNavigationNode *> NXNavigationNode::getExceptCategoryNodes()
+QList<NXNavigationNode *> NXNavigationNode::getExceptCategoryNodes() const noexcept
 {
   QList<NXNavigationNode *> exceptCategoryNodeList;
   for (auto node : _pChildrenNodes)
@@ -151,7 +151,7 @@ QList<NXNavigationNode *> NXNavigationNode::getExceptCategoryNodes()
   return exceptCategoryNodeList;
 }
 
-void NXNavigationNode::swapVisual(NXNavigationNode *other)
+void NXNavigationNode::swap(NXNavigationNode *other)
 {
   if (this == other || other == nullptr) return;
   std::swap(this->_pAwesome, other->_pAwesome);

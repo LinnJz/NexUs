@@ -31,10 +31,7 @@ T_Icon::T_Icon(QWidget *parent)
   _iconView->setFlow(QListView::LeftToRight);
   _iconView->setViewMode(QListView::IconMode);
   _iconView->setResizeMode(QListView::Adjust);
-  connect(_iconView,
-          &NXListView::clicked,
-          this,
-          [=](const QModelIndex& index)
+  connect(_iconView, &NXListView::clicked, this, [=](const QModelIndex& index)
   {
     QString iconName = _iconModel->getIconNameFromModelIndex(index);
     if (iconName.isEmpty()) { return; }

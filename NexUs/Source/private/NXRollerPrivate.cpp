@@ -8,7 +8,7 @@ NXRollerPrivate::NXRollerPrivate(QObject *parent)
 
 NXRollerPrivate::~NXRollerPrivate() { }
 
-void NXRollerPrivate::_scroll(int delta)
+void NXRollerPrivate::_scroll(int delta) noexcept
 {
   int steps = delta / 120;
   _targetScrollOffset -= steps * _pItemHeight;

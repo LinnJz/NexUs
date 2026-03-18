@@ -30,10 +30,13 @@ private:
   NXThemeType::ThemeMode _themeMode;
   int _contentMargin { 6 };
   int _hasMenuIndicatorWidth { 30 };
-  void _drawIndicator(QPainter *painter, const QStyleOptionToolButton *bopt, const QWidget *widget) const;
-  void _drawIcon(QPainter *painter, QRectF iconRect, const QStyleOptionToolButton *bopt, const QWidget *widget) const;
-  void _drawText(QPainter *painter, QRect contentRect, const QStyleOptionToolButton *bopt) const;
-  qreal _calculateExpandIndicatorWidth(const QStyleOptionToolButton *bopt, QPainter *painter) const;
+  void _drawIndicator(QPainter *painter, const QStyleOptionToolButton *bopt, const QWidget *widget) const noexcept;
+  void _drawIcon(QPainter *painter,
+                 QRectF iconRect,
+                 const QStyleOptionToolButton *bopt,
+                 const QWidget *widget) const noexcept;
+  void _drawText(QPainter *painter, QRect contentRect, const QStyleOptionToolButton *bopt) const noexcept;
+  qreal _calculateExpandIndicatorWidth(const QStyleOptionToolButton *bopt, QPainter *painter) const noexcept;
 };
 
 #endif // NXTOOLBUTTONSTYLE_H

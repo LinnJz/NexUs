@@ -16,7 +16,7 @@ class NXKeyBinderPrivate : public QObject
 public:
   explicit NXKeyBinderPrivate(QObject *parent = nullptr);
   ~NXKeyBinderPrivate() override;
-  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
+  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept;
 
 private:
   NXThemeType::ThemeMode _themeMode;

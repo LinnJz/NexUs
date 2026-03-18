@@ -40,44 +40,35 @@ void NXSliderStyle::drawComplexControl(ComplexControl control,
       // 未滑过
       painter->drawRoundedRect(QRect(sliderRect.x() + sliderRect.height() / 8,
                                      sliderRect.y() + sliderRect.height() * 0.375,
-                                     sliderRect.width() - sliderRect.height() / 4,
-                                     sliderRect.height() / 4),
-                               sliderRect.height() / 8,
-                               sliderRect.height() / 8);
+                                     sliderRect.width() - sliderRect.height() / 4, sliderRect.height() / 4),
+                               sliderRect.height() / 8, sliderRect.height() / 8);
       // 已滑过
       painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
       painter->drawRoundedRect(QRect(sliderRect.x() + sliderRect.height() / 8,
-                                     sliderRect.y() + sliderRect.height() * 0.375,
-                                     sliderHandleRect.x(),
+                                     sliderRect.y() + sliderRect.height() * 0.375, sliderHandleRect.x(),
                                      sliderRect.height() / 4),
-                               sliderRect.height() / 8,
-                               sliderRect.height() / 8);
+                               sliderRect.height() / 8, sliderRect.height() / 8);
     }
     else
     {
       // 未滑过
       painter->drawRoundedRect(QRect(sliderRect.x() + sliderRect.width() * 0.375,
-                                     sliderRect.y() + sliderRect.width() / 8,
-                                     sliderRect.width() / 4,
+                                     sliderRect.y() + sliderRect.width() / 8, sliderRect.width() / 4,
                                      sliderRect.height() - sliderRect.width() / 4),
-                               sliderRect.width() / 8,
-                               sliderRect.width() / 8);
+                               sliderRect.width() / 8, sliderRect.width() / 8);
       // 已滑过
       painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
-      painter->drawRoundedRect(QRect(sliderRect.x() + sliderRect.width() * 0.375,
-                                     sliderHandleRect.y(),
+      painter->drawRoundedRect(QRect(sliderRect.x() + sliderRect.width() * 0.375, sliderHandleRect.y(),
                                      sliderRect.width() / 4,
                                      sliderRect.height() - sliderRect.width() / 8 - sliderHandleRect.y()),
-                               sliderRect.width() / 8,
-                               sliderRect.width() / 8);
+                               sliderRect.width() / 8, sliderRect.width() / 8);
     }
     // 滑块
     // 外圆形
     painter->setPen(NXThemeColor(_themeMode, BasicBorder));
     painter->setBrush(NXThemeColor(_themeMode, BasicBase));
     painter->drawEllipse(QPointF(sliderHandleRect.center().x() + 1, sliderHandleRect.center().y() + 1),
-                         sliderHandleRect.width() / 2,
-                         sliderHandleRect.width() / 2);
+                         sliderHandleRect.width() / 2, sliderHandleRect.width() / 2);
     // 内圆形
     painter->setPen(Qt::NoPen);
     painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
@@ -91,13 +82,12 @@ void NXSliderStyle::drawComplexControl(ComplexControl control,
         {
           if (!_lastState.testFlag(QStyle::State_Sunken))
           {
-            _startRadiusAnimation(
-                sliderHandleRect.width() / 2.8, sliderHandleRect.width() / 4.5, const_cast<QWidget *>(widget));
+            _startRadiusAnimation(sliderHandleRect.width() / 2.8, sliderHandleRect.width() / 4.5,
+                                  const_cast<QWidget *>(widget));
             _lastState = sopt->state;
           }
           painter->drawEllipse(QPointF(sliderHandleRect.center().x() + 1, sliderHandleRect.center().y() + 1),
-                               _circleRadius,
-                               _circleRadius);
+                               _circleRadius, _circleRadius);
         }
       }
       else
@@ -115,8 +105,7 @@ void NXSliderStyle::drawComplexControl(ComplexControl control,
             _lastState = sopt->state;
           }
           painter->drawEllipse(QPointF(sliderHandleRect.center().x() + 1, sliderHandleRect.center().y() + 1),
-                               _circleRadius,
-                               _circleRadius);
+                               _circleRadius, _circleRadius);
         }
       }
     }
@@ -128,8 +117,8 @@ void NXSliderStyle::drawComplexControl(ComplexControl control,
         _lastState &= ~QStyle::State_MouseOver;
         _lastState &= ~QStyle::State_Sunken;
       }
-      painter->drawEllipse(
-          QPointF(sliderHandleRect.center().x() + 1, sliderHandleRect.center().y() + 1), _circleRadius, _circleRadius);
+      painter->drawEllipse(QPointF(sliderHandleRect.center().x() + 1, sliderHandleRect.center().y() + 1), _circleRadius,
+                           _circleRadius);
     }
     painter->restore();
     return;
@@ -175,10 +164,7 @@ void NXSliderStyle::_startRadiusAnimation(qreal startRadius, qreal endRadius, QW
 {
   NXSliderStyle *style                      = const_cast<NXSliderStyle *>(this);
   QPropertyAnimation *circleRadiusAnimation = new QPropertyAnimation(style, "circleRadius");
-  connect(circleRadiusAnimation,
-          &QPropertyAnimation::valueChanged,
-          style,
-          [=](const QVariant& value)
+  connect(circleRadiusAnimation, &QPropertyAnimation::valueChanged, style, [=](const QVariant& value)
   {
     this->_circleRadius = value.toReal();
     widget->update();

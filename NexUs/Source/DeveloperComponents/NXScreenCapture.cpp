@@ -106,13 +106,8 @@ static QImage cgImageToQImage(CGImageRef cgImage)
   QImage image(static_cast<int>(width), static_cast<int>(height), QImage::Format_ARGB32);
 
   CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-  CGContextRef context       = CGBitmapContextCreate(image.bits(),
-                                               width,
-                                               height,
-                                               8,
-                                               image.bytesPerLine(),
-                                               colorSpace,
-                                               kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Host);
+  CGContextRef context       = CGBitmapContextCreate(image.bits(), width, height, 8, image.bytesPerLine(), colorSpace,
+                                                     kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Host);
 
   CGContextDrawImage(context, CGRectMake(0, 0, width, height), cgImage);
 
@@ -148,7 +143,7 @@ static CGImageRef captureDisplayUsingScreenCaptureKit(SCDisplay *display)
   return capturedImage;
 }
 
-QImage NXScreenCapture::getGrabImage() const
+QImage NXScreenCapture::getGrabImage() const noexcept
 {
   if (!_pIsInitSuccess || !d->scDisplay) { return QImage(); }
 
@@ -160,16 +155,14 @@ QImage NXScreenCapture::getGrabImage() const
 
   if (_pIsGrabCenter)
   {
-    return image.copy(QRect((_displayWidth - _pGrabArea.width()) / 2,
-                            (_displayHeight - _pGrabArea.height()) / 2,
-                            _pGrabArea.width(),
-                            _pGrabArea.height()));
+    return image.copy(QRect((_displayWidth - _pGrabArea.width()) / 2, (_displayHeight - _pGrabArea.height()) / 2,
+                            _pGrabArea.width(), _pGrabArea.height()));
   }
   else if (!_pGrabArea.isEmpty()) { return image.copy(_pGrabArea); }
   return image;
 }
 
-void NXScreenCapture::onGrabScreen()
+void NXScreenCapture::onGrabScreen() noexcept
 {
   if (!_pIsInitSuccess || !d->scDisplay)
   {
@@ -195,8 +188,7 @@ void NXScreenCapture::onGrabScreen()
         if (_pIsGrabCenter)
         {
           outputImage = _lastImage.copy(QRect((_displayWidth - _pGrabArea.width()) / 2,
-                                              (_displayHeight - _pGrabArea.height()) / 2,
-                                              _pGrabArea.width(),
+                                              (_displayHeight - _pGrabArea.height()) / 2, _pGrabArea.width(),
                                               _pGrabArea.height()));
         }
         else if (!_pGrabArea.isEmpty()) { outputImage = _lastImage.copy(_pGrabArea); }

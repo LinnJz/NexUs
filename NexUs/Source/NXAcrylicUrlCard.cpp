@@ -7,21 +7,21 @@
 
 #include "NXTheme.h"
 #include "private/NXAcrylicUrlCardPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, int, BorderRadius)
-Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, qreal, MainOpacity)
-Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, qreal, NoiseOpacity)
-Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, int, BrushAlpha)
-Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, QString, Title);
-Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, QString, SubTitle);
-Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, int, TitlePixelSize);
-Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, int, SubTitlePixelSize);
-Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, int, TitleSpacing);
-Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, int, SubTitleSpacing);
-Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, QPixmap, CardPixmap);
-Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, QSize, CardPixmapSize);
-Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, int, CardPixmapBorderRadius)
-Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, NXCardPixType::PixMode, CardPixMode);
-Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, QString, Url);
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, BorderRadius)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, qreal, MainOpacity)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, qreal, NoiseOpacity)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, BrushAlpha)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, TitlePixelSize)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, SubTitlePixelSize)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, TitleSpacing)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, SubTitleSpacing)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, QSize, CardPixmapSize)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, CardPixmapBorderRadius)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, NXCardPixType::PixMode, CardPixMode)
+Q_PROPERTY_CREATE_2_CPP(NXAcrylicUrlCard, const QPixmap&, QPixmap, CardPixmap)
+Q_PROPERTY_CREATE_2_CPP(NXAcrylicUrlCard, const QString&, QString, Url)
+Q_PROPERTY_CREATE_2_CPP(NXAcrylicUrlCard, const QString&, QString, Title)
+Q_PROPERTY_CREATE_2_CPP(NXAcrylicUrlCard, const QString&, QString, SubTitle)
 
 NXAcrylicUrlCard::NXAcrylicUrlCard(QWidget *parent)
     : QPushButton(parent)
@@ -44,13 +44,13 @@ NXAcrylicUrlCard::NXAcrylicUrlCard(QWidget *parent)
   d->_pCardPixMode            = NXCardPixType::PixMode::Ellipse;
   d->_themeMode               = nxTheme->getThemeMode();
   connect(this, &NXAcrylicUrlCard::clicked, this, [=]() { QDesktopServices::openUrl(QUrl(d->_pUrl)); });
-  connect(
-      nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this,
+          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXAcrylicUrlCard::~NXAcrylicUrlCard() { }
 
-void NXAcrylicUrlCard::setCardPixmapSize(int width, int height)
+void NXAcrylicUrlCard::setCardPixmapSize(int width, int height) noexcept
 {
   Q_D(NXAcrylicUrlCard);
   d->_pCardPixmapSize = QSize(width, height);
@@ -81,9 +81,7 @@ void NXAcrylicUrlCard::paintEvent(QPaintEvent *event)
   painter.restore();
 
   // 图片绘制
-  QRectF pixRect(width / 8.5,
-                 height() / 4 - d->_pCardPixmapSize.height() / 2,
-                 d->_pCardPixmapSize.width(),
+  QRectF pixRect(width / 8.5, height() / 4 - d->_pCardPixmapSize.height() / 2, d->_pCardPixmapSize.width(),
                  d->_pCardPixmapSize.height());
   if (!d->_pCardPixmap.isNull())
   {
@@ -116,29 +114,24 @@ void NXAcrylicUrlCard::paintEvent(QPaintEvent *event)
   painter.setFont(font);
   painter.setPen(NXThemeColor(d->_themeMode, BasicText));
   painter.drawText(QRect(pixRect.x(), pixRect.bottom() + d->_pTitleSpacing, width - width / 7, height() / 3),
-                   Qt::AlignLeft | Qt::AlignTop | Qt::TextSingleLine,
-                   d->_pTitle);
+                   Qt::AlignLeft | Qt::AlignTop | Qt::TextSingleLine, d->_pTitle);
   font.setWeight(QFont::Normal);
   font.setPixelSize(d->_pSubTitlePixelSize);
   painter.setFont(font);
   painter.setPen(NXThemeColor(d->_themeMode, BasicDetailsText));
   int titleHeight = painter.fontMetrics().boundingRect(d->_pTitle).height() * 1.1;
-  painter.drawText(QRect(pixRect.x(),
-                         d->_pSubTitleSpacing + titleHeight + pixRect.bottom() + d->_pTitleSpacing,
-                         width - width / 7,
-                         height() / 3),
-                   Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap,
-                   d->_pSubTitle);
+  painter.drawText(QRect(pixRect.x(), d->_pSubTitleSpacing + titleHeight + pixRect.bottom() + d->_pTitleSpacing,
+                         width - width / 7, height() / 3),
+                   Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, d->_pSubTitle);
   painter.restore();
 
   // 图标绘制
   painter.save();
-  QFont iconFont = QFont("NXAwesome");
+  QFont iconFont = QFont(QStringLiteral("NXAwesome"));
   iconFont.setPixelSize(13);
   painter.setFont(iconFont);
   painter.setPen(NXThemeColor(d->_themeMode, BasicText));
-  painter.drawText(width - 1.5 * iconFont.pixelSize(),
-                   height() - iconFont.pixelSize(),
+  painter.drawText(width - 1.5 * iconFont.pixelSize(), height() - iconFont.pixelSize(),
                    QChar((unsigned short) NXIconType::UpRightFromSquare));
   painter.restore();
 }

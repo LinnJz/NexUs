@@ -44,7 +44,7 @@ void NXMultiCellLineEditPrivate::onWMWindowClickedEvent(QVariantMap data)
     }
   }
 
-  NXAppBarType::WMMouseActionType actionType = data.value("WMClickType").value<NXAppBarType::WMMouseActionType>();
+  NXAppBarType::WMMouseActionType actionType = data.value(QStringLiteral("WMClickType")).value<NXAppBarType::WMMouseActionType>();
   if (actionType == NXAppBarType::WMLBUTTONDOWN)
   {
     if (focusCell && focusCell->hasSelectedText()) { focusCell->clearFocus(); }
@@ -63,7 +63,7 @@ void NXMultiCellLineEditPrivate::onWMWindowClickedEvent(QVariantMap data)
   }
 }
 
-void NXMultiCellLineEditPrivate::rebuildCells(int cellCount)
+void NXMultiCellLineEditPrivate::rebuildCells(int cellCount) noexcept
 {
   Q_Q(NXMultiCellLineEdit);
 
@@ -107,7 +107,7 @@ void NXMultiCellLineEditPrivate::rebuildCells(int cellCount)
   q->update();
 }
 
-void NXMultiCellLineEditPrivate::rebuildLayout()
+void NXMultiCellLineEditPrivate::rebuildLayout() noexcept
 {
   Q_Q(NXMultiCellLineEdit);
   if (!_cellLayout) { return; }
@@ -138,9 +138,9 @@ void NXMultiCellLineEditPrivate::rebuildLayout()
   updateCellObjectNames();
 }
 
-void NXMultiCellLineEditPrivate::updateFocusCell(int cellIndex) { _currentFocusCellIndex = cellIndex; }
+void NXMultiCellLineEditPrivate::updateFocusCell(int cellIndex) noexcept { _currentFocusCellIndex = cellIndex; }
 
-void NXMultiCellLineEditPrivate::pushGlobalRoute()
+void NXMultiCellLineEditPrivate::pushGlobalRoute() noexcept
 {
   if (_isApplyingGlobalRoute) { return; }
 
@@ -177,20 +177,20 @@ void NXMultiCellLineEditPrivate::pushGlobalRoute()
   if (_globalRedoRouteIndex >= 0) { _globalRedoRouteIndex = std::max(-1, _globalRedoRouteIndex - removeCount); }
 }
 
-bool NXMultiCellLineEditPrivate::canGlobalUndo() const
+bool NXMultiCellLineEditPrivate::canGlobalUndo() const noexcept
 {
   if (_globalRedoRouteIndex >= 0) { return false; }
   if (_globalRouteList.isEmpty()) { return false; }
   return _currentGlobalTextRouteState().texts != _globalRouteList.first().texts;
 }
 
-bool NXMultiCellLineEditPrivate::canGlobalRedo() const
+bool NXMultiCellLineEditPrivate::canGlobalRedo() const noexcept
 {
   if (_globalRouteList.isEmpty()) { return false; }
   return _globalRedoRouteIndex >= 0 && _globalRedoRouteIndex < _globalRouteList.size();
 }
 
-void NXMultiCellLineEditPrivate::globalUndo()
+void NXMultiCellLineEditPrivate::globalUndo() noexcept
 {
   if (!canGlobalUndo()) { return; }
   _globalRedoRouteIndex    = _globalRouteCurrentIndex;
@@ -198,7 +198,7 @@ void NXMultiCellLineEditPrivate::globalUndo()
   _applyGlobalTextRouteState(_globalRouteList[_globalRouteCurrentIndex]);
 }
 
-void NXMultiCellLineEditPrivate::globalRedo()
+void NXMultiCellLineEditPrivate::globalRedo() noexcept
 {
   if (!canGlobalRedo()) { return; }
   _globalRouteCurrentIndex = std::clamp(_globalRedoRouteIndex, 0, (int) _globalRouteList.size() - 1);
@@ -206,7 +206,7 @@ void NXMultiCellLineEditPrivate::globalRedo()
   _applyGlobalTextRouteState(_globalRouteList[_globalRouteCurrentIndex]);
 }
 
-QLineEdit *NXMultiCellLineEditPrivate::createCell()
+QLineEdit *NXMultiCellLineEditPrivate::createCell() noexcept
 {
   Q_Q(NXMultiCellLineEdit);
   auto *cell = new QLineEdit(q);
@@ -214,7 +214,7 @@ QLineEdit *NXMultiCellLineEditPrivate::createCell()
   return cell;
 }
 
-void NXMultiCellLineEditPrivate::setupCell(QLineEdit *cell, bool preserveClearAllowed)
+void NXMultiCellLineEditPrivate::setupCell(QLineEdit *cell, bool preserveClearAllowed) noexcept
 {
   Q_Q(NXMultiCellLineEdit);
   if (!cell) { return; }
@@ -222,7 +222,7 @@ void NXMultiCellLineEditPrivate::setupCell(QLineEdit *cell, bool preserveClearAl
   cell->setFrame(false);
   cell->setMouseTracking(true);
   cell->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-  cell->setStyleSheet("QLineEdit{background-color:transparent;border:none;}");
+  cell->setStyleSheet(QStringLiteral("QLineEdit{background-color:transparent;border:none;}"));
   cell->setPalette(q->palette());
 
   if (preserveClearAllowed)
@@ -238,7 +238,7 @@ void NXMultiCellLineEditPrivate::setupCell(QLineEdit *cell, bool preserveClearAl
   cell->installEventFilter(q);
 }
 
-void NXMultiCellLineEditPrivate::resetGlobalRoute()
+void NXMultiCellLineEditPrivate::resetGlobalRoute() noexcept
 {
   _globalRouteList.clear();
   _globalRouteCurrentIndex = -1;
@@ -246,7 +246,7 @@ void NXMultiCellLineEditPrivate::resetGlobalRoute()
   pushGlobalRoute();
 }
 
-bool NXMultiCellLineEditPrivate::isAllNormalEcho() const
+bool NXMultiCellLineEditPrivate::isAllNormalEcho() const noexcept
 {
   for (auto *item : _cellEdits)
   {
@@ -255,7 +255,7 @@ bool NXMultiCellLineEditPrivate::isAllNormalEcho() const
   return true;
 }
 
-bool NXMultiCellLineEditPrivate::isAnyEditable() const
+bool NXMultiCellLineEditPrivate::isAnyEditable() const noexcept
 {
   for (auto *item : _cellEdits)
   {
@@ -264,7 +264,7 @@ bool NXMultiCellLineEditPrivate::isAnyEditable() const
   return false;
 }
 
-void NXMultiCellLineEditPrivate::copyAllCells() const
+void NXMultiCellLineEditPrivate::copyAllCells() const noexcept
 {
   QStringList texts;
   texts.reserve(_cellEdits.size());
@@ -272,7 +272,7 @@ void NXMultiCellLineEditPrivate::copyAllCells() const
   QGuiApplication::clipboard()->setText(texts.join(_pCellSeparator));
 }
 
-void NXMultiCellLineEditPrivate::clearAllEditableCells()
+void NXMultiCellLineEditPrivate::clearAllEditableCells() noexcept
 {
   for (auto *item : _cellEdits)
   {
@@ -283,7 +283,7 @@ void NXMultiCellLineEditPrivate::clearAllEditableCells()
   pushGlobalRoute();
 }
 
-void NXMultiCellLineEditPrivate::selectAllCells() const
+void NXMultiCellLineEditPrivate::selectAllCells() const noexcept
 {
   for (auto *item : _cellEdits)
   {
@@ -291,7 +291,7 @@ void NXMultiCellLineEditPrivate::selectAllCells() const
   }
 }
 
-void NXMultiCellLineEditPrivate::updateClearButtonState(QLineEdit *focusCell)
+void NXMultiCellLineEditPrivate::updateClearButtonState(QLineEdit *focusCell) noexcept
 {
   for (auto *item : _cellEdits)
   {
@@ -301,7 +301,7 @@ void NXMultiCellLineEditPrivate::updateClearButtonState(QLineEdit *focusCell)
   if (focusCell && focusCell->property(CLEAR_ALLOWED_PROPERTY).toBool()) { focusCell->setClearButtonEnabled(true); }
 }
 
-void NXMultiCellLineEditPrivate::updateCellObjectNames()
+void NXMultiCellLineEditPrivate::updateCellObjectNames() noexcept
 {
   const QString prefix = QStringLiteral("NXMultiCellLineEditCell_");
   for (int i = 0; i < _cellEdits.size(); ++i)
@@ -313,7 +313,7 @@ void NXMultiCellLineEditPrivate::updateCellObjectNames()
   }
 }
 
-void NXMultiCellLineEditPrivate::animateCellMarkIn(int cellIndex)
+void NXMultiCellLineEditPrivate::animateCellMarkIn(int cellIndex) noexcept
 {
   Q_Q(NXMultiCellLineEdit);
   QLineEdit *cell = _cellAt(cellIndex);
@@ -323,10 +323,7 @@ void NXMultiCellLineEditPrivate::animateCellMarkIn(int cellIndex)
   const qreal endValue   = std::max<qreal>(0, cell->width() / 2.0 - 3);
 
   auto *markAnimation = new QVariantAnimation(q);
-  connect(markAnimation,
-          &QVariantAnimation::valueChanged,
-          q,
-          [this, q, cellIndex](const QVariant& value)
+  connect(markAnimation, &QVariantAnimation::valueChanged, q, [this, q, cellIndex](const QVariant& value)
   {
     if (cellIndex < 0 || cellIndex >= _cellExpandMarkWidths.size()) { return; }
     _cellExpandMarkWidths[cellIndex] = value.toReal();
@@ -339,7 +336,7 @@ void NXMultiCellLineEditPrivate::animateCellMarkIn(int cellIndex)
   markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXMultiCellLineEditPrivate::animateCellMarkOut(int cellIndex)
+void NXMultiCellLineEditPrivate::animateCellMarkOut(int cellIndex) noexcept
 {
   Q_Q(NXMultiCellLineEdit);
   if (cellIndex < 0 || cellIndex >= _cellExpandMarkWidths.size()) { return; }
@@ -348,10 +345,7 @@ void NXMultiCellLineEditPrivate::animateCellMarkOut(int cellIndex)
   const qreal endValue   = 0;
 
   auto *markAnimation = new QVariantAnimation(q);
-  connect(markAnimation,
-          &QVariantAnimation::valueChanged,
-          q,
-          [this, q, cellIndex](const QVariant& value)
+  connect(markAnimation, &QVariantAnimation::valueChanged, q, [this, q, cellIndex](const QVariant& value)
   {
     if (cellIndex < 0 || cellIndex >= _cellExpandMarkWidths.size()) { return; }
     _cellExpandMarkWidths[cellIndex] = value.toReal();
@@ -364,27 +358,24 @@ void NXMultiCellLineEditPrivate::animateCellMarkOut(int cellIndex)
   markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-QLineEdit *NXMultiCellLineEditPrivate::_cellAt(int cellIndex) const
+QLineEdit *NXMultiCellLineEditPrivate::_cellAt(int cellIndex) const noexcept
 {
   if (cellIndex < 0 || cellIndex >= _cellEdits.size()) { return nullptr; }
   return _cellEdits[cellIndex];
 }
 
-int NXMultiCellLineEditPrivate::_cellIndex(QObject *watched) const
+int NXMultiCellLineEditPrivate::_cellIndex(QObject *watched) const noexcept
 {
   if (!watched) { return -1; }
   return _cellEdits.indexOf(qobject_cast<QLineEdit *>(watched));
 }
 
-void NXMultiCellLineEditPrivate::_connectCellSignals(int, QLineEdit *cell)
+void NXMultiCellLineEditPrivate::_connectCellSignals(int, QLineEdit *cell) noexcept
 {
   Q_Q(NXMultiCellLineEdit);
   if (!cell) { return; }
 
-  connect(cell,
-          &QLineEdit::textChanged,
-          q,
-          [this, q, cell](const QString& text)
+  connect(cell, &QLineEdit::textChanged, q, [this, q, cell](const QString& text)
   {
     const int cellIndex = _cellEdits.indexOf(cell);
     if (cellIndex < 0) { return; }
@@ -393,10 +384,7 @@ void NXMultiCellLineEditPrivate::_connectCellSignals(int, QLineEdit *cell)
     q->update();
   });
 
-  connect(cell,
-          &QLineEdit::textEdited,
-          q,
-          [this, q, cell](const QString& text)
+  connect(cell, &QLineEdit::textEdited, q, [this, q, cell](const QString& text)
   {
     const int cellIndex = _cellEdits.indexOf(cell);
     if (cellIndex < 0) { return; }
@@ -413,20 +401,14 @@ void NXMultiCellLineEditPrivate::_connectCellSignals(int, QLineEdit *cell)
     }
   });
 
-  connect(cell,
-          &QLineEdit::editingFinished,
-          q,
-          [this, q, cell]()
+  connect(cell, &QLineEdit::editingFinished, q, [this, q, cell]()
   {
     const int cellIndex = _cellEdits.indexOf(cell);
     if (cellIndex < 0) { return; }
     Q_EMIT q->cellEditingFinished(cellIndex);
   });
 
-  connect(cell,
-          &QLineEdit::returnPressed,
-          q,
-          [this, q, cell]()
+  connect(cell, &QLineEdit::returnPressed, q, [this, q, cell]()
   {
     const int cellIndex = _cellEdits.indexOf(cell);
     if (cellIndex < 0) { return; }
@@ -434,7 +416,7 @@ void NXMultiCellLineEditPrivate::_connectCellSignals(int, QLineEdit *cell)
   });
 }
 
-void NXMultiCellLineEditPrivate::_updateCellValidState(int cellIndex)
+void NXMultiCellLineEditPrivate::_updateCellValidState(int cellIndex) noexcept
 {
   Q_Q(NXMultiCellLineEdit);
   QLineEdit *cell = _cellAt(cellIndex);
@@ -455,7 +437,8 @@ void NXMultiCellLineEditPrivate::_updateCellValidState(int cellIndex)
   Q_EMIT q->cellValidatorStateChanged(cellIndex, isValid);
 }
 
-NXMultiCellLineEditPrivate::GlobalTextRouteState NXMultiCellLineEditPrivate::_currentGlobalTextRouteState() const
+NXMultiCellLineEditPrivate::GlobalTextRouteState
+NXMultiCellLineEditPrivate::_currentGlobalTextRouteState() const noexcept
 {
   GlobalTextRouteState state;
   state.texts.reserve(_cellEdits.size());
@@ -483,7 +466,7 @@ NXMultiCellLineEditPrivate::GlobalTextRouteState NXMultiCellLineEditPrivate::_cu
   return state;
 }
 
-void NXMultiCellLineEditPrivate::_applyGlobalTextRouteState(const GlobalTextRouteState& state)
+void NXMultiCellLineEditPrivate::_applyGlobalTextRouteState(const GlobalTextRouteState& state) noexcept
 {
   Q_Q(NXMultiCellLineEdit);
   _isApplyingGlobalRoute = true;

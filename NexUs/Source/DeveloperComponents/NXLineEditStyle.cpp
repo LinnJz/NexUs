@@ -45,8 +45,7 @@ void NXLineEditStyle::drawPrimitive(PrimitiveElement element,
       }
       painter->drawRoundedRect(
           QRectF(lineEditRect.x() + 1.5, lineEditRect.y() + 1.5, lineEditRect.width() - 3, lineEditRect.height() - 3),
-          6,
-          6);
+          _pLineEditBorderRadius, _pLineEditBorderRadius);
 
       // 底边线绘制
       painter->setBrush(NXThemeColor(_themeMode, BasicHemline));

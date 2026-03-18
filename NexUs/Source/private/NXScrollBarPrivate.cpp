@@ -13,17 +13,14 @@ NXScrollBarPrivate::NXScrollBarPrivate(QObject *parent)
 
 NXScrollBarPrivate::~NXScrollBarPrivate() { }
 
-void NXScrollBarPrivate::onRangeChanged(int min, int max)
+void NXScrollBarPrivate::onRangeChanged(int min, int max) noexcept
 {
   Q_Q(NXScrollBar);
   if (q->isVisible() && _pIsAnimation && max != 0)
   {
     QPropertyAnimation *rangeSmoothAnimation = new QPropertyAnimation(this, "pTargetMaximum");
     connect(rangeSmoothAnimation, &QPropertyAnimation::finished, this, [=]() { Q_EMIT q->rangeAnimationFinished(); });
-    connect(rangeSmoothAnimation,
-            &QPropertyAnimation::valueChanged,
-            this,
-            [=](const QVariant& value)
+    connect(rangeSmoothAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value)
     {
       q->blockSignals(true);
       q->setMaximum(value.toUInt());
@@ -43,7 +40,7 @@ void NXScrollBarPrivate::onRangeChanged(int min, int max)
   }
 }
 
-void NXScrollBarPrivate::_scroll(Qt::KeyboardModifiers modifiers, int delta)
+void NXScrollBarPrivate::_scroll(Qt::KeyboardModifiers modifiers, int delta) noexcept
 {
   Q_Q(NXScrollBar);
   int stepsToScroll = 0;
@@ -66,7 +63,7 @@ void NXScrollBarPrivate::_scroll(Qt::KeyboardModifiers modifiers, int delta)
   _slideSmoothAnimation->start();
 }
 
-int NXScrollBarPrivate::_pixelPosToRangeValue(int pos) const
+int NXScrollBarPrivate::_pixelPosToRangeValue(int pos) const noexcept
 {
   Q_Q(const NXScrollBar);
   QStyleOptionSlider opt;
@@ -87,11 +84,11 @@ int NXScrollBarPrivate::_pixelPosToRangeValue(int pos) const
     sliderMin    = gr.y();
     sliderMax    = gr.bottom() - sliderLength + 1;
   }
-  return QStyle::sliderValueFromPosition(
-      q->minimum(), q->maximum(), pos - sliderMin, sliderMax - sliderMin, opt.upsideDown);
+  return QStyle::sliderValueFromPosition(q->minimum(), q->maximum(), pos - sliderMin, sliderMax - sliderMin,
+                                         opt.upsideDown);
 }
 
-void NXScrollBarPrivate::_initAllConfig()
+void NXScrollBarPrivate::_initAllConfig() noexcept
 {
   Q_Q(NXScrollBar);
   _handleScrollBarRangeChanged(_originScrollBar->minimum(), _originScrollBar->maximum());
@@ -99,9 +96,12 @@ void NXScrollBarPrivate::_initAllConfig()
   q->setPageStep(_originScrollBar->pageStep());
 }
 
-void NXScrollBarPrivate::_handleScrollBarValueChanged(QScrollBar *scrollBar, int value) { scrollBar->setValue(value); }
+void NXScrollBarPrivate::_handleScrollBarValueChanged(QScrollBar *scrollBar, int value) noexcept
+{
+  scrollBar->setValue(value);
+}
 
-void NXScrollBarPrivate::_handleScrollBarRangeChanged(int min, int max)
+void NXScrollBarPrivate::_handleScrollBarRangeChanged(int min, int max) noexcept
 {
   Q_Q(NXScrollBar);
   q->setRange(min, max);
@@ -112,7 +112,7 @@ void NXScrollBarPrivate::_handleScrollBarRangeChanged(int min, int max)
   }
 }
 
-void NXScrollBarPrivate::_handleScrollBarGeometry()
+void NXScrollBarPrivate::_handleScrollBarGeometry() noexcept
 {
   Q_Q(NXScrollBar);
   q->raise();

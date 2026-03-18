@@ -14,13 +14,10 @@ NXRollerPickerContainer::NXRollerPickerContainer(QWidget *parent)
   setAttribute(Qt::WA_TranslucentBackground);
   setContentsMargins(8, 8, 8, 6 + _pButtonAreaHeight);
   setObjectName("NXCalendarPickerContainer");
-  setStyleSheet("#NXCalendarPickerContainer{background-color:transparent}");
+  setStyleSheet(QStringLiteral("#NXCalendarPickerContainer{background-color:transparent}"));
 
   _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme,
-          &NXTheme::themeModeChanged,
-          this,
-          [=](NXThemeType::ThemeMode themeMode)
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
     _themeMode = themeMode;
     update();
@@ -29,16 +26,13 @@ NXRollerPickerContainer::NXRollerPickerContainer(QWidget *parent)
 
 NXRollerPickerContainer::~NXRollerPickerContainer() { }
 
-void NXRollerPickerContainer::doPickerAnimation()
+void NXRollerPickerContainer::doPickerAnimation() noexcept
 {
   _handleSaveOrReset(true);
   if (!_animationPix.isNull()) { _animationPix = QPixmap(); }
   _animationPix                       = this->grab(rect());
   QPropertyAnimation *offsetAnimation = new QPropertyAnimation(this, "pAnimationPixOffsetY");
-  connect(offsetAnimation,
-          &QPropertyAnimation::finished,
-          this,
-          [=]()
+  connect(offsetAnimation, &QPropertyAnimation::finished, this, [=]()
   {
     _animationPix = QPixmap();
     update();
@@ -140,30 +134,25 @@ void NXRollerPickerContainer::paintEvent(QPaintEvent *event)
       if (i != _rollerList.count() - 1)
       {
         painter.setPen(NXThemeColor(_themeMode, BasicBorder));
-        painter.drawLine(
-            rollerXOffset, foregroundRect.y(), rollerXOffset, foregroundRect.bottom() - _pButtonAreaHeight);
+        painter.drawLine(rollerXOffset, foregroundRect.y(), rollerXOffset,
+                         foregroundRect.bottom() - _pButtonAreaHeight);
       }
     }
     // 横向分割线
-    painter.drawLine(foregroundRect.x(),
-                     foregroundRect.bottom() - _pButtonAreaHeight,
-                     foregroundRect.right(),
+    painter.drawLine(foregroundRect.x(), foregroundRect.bottom() - _pButtonAreaHeight, foregroundRect.right(),
                      foregroundRect.bottom() - _pButtonAreaHeight);
     // 按钮区域绘制
-    _overButtonRect   = QRect(foregroundRect.x() + _buttonMargin,
-                            foregroundRect.bottom() - _pButtonAreaHeight + _buttonMargin,
-                            (foregroundRect.width() - 2 * _buttonMargin - _buttonSpacing) / 2,
-                            _pButtonAreaHeight - 2 * _buttonMargin + 1);
-    _cancelButtonRect = QRect(_overButtonRect.right() + _buttonSpacing,
-                              _overButtonRect.y(),
-                              _overButtonRect.width(),
+    _overButtonRect = QRect(
+        foregroundRect.x() + _buttonMargin, foregroundRect.bottom() - _pButtonAreaHeight + _buttonMargin,
+        (foregroundRect.width() - 2 * _buttonMargin - _buttonSpacing) / 2, _pButtonAreaHeight - 2 * _buttonMargin + 1);
+    _cancelButtonRect = QRect(_overButtonRect.right() + _buttonSpacing, _overButtonRect.y(), _overButtonRect.width(),
                               _overButtonRect.height());
     // 按钮覆盖绘制
     painter.setPen(Qt::NoPen);
     painter.setBrush(NXThemeColor(_themeMode, BasicHover));
     if (_isOverButtonHover) { painter.drawRoundedRect(_overButtonRect, 5, 5); }
     else if (_isCancelButtonHover) { painter.drawRoundedRect(_cancelButtonRect, 5, 5); }
-    QFont iconFont = QFont("NXAwesome");
+    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     iconFont.setPixelSize(17);
     painter.setFont(iconFont);
     painter.setPen(NXThemeColor(_themeMode, BasicText));

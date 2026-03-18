@@ -21,8 +21,8 @@ class NXPopularCardPrivate : public QObject
   Q_PROPERTY_CREATE_D(QString, DetailedText)
   Q_PROPERTY_CREATE_D(QString, CardButtonText)
   Q_PROPERTY_CREATE_D(QPixmap, CardFloatPixmap)
-  Q_PROPERTY_CREATE(qreal, HoverYOffset);
-  Q_PROPERTY_CREATE(qreal, HoverOpacity);
+  Q_PROPERTY_CREATE(qreal, HoverYOffset)
+  Q_PROPERTY_CREATE(qreal, HoverOpacity)
   Q_PROPERTY_CREATE_D(int, BorderRadius)
 
 public:
@@ -41,7 +41,7 @@ private:
   QRectF _interactiveTipsBaseRect;
   QRect _buttonTargetRect;
 
-  void _showFloater();
+  void _showFloater() noexcept;
 };
 
 #endif // NXPOPULARCARDPRIVATE_H

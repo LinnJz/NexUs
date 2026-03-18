@@ -22,7 +22,7 @@ class NXWinShadowHelper : public QObject
   Q_OBJECT
   Q_PRIVATE_CREATE(bool, IsWinVersionGreater10)
   Q_PRIVATE_CREATE(bool, IsWinVersionGreater11)
-  LINN_SINGLETON_CREATE(LINN_SINGLETON_UNIQUE(NXWinShadowHelper))
+  Q_SINGLETON_CREATE(QS_S_UNIQUE(NXWinShadowHelper))
 
 private:
   explicit NXWinShadowHelper(QObject *parent = nullptr);
@@ -37,12 +37,12 @@ public:
                             NXApplicationType::WindowDisplayMode displayMode,
                             NXApplicationType::WindowDisplayMode lastDisplayMode);
   bool getIsCompositionEnabled() const;
-  bool getIsFullScreen(const HWND hwnd);
-  MONITORINFOEXW getMonitorForWindow(const HWND hwnd);
-  quint32 getResizeBorderThickness(const HWND hwnd);
-  quint32 getDpiForWindow(const HWND hwnd);
-  int getSystemMetricsForDpi(const HWND hwnd, const int index);
-  bool compareWindowsVersion(const QString& windowsVersion) const;
+  bool getIsFullScreen(const HWND hwnd) const;
+  MONITORINFOEXW getMonitorForWindow(const HWND hwnd) const;
+  quint32 getResizeBorderThickness(const HWND hwnd) const;
+  quint32 getDpiForWindow(const HWND hwnd) const;
+  int getSystemMetricsForDpi(const HWND hwnd, const int index) const;
+  bool compareWindowsVersion(const QString& windowsVersion);
 
 private:
   enum _DWM_SYSTEMBACKDROP_TYPE

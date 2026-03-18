@@ -3,93 +3,104 @@
 #include <QPainter>
 #include <QPainterPath>
 #include "NXShadowGraphicsEffect.h"
+#include "private/NXShadowWidgetPrivate.h"
 
 NXShadowWidget::NXShadowWidget(QWidget *parent /*= nullptr*/)
     : QWidget(parent)
+    , d_ptr(new NXShadowWidgetPrivate())
 {
+  Q_D(NXShadowWidget);
+  d->q_ptr = this;
+
   setAttribute(Qt::WA_TranslucentBackground);
   setWindowFlags(windowFlags() | Qt::FramelessWindowHint);
-  setStyleSheet("background-color: transparent;");
+  setStyleSheet(QStringLiteral("background-color: transparent;"));
   setFixedSize(200, 200);
-  _pShadowEffect = new NXShadowGraphicsEffect(this);
-  setGraphicsEffect(_pShadowEffect);
+  d->_shadowEffect = new NXShadowGraphicsEffect(this);
+  setGraphicsEffect(d->_shadowEffect);
 }
 
-void NXShadowWidget::setCustomDraw(std::function<void(QPainter *, QWidget *)> customDraw) { _pCustomDraw = customDraw; }
-
-void NXShadowWidget::setDarkOffset(QPointF size)
+void NXShadowWidget::setCustomDraw(std::function<void(QPainter *, QWidget *)> customDraw) noexcept
 {
-  _pShadowEffect->setDarkOffset(size);
+  d_ptr->_customDraw = customDraw;
+}
+
+void NXShadowWidget::setDarkOffset(QPointF size) noexcept
+{
+  d_ptr->_shadowEffect->setDarkOffset(size);
   update();
 }
 
-QPointF NXShadowWidget::getDarkOffset() const { return _pShadowEffect->getDarkOffset(); }
+QPointF NXShadowWidget::getDarkOffset() const noexcept { return d_ptr->_shadowEffect->getDarkOffset(); }
 
-void NXShadowWidget::setLightOffset(QPointF size)
+void NXShadowWidget::setLightOffset(QPointF size) noexcept
 {
-  _pShadowEffect->setLightOffset(size);
+  d_ptr->_shadowEffect->setLightOffset(size);
   update();
 }
 
-QPointF NXShadowWidget::getLightOffset() const { return _pShadowEffect->getLightOffset(); }
+QPointF NXShadowWidget::getLightOffset() const noexcept { return d_ptr->_shadowEffect->getLightOffset(); }
 
-void NXShadowWidget::setRotateMode(NXShadowGraphicsEffectType::RotateMode mode)
+void NXShadowWidget::setRotateMode(NXShadowGraphicsEffectType::RotateMode mode) noexcept
 {
-  _pShadowEffect->setRotateMode(mode);
+  d_ptr->_shadowEffect->setRotateMode(mode);
   update();
 }
 
-NXShadowGraphicsEffectType::RotateMode NXShadowWidget::getRotateMode() const { return _pShadowEffect->getRotateMode(); }
-
-void NXShadowWidget::setProjectionMode(NXShadowGraphicsEffectType::ProjectionMode mode)
+NXShadowGraphicsEffectType::RotateMode NXShadowWidget::getRotateMode() const noexcept
 {
-  _pShadowEffect->setProjectionMode(mode);
+  return d_ptr->_shadowEffect->getRotateMode();
+}
+
+void NXShadowWidget::setProjectionMode(NXShadowGraphicsEffectType::ProjectionMode mode) noexcept
+{
+  d_ptr->_shadowEffect->setProjectionMode(mode);
   update();
 }
 
-NXShadowGraphicsEffectType::ProjectionMode NXShadowWidget::getProjectionMode() const
+NXShadowGraphicsEffectType::ProjectionMode NXShadowWidget::getProjectionMode() const noexcept
 {
-  return _pShadowEffect->getProjectionMode();
+  return d_ptr->_shadowEffect->getProjectionMode();
 }
 
-void NXShadowWidget::setBlur(qreal blur)
+void NXShadowWidget::setBlur(qreal blur) noexcept
 {
-  _pShadowEffect->setBlur(blur);
+  d_ptr->_shadowEffect->setBlur(blur);
   update();
 }
 
-qreal NXShadowWidget::getBlur() const { return _pShadowEffect->getBlur(); }
+qreal NXShadowWidget::getBlur() const noexcept { return d_ptr->_shadowEffect->getBlur(); }
 
-void NXShadowWidget::setSpread(qreal spread)
+void NXShadowWidget::setSpread(qreal spread) noexcept
 {
-  _pShadowEffect->setSpread(spread);
+  d_ptr->_shadowEffect->setSpread(spread);
   update();
 }
 
-qreal NXShadowWidget::getSpread() const { return _pShadowEffect->getSpread(); }
+qreal NXShadowWidget::getSpread() const noexcept { return d_ptr->_shadowEffect->getSpread(); }
 
-void NXShadowWidget::setLightColor(const QColor& color)
+void NXShadowWidget::setLightColor(const QColor& color) noexcept
 {
-  _pShadowEffect->setLightColor(color);
+  d_ptr->_shadowEffect->setLightColor(color);
   update();
 }
 
-QColor NXShadowWidget::getLightColor() const { return _pShadowEffect->getLightColor(); }
+QColor NXShadowWidget::getLightColor() const noexcept { return d_ptr->_shadowEffect->getLightColor(); }
 
-void NXShadowWidget::setDarkColor(const QColor& color)
+void NXShadowWidget::setDarkColor(const QColor& color) noexcept
 {
-  _pShadowEffect->setDarkColor(color);
+  d_ptr->_shadowEffect->setDarkColor(color);
   update();
 }
 
-QColor NXShadowWidget::getDarkColor() const { return _pShadowEffect->getDarkColor(); }
+QColor NXShadowWidget::getDarkColor() const noexcept { return d_ptr->_shadowEffect->getDarkColor(); }
 
 void NXShadowWidget::paintEvent(QPaintEvent *event)
 {
   QPainter painter(this);
-  if (_pShadowEffect->getProjectionMode() == NXShadowGraphicsEffectType::ProjectionMode::Outset)
+  if (d_ptr->_shadowEffect->getProjectionMode() == NXShadowGraphicsEffectType::ProjectionMode::Outset)
   {
-    if (_pCustomDraw) { _pCustomDraw(&painter, this->parentWidget()); }
+    if (d_ptr->_customDraw) { d_ptr->_customDraw(&painter, this->parentWidget()); }
     else
     {
       painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);

@@ -8,7 +8,7 @@
 class NXCheckBoxStyle : public QProxyStyle
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE(int, IndicatorWidth)
+  Q_PRIVATE_CREATE(int, CheckIndicatorWidth)
   Q_PRIVATE_CREATE(int, BorderRadius)
 
 public:

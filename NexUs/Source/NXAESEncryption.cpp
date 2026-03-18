@@ -522,11 +522,8 @@ QByteArray NXAESEncryption::encode(const QByteArray& rawText, const QByteArray& 
 
       QByteArray outText;
       outText.resize(alignedText.size());
-      AES_ECB_encrypt((unsigned char *) alignedText.constData(),
-                      (unsigned char *) outText.data(),
-                      alignedText.size(),
-                      expKey,
-                      m_nr);
+      AES_ECB_encrypt((unsigned char *) alignedText.constData(), (unsigned char *) outText.data(), alignedText.size(),
+                      expKey, m_nr);
       return outText;
     }
 #endif
@@ -548,12 +545,8 @@ QByteArray NXAESEncryption::encode(const QByteArray& rawText, const QByteArray& 
 
       QByteArray outText;
       outText.resize(alignedText.size());
-      AES_CBC_encrypt((unsigned char *) alignedText.constData(),
-                      (unsigned char *) outText.data(),
-                      ivec,
-                      alignedText.size(),
-                      expKey,
-                      m_nr);
+      AES_CBC_encrypt((unsigned char *) alignedText.constData(), (unsigned char *) outText.data(), ivec,
+                      alignedText.size(), expKey, m_nr);
       return outText;
     }
 #endif
@@ -631,8 +624,8 @@ QByteArray NXAESEncryption::decode(const QByteArray& rawText, const QByteArray& 
       memcpy(expKey, expandedKey.data(), expandedKey.size());
       ret.resize(rawText.size());
 
-      AES_ECB_decrypt(
-          (unsigned char *) rawText.constData(), (unsigned char *) ret.data(), rawText.size(), expKey, m_nr);
+      AES_ECB_decrypt((unsigned char *) rawText.constData(), (unsigned char *) ret.data(), rawText.size(), expKey,
+                      m_nr);
       break;
     }
 #endif
@@ -648,8 +641,8 @@ QByteArray NXAESEncryption::decode(const QByteArray& rawText, const QByteArray& 
       memcpy(expKey, expandedKey.data(), expandedKey.size());
       ret.resize(rawText.size());
 
-      AES_CBC_decrypt(
-          (unsigned char *) rawText.constData(), (unsigned char *) ret.data(), ivec, rawText.size(), expKey, m_nr);
+      AES_CBC_decrypt((unsigned char *) rawText.constData(), (unsigned char *) ret.data(), ivec, rawText.size(), expKey,
+                      m_nr);
       break;
     }
 #endif

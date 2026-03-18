@@ -1,4 +1,4 @@
-#include "NXGroupBoxPrivate.h"
+﻿#include "NXGroupBoxPrivate.h"
 
 #include "NXGroupBox.h"
 #include "NXTheme.h"
@@ -11,7 +11,7 @@ NXGroupBoxPrivate::NXGroupBoxPrivate(QObject *parent)
 
 NXGroupBoxPrivate::~NXGroupBoxPrivate() { }
 
-void NXGroupBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
+void NXGroupBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_Q(NXGroupBox);
   _themeMode       = themeMode;

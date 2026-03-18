@@ -158,7 +158,7 @@ int NXScreenCaptureManager::getGrabFrameRate() const
   return d->_screenCapture->getGrabFrameRate();
 }
 
-Q_PROPERTY_CREATE_Q_CPP(NXScreenCaptureScreen, int, BorderRadius)
+Q_PROPERTY_CREATE_CPP(NXScreenCaptureScreen, int, BorderRadius)
 
 NXScreenCaptureScreen::NXScreenCaptureScreen(QWidget *parent)
     : QWidget(parent)
@@ -169,10 +169,7 @@ NXScreenCaptureScreen::NXScreenCaptureScreen(QWidget *parent)
   d->_pBorderRadius  = 5;
   d->_captureManager = NXScreenCaptureManager::getInstance();
   setFixedSize(700, 500);
-  connect(d->_captureManager,
-          &NXScreenCaptureManager::grabImageUpdate,
-          this,
-          [=](QImage img)
+  connect(d->_captureManager, &NXScreenCaptureManager::grabImageUpdate, this, [=](QImage img)
   {
     if (isVisible())
     {

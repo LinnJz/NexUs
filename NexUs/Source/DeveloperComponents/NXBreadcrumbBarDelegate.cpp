@@ -23,7 +23,7 @@ void NXBreadcrumbBarDelegate::paint(QPainter *painter,
   QRect itemRect                = option.rect;
   QString breadcrumbDisplayData = index.data(Qt::DisplayRole).toString();
   QString breadcrumbUserData    = index.data(Qt::UserRole).toString();
-  if (breadcrumbUserData != "LastBreadcrumb")
+  if (breadcrumbUserData != QStringLiteral("LastBreadcrumb"))
   {
     if (_pPressIndex == index)
     {
@@ -36,14 +36,14 @@ void NXBreadcrumbBarDelegate::paint(QPainter *painter,
       if (!(option.state & QStyle::State_MouseOver)) { painter->setPen(NXThemeColor(_themeMode, BasicTextNoFocus)); }
     }
   }
-  if (breadcrumbDisplayData != ">")
+  if (breadcrumbDisplayData != QStringLiteral(">"))
   {
     painter->drawText(itemRect, Qt::AlignVCenter | Qt::AlignLeft, breadcrumbDisplayData);
   }
   else
   {
     // 分隔符
-    QFont iconFont = QFont("NXAwesome");
+    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     iconFont.setPixelSize(painter->font().pixelSize() * 0.785);
     painter->setFont(iconFont);
     itemRect.setX(itemRect.x() - itemRect.width() * 0.36);

@@ -8,9 +8,9 @@
 #include "NXRoller.h"
 #include "NXTheme.h"
 #include "private/NXRollerPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(NXRoller, int, BorderRadius)
-Q_PROPERTY_CREATE_Q_CPP(NXRoller, bool, IsContainer)
-Q_PROPERTY_CREATE_Q_CPP(NXRoller, bool, IsEnableLoop)
+Q_PROPERTY_CREATE_CPP(NXRoller, int, BorderRadius)
+Q_PROPERTY_CREATE_CPP(NXRoller, bool, IsContainer)
+Q_PROPERTY_CREATE_CPP(NXRoller, bool, IsEnableLoop)
 
 NXRoller::NXRoller(QWidget *parent)
     : QWidget { parent }
@@ -29,17 +29,14 @@ NXRoller::NXRoller(QWidget *parent)
   setFixedSize(90, 175);
   setMouseTracking(true);
   setObjectName("NXRoller");
-  setStyleSheet("#NXRoller{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXRoller{background-color:transparent;}"));
   QFont font = this->font();
   font.setPixelSize(16);
   setFont(font);
 
   d->_scrollAnimation = new QPropertyAnimation(d, "pScrollOffset");
   connect(d->_scrollAnimation, &QPropertyAnimation::valueChanged, this, [=]() { update(); });
-  connect(d->_scrollAnimation,
-          &QPropertyAnimation::finished,
-          this,
-          [=]()
+  connect(d->_scrollAnimation, &QPropertyAnimation::finished, this, [=]()
   {
     while (d->_pScrollOffset < -d->_pItemList.size() * d->_pItemHeight)
     {
@@ -74,36 +71,33 @@ NXRoller::NXRoller(QWidget *parent)
 
   d->_repeatScrollTimer = new QTimer(this);
   d->_repeatScrollTimer->setInterval(50);
-  connect(d->_repeatScrollTimer,
-          &QTimer::timeout,
-          this,
-          [=]()
+  connect(d->_repeatScrollTimer, &QTimer::timeout, this, [=]()
   {
     if (d->_isUpArrowPress) { d->_scroll(120); }
     if (d->_isDownArrowPress) { d->_scroll(-120); }
   });
 
   d->_themeMode = nxTheme->getThemeMode();
-  connect(
-      nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this,
+          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 NXRoller::~NXRoller() { }
 
-void NXRoller::setCurrentData(const QString& data)
+void NXRoller::setCurrentData(const QString& data) noexcept
 {
   Q_D(NXRoller);
   if (d->_pItemList.contains(data)) { setCurrentIndex(d->_pItemList.indexOf(data)); }
 }
 
-QString NXRoller::getCurrentData() const
+QString NXRoller::getCurrentData() const noexcept
 {
   Q_D(const NXRoller);
   if (d->_pCurrentIndex >= d->_pItemList.count()) { return {}; }
   return d->_pItemList[d->_pCurrentIndex];
 }
 
-void NXRoller::setItemList(QStringList itemList)
+void NXRoller::setItemList(const QStringList& itemList) noexcept
 {
   Q_D(NXRoller);
   d->_pItemList = std::move(itemList);
@@ -111,13 +105,13 @@ void NXRoller::setItemList(QStringList itemList)
   Q_EMIT pItemListChanged();
 }
 
-QStringList NXRoller::getItemList() const
+QStringList NXRoller::getItemList() const noexcept
 {
   Q_D(const NXRoller);
   return d->_pItemList;
 }
 
-void NXRoller::setItemHeight(int itemHeight)
+void NXRoller::setItemHeight(int itemHeight) noexcept
 {
   Q_D(NXRoller);
   d->_pItemHeight = itemHeight;
@@ -126,13 +120,13 @@ void NXRoller::setItemHeight(int itemHeight)
   Q_EMIT pItemHeightChanged();
 }
 
-int NXRoller::getItemHeight() const
+int NXRoller::getItemHeight() const noexcept
 {
   Q_D(const NXRoller);
   return d->_pItemHeight;
 }
 
-void NXRoller::setMaxVisibleItems(int maxVisibleItems)
+void NXRoller::setMaxVisibleItems(int maxVisibleItems) noexcept
 {
   Q_D(NXRoller);
   d->_pMaxVisibleItems = maxVisibleItems;
@@ -141,13 +135,13 @@ void NXRoller::setMaxVisibleItems(int maxVisibleItems)
   Q_EMIT pMaxVisibleItemsChanged();
 }
 
-int NXRoller::getMaxVisibleItems() const
+int NXRoller::getMaxVisibleItems() const noexcept
 {
   Q_D(const NXRoller);
   return d->_pMaxVisibleItems;
 }
 
-void NXRoller::setCurrentIndex(int currentIndex)
+void NXRoller::setCurrentIndex(int currentIndex) noexcept
 {
   Q_D(NXRoller);
   if (currentIndex >= d->_pItemList.count()) { return; }
@@ -157,7 +151,7 @@ void NXRoller::setCurrentIndex(int currentIndex)
   update();
 }
 
-int NXRoller::getCurrentIndex() const
+int NXRoller::getCurrentIndex() const noexcept
 {
   Q_D(const NXRoller);
   return d->_pCurrentIndex;
@@ -243,8 +237,8 @@ void NXRoller::paintEvent(QPaintEvent *event)
   painter.save();
   painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
   // 背景绘制
-  QRect foregroundRect(
-      d->_penBorderWidth, d->_penBorderWidth, width() - 2 * d->_penBorderWidth, height() - 2 * d->_penBorderWidth - 1);
+  QRect foregroundRect(d->_penBorderWidth, d->_penBorderWidth, width() - 2 * d->_penBorderWidth,
+                       height() - 2 * d->_penBorderWidth - 1);
   if (!d->_pIsContainer)
   {
     painter.setPen(QPen(NXThemeColor(d->_themeMode, BasicBorder), d->_penBorderWidth));
@@ -258,21 +252,15 @@ void NXRoller::paintEvent(QPaintEvent *event)
   bool isEven = d->_pMaxVisibleItems % 2 == 0;
   if (isEven)
   {
-    painter.drawRoundedRect(QRect(d->_indicatorMargin,
-                                  d->_pItemHeight * d->_pMaxVisibleItems / 2 + d->_indicatorMargin,
-                                  width() - 2 * d->_indicatorMargin,
-                                  d->_pItemHeight - 2 * d->_indicatorMargin),
-                            d->_pBorderRadius,
-                            d->_pBorderRadius);
+    painter.drawRoundedRect(QRect(d->_indicatorMargin, d->_pItemHeight * d->_pMaxVisibleItems / 2 + d->_indicatorMargin,
+                                  width() - 2 * d->_indicatorMargin, d->_pItemHeight - 2 * d->_indicatorMargin),
+                            d->_pBorderRadius, d->_pBorderRadius);
   }
   else
   {
-    painter.drawRoundedRect(QRect(d->_indicatorMargin,
-                                  (height() - d->_pItemHeight) / 2 + d->_indicatorMargin,
-                                  width() - 2 * d->_indicatorMargin,
-                                  d->_pItemHeight - 2 * d->_indicatorMargin),
-                            d->_pBorderRadius,
-                            d->_pBorderRadius);
+    painter.drawRoundedRect(QRect(d->_indicatorMargin, (height() - d->_pItemHeight) / 2 + d->_indicatorMargin,
+                                  width() - 2 * d->_indicatorMargin, d->_pItemHeight - 2 * d->_indicatorMargin),
+                            d->_pBorderRadius, d->_pBorderRadius);
   }
 
   int yStart           = -d->_pItemHeight;
@@ -305,12 +293,9 @@ void NXRoller::paintEvent(QPaintEvent *event)
           if (itemRect.contains(d->_mousePoint))
           {
             painter.setBrush(NXThemeColor(d->_themeMode, BasicHover));
-            painter.drawRoundedRect(QRect(d->_indicatorMargin,
-                                          d->_indicatorMargin,
-                                          width() - 2 * d->_indicatorMargin,
+            painter.drawRoundedRect(QRect(d->_indicatorMargin, d->_indicatorMargin, width() - 2 * d->_indicatorMargin,
                                           d->_pItemHeight - 2 * d->_indicatorMargin),
-                                    d->_pBorderRadius,
-                                    d->_pBorderRadius);
+                                    d->_pBorderRadius, d->_pBorderRadius);
           }
         }
         painter.setPen(NXThemeColor(d->_themeMode, BasicText));
@@ -326,8 +311,8 @@ void NXRoller::paintEvent(QPaintEvent *event)
     painter.setBrush(NXThemeColor(d->_themeMode, PopupBase));
     // 覆盖文字
     d->_upArrowRect   = QRect(foregroundRect.x(), foregroundRect.y(), foregroundRect.width(), d->_pItemHeight);
-    d->_downArrowRect = QRect(
-        foregroundRect.x(), foregroundRect.bottom() - d->_pItemHeight + 2, foregroundRect.width(), d->_pItemHeight);
+    d->_downArrowRect = QRect(foregroundRect.x(), foregroundRect.bottom() - d->_pItemHeight + 2, foregroundRect.width(),
+                              d->_pItemHeight);
     painter.drawRect(d->_upArrowRect);
     painter.drawRect(d->_downArrowRect);
     painter.setBrush(NXThemeColor(d->_themeMode, BasicText));

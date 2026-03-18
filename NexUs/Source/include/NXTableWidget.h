@@ -1,4 +1,4 @@
-#ifndef NXTABLEWIDGET_H
+﻿#ifndef NXTABLEWIDGET_H
 #define NXTABLEWIDGET_H
 
 #include <QTableWidget>
@@ -11,33 +11,34 @@ class NX_EXPORT NXTableWidget : public QTableWidget
 {
   Q_OBJECT
   Q_Q_CREATE(NXTableWidget)
-  Q_PROPERTY_CREATE_Q_H(int, ItemHeight)
-  Q_PROPERTY_CREATE_Q_H(int, HeaderMargin)
-  Q_PROPERTY_CREATE_Q_H(bool, IsTransparent)
+  Q_PROPERTY_CREATE_H(int, ItemHeight)
+  Q_PROPERTY_CREATE_H(int, HeaderMargin)
+  Q_PROPERTY_CREATE_H(bool, IsTransparent)
 
 public:
   explicit NXTableWidget(QWidget *parent = nullptr);
   ~NXTableWidget();
 
-  void insertRows(int row, int count);
-  void removeRows(int row, int count);
-  void insertColumns(int column, int count);
-  void removeColumns(int column, int count);
+  void insertRows(int row, int count) noexcept;
+  void removeRows(int row, int count) noexcept;
+  void insertColumns(int column, int count) noexcept;
+  void removeColumns(int column, int count) noexcept;
 
-  void setItemText(int row, int column, const QString& text);
-  QString getItemText(int row, int column) const;
-  void setRowData(int row, const QStringList& data);
-  QStringList getRowData(int row) const;
+  void setItemText(int row, int column, const QString& text) noexcept;
+  QString getItemText(int row, int column) const noexcept;
+  void setRowData(int row, const QStringList& data) noexcept;
+  QStringList getRowData(int row) const noexcept;
 
 Q_SIGNALS:
-  Q_SIGNAL void tableWidgetShow();
-  Q_SIGNAL void tableWidgetHide();
+  void tableWidgetShow();
+  void tableWidgetHide();
+  void hoverIndexChanged(const QModelIndex& index);
 
 protected:
-  virtual void showEvent(QShowEvent *event) override;
-  virtual void hideEvent(QHideEvent *event) override;
-  virtual void mouseMoveEvent(QMouseEvent *event) override;
-  virtual void leaveEvent(QEvent *event) override;
+  void showEvent(QShowEvent *event) override;
+  void hideEvent(QHideEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void leaveEvent(QEvent *event) override;
 };
 
 #endif // NXTABLEWIDGET_H

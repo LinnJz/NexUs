@@ -9,7 +9,7 @@ NXSuggestBoxSearchViewContainer::NXSuggestBoxSearchViewContainer(QWidget *parent
 {
   setContentsMargins(8, 8, 8, 8);
   setObjectName("NXSuggestBoxSearchViewBaseWidget");
-  setStyleSheet("#NXSuggestBoxSearchViewBaseWidget{background-color:transparent}");
+  setStyleSheet(QStringLiteral("#NXSuggestBoxSearchViewBaseWidget{background-color:transparent}"));
   _themeMode = nxTheme->getThemeMode();
   connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }

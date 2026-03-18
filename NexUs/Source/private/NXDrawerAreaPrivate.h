@@ -16,7 +16,7 @@ public:
   explicit NXDrawerAreaPrivate(QObject *parent = nullptr);
   ~NXDrawerAreaPrivate() override;
 
-  Q_SLOT void onDrawerHeaderClicked(bool isExpand);
+  Q_SLOT void onDrawerHeaderClicked(bool isExpand) noexcept;
 
 private:
   NXThemeType::ThemeMode _themeMode;

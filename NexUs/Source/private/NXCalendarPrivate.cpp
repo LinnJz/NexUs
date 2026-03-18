@@ -19,7 +19,7 @@ NXCalendarPrivate::NXCalendarPrivate(QObject *parent)
 
 NXCalendarPrivate::~NXCalendarPrivate() { }
 
-void NXCalendarPrivate::onSwitchButtonClicked()
+void NXCalendarPrivate::onSwitchButtonClicked() noexcept
 {
   if (!_isSwitchAnimationFinished) { return; }
   Q_Q(NXCalendar);
@@ -49,7 +49,7 @@ void NXCalendarPrivate::onSwitchButtonClicked()
   }
 }
 
-void NXCalendarPrivate::onCalendarViewClicked(const QModelIndex& index)
+void NXCalendarPrivate::onCalendarViewClicked(const QModelIndex& index) noexcept
 {
   Q_Q(NXCalendar);
   if (!_isSwitchAnimationFinished) { return; }
@@ -98,7 +98,7 @@ void NXCalendarPrivate::onCalendarViewClicked(const QModelIndex& index)
   }
 }
 
-void NXCalendarPrivate::onUpButtonClicked()
+void NXCalendarPrivate::onUpButtonClicked() noexcept
 {
   QScrollBar *vscrollBar              = _calendarView->verticalScrollBar();
   QPropertyAnimation *scrollAnimation = new QPropertyAnimation(vscrollBar, "value");
@@ -109,7 +109,7 @@ void NXCalendarPrivate::onUpButtonClicked()
   scrollAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXCalendarPrivate::onDownButtonClicked()
+void NXCalendarPrivate::onDownButtonClicked() noexcept
 {
   QScrollBar *vscrollBar              = _calendarView->verticalScrollBar();
   QPropertyAnimation *scrollAnimation = new QPropertyAnimation(vscrollBar, "value");
@@ -120,7 +120,7 @@ void NXCalendarPrivate::onDownButtonClicked()
   scrollAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXCalendarPrivate::_scrollToDate(QDate date)
+void NXCalendarPrivate::_scrollToDate(QDate date) noexcept
 {
   int index = _calendarModel->getIndexFromDate(date).row();
   switch (_calendarModel->getDisplayMode())
@@ -148,18 +148,12 @@ void NXCalendarPrivate::_doSwitchAnimation(bool isZoomIn)
   _calendarDelegate->setIsTransparent(true);
   QPropertyAnimation *oldPixZoomAnimation = new QPropertyAnimation(this, "pZoomRatio");
   connect(oldPixZoomAnimation, &QPropertyAnimation::valueChanged, this, [=]() { q->update(); });
-  connect(oldPixZoomAnimation,
-          &QPropertyAnimation::finished,
-          this,
-          [=]()
+  connect(oldPixZoomAnimation, &QPropertyAnimation::finished, this, [=]()
   {
     _isDrawNewPix                           = true;
     QPropertyAnimation *newPixZoomAnimation = new QPropertyAnimation(this, "pZoomRatio");
     connect(newPixZoomAnimation, &QPropertyAnimation::valueChanged, this, [=]() { q->update(); });
-    connect(newPixZoomAnimation,
-            &QPropertyAnimation::finished,
-            this,
-            [=]()
+    connect(newPixZoomAnimation, &QPropertyAnimation::finished, this, [=]()
     {
       if (_calendarModel->getDisplayMode() == NXCalendarType::DayMode) { _calendarTitleView->setVisible(true); }
       _isSwitchAnimationFinished = true;
@@ -196,10 +190,7 @@ void NXCalendarPrivate::_doSwitchAnimation(bool isZoomIn)
   oldPixZoomAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
   QPropertyAnimation *oldPixOpacityAnimation = new QPropertyAnimation(this, "pPixOpacity");
-  connect(oldPixZoomAnimation,
-          &QPropertyAnimation::finished,
-          this,
-          [=]()
+  connect(oldPixZoomAnimation, &QPropertyAnimation::finished, this, [=]()
   {
     QPropertyAnimation *newPixOpacityAnimation = new QPropertyAnimation(this, "pPixOpacity");
     newPixOpacityAnimation->setStartValue(0);
@@ -213,7 +204,7 @@ void NXCalendarPrivate::_doSwitchAnimation(bool isZoomIn)
   oldPixOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXCalendarPrivate::_updateSwitchButtonText()
+void NXCalendarPrivate::_updateSwitchButtonText() noexcept
 {
   QModelIndex modelIndex =
       _calendarView->indexAt(QPoint(_calendarView->rect().center().x() - 20, _calendarView->rect().center().y()));
@@ -223,17 +214,17 @@ void NXCalendarPrivate::_updateSwitchButtonText()
   {
   case YearMode :
   {
-    _modeSwitchButton->setText(QString("%1-%2").arg(data.year - 5).arg(data.year + 10));
+    _modeSwitchButton->setText(QStringLiteral("%1-%2").arg(data.year - 5).arg(data.year + 10));
     break;
   }
   case MonthMode :
   {
-    _modeSwitchButton->setText(QString("%1年").arg(data.year));
+    _modeSwitchButton->setText(QStringLiteral("%1年").arg(data.year));
     break;
   }
   case DayMode :
   {
-    _modeSwitchButton->setText(QString("%1年%2月").arg(data.year).arg(data.month));
+    _modeSwitchButton->setText(QStringLiteral("%1年%2月").arg(data.year).arg(data.month));
     break;
   }
   }

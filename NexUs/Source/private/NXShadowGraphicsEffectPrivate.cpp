@@ -405,7 +405,9 @@ NXShadowGraphicsEffectPrivate::NXShadowGraphicsEffectPrivate(QObject *parent)
 
 NXShadowGraphicsEffectPrivate::~NXShadowGraphicsEffectPrivate() { }
 
-void NXShadowGraphicsEffectPrivate::_drawInsetShadow(QPainter *painter, const QPixmap& pixmap, const QPoint& pos)
+void NXShadowGraphicsEffectPrivate::_drawInsetShadow(QPainter *painter,
+                                                     const QPixmap& pixmap,
+                                                     const QPoint& pos) noexcept
 {
   const QSize pixmapSize = pixmap.size();
   const qreal pixelRatio = pixmap.devicePixelRatioF();
@@ -463,7 +465,9 @@ void NXShadowGraphicsEffectPrivate::_drawInsetShadow(QPainter *painter, const QP
   painter->drawImage(pos, resultImage);
 }
 
-void NXShadowGraphicsEffectPrivate::_drawOutsetShadow(QPainter *painter, const QPixmap& pixmap, const QPoint& pos)
+void NXShadowGraphicsEffectPrivate::_drawOutsetShadow(QPainter *painter,
+                                                      const QPixmap& pixmap,
+                                                      const QPoint& pos) noexcept
 {
   /*
   const qreal radian = _pSpread * M_SQRT1_2;

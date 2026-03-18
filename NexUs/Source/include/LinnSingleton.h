@@ -50,6 +50,21 @@
 #define LINN_SINGLETON_CREATE(...)                       LINN_CAT(LINN_SINGLETON_CREATE_, LINN_NARGS(__VA_ARGS__))(__VA_ARGS__)
 #define LINN_SINGLETON_CREATE_1(MODE_PAIR)               LINN_SINGLETON_CREATE_2(MODE_PAIR, LINN_SINGLETON_NO_DESTROY)
 #define LINN_SINGLETON_CREATE_2(MODE_PAIR, DESTROY_MODE) LINN_SINGLETON_CREATE_FROM_PAIR(MODE_PAIR, DESTROY_MODE)
+
+#ifdef Q_OBJECT
+
+#  define Q_SINGLETON_CREATE(...)                       LINN_SINGLETON_CREATE(__VA_ARGS__)
+#  define Q_SINGLETON_CREATE_1(MODE_PAIR)               LINN_SINGLETON_CREATE_1(MODE_PAIR)
+#  define Q_SINGLETON_CREATE_2(MODE_PAIR, DESTROY_MODE) LINN_SINGLETON_CREATE_2(MODE_PAIR, DESTROY_MODE)
+
+#  define QS_S_SHARED(CLASS)       LINN_SINGLETON_SHARED(CLASS)
+#  define QS_S_UNIQUE(CLASS)       LINN_SINGLETON_UNIQUE(CLASS)
+#  define QS_S_MEYERS(CLASS)       LINN_SINGLETON_MEYERS(CLASS)
+#  define QS_S_NO_DESTROY          LINN_SINGLETON_NO_DESTROY
+#  define QS_S_ENABLE_DESTROY      LINN_SINGLETON_ENABLE_DESTROY
+#  define QS_S_ENABLE_LOCK_DESTROY LINN_SINGLETON_ENABLE_LOCK_DESTROY
+
+#endif
 /*
  *
  */
@@ -66,42 +81,41 @@
 #define LINN_SINGLETON_PP_EQ_21    0
 #define LINN_SINGLETON_PP_EQ_22    1
 
-#define LINN_SINGLETON_CREATE_BODY_UNIQUE_NO_DESTROY(CLASS)                                        \
-                                                                                                   \
-public:                                                                                            \
-  LINN_DISABLE_COPY_MOVE(CLASS)                                                                    \
-                                                                                                   \
-  template<typename... Args>                                                                       \
-  static CLASS *getInstance(Args&&...args)                                                         \
-  {                                                                                                \
-    std::call_once(s_InitFlag,                                                                     \
-                   [args_tuple = std::forward_as_tuple(std::forward<Args>(args)...)]() mutable     \
-    {                                                                                              \
-      std::apply([](auto&&...unpacked_args) {                                                      \
-        s_Instance = _InstanceCreateImpl(std::forward<decltype(unpacked_args)>(unpacked_args)...); \
-      }, std::move(args_tuple));                                                                   \
-    });                                                                                            \
-    return s_Instance.get();                                                                       \
-  }                                                                                                \
-                                                                                                   \
-private:                                                                                           \
-  friend std::default_delete<CLASS>;                                                               \
-                                                                                                   \
-  template<typename... Args>                                                                       \
-  static std::unique_ptr<CLASS> _InstanceCreateImpl(Args&&...args)                                 \
-  {                                                                                                \
-    struct LinnSingletonMakeHelper : public CLASS                                                  \
-    {                                                                                              \
-      explicit LinnSingletonMakeHelper(Args&&...args)                                              \
-          : CLASS(std::forward<Args>(args)...)                                                     \
-      {                                                                                            \
-      }                                                                                            \
-    };                                                                                             \
-                                                                                                   \
-    return std::make_unique<LinnSingletonMakeHelper>(std::forward<Args>(args)...);                 \
-  }                                                                                                \
-                                                                                                   \
-  inline static std::once_flag s_InitFlag;                                                         \
+#define LINN_SINGLETON_CREATE_BODY_UNIQUE_NO_DESTROY(CLASS)                                                \
+                                                                                                           \
+public:                                                                                                    \
+  LINN_DISABLE_COPY_MOVE(CLASS)                                                                            \
+                                                                                                           \
+  template<typename... Args>                                                                               \
+  static CLASS *getInstance(Args&&...args)                                                                 \
+  {                                                                                                        \
+    std::call_once(s_InitFlag, [args_tuple = std::forward_as_tuple(std::forward<Args>(args)...)]() mutable \
+    {                                                                                                      \
+      std::apply([](auto&&...unpacked_args) {                                                              \
+        s_Instance = _InstanceCreateImpl(std::forward<decltype(unpacked_args)>(unpacked_args)...);         \
+      }, std::move(args_tuple));                                                                           \
+    });                                                                                                    \
+    return s_Instance.get();                                                                               \
+  }                                                                                                        \
+                                                                                                           \
+private:                                                                                                   \
+  friend std::default_delete<CLASS>;                                                                       \
+                                                                                                           \
+  template<typename... Args>                                                                               \
+  static std::unique_ptr<CLASS> _InstanceCreateImpl(Args&&...args)                                         \
+  {                                                                                                        \
+    struct LinnSingletonMakeHelper : public CLASS                                                          \
+    {                                                                                                      \
+      explicit LinnSingletonMakeHelper(Args&&...args)                                                      \
+          : CLASS(std::forward<Args>(args)...)                                                             \
+      {                                                                                                    \
+      }                                                                                                    \
+    };                                                                                                     \
+                                                                                                           \
+    return std::make_unique<LinnSingletonMakeHelper>(std::forward<Args>(args)...);                         \
+  }                                                                                                        \
+                                                                                                           \
+  inline static std::once_flag s_InitFlag;                                                                 \
   inline static std::unique_ptr<CLASS> s_Instance { nullptr };
 
 #define LINN_SINGLETON_CREATE_BODY_UNIQUE_ENABLE_DESTROY(CLASS)                         \
@@ -190,42 +204,41 @@ private:                                                                        
   inline static std::atomic_bool s_Destroyed { false };                                 \
   inline static std::unique_ptr<CLASS> s_Instance { nullptr };
 
-#define LINN_SINGLETON_CREATE_BODY_SHARED_NO_DESTROY(CLASS)                                        \
-                                                                                                   \
-public:                                                                                            \
-  LINN_DISABLE_COPY_MOVE(CLASS)                                                                    \
-                                                                                                   \
-  template<typename... Args>                                                                       \
-  static std::shared_ptr<CLASS> getInstance(Args&&...args)                                         \
-  {                                                                                                \
-    std::call_once(s_InitFlag,                                                                     \
-                   [args_tuple = std::forward_as_tuple(std::forward<Args>(args)...)]() mutable     \
-    {                                                                                              \
-      std::apply([](auto&&...unpacked_args) {                                                      \
-        s_Instance = _InstanceCreateImpl(std::forward<decltype(unpacked_args)>(unpacked_args)...); \
-      }, std::move(args_tuple));                                                                   \
-    });                                                                                            \
-    return s_Instance;                                                                             \
-  }                                                                                                \
-                                                                                                   \
-private:                                                                                           \
-  friend std::default_delete<CLASS>;                                                               \
-                                                                                                   \
-  template<typename... Args>                                                                       \
-  static std::shared_ptr<CLASS> _InstanceCreateImpl(Args&&...args)                                 \
-  {                                                                                                \
-    struct LinnSingletonMakeHelper : public CLASS                                                  \
-    {                                                                                              \
-      explicit LinnSingletonMakeHelper(Args&&...args)                                              \
-          : CLASS(std::forward<Args>(args)...)                                                     \
-      {                                                                                            \
-      }                                                                                            \
-    };                                                                                             \
-                                                                                                   \
-    return std::make_shared<LinnSingletonMakeHelper>(std::forward<Args>(args)...);                 \
-  }                                                                                                \
-                                                                                                   \
-  inline static std::once_flag s_InitFlag;                                                         \
+#define LINN_SINGLETON_CREATE_BODY_SHARED_NO_DESTROY(CLASS)                                                \
+                                                                                                           \
+public:                                                                                                    \
+  LINN_DISABLE_COPY_MOVE(CLASS)                                                                            \
+                                                                                                           \
+  template<typename... Args>                                                                               \
+  static std::shared_ptr<CLASS> getInstance(Args&&...args)                                                 \
+  {                                                                                                        \
+    std::call_once(s_InitFlag, [args_tuple = std::forward_as_tuple(std::forward<Args>(args)...)]() mutable \
+    {                                                                                                      \
+      std::apply([](auto&&...unpacked_args) {                                                              \
+        s_Instance = _InstanceCreateImpl(std::forward<decltype(unpacked_args)>(unpacked_args)...);         \
+      }, std::move(args_tuple));                                                                           \
+    });                                                                                                    \
+    return s_Instance;                                                                                     \
+  }                                                                                                        \
+                                                                                                           \
+private:                                                                                                   \
+  friend std::default_delete<CLASS>;                                                                       \
+                                                                                                           \
+  template<typename... Args>                                                                               \
+  static std::shared_ptr<CLASS> _InstanceCreateImpl(Args&&...args)                                         \
+  {                                                                                                        \
+    struct LinnSingletonMakeHelper : public CLASS                                                          \
+    {                                                                                                      \
+      explicit LinnSingletonMakeHelper(Args&&...args)                                                      \
+          : CLASS(std::forward<Args>(args)...)                                                             \
+      {                                                                                                    \
+      }                                                                                                    \
+    };                                                                                                     \
+                                                                                                           \
+    return std::make_shared<LinnSingletonMakeHelper>(std::forward<Args>(args)...);                         \
+  }                                                                                                        \
+                                                                                                           \
+  inline static std::once_flag s_InitFlag;                                                                 \
   inline static std::shared_ptr<CLASS> s_Instance { nullptr };
 
 #define LINN_SINGLETON_CREATE_BODY_SHARED_ENABLE_DESTROY(CLASS)                         \

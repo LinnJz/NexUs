@@ -71,12 +71,11 @@ void NXTreeViewStyle::drawPrimitive(PrimitiveElement element,
         painter->save();
         QRect indicatorRect = option->rect;
         indicatorRect.adjust(0, 0, -2, 0);
-        QFont iconFont = QFont("NXAwesome");
+        QFont iconFont = QFont(QStringLiteral("NXAwesome"));
         iconFont.setPixelSize(17);
         painter->setFont(iconFont);
         painter->setPen(NXThemeColor(_themeMode, BasicText));
-        painter->drawText(indicatorRect,
-                          Qt::AlignVCenter | Qt::AlignRight,
+        painter->drawText(indicatorRect, Qt::AlignVCenter | Qt::AlignRight,
                           vopt->state.testFlag(QStyle::State_Open) ? QChar((unsigned short) NXIconType::AngleDown)
                                                                    : QChar((unsigned short) NXIconType::AngleRight));
         painter->restore();
@@ -173,7 +172,7 @@ void NXTreeViewStyle::drawControl(ControlElement element,
           painter->setPen(Qt::NoPen);
           painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
           painter->drawRoundedRect(checkRect, 2, 2);
-          QFont iconFont = QFont("NXAwesome");
+          QFont iconFont = QFont(QStringLiteral("NXAwesome"));
           iconFont.setPixelSize(checkRect.width() * 0.85);
           painter->setFont(iconFont);
           painter->setPen(NXThemeColor(NXThemeType::Dark, BasicText));
@@ -218,16 +217,15 @@ void NXTreeViewStyle::drawControl(ControlElement element,
           const int iconSize   = qMax(16, static_cast<int>(lineHeight * 0.55));
           QRect iconRect(vopt->icon.isNull() ? itemRect.left() + 10 : textRect.left(),
                          textRect.top() + (lineHeight - iconSize) / 2, // 垂直居中
-                         iconSize,
-                         iconSize);
+                         iconSize, iconSize);
           QRect adjustedTextRect = vopt->icon.isNull() ? itemRect.adjusted(iconSize + 13, 0, 0, 0)
                                                        : textRect.adjusted(iconSize + 3, 0, 0, 0);
           painter->setPen(isFirst ? NXThemeColor(_themeMode, PrimaryNormal) : NXThemeColor(_themeMode, BasicText));
           painter->setFont(vopt->font);
-          painter->drawText(
-              adjustedTextRect, vopt->displayAlignment | Qt::TextSingleLine, vopt->text.mid(0, 50)); // 防止长文本溢出
+          painter->drawText(adjustedTextRect, vopt->displayAlignment | Qt::TextSingleLine,
+                            vopt->text.mid(0, 50)); // 防止长文本溢出
 
-          QFont iconFont("NXAwesome");
+          QFont iconFont(QStringLiteral("NXAwesome"));
           iconFont.setPixelSize(iconSize * 0.8);
           painter->setFont(iconFont);
           painter->drawText(iconRect, Qt::AlignCenter, QChar((unsigned short) _pIconName));
@@ -236,8 +234,7 @@ void NXTreeViewStyle::drawControl(ControlElement element,
         {
           painter->setPen(isFirst ? NXThemeColor(_themeMode, PrimaryNormal) : NXThemeColor(_themeMode, BasicText));
           painter->drawText(vopt->icon.isNull() ? itemRect.adjusted(15, 0, 0, 0) : textRect,
-                            vopt->displayAlignment | Qt::TextSingleLine,
-                            vopt->text.mid(0, 50));
+                            vopt->displayAlignment | Qt::TextSingleLine, vopt->text.mid(0, 50));
         }
       }
       // 选中特效

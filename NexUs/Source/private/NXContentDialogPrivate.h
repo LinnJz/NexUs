@@ -36,7 +36,7 @@ private:
   NXPushButton *_leftButton { nullptr };
   NXPushButton *_middleButton { nullptr };
   NXPushButton *_rightButton { nullptr };
-  void _doCloseAnimation(int result);
+  void _doCloseAnimation(int result) noexcept;
 };
 
 #endif // NXCONTENTDIALOGPRIVATE_H

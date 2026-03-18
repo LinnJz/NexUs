@@ -11,14 +11,11 @@ NXToggleSwitchPrivate::NXToggleSwitchPrivate(QObject *parent)
 
 NXToggleSwitchPrivate::~NXToggleSwitchPrivate() { }
 
-void NXToggleSwitchPrivate::_startPosAnimation(qreal startX, qreal endX, bool isToggle)
+void NXToggleSwitchPrivate::_startPosAnimation(qreal startX, qreal endX, bool isToggle) noexcept
 {
   Q_Q(NXToggleSwitch);
   QPropertyAnimation *circleAnimation = new QPropertyAnimation(q, "circleCenterX");
-  connect(circleAnimation,
-          &QPropertyAnimation::valueChanged,
-          q,
-          [=](const QVariant& value)
+  connect(circleAnimation, &QPropertyAnimation::valueChanged, q, [=](const QVariant& value)
   {
     this->_circleCenterX = value.toReal();
     q->update();
@@ -31,14 +28,11 @@ void NXToggleSwitchPrivate::_startPosAnimation(qreal startX, qreal endX, bool is
   Q_EMIT q->toggled(isToggle);
 }
 
-void NXToggleSwitchPrivate::_startRadiusAnimation(qreal startRadius, qreal endRadius)
+void NXToggleSwitchPrivate::_startRadiusAnimation(qreal startRadius, qreal endRadius) noexcept
 {
   Q_Q(NXToggleSwitch);
   QPropertyAnimation *circleRadiusAnimation = new QPropertyAnimation(q, "circleRadius");
-  connect(circleRadiusAnimation,
-          &QPropertyAnimation::valueChanged,
-          q,
-          [=](const QVariant& value)
+  connect(circleRadiusAnimation, &QPropertyAnimation::valueChanged, q, [=](const QVariant& value)
   {
     this->_circleRadius = value.toReal();
     q->update();
@@ -49,7 +43,7 @@ void NXToggleSwitchPrivate::_startRadiusAnimation(qreal startRadius, qreal endRa
   circleRadiusAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXToggleSwitchPrivate::_adjustCircleCenterX()
+void NXToggleSwitchPrivate::_adjustCircleCenterX() noexcept
 {
   Q_Q(NXToggleSwitch);
   if (_circleCenterX > q->width() - q->height() / 2 - _margin * 2)

@@ -12,15 +12,12 @@ NXProgressBar::NXProgressBar(QWidget *parent)
 {
   Q_D(NXProgressBar);
   setObjectName("NXProgressBar");
-  setStyleSheet("#NXProgressBar{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXProgressBar{background-color:transparent;}"));
   d->q_ptr  = this;
   d->_style = new NXProgressBarStyle(style());
   setStyle(d->_style);
   d->_busyAnimation = new QPropertyAnimation(d->_style, "busyStartValue");
-  connect(d->_busyAnimation,
-          &QPropertyAnimation::valueChanged,
-          this,
-          [=](const QVariant& value)
+  connect(d->_busyAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value)
   {
     d->_style->setProperty("busyEndValue", value.toInt() + 75);
     update();
@@ -35,7 +32,7 @@ NXProgressBar::~NXProgressBar()
   delete d->_style;
 }
 
-void NXProgressBar::setMinimum(int minimum)
+void NXProgressBar::setMinimum(int minimum) noexcept
 {
   Q_D(NXProgressBar);
   if (d->_isBusyAnimation && !(maximum() == 0 && minimum == 0))
@@ -46,7 +43,7 @@ void NXProgressBar::setMinimum(int minimum)
   QProgressBar::setMinimum(minimum);
 }
 
-void NXProgressBar::setMaximum(int maximum)
+void NXProgressBar::setMaximum(int maximum) noexcept
 {
   Q_D(NXProgressBar);
   if (d->_isBusyAnimation && !(minimum() == 0 && maximum == 0))

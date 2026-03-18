@@ -55,7 +55,7 @@ void NXMenuBarStyle::drawControl(ControlElement element,
       }
       // 展开图标
       painter->setPen(!topt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : NXThemeColor(_themeMode, BasicText));
-      QFont iconFont = QFont("NXAwesome");
+      QFont iconFont = QFont(QStringLiteral("NXAwesome"));
       iconFont.setPixelSize(18);
       painter->setFont(iconFont);
       painter->drawText(topt->rect, Qt::AlignCenter, QChar((unsigned short) NXIconType::AngleRight));
@@ -94,7 +94,7 @@ void NXMenuBarStyle::drawControl(ControlElement element,
       QIcon icon       = mopt->icon;
       QString menuText = mopt->text;
       QString iconText;
-      menuText                 = menuText.replace("&", "");
+      menuText                 = menuText.replace(QStringLiteral("&"), QStringLiteral(""));
       const NXMenuBar *menuBar = dynamic_cast<const NXMenuBar *>(widget);
       if (menuBar)
       {
@@ -109,7 +109,7 @@ void NXMenuBarStyle::drawControl(ControlElement element,
           painter->save();
           painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? NXThemeColor(_themeMode, BasicTextDisable)
                                                                        : NXThemeColor(_themeMode, BasicText));
-          QFont iconFont = QFont("NXAwesome");
+          QFont iconFont = QFont(QStringLiteral("NXAwesome"));
           iconFont.setPixelSize(menuBarHeight * 0.7);
           painter->setFont(iconFont);
           painter->drawText(menuItemRect, Qt::AlignCenter, iconText);
@@ -118,9 +118,7 @@ void NXMenuBarStyle::drawControl(ControlElement element,
         else if (!icon.isNull())
         {
           QRect menuIconRect(menuItemRect.center().x() - menuBarHeight * 0.4,
-                             menuItemRect.center().y() - menuBarHeight * 0.4,
-                             menuBarHeight * 0.8,
-                             menuBarHeight * 0.8);
+                             menuItemRect.center().y() - menuBarHeight * 0.4, menuBarHeight * 0.8, menuBarHeight * 0.8);
           painter->drawPixmap(menuIconRect, icon.pixmap(menuBarHeight * 0.8, menuBarHeight * 0.8));
         }
       }
@@ -134,34 +132,26 @@ void NXMenuBarStyle::drawControl(ControlElement element,
         {
           if (!iconText.isEmpty())
           {
-            QRectF menuIconRect(menuItemRect.x() + menuBarHeight * 0.1 + _menuBarItemMargin,
-                                menuBarHeight * 0.1,
-                                menuBarHeight * 0.8,
-                                menuBarHeight * 0.8);
+            QRectF menuIconRect(menuItemRect.x() + menuBarHeight * 0.1 + _menuBarItemMargin, menuBarHeight * 0.1,
+                                menuBarHeight * 0.8, menuBarHeight * 0.8);
             painter->save();
-            QFont iconFont = QFont("NXAwesome");
+            QFont iconFont = QFont(QStringLiteral("NXAwesome"));
             iconFont.setPixelSize(menuBarHeight * 0.7);
             painter->setFont(iconFont);
             painter->drawText(menuIconRect, Qt::AlignCenter, iconText);
             painter->restore();
-            painter->drawText(
-                QRect(
-                    menuIconRect.right(), menuItemRect.y(), menuItemRect.width() - menuIconRect.width(), menuBarHeight),
-                Qt::AlignCenter,
-                menuText);
+            painter->drawText(QRect(menuIconRect.right(), menuItemRect.y(), menuItemRect.width() - menuIconRect.width(),
+                                    menuBarHeight),
+                              Qt::AlignCenter, menuText);
           }
           else
           {
-            QRect menuIconRect(menuItemRect.x() + menuBarHeight * 0.1 + _menuBarItemMargin,
-                               menuBarHeight * 0.1,
-                               menuBarHeight * 0.8,
-                               menuBarHeight * 0.8);
+            QRect menuIconRect(menuItemRect.x() + menuBarHeight * 0.1 + _menuBarItemMargin, menuBarHeight * 0.1,
+                               menuBarHeight * 0.8, menuBarHeight * 0.8);
             painter->drawPixmap(menuIconRect, icon.pixmap(menuBarHeight * 0.8, menuBarHeight * 0.8));
-            painter->drawText(
-                QRect(
-                    menuIconRect.right(), menuItemRect.y(), menuItemRect.width() - menuIconRect.width(), menuBarHeight),
-                Qt::AlignCenter,
-                menuText);
+            painter->drawText(QRect(menuIconRect.right(), menuItemRect.y(), menuItemRect.width() - menuIconRect.width(),
+                                    menuBarHeight),
+                              Qt::AlignCenter, menuText);
           }
         }
       }
@@ -202,7 +192,8 @@ QSize NXMenuBarStyle::sizeFromContents(ContentsType type,
         menuBarItemSize.setWidth(menuBarItemSize.width() + mopt->fontMetrics.horizontalAdvance(mopt->text) +
                                  2 * _menuBarItemMargin);
       }
-      if (!mopt->text.contains("&")) { menuBarItemSize.setWidth(menuBarItemSize.width() + 5); }
+      if (!mopt->text.contains(QStringLiteral("&"))) {
+        menuBarItemSize.setWidth(menuBarItemSize.width() + 5); }
       return menuBarItemSize;
     }
   }

@@ -27,18 +27,12 @@ NXDockWidget::NXDockWidget(QWidget *parent, Qt::WindowFlags flags)
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXDockWidgetPrivate::onThemeModeChanged);
 
   d->_windowDisplayMode = nxApp->getWindowDisplayMode();
-  connect(nxApp,
-          &NXApplication::pWindowDisplayModeChanged,
-          this,
-          [=]()
+  connect(nxApp, &NXApplication::pWindowDisplayModeChanged, this, [=]()
   {
     d->_windowDisplayMode = nxApp->getWindowDisplayMode();
     update();
   });
-  connect(this,
-          &NXDockWidget::topLevelChanged,
-          this,
-          [=](bool topLevel)
+  connect(this, &NXDockWidget::topLevelChanged, this, [=](bool topLevel)
   {
     if (nxApp->getWindowDisplayMode() == NXApplicationType::WindowDisplayMode::NXMica)
     {
@@ -89,9 +83,7 @@ void NXDockWidget::paintEvent(QPaintEvent *event)
     painter.setBrush(d->_windowDisplayMode == NXApplicationType::WindowDisplayMode::NXMica
                          ? Qt::transparent
                          : NXThemeColor(d->_themeMode, DialogBase));
-    QRect foregroundRect(d->_shadowBorderWidth,
-                         d->_shadowBorderWidth,
-                         width() - 2 * d->_shadowBorderWidth,
+    QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * d->_shadowBorderWidth,
                          height() - 2 * d->_shadowBorderWidth);
     painter.drawRect(rect());
 #endif

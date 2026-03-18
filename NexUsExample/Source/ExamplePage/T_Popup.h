@@ -1,4 +1,4 @@
-#ifndef T_POPUP_H
+﻿#ifndef T_POPUP_H
 #define T_POPUP_H
 
 #include "T_BasePage.h"
@@ -33,7 +33,6 @@ private:
   NXRollerPicker *_timeRollerPicker { nullptr };
   NXRollerPicker *_clockRollerPicker { nullptr };
   NXDrawerArea *_drawer { nullptr };
-  NXMessageCard *_messageCard { nullptr };
   NXMessageDialog *_messageDialog { nullptr };
 };
 
