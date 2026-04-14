@@ -19,13 +19,13 @@ struct NXCalendarData : public QObjectData
 public:
   NXCalendarData() { };
   ~NXCalendarData() { };
-  NXCalendarData(int year, int month, int day, const QString& desText = {})
+  NXCalendarData(int year, int month, int day, const QString &desText = {})
       : year(year)
       , month(month)
       , day(day)
       , desText(desText) { };
 
-  NXCalendarData(const NXCalendarData& other)
+  NXCalendarData(const NXCalendarData &other)
   {
     year    = other.year;
     month   = other.month;
@@ -53,15 +53,15 @@ public:
   ~NXCalendarModel();
 
   QModelIndex getIndexFromDate(QDate date) const noexcept;
-  QDate getDateFromIndex(const QModelIndex& index) const noexcept;
-  QVariant data(const QModelIndex& index, int role) const override;
+  QDate getDateFromIndex(const QModelIndex &index) const noexcept;
+  QVariant data(const QModelIndex &index, int role) const override;
 
 Q_SIGNALS:
-  void currentYearMonthChanged(const QString& date);
+  void currentYearMonthChanged(const QString &date);
   void displayModeChanged();
 
 protected:
-  int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+  int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
 private:
   NXCalendarType _displayMode { NXCalendarType::DayMode };

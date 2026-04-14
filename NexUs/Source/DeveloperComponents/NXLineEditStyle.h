@@ -18,9 +18,8 @@ public:
                      const QStyleOption *option,
                      QPainter *painter,
                      const QWidget *widget = nullptr) const override;
-  int pixelMetric(PixelMetric metric,
-                  const QStyleOption *option = nullptr,
-                  const QWidget *widget      = nullptr) const override;
+  int
+  pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr, const QWidget *widget = nullptr) const override;
 
 private:
   NXThemeType::ThemeMode _themeMode;

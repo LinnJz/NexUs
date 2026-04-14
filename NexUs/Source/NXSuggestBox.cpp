@@ -23,18 +23,22 @@
 Q_PROPERTY_CREATE_CPP(NXSuggestBox, int, BorderRadius)
 Q_PROPERTY_CREATE_CPP(NXSuggestBox, Qt::CaseSensitivity, CaseSensitivity)
 
-NXSuggestBox::SuggestData::SuggestData() { }
+NXSuggestBox::SuggestData::SuggestData()
+{
+}
 
 NXSuggestBox::SuggestData::SuggestData(NXIconType::IconName icon,
-                                       const QString& suggestText,
-                                       const QVariantMap& suggestData)
+                                       const QString &suggestText,
+                                       const QVariantMap &suggestData)
     : _pNXIcon(icon)
     , _pSuggestText(suggestText)
     , _pSuggestData(suggestData)
 {
 }
 
-NXSuggestBox::SuggestData::~SuggestData() { }
+NXSuggestBox::SuggestData::~SuggestData()
+{
+}
 
 NXSuggestBox::NXSuggestBox(QWidget *parent)
     : QWidget { parent }
@@ -49,9 +53,11 @@ NXSuggestBox::NXSuggestBox(QWidget *parent)
   d->_searchEdit->setFixedHeight(35);
   d->_searchEdit->setPlaceholderText(QStringLiteral("查找功能"));
   d->_searchEdit->setClearButtonEnabled(true);
-  d->_lightSearchAction = new QAction(NXIcon::getInstance()->getNXIcon(NXIconType::MagnifyingGlass), QStringLiteral("Search"), this);
-  d->_darkSearchAction  = new QAction(
-      NXIcon::getInstance()->getNXIcon(NXIconType::MagnifyingGlass, QColor(0xFF, 0xFF, 0xFF)), QStringLiteral("Search"), this);
+  d->_lightSearchAction =
+      new QAction(NXIcon::getInstance()->getNXIcon(NXIconType::MagnifyingGlass), QStringLiteral("Search"), this);
+  d->_darkSearchAction =
+      new QAction(NXIcon::getInstance()->getNXIcon(NXIconType::MagnifyingGlass, QColor(0xFF, 0xFF, 0xFF)),
+                  QStringLiteral("Search"), this);
 
   d->_themeMode = nxTheme->getThemeMode();
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXSuggestBoxPrivate::onThemeModeChanged);
@@ -97,40 +103,50 @@ NXSuggestBox::NXSuggestBox(QWidget *parent)
   // 焦点事件
   connect(d->_searchEdit, &NXLineEdit::wmFocusOut, this, [=]()
   {
-    if (!d->_searchView->underMouse()) { d->_startCloseAnimation(); }
+    if (!d->_searchView->underMouse())
+    {
+      d->_startCloseAnimation();
+    }
   });
 }
 
-NXSuggestBox::~NXSuggestBox() { }
+NXSuggestBox::~NXSuggestBox()
+{
+}
 
-void NXSuggestBox::setPlaceholderText(const QString& placeholderText) noexcept
+void
+NXSuggestBox::setPlaceholderText(const QString &placeholderText) noexcept
 {
   Q_D(NXSuggestBox);
   d->_searchEdit->setPlaceholderText(placeholderText);
 }
 
-void NXSuggestBox::setFixedSize(const QSize& size) noexcept
+void
+NXSuggestBox::setFixedSize(const QSize &size) noexcept
 {
   Q_D(NXSuggestBox);
   d->_searchEdit->setFixedHeight(size.height());
   QWidget::setFixedSize(size);
 }
 
-void NXSuggestBox::setFixedSize(int w, int h) noexcept
+void
+NXSuggestBox::setFixedSize(int w, int h) noexcept
 {
   Q_D(NXSuggestBox);
   d->_searchEdit->setFixedHeight(h);
   QWidget::setFixedSize(w, h);
 }
 
-void NXSuggestBox::setFixedHeight(int h) noexcept
+void
+NXSuggestBox::setFixedHeight(int h) noexcept
 {
   Q_D(NXSuggestBox);
   d->_searchEdit->setFixedHeight(h);
   QWidget::setFixedHeight(h);
 }
 
-QString NXSuggestBox::addSuggestion(const QString& suggestText, const QVariantMap& suggestData) noexcept
+QString
+NXSuggestBox::addSuggestion(const QString &suggestText, const QVariantMap &suggestData) noexcept
 {
   Q_D(NXSuggestBox);
   NXSuggestion *suggest = new NXSuggestion(this);
@@ -140,9 +156,10 @@ QString NXSuggestBox::addSuggestion(const QString& suggestText, const QVariantMa
   return suggest->getSuggestKey();
 }
 
-QString NXSuggestBox::addSuggestion(NXIconType::IconName icon,
-                                    const QString& suggestText,
-                                    const QVariantMap& suggestData) noexcept
+QString
+NXSuggestBox::addSuggestion(NXIconType::IconName icon,
+                            const QString &suggestText,
+                            const QVariantMap &suggestData) noexcept
 {
   Q_D(NXSuggestBox);
   NXSuggestion *suggest = new NXSuggestion(this);
@@ -153,7 +170,8 @@ QString NXSuggestBox::addSuggestion(NXIconType::IconName icon,
   return suggest->getSuggestKey();
 }
 
-QString NXSuggestBox::addSuggestion(const NXSuggestBox::SuggestData& suggestData) noexcept
+QString
+NXSuggestBox::addSuggestion(const NXSuggestBox::SuggestData &suggestData) noexcept
 {
   Q_D(NXSuggestBox);
   NXSuggestion *suggest = new NXSuggestion(this);
@@ -164,11 +182,12 @@ QString NXSuggestBox::addSuggestion(const NXSuggestBox::SuggestData& suggestData
   return suggest->getSuggestKey();
 }
 
-QStringList NXSuggestBox::addSuggestion(const QList<NXSuggestBox::SuggestData>& suggestDataList) noexcept
+QStringList
+NXSuggestBox::addSuggestion(const QList<NXSuggestBox::SuggestData> &suggestDataList) noexcept
 {
   Q_D(NXSuggestBox);
   QStringList suggestKeyList;
-  for (const auto& suggestData : suggestDataList)
+  for (const auto &suggestData : suggestDataList)
   {
     NXSuggestion *suggest = new NXSuggestion(this);
     suggest->setNXIcon(suggestData.getNXIcon());
@@ -180,10 +199,11 @@ QStringList NXSuggestBox::addSuggestion(const QList<NXSuggestBox::SuggestData>& 
   return suggestKeyList;
 }
 
-void NXSuggestBox::removeSuggestion(const QString& suggestKey) noexcept
+void
+NXSuggestBox::removeSuggestion(const QString &suggestKey) noexcept
 {
   Q_D(NXSuggestBox);
-  foreach (auto suggest, d->_suggestionVector)
+  foreach(auto suggest, d->_suggestionVector)
   {
     if (suggest->getSuggestKey() == suggestKey)
     {
@@ -193,19 +213,24 @@ void NXSuggestBox::removeSuggestion(const QString& suggestKey) noexcept
   }
 }
 
-void NXSuggestBox::removeSuggestion(int index) noexcept
+void
+NXSuggestBox::removeSuggestion(int index) noexcept
 {
   Q_D(NXSuggestBox);
-  if (index >= d->_suggestionVector.count()) { return; }
+  if (index >= d->_suggestionVector.count())
+  {
+    return;
+  }
   NXSuggestion *suggest = d->_suggestionVector[index];
   d->_suggestionVector.removeOne(suggest);
   suggest->deleteLater();
 }
 
-void NXSuggestBox::clearSuggestion() noexcept
+void
+NXSuggestBox::clearSuggestion() noexcept
 {
   Q_D(NXSuggestBox);
-  foreach (auto suggest, d->_suggestionVector)
+  foreach(auto suggest, d->_suggestionVector)
   {
     d->_suggestionVector.removeOne(suggest);
     suggest->deleteLater();

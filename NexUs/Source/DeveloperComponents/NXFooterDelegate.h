@@ -13,16 +13,16 @@ class NXFooterDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
   Q_PRIVATE_CREATE(NXBaseListView *, NXListView)
-  Q_PRIVATE_CREATE_2(const QModelIndex&, QModelIndex, PressIndex)
+  Q_PRIVATE_CREATE_2(const QModelIndex &, QModelIndex, PressIndex)
 
 public:
   explicit NXFooterDelegate(QObject *parent = nullptr);
   ~NXFooterDelegate();
-  void navigationNodeStateChange(const QVariantMap& data) noexcept;
+  void navigationNodeStateChange(const QVariantMap &data) noexcept;
 
 protected:
-  void paint(QPainter *painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
-  QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+  void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+  QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
 private:
   bool _isSelectMarkDisplay { true };

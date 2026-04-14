@@ -14,7 +14,7 @@ class NX_EXPORT NXMenu : public QMenu
 
 public:
   explicit NXMenu(QWidget *parent = nullptr);
-  explicit NXMenu(const QString& title, QWidget *parent = nullptr);
+  explicit NXMenu(const QString &title, QWidget *parent = nullptr);
   ~NXMenu();
 
   void setBorderRadius(int borderRadius) noexcept;
@@ -27,12 +27,12 @@ public:
   bool getAlignParentMenuHeight() const noexcept;
 
   QAction *addMenu(QMenu *menu) noexcept;
-  NXMenu *addMenu(const QString& title) noexcept;
-  NXMenu *addMenu(const QIcon& icon, const QString& title) noexcept;
-  NXMenu *addMenu(NXIconType::IconName icon, const QString& title) noexcept;
+  NXMenu *addMenu(const QString &title) noexcept;
+  NXMenu *addMenu(const QIcon &icon, const QString &title) noexcept;
+  NXMenu *addMenu(NXIconType::IconName icon, const QString &title) noexcept;
 
-  QAction *addNXIconAction(NXIconType::IconName icon, const QString& text) noexcept;
-  QAction *addNXIconAction(NXIconType::IconName icon, const QString& text, const QKeySequence& shortcut) noexcept;
+  QAction *addNXIconAction(NXIconType::IconName icon, const QString &text) noexcept;
+  QAction *addNXIconAction(NXIconType::IconName icon, const QString &text, const QKeySequence &shortcut) noexcept;
 
   bool isHasParentMenu() const noexcept;
   bool isHasChildMenu() const noexcept;

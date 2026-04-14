@@ -5,4 +5,6 @@ NXProgressRingPrivate::NXProgressRingPrivate(QObject *parent)
 {
 }
 
-NXProgressRingPrivate::~NXProgressRingPrivate() { }
+NXProgressRingPrivate::~NXProgressRingPrivate()
+{
+}

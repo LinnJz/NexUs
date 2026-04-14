@@ -31,10 +31,13 @@ T_Icon::T_Icon(QWidget *parent)
   _iconView->setFlow(QListView::LeftToRight);
   _iconView->setViewMode(QListView::IconMode);
   _iconView->setResizeMode(QListView::Adjust);
-  connect(_iconView, &NXListView::clicked, this, [=](const QModelIndex& index)
+  connect(_iconView, &NXListView::clicked, this, [=](const QModelIndex &index)
   {
     QString iconName = _iconModel->getIconNameFromModelIndex(index);
-    if (iconName.isEmpty()) { return; }
+    if (iconName.isEmpty())
+    {
+      return;
+    }
     qApp->clipboard()->setText(iconName);
     NXMessageBar::success(NXMessageBarType::Top, "复制完成", iconName + "已被复制到剪贴板", 1000, this);
   });
@@ -56,9 +59,12 @@ T_Icon::T_Icon(QWidget *parent)
   this->addCentralWidget(centralWidget, true, true, 0);
 }
 
-T_Icon::~T_Icon() { }
+T_Icon::~T_Icon()
+{
+}
 
-void T_Icon::onSearchEditTextEdit(const QString& searchText)
+void
+T_Icon::onSearchEditTextEdit(const QString &searchText)
 {
   if (searchText.isEmpty())
   {
@@ -72,7 +78,10 @@ void T_Icon::onSearchEditTextEdit(const QString& searchText)
   for (int i = 1; i < _metaEnum.keyCount(); i++)
   {
     QString key = QString(_metaEnum.key(i));
-    if (key.contains(searchText, Qt::CaseInsensitive)) { searchKeyList.append(key); }
+    if (key.contains(searchText, Qt::CaseInsensitive))
+    {
+      searchKeyList.append(key);
+    }
   }
   _iconModel->setIsSearchMode(true);
   _iconModel->setSearchKeyList(searchKeyList);

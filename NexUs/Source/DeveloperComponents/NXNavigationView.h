@@ -20,15 +20,15 @@ public:
   explicit NXNavigationView(QWidget *parent = nullptr);
   ~NXNavigationView() override;
   NXToolTip *getCompactToolTip() const noexcept;
-  void navigationNodeStateChange(const QVariantMap& data) noexcept;
+  void navigationNodeStateChange(const QVariantMap &data) noexcept;
   void setNavigationNodeDragAndDropEnable(bool isEnable) noexcept;
-  Q_SLOT void onCustomContextMenuRequested(const QPoint& pos) noexcept;
+  Q_SLOT void onCustomContextMenuRequested(const QPoint &pos) noexcept;
 
 Q_SIGNALS:
-  void navigationPositionSwapped(const QModelIndex& from, const QModelIndex& to);
-  void navigationClicked(const QModelIndex& index);
-  void navigationOpenNewWindow(const QString& nodeKey);
-  void navigationCloseCurrentWindow(const QString& nodeKey);
+  void navigationPositionSwapped(const QModelIndex &from, const QModelIndex &to);
+  void navigationClicked(const QModelIndex &index);
+  void navigationOpenNewWindow(const QString &nodeKey);
+  void navigationCloseCurrentWindow(const QString &nodeKey);
 
 protected:
   void mousePressEvent(QMouseEvent *event) override;
@@ -46,13 +46,13 @@ private:
   NXNavigationStyle *_navigationStyle { nullptr };
   NXToolTip *_compactToolTip { nullptr };
   bool _canProceedWithDragDrop(QAbstractItemView::DropIndicatorPosition dropIndicatorPosition,
-                               const QModelIndex& draggedIndex,
-                               const QModelIndex& targetIndex,
-                               const QModelIndex& draggedPreviousIndex,
-                               const QModelIndex& draggedNextIndex,
-                               const QModelIndex& targetParentIndex,
+                               const QModelIndex &draggedIndex,
+                               const QModelIndex &targetIndex,
+                               const QModelIndex &draggedPreviousIndex,
+                               const QModelIndex &draggedNextIndex,
+                               const QModelIndex &targetParentIndex,
                                NXNavigationModel *model);
-  QAbstractItemView::DropIndicatorPosition _dropIndicatorPosition(const QModelIndex& dropTargetIndex) const;
+  QAbstractItemView::DropIndicatorPosition _dropIndicatorPosition(const QModelIndex &dropTargetIndex) const;
   void _doCompactToolTip();
 };
 

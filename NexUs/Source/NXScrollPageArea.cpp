@@ -16,13 +16,18 @@ NXScrollPageArea::NXScrollPageArea(QWidget *parent)
   d->_pBorderRadius = 6;
   setFixedHeight(75);
   d->_themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
 }
 
-NXScrollPageArea::~NXScrollPageArea() { }
+NXScrollPageArea::~NXScrollPageArea()
+{
+}
 
-void NXScrollPageArea::paintEvent(QPaintEvent *event)
+void
+NXScrollPageArea::paintEvent(QPaintEvent *event)
 {
   Q_D(NXScrollPageArea);
   QPainter painter(this);

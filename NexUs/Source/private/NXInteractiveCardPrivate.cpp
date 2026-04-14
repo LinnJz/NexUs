@@ -5,4 +5,6 @@ NXInteractiveCardPrivate::NXInteractiveCardPrivate(QObject *parent)
 {
 }
 
-NXInteractiveCardPrivate::~NXInteractiveCardPrivate() { }
+NXInteractiveCardPrivate::~NXInteractiveCardPrivate()
+{
+}

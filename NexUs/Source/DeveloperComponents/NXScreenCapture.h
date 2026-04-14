@@ -11,8 +11,8 @@
 class NXScreenCapture : public QObject
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE_2(const QStringList&, QStringList, DisplayList)
-  Q_PRIVATE_CREATE_2(const QString&, QString, LastError)
+  Q_PRIVATE_CREATE_2(const QStringList &, QStringList, DisplayList)
+  Q_PRIVATE_CREATE_2(const QString &, QString, LastError)
   Q_PRIVATE_CREATE(QRect, GrabArea)
   Q_PRIVATE_CREATE(int, DisplayID)
   Q_PRIVATE_CREATE(int, GrabFrameRate)

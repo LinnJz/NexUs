@@ -9,7 +9,7 @@ class QStyleOptionViewItem;
 class NXTableViewStyle : public QProxyStyle
 {
   Q_OBJECT
-  Q_PROPERTY_CREATE_2(const QModelIndex&, QModelIndex, CurrentHoverIndex)
+  Q_PROPERTY_CREATE_2(const QModelIndex &, QModelIndex, CurrentHoverIndex)
   Q_PROPERTY_CREATE(int, HeaderMargin)
   Q_PROPERTY_CREATE(int, BorderRadius)
   Q_PROPERTY_CREATE(int, CheckIndicatorWidth)
@@ -27,9 +27,8 @@ public:
                    const QStyleOption *option,
                    QPainter *painter,
                    const QWidget *widget = nullptr) const override;
-  int pixelMetric(PixelMetric metric,
-                  const QStyleOption *option = nullptr,
-                  const QWidget *widget      = nullptr) const override;
+  int
+  pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr, const QWidget *widget = nullptr) const override;
 
   void setHorizontalPadding(int column, int padding) noexcept;
   int getHorizontalPadding(int column) const noexcept;
@@ -40,7 +39,7 @@ private:
   QList<int> _horizontalPaddings;
 
   int _horizontalPaddingForColumn(int column) const noexcept;
-  void _drawCheckIndicator(QPainter *painter, const QRect& rect, Qt::CheckState state) const noexcept;
+  void _drawCheckIndicator(QPainter *painter, const QRect &rect, Qt::CheckState state) const noexcept;
 };
 
 #endif // NXTABLEVIEWSTYLE_H

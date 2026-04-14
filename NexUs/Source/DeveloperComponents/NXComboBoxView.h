@@ -12,7 +12,7 @@ public:
   ~NXComboBoxView();
 
 Q_SIGNALS:
-  void itemPressed(const QModelIndex& index);
+  void itemPressed(const QModelIndex &index);
 
 protected:
   void mousePressEvent(QMouseEvent *event) override;

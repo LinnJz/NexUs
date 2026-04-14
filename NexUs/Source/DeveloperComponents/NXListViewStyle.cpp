@@ -12,15 +12,21 @@ NXListViewStyle::NXListViewStyle(QStyle *style)
   _pItemHeight    = 35;
   _pIsTransparent = true;
   _themeMode      = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXListViewStyle::~NXListViewStyle() { }
+NXListViewStyle::~NXListViewStyle()
+{
+}
 
-void NXListViewStyle::drawPrimitive(PrimitiveElement element,
-                                    const QStyleOption *option,
-                                    QPainter *painter,
-                                    const QWidget *widget) const
+void
+NXListViewStyle::drawPrimitive(PrimitiveElement element,
+                               const QStyleOption *option,
+                               QPainter *painter,
+                               const QWidget *widget) const
 {
   switch (element)
   {
@@ -89,10 +95,11 @@ void NXListViewStyle::drawPrimitive(PrimitiveElement element,
   QProxyStyle::drawPrimitive(element, option, painter, widget);
 }
 
-void NXListViewStyle::drawControl(ControlElement element,
-                                  const QStyleOption *option,
-                                  QPainter *painter,
-                                  const QWidget *widget) const
+void
+NXListViewStyle::drawControl(ControlElement element,
+                             const QStyleOption *option,
+                             QPainter *painter,
+                             const QWidget *widget) const
 {
   switch (element)
   {
@@ -129,8 +136,14 @@ void NXListViewStyle::drawControl(ControlElement element,
       if (!vopt->icon.isNull())
       {
         QIcon::Mode mode = QIcon::Normal;
-        if (!(vopt->state.testFlag(QStyle::State_Enabled))) { mode = QIcon::Disabled; }
-        else if (vopt->state.testFlag(QStyle::State_Selected)) { mode = QIcon::Selected; }
+        if (!(vopt->state.testFlag(QStyle::State_Enabled)))
+        {
+          mode = QIcon::Disabled;
+        }
+        else if (vopt->state.testFlag(QStyle::State_Selected))
+        {
+          mode = QIcon::Selected;
+        }
         QIcon::State state = vopt->state & QStyle::State_Open ? QIcon::On : QIcon::Off;
         vopt->icon.paint(painter, iconRect, vopt->decorationAlignment, mode, state);
       }
@@ -162,10 +175,11 @@ void NXListViewStyle::drawControl(ControlElement element,
   QProxyStyle::drawControl(element, option, painter, widget);
 }
 
-QSize NXListViewStyle::sizeFromContents(ContentsType type,
-                                        const QStyleOption *option,
-                                        const QSize& size,
-                                        const QWidget *widget) const
+QSize
+NXListViewStyle::sizeFromContents(ContentsType type,
+                                  const QStyleOption *option,
+                                  const QSize &size,
+                                  const QWidget *widget) const
 {
   switch (type)
   {
@@ -174,7 +188,10 @@ QSize NXListViewStyle::sizeFromContents(ContentsType type,
     QSize itemSize               = QProxyStyle::sizeFromContents(type, option, size, widget);
     const NXListView *listView   = dynamic_cast<const NXListView *>(widget);
     QListView::ViewMode viewMode = listView->viewMode();
-    if (viewMode == QListView::ListMode) { itemSize.setWidth(itemSize.width() + _leftPadding); }
+    if (viewMode == QListView::ListMode)
+    {
+      itemSize.setWidth(itemSize.width() + _leftPadding);
+    }
     itemSize.setHeight(_pItemHeight);
     return itemSize;
   }

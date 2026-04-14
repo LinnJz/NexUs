@@ -22,8 +22,8 @@ public:
   explicit NXGraphicsItemPrivate(QObject *parent = nullptr);
   ~NXGraphicsItemPrivate();
 
-  friend QDataStream& operator<< (QDataStream& stream, const NXGraphicsItemPrivate *data);
-  friend QDataStream& operator>> (QDataStream& stream, NXGraphicsItemPrivate *data);
+  friend QDataStream &operator<< (QDataStream &stream, const NXGraphicsItemPrivate *data);
+  friend QDataStream &operator>> (QDataStream &stream, NXGraphicsItemPrivate *data);
 
 private:
   QString _itemUID;

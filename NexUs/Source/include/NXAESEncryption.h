@@ -49,9 +49,9 @@ public:
    */
   static QByteArray Crypt(NXAESEncryption::Aes level,
                           NXAESEncryption::Mode mode,
-                          const QByteArray& rawText,
-                          const QByteArray& key,
-                          const QByteArray& iv             = QByteArray(),
+                          const QByteArray &rawText,
+                          const QByteArray &key,
+                          const QByteArray &iv             = QByteArray(),
                           NXAESEncryption::Padding padding = NXAESEncryption::ISO);
   /*!
    * \brief static method call to decrypt data given by rawText
@@ -65,9 +65,9 @@ public:
    */
   static QByteArray Decrypt(NXAESEncryption::Aes level,
                             NXAESEncryption::Mode mode,
-                            const QByteArray& rawText,
-                            const QByteArray& key,
-                            const QByteArray& iv             = QByteArray(),
+                            const QByteArray &rawText,
+                            const QByteArray &key,
+                            const QByteArray &iv             = QByteArray(),
                             NXAESEncryption::Padding padding = NXAESEncryption::ISO);
   /*!
    * \brief static method call to expand the user key to fit the encrypting/decrypting algorithm
@@ -80,7 +80,7 @@ public:
    * \return AES-ready key
    */
   static QByteArray
-  ExpandKey(NXAESEncryption::Aes level, NXAESEncryption::Mode mode, const QByteArray& key, bool isEncryptionKey);
+  ExpandKey(NXAESEncryption::Aes level, NXAESEncryption::Mode mode, const QByteArray &key, bool isEncryptionKey);
 
   /*!
    * \brief static method call to remove padding from decrypted cipher given by rawText
@@ -88,7 +88,7 @@ public:
    * \param padding:  AES::Padding standard
    * \return decrypted cipher with padding removed
    */
-  static QByteArray RemovePadding(const QByteArray& rawText, NXAESEncryption::Padding padding = NXAESEncryption::ISO);
+  static QByteArray RemovePadding(const QByteArray &rawText, NXAESEncryption::Padding padding = NXAESEncryption::ISO);
 
   NXAESEncryption(NXAESEncryption::Aes level,
                   NXAESEncryption::Mode mode,
@@ -101,7 +101,7 @@ public:
    * \param iv:       initialisation-vector (iv.size is 128 bits (16 Bytes))
    * \return encrypted cipher
    */
-  QByteArray encode(const QByteArray& rawText, const QByteArray& key, const QByteArray& iv = QByteArray());
+  QByteArray encode(const QByteArray &rawText, const QByteArray &key, const QByteArray &iv = QByteArray());
 
   /*!
    * \brief object method call to decrypt data given by rawText
@@ -111,7 +111,7 @@ public:
    * \param padding:  AES::Padding standard
    * \return decrypted cipher with padding
    */
-  QByteArray decode(const QByteArray& rawText, const QByteArray& key, const QByteArray& iv = QByteArray());
+  QByteArray decode(const QByteArray &rawText, const QByteArray &key, const QByteArray &iv = QByteArray());
 
   /*!
    * \brief object method call to expand the user key to fit the encrypting/decrypting algorithm
@@ -120,14 +120,14 @@ public:
    * supported)
    * \return AES-ready key
    */
-  QByteArray expandKey(const QByteArray& key, bool isEncryptionKey);
+  QByteArray expandKey(const QByteArray &key, bool isEncryptionKey);
 
   /*!
    * \brief object method call to remove padding from decrypted cipher given by rawText
    * \param rawText:  inputText
    * \return decrypted cipher with padding removed
    */
-  QByteArray removePadding(const QByteArray& rawText);
+  QByteArray removePadding(const QByteArray &rawText);
 
   QByteArray printArray(uchar *arr, int size);
 Q_SIGNALS:
@@ -178,7 +178,7 @@ private:
 
   quint8 getSBoxInvert(quint8 num) { return rsbox[num]; }
 
-  void addRoundKey(const quint8 round, const QByteArray& expKey);
+  void addRoundKey(const quint8 round, const QByteArray &expKey);
   void subBytes();
   void shiftRows();
   void mixColumns();
@@ -186,9 +186,9 @@ private:
   void invSubBytes();
   void invShiftRows();
   QByteArray getPadding(int currSize, int alignment);
-  QByteArray cipher(const QByteArray& expKey, const QByteArray& in);
-  QByteArray invCipher(const QByteArray& expKey, const QByteArray& in);
-  QByteArray byteXor(const QByteArray& a, const QByteArray& b);
+  QByteArray cipher(const QByteArray &expKey, const QByteArray &in);
+  QByteArray invCipher(const QByteArray &expKey, const QByteArray &in);
+  QByteArray byteXor(const QByteArray &a, const QByteArray &b);
 
   const quint8 sbox[256] = {
     // 0     1    2      3     4    5     6     7      8    9     A      B    C     D     E     F

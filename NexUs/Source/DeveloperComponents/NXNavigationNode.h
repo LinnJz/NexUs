@@ -9,8 +9,8 @@
 class NXNavigationNode : public QObject
 {
   Q_OBJECT
-  Q_PROPERTY_CREATE_2(const QList<NXNavigationNode *>&, auto, ChildrenNodes)
-  Q_PROPERTY_CREATE_2(const QModelIndex&, QModelIndex, ModelIndex)
+  Q_PROPERTY_CREATE_2(const QList<NXNavigationNode *> &, auto, ChildrenNodes)
+  Q_PROPERTY_CREATE_2(const QModelIndex &, QModelIndex, ModelIndex)
   Q_PRIVATE_CREATE(NXNavigationNode *, ParentNode)
   Q_PROPERTY_CREATE(NXIconType::IconName, Awesome)
   Q_PROPERTY_CREATE(int, KeyPoints)
@@ -23,10 +23,10 @@ class NXNavigationNode : public QObject
   Q_PROPERTY_CREATE_D(bool, IsExpanded)
   Q_PRIVATE_CREATE(bool, IsCategoryNode)
   Q_PROPERTY_CREATE_D(QString, NodeKey)
-  Q_PROPERTY_CREATE_2(const QString&, QString, NodeTitle)
+  Q_PROPERTY_CREATE_2(const QString &, QString, NodeTitle)
 
 public:
-  explicit NXNavigationNode(const QString& nodeTitle, NXNavigationNode *parent = nullptr);
+  explicit NXNavigationNode(const QString &nodeTitle, NXNavigationNode *parent = nullptr);
   ~NXNavigationNode() override;
 
   QString getNodeKey() const noexcept;
@@ -48,6 +48,7 @@ public:
   bool getIsChildNode(NXNavigationNode *node) const noexcept;
 
   int getRow() const noexcept;
+  int getRowExceptCategoryNodes() const;
 
   QList<NXNavigationNode *> getExceptCategoryNodes() const noexcept;
 

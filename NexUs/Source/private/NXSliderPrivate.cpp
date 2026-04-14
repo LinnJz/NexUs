@@ -5,4 +5,6 @@ NXSliderPrivate::NXSliderPrivate(QObject *parent)
 {
 }
 
-NXSliderPrivate::~NXSliderPrivate() { }
+NXSliderPrivate::~NXSliderPrivate()
+{
+}

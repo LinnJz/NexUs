@@ -8,9 +8,12 @@ NXGraphicsViewPrivate::NXGraphicsViewPrivate(QObject *parent)
 {
 }
 
-NXGraphicsViewPrivate::~NXGraphicsViewPrivate() { }
+NXGraphicsViewPrivate::~NXGraphicsViewPrivate()
+{
+}
 
-void NXGraphicsViewPrivate::_initStyle() noexcept
+void
+NXGraphicsViewPrivate::_initStyle() noexcept
 {
   Q_Q(NXGraphicsView);
   q->setDragMode(QGraphicsView::RubberBandDrag);

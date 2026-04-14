@@ -22,8 +22,8 @@ public:
   explicit NXGraphicsScenePrivate(QObject *parent = nullptr);
   ~NXGraphicsScenePrivate();
 
-  friend QDataStream& operator<< (QDataStream& stream, const NXGraphicsScenePrivate *data);
-  friend QDataStream& operator>> (QDataStream& stream, NXGraphicsScenePrivate *data);
+  friend QDataStream &operator<< (QDataStream &stream, const NXGraphicsScenePrivate *data);
+  friend QDataStream &operator>> (QDataStream &stream, NXGraphicsScenePrivate *data);
 
 private:
   bool _isLeftButtonPress { false };

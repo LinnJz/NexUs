@@ -18,10 +18,10 @@ Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, SubTitleSpacing)
 Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, QSize, CardPixmapSize)
 Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, CardPixmapBorderRadius)
 Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, NXCardPixType::PixMode, CardPixMode)
-Q_PROPERTY_CREATE_2_CPP(NXAcrylicUrlCard, const QPixmap&, QPixmap, CardPixmap)
-Q_PROPERTY_CREATE_2_CPP(NXAcrylicUrlCard, const QString&, QString, Url)
-Q_PROPERTY_CREATE_2_CPP(NXAcrylicUrlCard, const QString&, QString, Title)
-Q_PROPERTY_CREATE_2_CPP(NXAcrylicUrlCard, const QString&, QString, SubTitle)
+Q_PROPERTY_CREATE_2_CPP(NXAcrylicUrlCard, const QPixmap &, QPixmap, CardPixmap)
+Q_PROPERTY_CREATE_2_CPP(NXAcrylicUrlCard, const QString &, QString, Url)
+Q_PROPERTY_CREATE_2_CPP(NXAcrylicUrlCard, const QString &, QString, Title)
+Q_PROPERTY_CREATE_2_CPP(NXAcrylicUrlCard, const QString &, QString, SubTitle)
 
 NXAcrylicUrlCard::NXAcrylicUrlCard(QWidget *parent)
     : QPushButton(parent)
@@ -43,21 +43,30 @@ NXAcrylicUrlCard::NXAcrylicUrlCard(QWidget *parent)
   d->_pCardPixmapBorderRadius = 6;
   d->_pCardPixMode            = NXCardPixType::PixMode::Ellipse;
   d->_themeMode               = nxTheme->getThemeMode();
-  connect(this, &NXAcrylicUrlCard::clicked, this, [=]() { QDesktopServices::openUrl(QUrl(d->_pUrl)); });
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(this, &NXAcrylicUrlCard::clicked, this, [=]()
+  {
+    QDesktopServices::openUrl(QUrl(d->_pUrl));
+  });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
 }
 
-NXAcrylicUrlCard::~NXAcrylicUrlCard() { }
+NXAcrylicUrlCard::~NXAcrylicUrlCard()
+{
+}
 
-void NXAcrylicUrlCard::setCardPixmapSize(int width, int height) noexcept
+void
+NXAcrylicUrlCard::setCardPixmapSize(int width, int height) noexcept
 {
   Q_D(NXAcrylicUrlCard);
   d->_pCardPixmapSize = QSize(width, height);
   Q_EMIT pCardPixmapSizeChanged();
 }
 
-void NXAcrylicUrlCard::paintEvent(QPaintEvent *event)
+void
+NXAcrylicUrlCard::paintEvent(QPaintEvent *event)
 {
   Q_D(NXAcrylicUrlCard);
   QPainter painter(this);
@@ -132,6 +141,6 @@ void NXAcrylicUrlCard::paintEvent(QPaintEvent *event)
   painter.setFont(iconFont);
   painter.setPen(NXThemeColor(d->_themeMode, BasicText));
   painter.drawText(width - 1.5 * iconFont.pixelSize(), height() - iconFont.pixelSize(),
-                   QChar((unsigned short) NXIconType::UpRightFromSquare));
+                   QChar(NXIconType::UpRightFromSquare));
   painter.restore();
 }

@@ -5,4 +5,6 @@ NXToolBarPrivate::NXToolBarPrivate(QObject *parent)
 {
 }
 
-NXToolBarPrivate::~NXToolBarPrivate() { }
+NXToolBarPrivate::~NXToolBarPrivate()
+{
+}

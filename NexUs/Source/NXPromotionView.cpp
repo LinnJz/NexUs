@@ -35,57 +35,80 @@ NXPromotionView::NXPromotionView(QWidget *parent)
   });
 
   d->_themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
 }
 
-NXPromotionView::~NXPromotionView() { }
+NXPromotionView::~NXPromotionView()
+{
+}
 
-void NXPromotionView::setCardExpandWidth(int width) noexcept
+void
+NXPromotionView::setCardExpandWidth(int width) noexcept
 {
   Q_D(NXPromotionView);
-  if (width <= 0) { return; }
+  if (width <= 0)
+  {
+    return;
+  }
   d->_pCardExpandWidth = width;
   d->_updatePromotionCardGeometry();
 }
 
-int NXPromotionView::getCardExpandWidth() const noexcept
+int
+NXPromotionView::getCardExpandWidth() const noexcept
 {
   Q_D(const NXPromotionView);
   return d->_pCardExpandWidth;
 }
 
-void NXPromotionView::setCardCollapseWidth(int width) noexcept
+void
+NXPromotionView::setCardCollapseWidth(int width) noexcept
 {
   Q_D(NXPromotionView);
-  if (width <= 0) { return; }
+  if (width <= 0)
+  {
+    return;
+  }
   d->_pCardCollapseWidth = width;
   d->_updatePromotionCardGeometry();
 }
 
-int NXPromotionView::getCardCollapseWidth() const noexcept
+int
+NXPromotionView::getCardCollapseWidth() const noexcept
 {
   Q_D(const NXPromotionView);
   return d->_pCardCollapseWidth;
 }
 
-void NXPromotionView::setCurrentIndex(int index) noexcept
+void
+NXPromotionView::setCurrentIndex(int index) noexcept
 {
   Q_D(NXPromotionView);
-  if (index < 0 || index >= d->_promotionCardList.count()) { return; }
+  if (index < 0 || index >= d->_promotionCardList.count())
+  {
+    return;
+  }
   d->onPromotionCardClicked(d->_promotionCardList[index]);
 }
 
-int NXPromotionView::getCurrentIndex() const noexcept
+int
+NXPromotionView::getCurrentIndex() const noexcept
 {
   Q_D(const NXPromotionView);
   return d->_pCurrentIndex;
 }
 
-void NXPromotionView::setIsAutoScroll(bool isAutoScroll) noexcept
+void
+NXPromotionView::setIsAutoScroll(bool isAutoScroll) noexcept
 {
   Q_D(NXPromotionView);
-  if (isAutoScroll) { d->_autoScrollTimer->start(d->_pAutoScrollInterval); }
+  if (isAutoScroll)
+  {
+    d->_autoScrollTimer->start(d->_pAutoScrollInterval);
+  }
   else
   {
     d->_autoScrollTimer->stop();
@@ -94,39 +117,53 @@ void NXPromotionView::setIsAutoScroll(bool isAutoScroll) noexcept
   Q_EMIT pIsAutoScrollChanged();
 }
 
-bool NXPromotionView::getIsAutoScroll() const noexcept
+bool
+NXPromotionView::getIsAutoScroll() const noexcept
 {
   Q_D(const NXPromotionView);
   return d->_pIsAutoScroll;
 }
 
-void NXPromotionView::setAutoScrollInterval(int autoScrollInterval) noexcept
+void
+NXPromotionView::setAutoScrollInterval(int autoScrollInterval) noexcept
 {
   Q_D(NXPromotionView);
-  if (autoScrollInterval < 400) { return; }
+  if (autoScrollInterval < 400)
+  {
+    return;
+  }
   d->_pAutoScrollInterval = autoScrollInterval;
   Q_EMIT pAutoScrollIntervalChanged();
 }
 
-int NXPromotionView::getAutoScrollInterval() const noexcept
+int
+NXPromotionView::getAutoScrollInterval() const noexcept
 {
   Q_D(const NXPromotionView);
   return d->_pAutoScrollInterval;
 }
 
-void NXPromotionView::appendPromotionCard(NXPromotionCard *card) noexcept
+void
+NXPromotionView::appendPromotionCard(NXPromotionCard *card) noexcept
 {
   Q_D(NXPromotionView);
-  if (!card || d->_promotionCardList.contains(card)) { return; }
+  if (!card || d->_promotionCardList.contains(card))
+  {
+    return;
+  }
   card->setMinimumSize(0, 0);
   card->setMaximumSize(10000, 10000);
   card->setParent(this);
   d->_promotionCardList.append(card);
-  connect(card, &NXPromotionCard::promotionCardClicked, this, [=]() { d->onPromotionCardClicked(card); });
+  connect(card, &NXPromotionCard::promotionCardClicked, this, [=]()
+  {
+    d->onPromotionCardClicked(card);
+  });
   d->_updatePromotionCardGeometry();
 }
 
-void NXPromotionView::resizeEvent(QResizeEvent *event)
+void
+NXPromotionView::resizeEvent(QResizeEvent *event)
 {
   Q_D(NXPromotionView);
   if (d->_promotionCardList.count() > 0)
@@ -164,14 +201,18 @@ void NXPromotionView::resizeEvent(QResizeEvent *event)
     }
 
     int newHeight = qMax(200, static_cast<int>(defaultHeight * scale));
-    if (height() != newHeight) { setFixedHeight(newHeight); }
+    if (height() != newHeight)
+    {
+      setFixedHeight(newHeight);
+    }
 
     d->_updatePromotionCardGeometry();
   }
   QWidget::resizeEvent(event);
 }
 
-void NXPromotionView::wheelEvent(QWheelEvent *event)
+void
+NXPromotionView::wheelEvent(QWheelEvent *event)
 {
   Q_D(NXPromotionView);
   if (d->_isAllowSwitch)
@@ -180,21 +221,28 @@ void NXPromotionView::wheelEvent(QWheelEvent *event)
     {
       // 右滑
       d->_isAllowSwitch = false;
-      QTimer::singleShot(400, this, [=] { d->_isAllowSwitch = true; });
+      QTimer::singleShot(400, this, [=]
+      {
+        d->_isAllowSwitch = true;
+      });
       d->onPromotionCardClicked(d->_promotionCardList[d->_getAdjacentIndex(Qt::RightToLeft, d->_pCurrentIndex)]);
     }
     else
     {
       // 左滑
       d->_isAllowSwitch = false;
-      QTimer::singleShot(400, this, [=] { d->_isAllowSwitch = true; });
+      QTimer::singleShot(400, this, [=]
+      {
+        d->_isAllowSwitch = true;
+      });
       d->onPromotionCardClicked(d->_promotionCardList[d->_getAdjacentIndex(Qt::LeftToRight, d->_pCurrentIndex)]);
     }
   }
   event->accept();
 }
 
-void NXPromotionView::paintEvent(QPaintEvent *event)
+void
+NXPromotionView::paintEvent(QPaintEvent *event)
 {
   Q_D(NXPromotionView);
   QPainter painter(this);

@@ -4,8 +4,8 @@
 
 #include "private/NXEventBusPrivate.h"
 
-Q_PROPERTY_CREATE_2_CPP(NXEvent, const QString&, QString, EventName)
-Q_PROPERTY_CREATE_2_CPP(NXEvent, const QString&, QString, FunctionName)
+Q_PROPERTY_CREATE_2_CPP(NXEvent, const QString &, QString, EventName)
+Q_PROPERTY_CREATE_2_CPP(NXEvent, const QString &, QString, FunctionName)
 Q_PROPERTY_CREATE_CPP(NXEvent, Qt::ConnectionType, ConnectionType)
 
 NXEvent::NXEvent(QObject *parent)
@@ -19,7 +19,7 @@ NXEvent::NXEvent(QObject *parent)
   d->_pEventName      = {};
 }
 
-NXEvent::NXEvent(const QString& eventName, const QString& functionName, QObject *parent)
+NXEvent::NXEvent(const QString &eventName, const QString &functionName, QObject *parent)
     : QObject { parent }
     , d_ptr(new NXEventPrivate())
 {
@@ -30,12 +30,16 @@ NXEvent::NXEvent(const QString& eventName, const QString& functionName, QObject 
   d->_pFunctionName   = functionName;
 }
 
-NXEventBusType::EventBusReturnType NXEvent::registerAndInit() noexcept
+NXEventBusType::EventBusReturnType
+NXEvent::registerAndInit() noexcept
 {
   return NXEventBus::getInstance()->d_ptr->registerEvent(this);
 }
 
-NXEvent::~NXEvent() { NXEventBus::getInstance()->d_ptr->unRegisterEvent(this); }
+NXEvent::~NXEvent()
+{
+  NXEventBus::getInstance()->d_ptr->unRegisterEvent(this);
+}
 
 NXEventBus::NXEventBus(QObject *parent)
     : QObject { parent }
@@ -45,16 +49,22 @@ NXEventBus::NXEventBus(QObject *parent)
   d->q_ptr = this;
 }
 
-NXEventBus::~NXEventBus() { }
+NXEventBus::~NXEventBus()
+{
+}
 
-NXEventBusType::EventBusReturnType NXEventBus::post(const QString& eventName, const QVariantMap& data) noexcept
+NXEventBusType::EventBusReturnType
+NXEventBus::post(const QString &eventName, const QVariantMap &data) noexcept
 {
   Q_D(NXEventBus);
-  if (eventName.isEmpty()) { return NXEventBusType::EventBusReturnType::EventNameInvalid; }
+  if (eventName.isEmpty())
+  {
+    return NXEventBusType::EventBusReturnType::EventNameInvalid;
+  }
   if (d->_eventMap.contains(eventName))
   {
     QList<NXEvent *> eventList = d->_eventMap.value(eventName);
-    foreach (auto event, eventList)
+    foreach(auto event, eventList)
     {
       if (event->parent())
       {
@@ -66,10 +76,14 @@ NXEventBusType::EventBusReturnType NXEventBus::post(const QString& eventName, co
   return NXEventBusType::EventBusReturnType::Success;
 }
 
-QStringList NXEventBus::getRegisteredEventsName() const noexcept
+QStringList
+NXEventBus::getRegisteredEventsName() const noexcept
 {
   Q_D(const NXEventBus);
-  if (d->_eventMap.count() == 0) { return QStringList(); }
+  if (d->_eventMap.count() == 0)
+  {
+    return QStringList();
+  }
   QStringList eventsNameList = d->_eventMap.keys();
   return eventsNameList;
 }

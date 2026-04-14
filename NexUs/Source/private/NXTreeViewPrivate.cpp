@@ -5,4 +5,6 @@ NXTreeViewPrivate::NXTreeViewPrivate(QObject *parent)
 {
 }
 
-NXTreeViewPrivate::~NXTreeViewPrivate() { }
+NXTreeViewPrivate::~NXTreeViewPrivate()
+{
+}

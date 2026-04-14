@@ -11,15 +11,21 @@ NXProgressBarStyle::NXProgressBarStyle(QStyle *style)
   setProperty("busyStartValue", 0);
   setProperty("busyEndValue", 0);
   _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXProgressBarStyle::~NXProgressBarStyle() { }
+NXProgressBarStyle::~NXProgressBarStyle()
+{
+}
 
-void NXProgressBarStyle::drawControl(ControlElement element,
-                                     const QStyleOption *option,
-                                     QPainter *painter,
-                                     const QWidget *widget) const
+void
+NXProgressBarStyle::drawControl(ControlElement element,
+                                const QStyleOption *option,
+                                QPainter *painter,
+                                const QWidget *widget) const
 {
   switch (element)
   {
@@ -50,7 +56,10 @@ void NXProgressBarStyle::drawControl(ControlElement element,
   {
     // 滑块
     const QStyleOptionProgressBar *popt = qstyleoption_cast<const QStyleOptionProgressBar *>(option);
-    if (!popt) { break; }
+    if (!popt)
+    {
+      break;
+    }
     QRect contentRect = popt->rect;
     painter->save();
     painter->setRenderHints(QPainter::Antialiasing);
@@ -58,16 +67,25 @@ void NXProgressBarStyle::drawControl(ControlElement element,
     painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
     const bool inverted = popt->invertedAppearance;
     bool reverse        = popt->direction == Qt::RightToLeft;
-    if (inverted) { reverse = !reverse; }
+    if (inverted)
+    {
+      reverse = !reverse;
+    }
     if (popt->minimum == 0 && popt->maximum == 0)
     {
       // 忙碌动画
       int startValue = this->property("busyStartValue").toInt();
-      if (startValue < 0) { startValue = 0; }
+      if (startValue < 0)
+      {
+        startValue = 0;
+      }
       int endValue = this->property("busyEndValue").toInt();
       if (popt->state & QStyle::State_Horizontal)
       {
-        if (endValue > contentRect.width()) { endValue = contentRect.width(); }
+        if (endValue > contentRect.width())
+        {
+          endValue = contentRect.width();
+        }
         int busyWidth = endValue - startValue;
         if (reverse)
         {
@@ -80,7 +98,10 @@ void NXProgressBarStyle::drawControl(ControlElement element,
       }
       else
       {
-        if (endValue > contentRect.height()) { endValue = contentRect.height(); }
+        if (endValue > contentRect.height())
+        {
+          endValue = contentRect.height();
+        }
         int busyHeight = endValue - startValue;
         painter->drawRoundedRect(
             QRectF(contentRect.x(), contentRect.height() - endValue, contentRect.width(), busyHeight), 3, 3);
@@ -119,7 +140,8 @@ void NXProgressBarStyle::drawControl(ControlElement element,
   QProxyStyle::drawControl(element, option, painter, widget);
 }
 
-QRect NXProgressBarStyle::subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const
+QRect
+NXProgressBarStyle::subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const
 {
   switch (element)
   {
@@ -128,7 +150,10 @@ QRect NXProgressBarStyle::subElementRect(SubElement element, const QStyleOption 
   {
     QRect textRect                      = subElementRect(SE_ProgressBarLabel, option, widget);
     const QStyleOptionProgressBar *popt = qstyleoption_cast<const QStyleOptionProgressBar *>(option);
-    if (!popt) { break; }
+    if (!popt)
+    {
+      break;
+    }
     QRect contentRect = popt->rect;
     int width         = contentRect.width();
     int height        = contentRect.height();
@@ -136,7 +161,10 @@ QRect NXProgressBarStyle::subElementRect(SubElement element, const QStyleOption 
     {
       contentRect.setTop(contentRect.top() + height * 0.45);
       contentRect.setBottom(contentRect.bottom() - height * 0.30);
-      if (!(popt->minimum == 0 && popt->maximum == 0)) { contentRect.setWidth(contentRect.width() - textRect.width()); }
+      if (!(popt->minimum == 0 && popt->maximum == 0))
+      {
+        contentRect.setWidth(contentRect.width() - textRect.width());
+      }
     }
     else
     {

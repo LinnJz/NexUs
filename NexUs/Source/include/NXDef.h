@@ -7,7 +7,7 @@ namespace __NXDefNamespace_MOC
 {
 Q_NAMESPACE_EXPORT(NX_EXPORT) // 空的命名空间，只是为了触发 moc
                               // 处理，当然可以使用CMAKE使用INTERFACE_AUTOMOC_MACRO_NAMES指定这个文件为MOC
-}
+} // namespace __NXDefNamespace_MOC
 
 Q_BEGIN_ENUM_CREATE(NXApplicationType, NX_EXPORT)
 
@@ -38,17 +38,14 @@ enum ThemeColor
 {
   ScrollBarHandle,
   ToggleSwitchNoToggledCenter,
-  WindowBase,
-  WindowCentralStackBase,
+  TabBarBase,
+  TabBarSelected,
+  TabBarHover,
+  TabBarCloseButtonHover,
+  TabBarSelectedCloseButtonHover,
   PrimaryNormal,
   PrimaryHover,
   PrimaryPress,
-  PopupBorder,
-  PopupBorderHover,
-  PopupBase,
-  PopupHover,
-  DialogBase,
-  DialogLayoutArea,
   BasicText,
   BasicTextInvert,
   BasicDetailsText,
@@ -77,13 +74,16 @@ enum ThemeColor
   BasicSelectedAlpha,
   BasicSelectedHoverAlpha,
   StatusDanger,
+  PopupBorder,
+  PopupBorderHover,
+  PopupBase,
+  PopupHover,
+  DialogBase,
+  DialogLayoutArea,
+  WindowBase,
+  WindowCentralStackBase,
   Win10BorderActive,
   Win10BorderInactive,
-  TabBarBase,
-  TabBarSelected,
-  TabBarHover,
-  TabBarSelectedCloseHover,
-  TabBarCloseHover
 };
 Q_ENUM_CREATE(ThemeColor)
 Q_END_ENUM_CREATE(NXThemeType)
@@ -158,16 +158,6 @@ enum TextStyle
   Display    = 0x00'07
 };
 Q_ENUM_CREATE(TextStyle)
-
-enum DisplayMode
-{
-  IconOnly       = 0x00'00,
-  TextOnly       = 0x00'01,
-  TextBesideIcon = 0x00'02,
-  TextUnderIcon  = 0x00'03,
-  FollowStyle    = 0x00'04,
-};
-Q_ENUM_CREATE(DisplayMode)
 Q_END_ENUM_CREATE(NXTextType)
 
 Q_BEGIN_ENUM_CREATE(NXNavigationType, NX_EXPORT)
@@ -201,25 +191,17 @@ enum NavigationNodeType
 Q_ENUM_CREATE(NavigationNodeType)
 Q_END_ENUM_CREATE(NXNavigationType)
 
-Q_BEGIN_ENUM_CREATE(NXNavigationRouterType, NX_EXPORT)
+Q_BEGIN_ENUM_CREATE(NXActionCommanderType, NX_EXPORT)
 
-enum NavigationRouteType
+enum CommanderState
 {
-  Success             = 0x00'00,
-  ObjectInvalid       = 0x00'01,
-  FunctionNameInvalid = 0x00'02,
+  UndoValid   = 0x00'00,
+  UndoInvalid = 0x00'01,
+  RedoValid   = 0x00'02,
+  RedoInvalid = 0x00'03,
 };
-Q_ENUM_CREATE(NavigationRouteType)
-
-enum RouteMode
-{
-  BackValid      = 0x00'00,
-  BackInvalid    = 0x00'01,
-  ForwardValid   = 0x00'02,
-  ForwardInvalid = 0x00'03,
-};
-Q_ENUM_CREATE(RouteMode)
-Q_END_ENUM_CREATE(NXNavigationRouterType)
+Q_ENUM_CREATE(CommanderState)
+Q_END_ENUM_CREATE(NXActionCommanderType)
 
 Q_BEGIN_ENUM_CREATE(NXEventBusType, NX_EXPORT)
 
@@ -3618,7 +3600,7 @@ Q_END_ENUM_CREATE(NXIconType)
  * @ Description  : NX Expand Define
  *
  * @ Version      : V1.0
- * @ Author       : Re11a
+ * @ Author       : Re11a/LinnJz
  *************************************************************************************/
 
 Q_BEGIN_ENUM_CREATE(NXColorSchemeType, NX_EXPORT)
@@ -3640,7 +3622,16 @@ enum BorderType
   BottomBorder = 0x00'02,
   LeftBorder   = 0x00'04,
   RightBorder  = 0x00'08,
-  AllBorder    = TopBorder | BottomBorder | LeftBorder | RightBorder,
+
+  TopLeftBorder     = TopBorder | LeftBorder,
+  TopRightBorder    = TopBorder | RightBorder,
+  BottomLeftBorder  = BottomBorder | LeftBorder,
+  BottomRightBorder = BottomBorder | RightBorder,
+
+  TopBottomBorder = TopBorder | BottomBorder,
+  LeftRightBorder = LeftBorder | RightBorder,
+
+  AllBorder = TopBorder | BottomBorder | LeftBorder | RightBorder,
 };
 Q_ENUM_CREATE(BorderType)
 Q_DECLARE_FLAGS(BorderFlags, BorderType)
@@ -3665,23 +3656,29 @@ enum RotateMode
 Q_ENUM_CREATE(RotateMode)
 Q_END_ENUM_CREATE(NXShadowGraphicsEffectType)
 
-Q_BEGIN_ENUM_CREATE(NXAbstractButtonType, NX_EXPORT)
+Q_BEGIN_ENUM_CREATE(NXPivotType, NX_EXPORT)
 
-enum ButtonState
+enum DisplayMode
 {
-  Normal,
-  Hovered,
-  Pressed,
-  Unavailable,
-  Focused,
-  Active,
-  Loading,
-  Selected,
-  Highlighted,
+  IconOnly            = 0x00'00,
+  TextOnly            = 0x00'01,
+  TextBesideIcon      = 0x00'02,
+  TextUnderIcon       = 0x00'03,
+  IconWithOverlayText = 0x00'04,
 };
+Q_ENUM_CREATE(DisplayMode)
 
-Q_ENUM_CREATE(ButtonState)
-Q_END_ENUM_CREATE(NXAbstractButtonType)
+enum MarkType
+{
+  MarkNone            = 0x00'00,
+  MarkCheck           = 0x00'01,
+  MarkTopIndicator    = 0x00'02,
+  MarkBottomIndicator = 0x00'04
+};
+Q_ENUM_CREATE(MarkType)
+Q_DECLARE_FLAGS(MarkFlags, MarkType)
+Q_END_ENUM_CREATE(NXPivotType)
+Q_DECLARE_OPERATORS_FOR_FLAGS(NXPivotType::MarkFlags)
 
 #if defined(__cpp_lib_expected) || (__cplusplus >= 202302L && __has_include(<expected>))
 #  include <expected>

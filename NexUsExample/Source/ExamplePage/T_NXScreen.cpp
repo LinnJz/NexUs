@@ -69,7 +69,10 @@ T_NXScreen::T_NXScreen(QWidget *parent)
   NXToggleButton *startButton = new NXToggleButton("捕获", this);
   connect(startButton, &NXToggleButton::toggled, this, [=](bool isToggled)
   {
-    if (isToggled) { dxgiManager->startGrabScreen(); }
+    if (isToggled)
+    {
+      dxgiManager->startGrabScreen();
+    }
     else
     {
       dxgiManager->stopGrabScreen();
@@ -109,7 +112,10 @@ T_NXScreen::T_NXScreen(QWidget *parent)
   NXToggleButton *sendButton2 = new NXToggleButton("初始发送", this);
   connect(sendButton2, &NXToggleButton::toggled, this, [=](bool isToggled)
   {
-    if (isToggled) { _initSendThread(interfaceIPEdit->text().trimmed()); }
+    if (isToggled)
+    {
+      _initSendThread(interfaceIPEdit->text().trimmed());
+    }
     else
     {
       _unInitThread(true);
@@ -118,7 +124,10 @@ T_NXScreen::T_NXScreen(QWidget *parent)
   NXToggleButton *recvButton = new NXToggleButton("初始接收", this);
   connect(recvButton, &NXToggleButton::toggled, this, [=](bool isToggled)
   {
-    if (isToggled) { _initRecvThread(interfaceIPEdit->text().trimmed()); }
+    if (isToggled)
+    {
+      _initRecvThread(interfaceIPEdit->text().trimmed());
+    }
     else
     {
       _unInitThread(false);
@@ -171,7 +180,10 @@ T_NXScreen::T_NXScreen(QWidget *parent)
   NXToggleButton *startButton = new NXToggleButton("捕获", this);
   connect(startButton, &NXToggleButton::toggled, this, [=](bool isToggled)
   {
-    if (isToggled) { captureManager->startGrabScreen(); }
+    if (isToggled)
+    {
+      captureManager->startGrabScreen();
+    }
     else
     {
       captureManager->stopGrabScreen();
@@ -205,7 +217,8 @@ T_NXScreen::~T_NXScreen()
 }
 
 #  if defined(Q_OS_WIN) && defined(BUILD_WITH_NXPACKETIO)
-void T_NXScreen::_initSendThread(QString interfaceIP)
+void
+T_NXScreen::_initSendThread(QString interfaceIP)
 {
   _packetIOSendThread = new QThread(this);
   _packetSendIO       = new T_NXPacketIO();
@@ -215,7 +228,8 @@ void T_NXScreen::_initSendThread(QString interfaceIP)
   _packetIOSendThread->start();
 }
 
-void T_NXScreen::_initRecvThread(QString interfaceIP)
+void
+T_NXScreen::_initRecvThread(QString interfaceIP)
 {
   // 原则上一个程序最好只初始化一个XIO 但如果需要多个XIO 则控制初始化间隔 不能同时进行初始化
   QTimer::singleShot(1000, this, [=]()
@@ -230,11 +244,15 @@ void T_NXScreen::_initRecvThread(QString interfaceIP)
   });
 }
 
-void T_NXScreen::_unInitThread(bool isSend)
+void
+T_NXScreen::_unInitThread(bool isSend)
 {
   if (isSend)
   {
-    if (!_packetSendIO || !_packetIOSendThread) { return; }
+    if (!_packetSendIO || !_packetIOSendThread)
+    {
+      return;
+    }
     _packetSendIO->setIsActive(false);
     _packetIOSendThread->quit();
     _packetIOSendThread->wait();
@@ -245,7 +263,10 @@ void T_NXScreen::_unInitThread(bool isSend)
   }
   else
   {
-    if (!_packetRecvIO || !_packetIORecvThread) { return; }
+    if (!_packetRecvIO || !_packetIORecvThread)
+    {
+      return;
+    }
     _packetRecvIO->setIsActive(false);
     _packetIORecvThread->quit();
     _packetIORecvThread->wait();

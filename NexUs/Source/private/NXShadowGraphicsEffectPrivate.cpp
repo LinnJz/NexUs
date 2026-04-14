@@ -394,8 +394,8 @@ static QImage qt_halfScaled(const QImage& source) {
 
 QT_BEGIN_NAMESPACE
 extern Q_WIDGETS_EXPORT void
-qt_blurImage(QPainter *p, QImage& blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
-extern Q_WIDGETS_EXPORT void qt_blurImage(QImage& blurImage, qreal radius, bool quality, int transposed = 0);
+qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
+extern Q_WIDGETS_EXPORT void qt_blurImage(QImage &blurImage, qreal radius, bool quality, int transposed = 0);
 QT_END_NAMESPACE
 
 NXShadowGraphicsEffectPrivate::NXShadowGraphicsEffectPrivate(QObject *parent)
@@ -403,11 +403,12 @@ NXShadowGraphicsEffectPrivate::NXShadowGraphicsEffectPrivate(QObject *parent)
 {
 }
 
-NXShadowGraphicsEffectPrivate::~NXShadowGraphicsEffectPrivate() { }
+NXShadowGraphicsEffectPrivate::~NXShadowGraphicsEffectPrivate()
+{
+}
 
-void NXShadowGraphicsEffectPrivate::_drawInsetShadow(QPainter *painter,
-                                                     const QPixmap& pixmap,
-                                                     const QPoint& pos) noexcept
+void
+NXShadowGraphicsEffectPrivate::_drawInsetShadow(QPainter *painter, const QPixmap &pixmap, const QPoint &pos) noexcept
 {
   const QSize pixmapSize = pixmap.size();
   const qreal pixelRatio = pixmap.devicePixelRatioF();
@@ -465,9 +466,8 @@ void NXShadowGraphicsEffectPrivate::_drawInsetShadow(QPainter *painter,
   painter->drawImage(pos, resultImage);
 }
 
-void NXShadowGraphicsEffectPrivate::_drawOutsetShadow(QPainter *painter,
-                                                      const QPixmap& pixmap,
-                                                      const QPoint& pos) noexcept
+void
+NXShadowGraphicsEffectPrivate::_drawOutsetShadow(QPainter *painter, const QPixmap &pixmap, const QPoint &pos) noexcept
 {
   /*
   const qreal radian = _pSpread * M_SQRT1_2;
@@ -567,7 +567,7 @@ void NXShadowGraphicsEffectPrivate::_drawOutsetShadow(QPainter *painter,
   qt_blurImage(&blurPainter, pixmapImage, _pBlur, true, true);
   blurPainter.end();
 
-  auto applyColorFunc = [](QImage source, const QColor& color) -> QImage
+  auto applyColorFunc = [](QImage source, const QColor &color) -> QImage
   {
     QPainter painter(&source);
     painter.setCompositionMode(QPainter::CompositionMode_SourceIn);

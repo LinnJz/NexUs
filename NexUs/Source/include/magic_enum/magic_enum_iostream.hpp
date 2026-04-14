@@ -46,7 +46,8 @@ namespace ostream_operators
 {
 
 template<typename Char, typename Traits, typename E, detail::enable_if_t<E, int> = 0>
-std::basic_ostream<Char, Traits>& operator<< (std::basic_ostream<Char, Traits>& os, E value)
+std::basic_ostream<Char, Traits> &
+operator<< (std::basic_ostream<Char, Traits> &os, E value)
 {
   using D = std::decay_t<E>;
   using U = underlying_type_t<D>;
@@ -57,7 +58,10 @@ std::basic_ostream<Char, Traits>& operator<< (std::basic_ostream<Char, Traits>& 
     {
       if (const auto name = enum_flags_name<D>(value); !name.empty())
       {
-        for (const auto c : name) { os.put(c); }
+        for (const auto c : name)
+        {
+          os.put(c);
+        }
         return os;
       }
     }
@@ -65,7 +69,10 @@ std::basic_ostream<Char, Traits>& operator<< (std::basic_ostream<Char, Traits>& 
     {
       if (const auto name = enum_name<D>(value); !name.empty())
       {
-        for (const auto c : name) { os.put(c); }
+        for (const auto c : name)
+        {
+          os.put(c);
+        }
         return os;
       }
     }
@@ -74,7 +81,8 @@ std::basic_ostream<Char, Traits>& operator<< (std::basic_ostream<Char, Traits>& 
 }
 
 template<typename Char, typename Traits, typename E, detail::enable_if_t<E, int> = 0>
-std::basic_ostream<Char, Traits>& operator<< (std::basic_ostream<Char, Traits>& os, optional<E> value)
+std::basic_ostream<Char, Traits> &
+operator<< (std::basic_ostream<Char, Traits> &os, optional<E> value)
 {
   return value ? (os << *value) : os;
 }
@@ -85,7 +93,8 @@ namespace istream_operators
 {
 
 template<typename Char, typename Traits, typename E, detail::enable_if_t<E, int> = 0>
-std::basic_istream<Char, Traits>& operator>> (std::basic_istream<Char, Traits>& is, E& value)
+std::basic_istream<Char, Traits> &
+operator>> (std::basic_istream<Char, Traits> &is, E &value)
 {
   using D = std::decay_t<E>;
 
@@ -95,7 +104,10 @@ std::basic_istream<Char, Traits>& operator>> (std::basic_istream<Char, Traits>& 
   {
     if constexpr (detail::subtype_v<D> == detail::enum_subtype::flags)
     {
-      if (const auto v = enum_flags_cast<D>(s)) { value = *v; }
+      if (const auto v = enum_flags_cast<D>(s))
+      {
+        value = *v;
+      }
       else
       {
         is.setstate(std::basic_ios<Char>::failbit);
@@ -103,7 +115,10 @@ std::basic_istream<Char, Traits>& operator>> (std::basic_istream<Char, Traits>& 
     }
     else
     {
-      if (const auto v = enum_cast<D>(s)) { value = *v; }
+      if (const auto v = enum_cast<D>(s))
+      {
+        value = *v;
+      }
       else
       {
         is.setstate(std::basic_ios<Char>::failbit);

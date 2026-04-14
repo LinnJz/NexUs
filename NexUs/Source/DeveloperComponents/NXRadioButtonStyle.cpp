@@ -9,22 +9,31 @@
 NXRadioButtonStyle::NXRadioButtonStyle(QStyle *style)
 {
   _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXRadioButtonStyle::~NXRadioButtonStyle() { }
+NXRadioButtonStyle::~NXRadioButtonStyle()
+{
+}
 
-void NXRadioButtonStyle::drawPrimitive(PrimitiveElement element,
-                                       const QStyleOption *option,
-                                       QPainter *painter,
-                                       const QWidget *widget) const
+void
+NXRadioButtonStyle::drawPrimitive(PrimitiveElement element,
+                                  const QStyleOption *option,
+                                  QPainter *painter,
+                                  const QWidget *widget) const
 {
   switch (element)
   {
   case PE_IndicatorRadioButton :
   {
     const QStyleOptionButton *bopt = qstyleoption_cast<const QStyleOptionButton *>(option);
-    if (!bopt) { break; }
+    if (!bopt)
+    {
+      break;
+    }
     QRect buttonRect = bopt->rect;
     buttonRect.adjust(1, 1, -1, -1);
     painter->save();
@@ -33,7 +42,10 @@ void NXRadioButtonStyle::drawPrimitive(PrimitiveElement element,
     if (bopt->state & QStyle::State_Off)
     {
       painter->setPen(QPen(NXThemeColor(_themeMode, BasicBorder), 1.5));
-      if (bopt->state & QStyle::State_MouseOver) { painter->setBrush(NXThemeColor(_themeMode, BasicHover)); }
+      if (bopt->state & QStyle::State_MouseOver)
+      {
+        painter->setBrush(NXThemeColor(_themeMode, BasicHover));
+      }
       else
       {
         painter->setBrush(NXThemeColor(_themeMode, BasicBase));
@@ -83,7 +95,8 @@ void NXRadioButtonStyle::drawPrimitive(PrimitiveElement element,
   QProxyStyle::drawPrimitive(element, option, painter, widget);
 }
 
-int NXRadioButtonStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
+int
+NXRadioButtonStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
   switch (metric)
   {

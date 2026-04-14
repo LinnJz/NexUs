@@ -32,7 +32,10 @@ NXScrollBar::NXScrollBar(QWidget *parent)
   d->_slideSmoothAnimation = new QPropertyAnimation(this, "value");
   d->_slideSmoothAnimation->setEasingCurve(QEasingCurve::OutSine);
   d->_slideSmoothAnimation->setDuration(300);
-  connect(d->_slideSmoothAnimation, &QPropertyAnimation::finished, this, [=]() { d->_scrollValue = value(); });
+  connect(d->_slideSmoothAnimation, &QPropertyAnimation::finished, this, [=]()
+  {
+    d->_scrollValue = value();
+  });
 
   d->_expandTimer = new QTimer(this);
   connect(d->_expandTimer, &QTimer::timeout, this, [=]()
@@ -68,17 +71,27 @@ NXScrollBar::NXScrollBar(QScrollBar *originScrollBar, QAbstractScrollArea *paren
   d->_originScrollBar = originScrollBar;
   d->_initAllConfig();
 
-  connect(d->_originScrollBar, &QScrollBar::valueChanged, this,
-          [=](int value) { d->_handleScrollBarValueChanged(this, value); });
-  connect(this, &QScrollBar::valueChanged, this,
-          [=](int value) { d->_handleScrollBarValueChanged(d->_originScrollBar, value); });
-  connect(d->_originScrollBar, &QScrollBar::rangeChanged, this,
-          [=](int min, int max) { d->_handleScrollBarRangeChanged(min, max); });
+  connect(d->_originScrollBar, &QScrollBar::valueChanged, this, [=](int value)
+  {
+    d->_handleScrollBarValueChanged(this, value);
+  });
+  connect(this, &QScrollBar::valueChanged, this, [=](int value)
+  {
+    d->_handleScrollBarValueChanged(d->_originScrollBar, value);
+  });
+  connect(d->_originScrollBar, &QScrollBar::rangeChanged, this, [=](int min, int max)
+  {
+    d->_handleScrollBarRangeChanged(min, max);
+  });
 }
 
-NXScrollBar::~NXScrollBar() { delete this->style(); }
+NXScrollBar::~NXScrollBar()
+{
+  delete this->style();
+}
 
-bool NXScrollBar::event(QEvent *event)
+bool
+NXScrollBar::event(QEvent *event)
 {
   Q_D(NXScrollBar);
   switch (event->type())
@@ -86,13 +99,19 @@ bool NXScrollBar::event(QEvent *event)
   case QEvent::Enter :
   {
     d->_expandTimer->stop();
-    if (!d->_isExpand) { d->_expandTimer->start(350); }
+    if (!d->_isExpand)
+    {
+      d->_expandTimer->start(350);
+    }
     break;
   }
   case QEvent::Leave :
   {
     d->_expandTimer->stop();
-    if (d->_isExpand) { d->_expandTimer->start(350); }
+    if (d->_isExpand)
+    {
+      d->_expandTimer->start(350);
+    }
     break;
   }
   default :
@@ -103,7 +122,8 @@ bool NXScrollBar::event(QEvent *event)
   return QScrollBar::event(event);
 }
 
-bool NXScrollBar::eventFilter(QObject *watched, QEvent *event)
+bool
+NXScrollBar::eventFilter(QObject *watched, QEvent *event)
 {
   Q_D(NXScrollBar);
   switch (event->type())
@@ -123,7 +143,8 @@ bool NXScrollBar::eventFilter(QObject *watched, QEvent *event)
   return QScrollBar::eventFilter(watched, event);
 }
 
-void NXScrollBar::mousePressEvent(QMouseEvent *event)
+void
+NXScrollBar::mousePressEvent(QMouseEvent *event)
 {
   Q_D(NXScrollBar);
   d->_slideSmoothAnimation->stop();
@@ -131,7 +152,8 @@ void NXScrollBar::mousePressEvent(QMouseEvent *event)
   d->_scrollValue = value();
 }
 
-void NXScrollBar::mouseReleaseEvent(QMouseEvent *event)
+void
+NXScrollBar::mouseReleaseEvent(QMouseEvent *event)
 {
   Q_D(NXScrollBar);
   d->_slideSmoothAnimation->stop();
@@ -139,7 +161,8 @@ void NXScrollBar::mouseReleaseEvent(QMouseEvent *event)
   d->_scrollValue = value();
 }
 
-void NXScrollBar::mouseMoveEvent(QMouseEvent *event)
+void
+NXScrollBar::mouseMoveEvent(QMouseEvent *event)
 {
   Q_D(NXScrollBar);
   d->_slideSmoothAnimation->stop();
@@ -147,11 +170,15 @@ void NXScrollBar::mouseMoveEvent(QMouseEvent *event)
   d->_scrollValue = value();
 }
 
-void NXScrollBar::wheelEvent(QWheelEvent *event)
+void
+NXScrollBar::wheelEvent(QWheelEvent *event)
 {
   Q_D(NXScrollBar);
   int verticalDelta = event->angleDelta().y();
-  if (d->_slideSmoothAnimation->state() == QAbstractAnimation::Stopped) { d->_scrollValue = value(); }
+  if (d->_slideSmoothAnimation->state() == QAbstractAnimation::Stopped)
+  {
+    d->_scrollValue = value();
+  }
   if (verticalDelta != 0)
   {
     if ((value() == minimum() && verticalDelta > 0) || (value() == maximum() && verticalDelta < 0))
@@ -174,7 +201,8 @@ void NXScrollBar::wheelEvent(QWheelEvent *event)
   event->accept();
 }
 
-void NXScrollBar::contextMenuEvent(QContextMenuEvent *event)
+void
+NXScrollBar::contextMenuEvent(QContextMenuEvent *event)
 {
   Q_D(NXScrollBar);
   bool horiz            = this->orientation() == Qt::Horizontal;
@@ -205,15 +233,36 @@ void NXScrollBar::contextMenuEvent(QContextMenuEvent *event)
                                                horiz ? tr("向右滚动") : tr("向下滚动"));
   QAction *actionSelected = menu->exec(event->globalPos());
   delete menu;
-  if (!actionSelected) { return; }
+  if (!actionSelected)
+  {
+    return;
+  }
   if (actionSelected == actScrollHere)
   {
     setValue(d->_pixelPosToRangeValue(horiz ? event->pos().x() : event->pos().y()));
   }
-  else if (actionSelected == actScrollTop) { triggerAction(QAbstractSlider::SliderToMinimum); }
-  else if (actionSelected == actScrollBottom) { triggerAction(QAbstractSlider::SliderToMaximum); }
-  else if (actionSelected == actPageUp) { triggerAction(QAbstractSlider::SliderPageStepSub); }
-  else if (actionSelected == actPageDn) { triggerAction(QAbstractSlider::SliderPageStepAdd); }
-  else if (actionSelected == actScrollUp) { triggerAction(QAbstractSlider::SliderSingleStepSub); }
-  else if (actionSelected == actScrollDn) { triggerAction(QAbstractSlider::SliderSingleStepAdd); }
+  else if (actionSelected == actScrollTop)
+  {
+    triggerAction(QAbstractSlider::SliderToMinimum);
+  }
+  else if (actionSelected == actScrollBottom)
+  {
+    triggerAction(QAbstractSlider::SliderToMaximum);
+  }
+  else if (actionSelected == actPageUp)
+  {
+    triggerAction(QAbstractSlider::SliderPageStepSub);
+  }
+  else if (actionSelected == actPageDn)
+  {
+    triggerAction(QAbstractSlider::SliderPageStepAdd);
+  }
+  else if (actionSelected == actScrollUp)
+  {
+    triggerAction(QAbstractSlider::SliderSingleStepSub);
+  }
+  else if (actionSelected == actScrollDn)
+  {
+    triggerAction(QAbstractSlider::SliderSingleStepAdd);
+  }
 }

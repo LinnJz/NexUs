@@ -35,7 +35,10 @@ NXRoller::NXRoller(QWidget *parent)
   setFont(font);
 
   d->_scrollAnimation = new QPropertyAnimation(d, "pScrollOffset");
-  connect(d->_scrollAnimation, &QPropertyAnimation::valueChanged, this, [=]() { update(); });
+  connect(d->_scrollAnimation, &QPropertyAnimation::valueChanged, this, [=]()
+  {
+    update();
+  });
   connect(d->_scrollAnimation, &QPropertyAnimation::finished, this, [=]()
   {
     while (d->_pScrollOffset < -d->_pItemList.size() * d->_pItemHeight)
@@ -48,7 +51,10 @@ NXRoller::NXRoller(QWidget *parent)
     }
     d->_targetScrollOffset = d->_pScrollOffset;
     int currentIndex       = 0;
-    if (d->_pScrollOffset >= 0) { currentIndex = d->_pScrollOffset / d->_pItemHeight; }
+    if (d->_pScrollOffset >= 0)
+    {
+      currentIndex = d->_pScrollOffset / d->_pItemHeight;
+    }
     else if (d->_pScrollOffset <= -d->_pItemHeight)
     {
       currentIndex = d->_pItemList.count() + d->_pScrollOffset / d->_pItemHeight;
@@ -67,37 +73,59 @@ NXRoller::NXRoller(QWidget *parent)
 
   d->_pressSustainTimer = new QTimer(this);
   d->_pressSustainTimer->setInterval(300);
-  connect(d->_pressSustainTimer, &QTimer::timeout, this, [=]() { d->_repeatScrollTimer->start(); });
+  connect(d->_pressSustainTimer, &QTimer::timeout, this, [=]()
+  {
+    d->_repeatScrollTimer->start();
+  });
 
   d->_repeatScrollTimer = new QTimer(this);
   d->_repeatScrollTimer->setInterval(50);
   connect(d->_repeatScrollTimer, &QTimer::timeout, this, [=]()
   {
-    if (d->_isUpArrowPress) { d->_scroll(120); }
-    if (d->_isDownArrowPress) { d->_scroll(-120); }
+    if (d->_isUpArrowPress)
+    {
+      d->_scroll(120);
+    }
+    if (d->_isDownArrowPress)
+    {
+      d->_scroll(-120);
+    }
   });
 
   d->_themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
 }
 
-NXRoller::~NXRoller() { }
+NXRoller::~NXRoller()
+{
+}
 
-void NXRoller::setCurrentData(const QString& data) noexcept
+void
+NXRoller::setCurrentData(const QString &data) noexcept
 {
   Q_D(NXRoller);
-  if (d->_pItemList.contains(data)) { setCurrentIndex(d->_pItemList.indexOf(data)); }
+  if (d->_pItemList.contains(data))
+  {
+    setCurrentIndex(d->_pItemList.indexOf(data));
+  }
 }
 
-QString NXRoller::getCurrentData() const noexcept
+QString
+NXRoller::getCurrentData() const noexcept
 {
   Q_D(const NXRoller);
-  if (d->_pCurrentIndex >= d->_pItemList.count()) { return {}; }
+  if (d->_pCurrentIndex >= d->_pItemList.count())
+  {
+    return {};
+  }
   return d->_pItemList[d->_pCurrentIndex];
 }
 
-void NXRoller::setItemList(const QStringList& itemList) noexcept
+void
+NXRoller::setItemList(const QStringList &itemList) noexcept
 {
   Q_D(NXRoller);
   d->_pItemList = std::move(itemList);
@@ -105,13 +133,15 @@ void NXRoller::setItemList(const QStringList& itemList) noexcept
   Q_EMIT pItemListChanged();
 }
 
-QStringList NXRoller::getItemList() const noexcept
+QStringList
+NXRoller::getItemList() const noexcept
 {
   Q_D(const NXRoller);
   return d->_pItemList;
 }
 
-void NXRoller::setItemHeight(int itemHeight) noexcept
+void
+NXRoller::setItemHeight(int itemHeight) noexcept
 {
   Q_D(NXRoller);
   d->_pItemHeight = itemHeight;
@@ -120,13 +150,15 @@ void NXRoller::setItemHeight(int itemHeight) noexcept
   Q_EMIT pItemHeightChanged();
 }
 
-int NXRoller::getItemHeight() const noexcept
+int
+NXRoller::getItemHeight() const noexcept
 {
   Q_D(const NXRoller);
   return d->_pItemHeight;
 }
 
-void NXRoller::setMaxVisibleItems(int maxVisibleItems) noexcept
+void
+NXRoller::setMaxVisibleItems(int maxVisibleItems) noexcept
 {
   Q_D(NXRoller);
   d->_pMaxVisibleItems = maxVisibleItems;
@@ -135,36 +167,44 @@ void NXRoller::setMaxVisibleItems(int maxVisibleItems) noexcept
   Q_EMIT pMaxVisibleItemsChanged();
 }
 
-int NXRoller::getMaxVisibleItems() const noexcept
+int
+NXRoller::getMaxVisibleItems() const noexcept
 {
   Q_D(const NXRoller);
   return d->_pMaxVisibleItems;
 }
 
-void NXRoller::setCurrentIndex(int currentIndex) noexcept
+void
+NXRoller::setCurrentIndex(int currentIndex) noexcept
 {
   Q_D(NXRoller);
-  if (currentIndex >= d->_pItemList.count()) { return; }
+  if (currentIndex >= d->_pItemList.count())
+  {
+    return;
+  }
   d->_pCurrentIndex      = currentIndex;
   d->_pScrollOffset      = d->_pItemHeight * currentIndex;
   d->_targetScrollOffset = d->_pScrollOffset;
   update();
 }
 
-int NXRoller::getCurrentIndex() const noexcept
+int
+NXRoller::getCurrentIndex() const noexcept
 {
   Q_D(const NXRoller);
   return d->_pCurrentIndex;
 }
 
-void NXRoller::wheelEvent(QWheelEvent *event)
+void
+NXRoller::wheelEvent(QWheelEvent *event)
 {
   Q_D(NXRoller);
   d->_scroll(event->angleDelta().y());
   event->accept();
 }
 
-void NXRoller::mousePressEvent(QMouseEvent *event)
+void
+NXRoller::mousePressEvent(QMouseEvent *event)
 {
   Q_D(NXRoller);
   if (d->_pIsContainer && d->_pMaxVisibleItems >= 5)
@@ -186,7 +226,8 @@ void NXRoller::mousePressEvent(QMouseEvent *event)
   QWidget::mousePressEvent(event);
 }
 
-void NXRoller::mouseReleaseEvent(QMouseEvent *event)
+void
+NXRoller::mouseReleaseEvent(QMouseEvent *event)
 {
   Q_D(NXRoller);
   int centerIndex = d->_pMaxVisibleItems / 2;
@@ -204,17 +245,24 @@ void NXRoller::mouseReleaseEvent(QMouseEvent *event)
   {
     if (clickIndex > centerIndex)
     {
-      for (int i = 0; i < jumpCount; i++) { d->_scroll(-120); }
+      for (int i = 0; i < jumpCount; i++)
+      {
+        d->_scroll(-120);
+      }
     }
     else if (clickIndex < centerIndex)
     {
-      for (int i = 0; i < jumpCount; i++) { d->_scroll(120); }
+      for (int i = 0; i < jumpCount; i++)
+      {
+        d->_scroll(120);
+      }
     }
   }
   update();
 }
 
-void NXRoller::mouseMoveEvent(QMouseEvent *event)
+void
+NXRoller::mouseMoveEvent(QMouseEvent *event)
 {
   Q_D(NXRoller);
   d->_mousePoint = event->pos();
@@ -222,7 +270,8 @@ void NXRoller::mouseMoveEvent(QMouseEvent *event)
   QWidget::mouseMoveEvent(event);
 }
 
-void NXRoller::leaveEvent(QEvent *event)
+void
+NXRoller::leaveEvent(QEvent *event)
 {
   Q_D(NXRoller);
   d->_mousePoint = QPoint();
@@ -230,7 +279,8 @@ void NXRoller::leaveEvent(QEvent *event)
   QWidget::leaveEvent(event);
 }
 
-void NXRoller::paintEvent(QPaintEvent *event)
+void
+NXRoller::paintEvent(QPaintEvent *event)
 {
   Q_D(NXRoller);
   QPainter painter(this);
@@ -274,8 +324,14 @@ void NXRoller::paintEvent(QPaintEvent *event)
     // 范围控制
     if (d->_pIsEnableLoop)
     {
-      while (y <= yStart) { y += d->_pItemList.size() * d->_pItemHeight; }
-      while (y >= yEnd) { y -= d->_pItemList.size() * d->_pItemHeight; }
+      while (y <= yStart)
+      {
+        y += d->_pItemList.size() * d->_pItemHeight;
+      }
+      while (y >= yEnd)
+      {
+        y -= d->_pItemList.size() * d->_pItemHeight;
+      }
     }
     // 可见区域绘制
     if (y >= yStart && y <= yEnd)
@@ -283,7 +339,10 @@ void NXRoller::paintEvent(QPaintEvent *event)
       painter.save();
       painter.translate(0, y);
       // 文字绘制
-      if (y >= centerYStart && y <= centerYEnd) { painter.setPen(NXThemeColor(d->_themeMode, BasicTextInvert)); }
+      if (y >= centerYStart && y <= centerYEnd)
+      {
+        painter.setPen(NXThemeColor(d->_themeMode, BasicTextInvert));
+      }
       else
       {
         // 覆盖效果绘制

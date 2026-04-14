@@ -12,9 +12,12 @@ NXCalendarPickerPrivate::NXCalendarPickerPrivate(QObject *parent)
 {
 }
 
-NXCalendarPickerPrivate::~NXCalendarPickerPrivate() { }
+NXCalendarPickerPrivate::~NXCalendarPickerPrivate()
+{
+}
 
-void NXCalendarPickerPrivate::onCalendarPickerClicked() noexcept
+void
+NXCalendarPickerPrivate::onCalendarPickerClicked() noexcept
 {
   Q_Q(NXCalendarPicker);
   QPoint endPoint(q->mapToGlobal(QPoint((q->width() - _calendarPickerContainer->width()) / 2, q->height() + 5)));
@@ -27,9 +30,13 @@ void NXCalendarPickerPrivate::onCalendarPickerClicked() noexcept
   showAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXCalendarPickerPrivate::onCalendarSelectedDateChanged() noexcept
+void
+NXCalendarPickerPrivate::onCalendarSelectedDateChanged() noexcept
 {
   Q_Q(NXCalendarPicker);
   Q_EMIT q->selectedDateChanged(_calendar->getSelectedDate());
-  if (_calendarPickerContainer->isVisible()) { _calendarPickerContainer->hide(); }
+  if (_calendarPickerContainer->isVisible())
+  {
+    _calendarPickerContainer->hide();
+  }
 }

@@ -20,33 +20,47 @@ NXCheckBox::NXCheckBox(QWidget *parent)
   setFont(font);
 }
 
-NXCheckBox::NXCheckBox(const QString& text, QWidget *parent)
+NXCheckBox::NXCheckBox(const QString &text, QWidget *parent)
     : NXCheckBox(parent)
 {
   setText(text);
 }
 
-NXCheckBox::~NXCheckBox() { delete this->style(); }
+NXCheckBox::~NXCheckBox()
+{
+  delete this->style();
+}
 
-void NXCheckBox::setTextPixelSize(int size) noexcept
+void
+NXCheckBox::setTextPixelSize(int size) noexcept
 {
   QFont font = this->font();
   font.setPixelSize(size);
   setFont(font);
 }
 
-int NXCheckBox::getTextPixelSize() const noexcept { return this->font().pixelSize(); }
+int
+NXCheckBox::getTextPixelSize() const noexcept
+{
+  return this->font().pixelSize();
+}
 
-void NXCheckBox::setTextPointSize(int size) noexcept
+void
+NXCheckBox::setTextPointSize(int size) noexcept
 {
   QFont font = this->font();
   font.setPointSize(size);
   setFont(font);
 }
 
-int NXCheckBox::getTextPointSize() const noexcept { return this->font().pointSize(); }
+int
+NXCheckBox::getTextPointSize() const noexcept
+{
+  return this->font().pointSize();
+}
 
-void NXCheckBox::setTextStyle(NXTextType::TextStyle textStyle) noexcept
+void
+NXCheckBox::setTextStyle(NXTextType::TextStyle textStyle) noexcept
 {
   Q_D(NXCheckBox);
   QFont textFont = font();
@@ -105,31 +119,36 @@ void NXCheckBox::setTextStyle(NXTextType::TextStyle textStyle) noexcept
   setFont(textFont);
 }
 
-NXTextType::TextStyle NXCheckBox::getTextStyle() const noexcept
+NXTextType::TextStyle
+NXCheckBox::getTextStyle() const noexcept
 {
   Q_D(const NXCheckBox);
   return d->_textStyle;
 }
 
-void NXCheckBox::setBorderRadius(int borderRadius) noexcept
+void
+NXCheckBox::setBorderRadius(int borderRadius) noexcept
 {
   Q_D(const NXCheckBox);
   d->_checkBoxStyle->setBorderRadius(borderRadius);
 }
 
-int NXCheckBox::getBorderRadius() const noexcept
+int
+NXCheckBox::getBorderRadius() const noexcept
 {
   Q_D(const NXCheckBox);
   return d->_checkBoxStyle->getBorderRadius();
 }
 
-void NXCheckBox::setCheckIndicatorWidth(int indicatorWidth) noexcept
+void
+NXCheckBox::setCheckIndicatorWidth(int indicatorWidth) noexcept
 {
   Q_D(const NXCheckBox);
   d->_checkBoxStyle->setCheckIndicatorWidth(indicatorWidth);
 }
 
-int NXCheckBox::getCheckIndicatorWidth() const noexcept
+int
+NXCheckBox::getCheckIndicatorWidth() const noexcept
 {
   Q_D(const NXCheckBox);
   return d->_checkBoxStyle->getCheckIndicatorWidth();

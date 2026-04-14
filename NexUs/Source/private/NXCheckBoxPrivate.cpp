@@ -7,4 +7,6 @@ NXCheckBoxPrivate::NXCheckBoxPrivate(QObject *parent)
 {
 }
 
-NXCheckBoxPrivate::~NXCheckBoxPrivate() { }
+NXCheckBoxPrivate::~NXCheckBoxPrivate()
+{
+}

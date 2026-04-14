@@ -32,7 +32,7 @@ public:
   int getPageTitleSpacing() const noexcept;
   void setTitleVisible(bool isVisible) noexcept;
 
-  void setPageTitle(const QString& title);
+  void setPageTitle(const QString &title);
 };
 
 #endif // NXSCROLLPAGE_H

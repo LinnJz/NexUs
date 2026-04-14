@@ -5,4 +5,6 @@ NXScrollPageAreaPrivate::NXScrollPageAreaPrivate(QObject *parent)
 {
 }
 
-NXScrollPageAreaPrivate::~NXScrollPageAreaPrivate() { }
+NXScrollPageAreaPrivate::~NXScrollPageAreaPrivate()
+{
+}

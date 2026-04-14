@@ -8,9 +8,12 @@ NXContentDialogPrivate::NXContentDialogPrivate(QObject *parent)
 {
 }
 
-NXContentDialogPrivate::~NXContentDialogPrivate() { }
+NXContentDialogPrivate::~NXContentDialogPrivate()
+{
+}
 
-void NXContentDialogPrivate::_doCloseAnimation(int result) noexcept
+void
+NXContentDialogPrivate::_doCloseAnimation(int result) noexcept
 {
   Q_Q(NXContentDialog);
   _maskWidget->doMaskAnimation(0);

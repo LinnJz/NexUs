@@ -32,4 +32,6 @@ T_UpdateWidget::T_UpdateWidget(QWidget *parent)
   mainLayout->addStretch();
 }
 
-T_UpdateWidget::~T_UpdateWidget() { }
+T_UpdateWidget::~T_UpdateWidget()
+{
+}

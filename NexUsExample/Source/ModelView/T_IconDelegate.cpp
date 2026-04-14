@@ -9,20 +9,32 @@ T_IconDelegate::T_IconDelegate(QObject *parent)
     : QStyledItemDelegate { parent }
 {
   _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-T_IconDelegate::~T_IconDelegate() { }
+T_IconDelegate::~T_IconDelegate()
+{
+}
 
-void T_IconDelegate::paint(QPainter *painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void
+T_IconDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
   QStyleOptionViewItem viewOption(option);
   initStyleOption(&viewOption, index);
 
-  if (option.state.testFlag(QStyle::State_HasFocus)) { viewOption.state &= ~QStyle::State_HasFocus; }
+  if (option.state.testFlag(QStyle::State_HasFocus))
+  {
+    viewOption.state &= ~QStyle::State_HasFocus;
+  }
   QStyledItemDelegate::paint(painter, viewOption, index);
   QStringList iconList = index.data(Qt::UserRole).toStringList();
-  if (iconList.count() != 2) { return; }
+  if (iconList.count() != 2)
+  {
+    return;
+  }
   QString iconName  = iconList.at(0);
   QString iconValue = iconList.at(1);
   painter->save();
@@ -48,7 +60,10 @@ void T_IconDelegate::paint(QPainter *painter, const QStyleOptionViewItem& option
     for (int i = 0; i < subTitleRow + 1; i++)
     {
       QString text = painter->fontMetrics().elidedText(subTitleText, Qt::ElideRight, rowTextWidth);
-      if (text.right(3).contains("…")) { text = text.replace("…", subTitleText.mid(text.length() - 1, 1)); }
+      if (text.right(3).contains("…"))
+      {
+        text = text.replace("…", subTitleText.mid(text.length() - 1, 1));
+      }
       subTitleText.remove(0, text.length());
       painter->drawText(option.rect.x() + option.rect.width() / 2 - painter->fontMetrics().horizontalAdvance(text) / 2,
                         option.rect.y() + option.rect.height() - 10 * (subTitleRow + 1 - i), text);
@@ -63,7 +78,8 @@ void T_IconDelegate::paint(QPainter *painter, const QStyleOptionViewItem& option
   painter->restore();
 }
 
-QSize T_IconDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+QSize
+T_IconDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
   return QSize(100, 100);
 }

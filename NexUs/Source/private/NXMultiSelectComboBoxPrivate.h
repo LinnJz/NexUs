@@ -22,7 +22,7 @@ class NXMultiSelectComboBoxPrivate : public QObject
 public:
   explicit NXMultiSelectComboBoxPrivate(QObject *parent = nullptr);
   ~NXMultiSelectComboBoxPrivate() override;
-  Q_SLOT void onItemPressed(const QModelIndex& index) noexcept;
+  Q_SLOT void onItemPressed(const QModelIndex &index) noexcept;
 
 private:
   bool _isFirstPopup { false };

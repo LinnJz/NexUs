@@ -64,8 +64,11 @@ T_Popup::T_Popup(QWidget *parent)
   colorDialogButton->setDarkDefaultColor(_colorDialog->getCurrentColor());
   colorDialogButton->setDarkHoverColor(_colorDialog->getCurrentColor());
   colorDialogButton->setDarkPressColor(_colorDialog->getCurrentColor());
-  connect(colorDialogButton, &NXPushButton::clicked, this, [=]() { _colorDialog->exec(); });
-  connect(_colorDialog, &NXColorDialog::colorSelected, this, [=](const QColor& color)
+  connect(colorDialogButton, &NXPushButton::clicked, this, [=]()
+  {
+    _colorDialog->exec();
+  });
+  connect(_colorDialog, &NXColorDialog::colorSelected, this, [=](const QColor &color)
   {
     colorDialogButton->setLightDefaultColor(color);
     colorDialogButton->setLightHoverColor(color);
@@ -97,7 +100,10 @@ T_Popup::T_Popup(QWidget *parent)
   {
     bool ok;
     QString text = NXInputDialog::getText(this, "输入对话框", "请输入您的信息", "名称:", "", &ok);
-    if (ok && !text.isEmpty()) { qDebug() << "文本输入:" << text; }
+    if (ok && !text.isEmpty())
+    {
+      qDebug() << "文本输入:" << text;
+    }
   });
   inputDialogLayout->addWidget(textInputButton);
 
@@ -107,7 +113,10 @@ T_Popup::T_Popup(QWidget *parent)
   {
     bool ok;
     int value = NXInputDialog::getInt(this, "输入年龄", "请提供您的个人信息", "年龄:", 18, 0, 150, 1, &ok);
-    if (ok) { qDebug() << "整数输入:" << value; }
+    if (ok)
+    {
+      qDebug() << "整数输入:" << value;
+    }
   });
   inputDialogLayout->addWidget(intInputButton);
 
@@ -117,7 +126,10 @@ T_Popup::T_Popup(QWidget *parent)
   {
     bool ok;
     double value = NXInputDialog::getDouble(this, "输入价格", "商品定价系统", "价格:", 99.99, 0.0, 9999.99, 2, &ok);
-    if (ok) { qDebug() << "小数输入:" << value; }
+    if (ok)
+    {
+      qDebug() << "小数输入:" << value;
+    }
   });
   inputDialogLayout->addWidget(doubleInputButton);
 
@@ -127,7 +139,10 @@ T_Popup::T_Popup(QWidget *parent)
   {
     bool ok;
     QString text = NXInputDialog::getMultiLineText(this, "输入备注", "请详细描述您的需求", "详细描述:", "", &ok);
-    if (ok && !text.isEmpty()) { qDebug() << "多行输入:" << text; }
+    if (ok && !text.isEmpty())
+    {
+      qDebug() << "多行输入:" << text;
+    }
   });
   inputDialogLayout->addWidget(multiLineInputButton);
   inputDialogLayout->addStretch();
@@ -154,7 +169,10 @@ T_Popup::T_Popup(QWidget *parent)
 
   _roller = new NXRoller(this);
   QStringList rollerItemList;
-  for (int i = 0; i < 100; i++) { rollerItemList.append(QString::number(i + 1)); }
+  for (int i = 0; i < 100; i++)
+  {
+    rollerItemList.append(QString::number(i + 1));
+  }
   _roller->setItemList(rollerItemList);
   NXScrollPageArea *rollerArea = new NXScrollPageArea(this);
   rollerArea->setFixedHeight(220);
@@ -174,9 +192,15 @@ T_Popup::T_Popup(QWidget *parent)
   QString currentMinute = QString("%1").arg(currentTime.minute(), 2, 10, QChar('0'));
   _timeRollerPicker     = new NXRollerPicker(this);
   QStringList hourItemList;
-  for (int i = 0; i < 24; i++) { hourItemList.append(QString("%1").arg(i, 2, 10, QChar('0'))); }
+  for (int i = 0; i < 24; i++)
+  {
+    hourItemList.append(QString("%1").arg(i, 2, 10, QChar('0')));
+  }
   QStringList minuteList;
-  for (int i = 0; i < 61; i++) { minuteList.append(QString("%1").arg(i, 2, 10, QChar('0'))); }
+  for (int i = 0; i < 61; i++)
+  {
+    minuteList.append(QString("%1").arg(i, 2, 10, QChar('0')));
+  }
   _timeRollerPicker->addRoller(hourItemList);
   _timeRollerPicker->addRoller(minuteList);
   _timeRollerPicker->addRoller({ "AM", "PM" }, false);
@@ -221,8 +245,10 @@ T_Popup::T_Popup(QWidget *parent)
       _drawer->collapse();
     }
   });
-  connect(_drawer, &NXDrawerArea::expandStateChanged, this,
-          [=](bool isExpand) { drawerSwitch->setIsToggled(isExpand); });
+  connect(_drawer, &NXDrawerArea::expandStateChanged, this, [=](bool isExpand)
+  {
+    drawerSwitch->setIsToggled(isExpand);
+  });
 
   drawerHeaderLayout->addWidget(drawerIcon);
   drawerHeaderLayout->addWidget(drawerText);
@@ -265,8 +291,14 @@ T_Popup::T_Popup(QWidget *parent)
   _messageDialog->setAttribute(Qt::WA_TranslucentBackground);
 
   // 连接信号以判断点击了哪个按钮
-  connect(_messageDialog, &NXMessageDialog::confirmed, this, [=]() { qDebug() << "确认按钮被点击"; });
-  connect(_messageDialog, &NXMessageDialog::cancelled, this, [=]() { qDebug() << "取消按钮被点击"; });
+  connect(_messageDialog, &NXMessageDialog::confirmed, this, [=]()
+  {
+    qDebug() << "确认按钮被点击";
+  });
+  connect(_messageDialog, &NXMessageDialog::cancelled, this, [=]()
+  {
+    qDebug() << "取消按钮被点击";
+  });
 
   NXScrollPageArea *messageDialogArea = new NXScrollPageArea(this);
   QHBoxLayout *messageDialogLayout    = new QHBoxLayout(messageDialogArea);
@@ -300,4 +332,6 @@ T_Popup::T_Popup(QWidget *parent)
   addCentralWidget(centralWidget, true, false, 0);
 }
 
-T_Popup::~T_Popup() { }
+T_Popup::~T_Popup()
+{
+}

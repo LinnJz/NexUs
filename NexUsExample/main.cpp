@@ -9,12 +9,29 @@
 #endif
 #include <QVBoxLayout>
 #include "NXText.h"
-#include "NXTabWidget.h"
+#include "NXPivot.h"
 
-struct A
+QList<QPixmap> splitSpriteHorizontally(const QString& filePath)
 {
-  Q_PROPERTY_CREATE(QString, Text)
-};
+  QPixmap original(filePath);
+  if (original.isNull())
+  {
+    // 加载失败处理
+    return QList<QPixmap>();
+  }
+
+  int totalWidth = original.width();
+  int height     = original.height();
+  int partWidth  = totalWidth / 3; // 三等分宽度
+
+  QList<QPixmap> parts;
+  for (int i = 0; i < 3; ++i)
+  {
+    QPixmap part = original.copy(i * partWidth, 0, partWidth, height);
+    parts.append(part);
+  }
+  return parts;
+}
 
 int main(int argc, char* argv[])
 {
@@ -34,29 +51,6 @@ int main(int argc, char* argv[])
   //NXLog::getInstance()->initMessageLog(true);
   MainWindow w;
   w.show();
-  //QWidget w;
-  //w.setMaximumSize(1080, 720);
-  //w.setMinimumSize(400, 720);
-  //w.resize(1080, 720);
-  //QVBoxLayout* layout = new QVBoxLayout(&w);
-  //NXTabWidget* _tabWidget = new NXTabWidget(&w);
-  //_tabWidget->setFixedHeight(600);
-  //_tabWidget->setIsSelectedIndicatorVisible(false);
-  //_tabWidget->setIsTabTransparent(true);
-  //_tabWidget->setTabBarStyle(NXTabBarType::Firefox);
-  //NXText *page1 = new NXText("新标签页", &w);
-  //page1->setTextPixelSize(32);
-  //page1->setAlignment(Qt::AlignCenter);
-  //_tabWidget->addTab(page1, QIcon(":/Resource/Image/Cirno.jpg"), "新标签页");
-  //for (int i = 0; i < 5; i++)
-  //{
-  //  NXText *page = new NXText(QString("新标签页%1").arg(i), &w);
-  //  page->setTextPixelSize(32);
-  //  page->setAlignment(Qt::AlignCenter);
-  //  _tabWidget->addTab(page, QString("新标签页%1").arg(i));
-  //}
-  //layout->addWidget(_tabWidget);
-  //w.show();
 #ifdef Q_OS_WIN
   //    HWND handle = FindWindowA(NULL, "NXWidgetTool");
   //    if (handle != NULL)

@@ -13,7 +13,7 @@ class NX_EXPORT NXImageCard : public QWidget
   Q_Q_CREATE(NXImageCard)
   Q_PROPERTY_CREATE_H(bool, IsPreserveAspectCrop)
   Q_PROPERTY_CREATE_H(int, BorderRadius)
-  Q_PROPERTY_CREATE_2_H(const QImage&, QImage, CardImage)
+  Q_PROPERTY_CREATE_2_H(const QImage &, QImage, CardImage)
 
 public:
   explicit NXImageCard(QWidget *parent = nullptr);

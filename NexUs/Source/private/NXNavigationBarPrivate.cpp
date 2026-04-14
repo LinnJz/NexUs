@@ -6,6 +6,7 @@
 #include <QScrollBar>
 #include <QTimer>
 
+#include "DeveloperComponents/Command/NXNavigationRouteCommand.h"
 #include "DeveloperComponents/NXBaseListView.h"
 #include "DeveloperComponents/NXCustomTabWidget.h"
 #include "DeveloperComponents/NXCustomWidget.h"
@@ -14,12 +15,12 @@
 #include "DeveloperComponents/NXNavigationModel.h"
 #include "DeveloperComponents/NXNavigationNode.h"
 #include "DeveloperComponents/NXNavigationView.h"
+#include "NXActionCommander.h"
 #include "NXApplication.h"
 #include "NXIconButton.h"
 #include "NXInteractiveCard.h"
 #include "NXMenu.h"
 #include "NXNavigationBar.h"
-#include "NXNavigationRouter.h"
 #include "NXSuggestBox.h"
 #include "NXSuggestBoxPrivate.h"
 #include "NXToolButton.h"
@@ -29,19 +30,26 @@ NXNavigationBarPrivate::NXNavigationBarPrivate(QObject *parent)
 {
 }
 
-NXNavigationBarPrivate::~NXNavigationBarPrivate() { }
+NXNavigationBarPrivate::~NXNavigationBarPrivate()
+{
+}
 
-void NXNavigationBarPrivate::onNavigationButtonClicked() noexcept
+void
+NXNavigationBarPrivate::onNavigationButtonClicked() noexcept
 {
   Q_Q(NXNavigationBar);
-  if (_currentDisplayMode == NXNavigationType::Compact) { q->setDisplayMode(NXNavigationType::Maximal); }
+  if (_currentDisplayMode == NXNavigationType::Compact)
+  {
+    q->setDisplayMode(NXNavigationType::Maximal);
+  }
   else
   {
     q->setDisplayMode(NXNavigationType::Compact);
   }
 }
 
-void NXNavigationBarPrivate::onNavigationOpenNewWindow(const QString& nodeKey) noexcept
+void
+NXNavigationBarPrivate::onNavigationOpenNewWindow(const QString &nodeKey) noexcept
 {
   Q_Q(NXNavigationBar);
   if (_openPageFunc)
@@ -51,7 +59,10 @@ void NXNavigationBarPrivate::onNavigationOpenNewWindow(const QString& nodeKey) n
     return;
   }
   const QMetaObject *meta = _pageMetaMap.value(nodeKey);
-  if (!meta) { return; }
+  if (!meta)
+  {
+    return;
+  }
   QWidget *widget = dynamic_cast<QWidget *>(meta->newInstance());
   if (widget)
   {
@@ -66,36 +77,38 @@ void NXNavigationBarPrivate::onNavigationOpenNewWindow(const QString& nodeKey) n
   }
 }
 
-void NXNavigationBarPrivate::onNavigationCloseCurrentWindow(const QString& nodeKey) noexcept
+void
+NXNavigationBarPrivate::onNavigationCloseCurrentWindow(const QString &nodeKey) noexcept
 {
   Q_Q(NXNavigationBar);
   const QMetaObject *meta = _pageMetaMap.value(nodeKey);
-  if (!meta) { return; }
+  if (!meta)
+  {
+    return;
+  }
   q->removeNavigationNode(nodeKey);
 }
 
-void NXNavigationBarPrivate::onNavigationRoute(const QVariantMap& routeData)
-{
-  Q_Q(NXNavigationBar);
-  bool isRouteBack = routeData.value(QStringLiteral("NXRouteBackMode")).toBool();
-  QString pageKey = isRouteBack ? routeData.value(QStringLiteral("NXBackPageKey")).toString()
-                                 : routeData.value(QStringLiteral("NXForwardPageKey")).toString();
-  q->navigation(pageKey, false, isRouteBack);
-}
-
-void NXNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool isLogRoute, bool isRouteBack)
+void
+NXNavigationBarPrivate::onTreeViewClicked(const QModelIndex &index, bool isLogRoute, bool isRouteBack)
 {
   Q_Q(NXNavigationBar);
   if (index.isValid())
   {
     NXNavigationNode *node = static_cast<NXNavigationNode *>(index.internalPointer());
-    if (!node) { return; }
+    if (!node)
+    {
+      return;
+    }
     if (node->getIsCategoryNode())
     {
       Q_EMIT q->navigationNodeClicked(NXNavigationType::CategoryNode, node->getNodeKey(), isRouteBack);
       return;
     }
-    if (node->getIsExpanderNode()) { _expandOrCollapseExpanderNode(node, !_navigationView->isExpanded(index)); }
+    if (node->getIsExpanderNode())
+    {
+      _expandOrCollapseExpanderNode(node, !_navigationView->isExpanded(index));
+    }
     else
     {
       if (node->getKeyPoints())
@@ -109,17 +122,23 @@ void NXNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool is
         // 记录跳转
         if (isLogRoute)
         {
-          QVariantMap routeData = QVariantMap();
           QString backPageKey;
-          if (selectedNode) { backPageKey = selectedNode->getNodeKey(); }
+          if (selectedNode)
+          {
+            backPageKey = selectedNode->getNodeKey();
+          }
           else
           {
-            if (_footerModel->getSelectedNode()) { backPageKey = _footerModel->getSelectedNode()->getNodeKey(); }
+            if (_footerModel->getSelectedNode())
+            {
+              backPageKey = _footerModel->getSelectedNode()->getNodeKey();
+            }
           }
-          routeData.insert(QStringLiteral("NXBackPageKey"), backPageKey);
-          routeData.insert(QStringLiteral("NXForwardPageKey"), node->getNodeKey());
-          NXNavigationRouter::getInstance()->navigationRoute(q->window(), this, QStringLiteral("onNavigationRoute"),
-                                                             routeData);
+          NXNavigationRouteCommand *command = new NXNavigationRouteCommand(this);
+          command->setNavigationBar(q);
+          command->setUndoPageKey(backPageKey);
+          command->setRedoPageKey(node->getNodeKey());
+          NXActionCommander::getInstance()->recordCommand(QStringLiteral("NXWidgetToolsAction"), command, false);
         }
         // Q_EMIT q->navigationNodeClicked(NXNavigationType::PageNode, node->getNodeKey(), isRouteBack);
 
@@ -128,7 +147,8 @@ void NXNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool is
           _footerView->clearSelection();
           QVariantMap footerPostData = QVariantMap();
           footerPostData.insert(QStringLiteral("SelectMarkChanged"), true);
-          footerPostData.insert(QStringLiteral("LastSelectedNode"), QVariant::fromValue(_footerModel->getSelectedNode()));
+          footerPostData.insert(QStringLiteral("LastSelectedNode"),
+                                QVariant::fromValue(_footerModel->getSelectedNode()));
           footerPostData.insert(QStringLiteral("SelectedNode"), QVariant::fromValue(nullptr));
           _footerModel->setSelectedNode(nullptr);
           _footerDelegate->navigationNodeStateChange(footerPostData);
@@ -137,7 +157,8 @@ void NXNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool is
         postData.insert(QStringLiteral("SelectMarkChanged"), true);
         if (_navigationModel->getSelectedExpandedNode())
         {
-          postData.insert(QStringLiteral("LastSelectedNode"), QVariant::fromValue(_navigationModel->getSelectedExpandedNode()));
+          postData.insert(QStringLiteral("LastSelectedNode"),
+                          QVariant::fromValue(_navigationModel->getSelectedExpandedNode()));
         }
         else
         {
@@ -146,7 +167,10 @@ void NXNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool is
         if (_currentDisplayMode == NXNavigationType::Compact)
         {
           NXNavigationNode *originNode = node->getOriginalNode();
-          if (originNode == node) { postData.insert(QStringLiteral("SelectedNode"), QVariant::fromValue(node)); }
+          if (originNode == node)
+          {
+            postData.insert(QStringLiteral("SelectedNode"), QVariant::fromValue(node));
+          }
           else
           {
             if (originNode == _navigationModel->getSelectedExpandedNode())
@@ -165,7 +189,10 @@ void NXNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool is
         }
         _navigationModel->setSelectedNode(node);
         _navigationView->navigationNodeStateChange(postData);
-        if (!node->getIsVisible() && _currentDisplayMode != NXNavigationType::Compact) { _expandSelectedNodeParent(); }
+        if (!node->getIsVisible() && _currentDisplayMode != NXNavigationType::Compact)
+        {
+          _expandSelectedNodeParent();
+        }
       }
     }
     _resetNodeSelected();
@@ -173,7 +200,8 @@ void NXNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool is
   }
 }
 
-void NXNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool isLogRoute, bool isRouteBack)
+void
+NXNavigationBarPrivate::onFooterViewClicked(const QModelIndex &index, bool isLogRoute, bool isRouteBack)
 {
   Q_Q(NXNavigationBar);
   NXNavigationNode *node = index.data(Qt::UserRole).value<NXNavigationNode *>();
@@ -191,14 +219,22 @@ void NXNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool 
     {
       QVariantMap routeData = QVariantMap();
       QString backPageKey;
-      if (selectedNode) { backPageKey = selectedNode->getNodeKey(); }
+      if (selectedNode)
+      {
+        backPageKey = selectedNode->getNodeKey();
+      }
       else
       {
-        if (_navigationModel->getSelectedNode()) { backPageKey = _navigationModel->getSelectedNode()->getNodeKey(); }
+        if (_navigationModel->getSelectedNode())
+        {
+          backPageKey = _navigationModel->getSelectedNode()->getNodeKey();
+        }
       }
-      routeData.insert(QStringLiteral("NXBackPageKey"), backPageKey);
-      routeData.insert(QStringLiteral("NXForwardPageKey"), node->getNodeKey());
-      NXNavigationRouter::getInstance()->navigationRoute(this, QStringLiteral("onNavigationRoute"), routeData);
+      NXNavigationRouteCommand *command = new NXNavigationRouteCommand(this);
+      command->setNavigationBar(q);
+      command->setUndoPageKey(backPageKey);
+      command->setRedoPageKey(node->getNodeKey());
+      NXActionCommander::getInstance()->recordCommand(QStringLiteral("NXWidgetToolsAction"), command, false);
     }
     // Q_EMIT q->navigationNodeClicked(NXNavigationType::FooterNode, node->getNodeKey(), isRouteBack);
 
@@ -208,9 +244,10 @@ void NXNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool 
       {
         QVariantMap mainPostData = QVariantMap();
         mainPostData.insert(QStringLiteral("SelectMarkChanged"), true);
-        mainPostData.insert(QStringLiteral("LastSelectedNode"), QVariant::fromValue(_navigationModel->getSelectedExpandedNode()
-                                                                        ? _navigationModel->getSelectedExpandedNode()
-                                                                        : _navigationModel->getSelectedNode()));
+        mainPostData.insert(QStringLiteral("LastSelectedNode"),
+                            QVariant::fromValue(_navigationModel->getSelectedExpandedNode()
+                                                    ? _navigationModel->getSelectedExpandedNode()
+                                                    : _navigationModel->getSelectedNode()));
         mainPostData.insert(QStringLiteral("SelectedNode"), QVariant::fromValue(nullptr));
         _navigationView->clearSelection();
         _navigationView->navigationNodeStateChange(mainPostData);
@@ -230,20 +267,27 @@ void NXNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool 
   Q_EMIT q->navigationNodeClicked(NXNavigationType::FooterNode, node->getNodeKey(), isRouteBack);
 }
 
-bool NXNavigationBarPrivate::eventFilter(QObject *watched, QEvent *event)
+bool
+NXNavigationBarPrivate::eventFilter(QObject *watched, QEvent *event)
 {
   switch (event->type())
   {
   case QEvent::Show :
   {
     QString nodeKey = watched->property("NXPageKey").toString();
-    if (!nodeKey.isNull()) { _pageNewWindowCountMap[nodeKey] += 1; }
+    if (!nodeKey.isNull())
+    {
+      _pageNewWindowCountMap[nodeKey] += 1;
+    }
     break;
   }
   case QEvent::HideToParent :
   {
     QString nodeKey = watched->property("NXPageKey").toString();
-    if (!nodeKey.isNull()) { _pageNewWindowCountMap[nodeKey] -= 1; }
+    if (!nodeKey.isNull())
+    {
+      _pageNewWindowCountMap[nodeKey] -= 1;
+    }
     break;
   }
   default :
@@ -254,7 +298,8 @@ bool NXNavigationBarPrivate::eventFilter(QObject *watched, QEvent *event)
   return QObject::eventFilter(watched, event);
 }
 
-void NXNavigationBarPrivate::_initNodeModelIndex(const QModelIndex& parentIndex) noexcept
+void
+NXNavigationBarPrivate::_initNodeModelIndex(const QModelIndex &parentIndex) noexcept
 {
   int rowCount = _navigationModel->rowCount(parentIndex);
   for (int row = 0; row < rowCount; ++row)
@@ -262,15 +307,22 @@ void NXNavigationBarPrivate::_initNodeModelIndex(const QModelIndex& parentIndex)
     QModelIndex index           = _navigationModel->index(row, 0, parentIndex);
     NXNavigationNode *childNode = static_cast<NXNavigationNode *>(index.internalPointer());
     childNode->setModelIndex(index);
-    if (_navigationModel->hasChildren(index)) { _initNodeModelIndex(index); }
+    if (_navigationModel->hasChildren(index))
+    {
+      _initNodeModelIndex(index);
+    }
   }
 }
 
-void NXNavigationBarPrivate::_resetNodeSelected() noexcept
+void
+NXNavigationBarPrivate::_resetNodeSelected() noexcept
 {
   _navigationView->clearSelection();
   NXNavigationNode *selectedNode = _navigationModel->getSelectedNode();
-  if (!selectedNode || !selectedNode->getModelIndex().isValid()) { return; }
+  if (!selectedNode || !selectedNode->getModelIndex().isValid())
+  {
+    return;
+  }
   if (selectedNode->getParentNode()->getIsRootNode() || selectedNode->getIsVisible())
   {
     _navigationView->selectionModel()->select(selectedNode->getModelIndex(), QItemSelectionModel::Select);
@@ -278,7 +330,8 @@ void NXNavigationBarPrivate::_resetNodeSelected() noexcept
     {
       QVariantMap postData = QVariantMap();
       postData.insert(QStringLiteral("SelectMarkChanged"), true);
-      postData.insert(QStringLiteral("LastSelectedNode"), QVariant::fromValue(_navigationModel->getSelectedExpandedNode()));
+      postData.insert(QStringLiteral("LastSelectedNode"),
+                      QVariant::fromValue(_navigationModel->getSelectedExpandedNode()));
       postData.insert(QStringLiteral("SelectedNode"), QVariant::fromValue(selectedNode));
       _navigationView->navigationNodeStateChange(postData);
     }
@@ -291,7 +344,10 @@ void NXNavigationBarPrivate::_resetNodeSelected() noexcept
     {
       parentNode = parentNode->getParentNode();
     }
-    if (!parentNode) { return; }
+    if (!parentNode)
+    {
+      return;
+    }
     // 单级节点展开/收起时Mark变化
     if (!_navigationModel->getSelectedExpandedNode())
     {
@@ -311,7 +367,8 @@ void NXNavigationBarPrivate::_resetNodeSelected() noexcept
         {
           QVariantMap postData = QVariantMap();
           postData.insert(QStringLiteral("SelectMarkChanged"), true);
-          postData.insert(QStringLiteral("LastSelectedNode"), QVariant::fromValue(_navigationModel->getSelectedExpandedNode()));
+          postData.insert(QStringLiteral("LastSelectedNode"),
+                          QVariant::fromValue(_navigationModel->getSelectedExpandedNode()));
           postData.insert(QStringLiteral("SelectedNode"), QVariant::fromValue(parentNode));
           _navigationView->navigationNodeStateChange(postData);
         }
@@ -322,7 +379,8 @@ void NXNavigationBarPrivate::_resetNodeSelected() noexcept
   }
 }
 
-void NXNavigationBarPrivate::_expandSelectedNodeParent() noexcept
+void
+NXNavigationBarPrivate::_expandSelectedNodeParent() noexcept
 {
   NXNavigationNode *parentNode = _navigationModel->getSelectedNode()->getParentNode();
   while (parentNode && !parentNode->getIsRootNode())
@@ -336,7 +394,8 @@ void NXNavigationBarPrivate::_expandSelectedNodeParent() noexcept
   }
 }
 
-void NXNavigationBarPrivate::_expandOrCollapseExpanderNode(NXNavigationNode *node, bool isExpand) noexcept
+void
+NXNavigationBarPrivate::_expandOrCollapseExpanderNode(NXNavigationNode *node, bool isExpand) noexcept
 {
   if (_currentDisplayMode == NXNavigationType::Compact)
   {
@@ -379,7 +438,8 @@ void NXNavigationBarPrivate::_expandOrCollapseExpanderNode(NXNavigationNode *nod
   }
 }
 
-void NXNavigationBarPrivate::_addStackedPage(QWidget *page, const QString& pageKey) noexcept
+void
+NXNavigationBarPrivate::_addStackedPage(QWidget *page, const QString &pageKey) noexcept
 {
   Q_Q(NXNavigationBar);
   page->setProperty("NXPageKey", pageKey);
@@ -390,10 +450,14 @@ void NXNavigationBarPrivate::_addStackedPage(QWidget *page, const QString& pageK
   Q_EMIT q->navigationNodeAdded(NXNavigationType::PageNode, pageKey, page);
 }
 
-void NXNavigationBarPrivate::_addFooterPage(QWidget *page, const QString& footKey) noexcept
+void
+NXNavigationBarPrivate::_addFooterPage(QWidget *page, const QString &footKey) noexcept
 {
   Q_Q(NXNavigationBar);
-  if (page) { page->setProperty("NXPageKey", footKey); }
+  if (page)
+  {
+    page->setProperty("NXPageKey", footKey);
+  }
   _footerView->setFixedHeight(40 * _footerModel->getFooterNodeCount());
   NXNavigationNode *node = _footerModel->getNavigationNode(footKey);
   QVariantMap suggestData;
@@ -402,13 +466,15 @@ void NXNavigationBarPrivate::_addFooterPage(QWidget *page, const QString& footKe
   Q_EMIT q->navigationNodeAdded(NXNavigationType::FooterNode, footKey, page);
 }
 
-void NXNavigationBarPrivate::_raiseNavigationBar() noexcept
+void
+NXNavigationBarPrivate::_raiseNavigationBar() noexcept
 {
   Q_Q(NXNavigationBar);
   q->raise();
 }
 
-void NXNavigationBarPrivate::_smoothScrollNavigationView(const QModelIndex& index) noexcept
+void
+NXNavigationBarPrivate::_smoothScrollNavigationView(const QModelIndex &index) noexcept
 {
   QTimer::singleShot(200, this, [=]()
   {
@@ -426,8 +492,9 @@ void NXNavigationBarPrivate::_smoothScrollNavigationView(const QModelIndex& inde
   });
 }
 
-void NXNavigationBarPrivate::_doComponentAnimation(NXNavigationType::NavigationDisplayMode displayMode,
-                                                   bool isAnimation) noexcept
+void
+NXNavigationBarPrivate::_doComponentAnimation(NXNavigationType::NavigationDisplayMode displayMode,
+                                              bool isAnimation) noexcept
 {
   switch (displayMode)
   {
@@ -470,30 +537,42 @@ void NXNavigationBarPrivate::_doComponentAnimation(NXNavigationType::NavigationD
   }
 }
 
-void NXNavigationBarPrivate::_handleNavigationExpandState(bool isSave) noexcept
+void
+NXNavigationBarPrivate::_handleNavigationExpandState(bool isSave) noexcept
 {
   if (isSave)
   {
     // 保存展开状态 收起根节点所有子树
     _lastExpandedNodesList = _navigationModel->getRootExpandedNodes();
-    for (auto node : _lastExpandedNodesList) { onTreeViewClicked(node->getModelIndex(), false); }
+    for (auto node : _lastExpandedNodesList)
+    {
+      onTreeViewClicked(node->getModelIndex(), false);
+    }
   }
   else
   {
     // 修正动画覆盖
     _navigationView->resize(_pNavigationBarWidth - 5, _navigationView->height());
-    for (auto node : _lastExpandedNodesList) { onTreeViewClicked(node->getModelIndex(), false); }
+    for (auto node : _lastExpandedNodesList)
+    {
+      onTreeViewClicked(node->getModelIndex(), false);
+    }
   }
 }
 
-void NXNavigationBarPrivate::_resetLayout() noexcept
+void
+NXNavigationBarPrivate::_resetLayout() noexcept
 {
-  while (_userButtonLayout->count()) { _userButtonLayout->takeAt(0); }
+  while (_userButtonLayout->count())
+  {
+    _userButtonLayout->takeAt(0);
+  }
   _userButtonLayout->addWidget(_userButton);
 }
 
-void NXNavigationBarPrivate::_doNavigationBarWidthAnimation(NXNavigationType::NavigationDisplayMode displayMode,
-                                                            bool isAnimation) noexcept
+void
+NXNavigationBarPrivate::_doNavigationBarWidthAnimation(NXNavigationType::NavigationDisplayMode displayMode,
+                                                       bool isAnimation) noexcept
 {
   Q_Q(NXNavigationBar);
   QPropertyAnimation *navigationBarWidthAnimation = new QPropertyAnimation(q, "maximumWidth");
@@ -504,23 +583,32 @@ void NXNavigationBarPrivate::_doNavigationBarWidthAnimation(NXNavigationType::Na
   {
   case NXNavigationType::Minimal :
   {
-    connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this,
-            [=](const QVariant& value) { q->setFixedWidth(value.toUInt()); });
+    connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+    {
+      q->setFixedWidth(value.toUInt());
+    });
     navigationBarWidthAnimation->setEndValue(0);
     break;
   }
   case NXNavigationType::Compact :
   {
-    connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this,
-            [=](const QVariant& value) { q->setFixedWidth(value.toUInt()); });
+    connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+    {
+      q->setFixedWidth(value.toUInt());
+    });
     navigationBarWidthAnimation->setEndValue(42);
     break;
   }
   case NXNavigationType::Maximal :
   {
-    connect(navigationBarWidthAnimation, &QPropertyAnimation::finished, this, [=]() { _resetLayout(); });
-    connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this,
-            [=](const QVariant& value) { q->setFixedWidth(value.toUInt()); });
+    connect(navigationBarWidthAnimation, &QPropertyAnimation::finished, this, [=]()
+    {
+      _resetLayout();
+    });
+    connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+    {
+      q->setFixedWidth(value.toUInt());
+    });
     navigationBarWidthAnimation->setEndValue(_pNavigationBarWidth);
     break;
   }
@@ -532,11 +620,14 @@ void NXNavigationBarPrivate::_doNavigationBarWidthAnimation(NXNavigationType::Na
   navigationBarWidthAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXNavigationBarPrivate::_doNavigationViewWidthAnimation(bool isAnimation) noexcept
+void
+NXNavigationBarPrivate::_doNavigationViewWidthAnimation(bool isAnimation) noexcept
 {
   QPropertyAnimation *navigationViewWidthAnimation = new QPropertyAnimation(this, "pNavigationViewWidth");
-  connect(navigationViewWidthAnimation, &QPropertyAnimation::valueChanged, this,
-          [=](const QVariant& value) { _navigationView->setColumnWidth(0, value.toUInt()); });
+  connect(navigationViewWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+  {
+    _navigationView->setColumnWidth(0, value.toUInt());
+  });
   navigationViewWidthAnimation->setEasingCurve(QEasingCurve::OutCubic);
   navigationViewWidthAnimation->setStartValue(_navigationView->columnWidth(0));
   navigationViewWidthAnimation->setEndValue(40);
@@ -544,11 +635,14 @@ void NXNavigationBarPrivate::_doNavigationViewWidthAnimation(bool isAnimation) n
   navigationViewWidthAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnimation) noexcept
+void
+NXNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnimation) noexcept
 {
   QPropertyAnimation *userButtonAnimation = new QPropertyAnimation(_userButton, "geometry");
-  connect(userButtonAnimation, &QPropertyAnimation::valueChanged, this,
-          [=](const QVariant& value) { _userButton->setFixedSize(value.toRect().size()); });
+  connect(userButtonAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+  {
+    _userButton->setFixedSize(value.toRect().size());
+  });
   userButtonAnimation->setEasingCurve(isCompact ? QEasingCurve::OutCubic : QEasingCurve::InOutSine);
   QRect maximumRect = QRect(13, 18, 64, 64);
   QRect compactRect = QRect(3, 10, 36, 36);
@@ -556,10 +650,16 @@ void NXNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnima
   userButtonAnimation->setEndValue(isCompact ? compactRect : maximumRect);
 
   QPropertyAnimation *spacingAnimation = new QPropertyAnimation(this, "pUserButtonSpacing");
-  connect(spacingAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value)
+  connect(spacingAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
   {
-    while (_userButtonLayout->count()) { _userButtonLayout->takeAt(0); }
-    if (_isShowUserCard) { _userButtonLayout->addSpacing(value.toInt()); }
+    while (_userButtonLayout->count())
+    {
+      _userButtonLayout->takeAt(0);
+    }
+    if (_isShowUserCard)
+    {
+      _userButtonLayout->addSpacing(value.toInt());
+    }
   });
   spacingAnimation->setEasingCurve(isCompact ? QEasingCurve::OutCubic : QEasingCurve::InOutSine);
   spacingAnimation->setStartValue(isCompact ? 80 : 36);
@@ -567,10 +667,16 @@ void NXNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnima
   if (isCompact)
   {
     _userCard->setVisible(false);
-    if (_isShowUserCard) { _userButton->setVisible(true); }
+    if (_isShowUserCard)
+    {
+      _userButton->setVisible(true);
+    }
     userButtonAnimation->setDuration(isAnimation ? 255 : 0);
     spacingAnimation->setDuration(isAnimation ? 255 : 0);
-    connect(spacingAnimation, &QPropertyAnimation::finished, this, [=]() { _resetLayout(); });
+    connect(spacingAnimation, &QPropertyAnimation::finished, this, [=]()
+    {
+      _resetLayout();
+    });
   }
   else
   {
@@ -580,7 +686,10 @@ void NXNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnima
       _userButton->setGeometry(QRect(13, 18, 64, 64));
       _userButton->setVisible(false);
       _resetLayout();
-      if (_isShowUserCard) { _userCard->setVisible(true); }
+      if (_isShowUserCard)
+      {
+        _userCard->setVisible(true);
+      }
     });
     userButtonAnimation->setDuration(isAnimation ? 135 : 0);
     spacingAnimation->setDuration(isAnimation ? 135 : 0);

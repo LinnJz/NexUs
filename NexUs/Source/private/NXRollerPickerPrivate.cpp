@@ -8,9 +8,12 @@ NXRollerPickerPrivate::NXRollerPickerPrivate(QObject *parent)
 {
 }
 
-NXRollerPickerPrivate::~NXRollerPickerPrivate() { }
+NXRollerPickerPrivate::~NXRollerPickerPrivate()
+{
+}
 
-void NXRollerPickerPrivate::onRollerPickerClicked() noexcept
+void
+NXRollerPickerPrivate::onRollerPickerClicked() noexcept
 {
   Q_Q(NXRollerPicker);
   QPoint targetPos(q->mapToGlobal(QPoint(
@@ -22,17 +25,25 @@ void NXRollerPickerPrivate::onRollerPickerClicked() noexcept
   _rollerPickerContainer->doPickerAnimation();
 }
 
-void NXRollerPickerPrivate::onOverButtonClicked() noexcept
+void
+NXRollerPickerPrivate::onOverButtonClicked() noexcept
 {
   Q_Q(NXRollerPicker);
   Q_EMIT q->currentDataChanged(q->getCurrentData());
 }
 
-void NXRollerPickerPrivate::onCancelButtonClicked() noexcept { }
+void
+NXRollerPickerPrivate::onCancelButtonClicked() noexcept
+{
+}
 
-int NXRollerPickerPrivate::_getRollerTotalWidth() const noexcept
+int
+NXRollerPickerPrivate::_getRollerTotalWidth() const noexcept
 {
   int totalWidth = 0;
-  for (auto rollerItem : _rollerPickerContainer->_rollerList) { totalWidth += rollerItem->width(); }
+  for (auto rollerItem : _rollerPickerContainer->_rollerList)
+  {
+    totalWidth += rollerItem->width();
+  }
   return totalWidth;
 }

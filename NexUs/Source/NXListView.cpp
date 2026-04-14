@@ -31,7 +31,8 @@ NXListView::~NXListView()
   delete d->_listViewStyle;
 }
 
-void NXListView::setItemHeight(int itemHeight) noexcept
+void
+NXListView::setItemHeight(int itemHeight) noexcept
 {
   Q_D(NXListView);
   if (itemHeight > 0)
@@ -41,20 +42,23 @@ void NXListView::setItemHeight(int itemHeight) noexcept
   }
 }
 
-int NXListView::getItemHeight() const noexcept
+int
+NXListView::getItemHeight() const noexcept
 {
   Q_D(const NXListView);
   return d->_listViewStyle->getItemHeight();
 }
 
-void NXListView::setIsTransparent(bool isTransparent) noexcept
+void
+NXListView::setIsTransparent(bool isTransparent) noexcept
 {
   Q_D(NXListView);
   d->_listViewStyle->setIsTransparent(isTransparent);
   update();
 }
 
-bool NXListView::getIsTransparent() const noexcept
+bool
+NXListView::getIsTransparent() const noexcept
 {
   Q_D(const NXListView);
   return d->_listViewStyle->getIsTransparent();

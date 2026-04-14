@@ -7,4 +7,6 @@ NXPushButtonPrivate::NXPushButtonPrivate(QObject *parent)
 {
 }
 
-NXPushButtonPrivate::~NXPushButtonPrivate() { }
+NXPushButtonPrivate::~NXPushButtonPrivate()
+{
+}

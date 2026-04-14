@@ -1,16 +1,16 @@
 ﻿#ifndef NXCENTRALSTACKEDWIDGET_H
 #define NXCENTRALSTACKEDWIDGET_H
 
-#include <QStackedWidget>
-
 #include "NXDef.h"
+#include "NXLazyStackedWidget.h"
 
 class NXCentralStackedWidgetPrivate;
 
-class NXCentralStackedWidget : public QWidget
+class NX_EXPORT NXCentralStackedWidget : public QWidget
 {
   Q_OBJECT
   Q_Q_CREATE(NXCentralStackedWidget)
+  Q_PROPERTY_CREATE_H(int, LastTargetIndex)
   Q_PROPERTY_CREATE_H(int, BlurAnimationRadius)
   Q_PROPERTY_CREATE_H(int, PopupAnimationYOffset)
   Q_PROPERTY_CREATE_H(qreal, ScaleAnimationRatio)
@@ -21,7 +21,7 @@ public:
   explicit NXCentralStackedWidget(QWidget *parent = nullptr);
   ~NXCentralStackedWidget() override;
 
-  QStackedWidget *getContainerStackedWidget() const noexcept;
+  NXLazyStackedWidget *getContainerStackedWidget() const noexcept;
 
   void setCustomWidget(QWidget *widget) noexcept;
   QWidget *getCustomWidget() const noexcept;

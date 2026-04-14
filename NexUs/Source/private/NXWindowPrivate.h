@@ -18,6 +18,7 @@ class QMovie;
 
 class NXWindowPrivate : public QObject
 {
+  friend class NXWindowStackChangeCommand;
   Q_OBJECT
   Q_D_CREATE(NXWindow)
   Q_PROPERTY_CREATE_D(int, ThemeChangeTime)
@@ -29,18 +30,17 @@ public:
   explicit NXWindowPrivate(QObject *parent = nullptr);
   ~NXWindowPrivate() override;
   Q_SLOT void onNavigationButtonClicked() noexcept;
-  Q_INVOKABLE void onWMWindowClickedEvent(const QVariantMap& data);
+  Q_INVOKABLE void onWMWindowClickedEvent(const QVariantMap &data);
   Q_SLOT void onThemeReadyChange() noexcept;
   Q_SLOT void onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept;
   Q_SLOT void onWindowDisplayModeChanged() noexcept;
   Q_SLOT void onNavigationNodeClicked(NXNavigationType::NavigationNodeType nodeType,
-                                      const QString& nodeKey,
+                                      const QString &nodeKey,
                                       bool isRouteBack) noexcept;
   Q_SLOT void
-  onNavigationNodeAdded(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey, QWidget *page) noexcept;
-  Q_SLOT void onNavigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString& nodeKey) noexcept;
-  Q_SLOT void onNavigationRouterStateChanged(NXNavigationRouterType::RouteMode routeMode) noexcept;
-  Q_INVOKABLE void onNavigationRoute(const QVariantMap& routeData);
+  onNavigationNodeAdded(NXNavigationType::NavigationNodeType nodeType, const QString &nodeKey, QWidget *page) noexcept;
+  Q_SLOT void onNavigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString &nodeKey) noexcept;
+  Q_SLOT void onNavigationRouterStateChanged(const QString &domainName, NXActionCommanderType::CommanderState state);
 
 private:
   bool _isNavigationBarFloat { false };
@@ -51,12 +51,11 @@ private:
   bool _isInitFinished { false };
   int _contentsMargins { 5 };
   int _navigationTargetIndex { 0 };
-  int _centralStackTargetIndex { 0 };
   NXNavigationType::NavigationDisplayMode _currentNavigationBarDisplayMode { NXNavigationType::Maximal };
   NXThemeType::ThemeMode _themeMode;
   NXApplicationType::WindowDisplayMode _windowDisplayMode;
-  QString _lightWindowMoviePath { };
-  QString _darkWindowMoviePath { };
+  QString _lightWindowMoviePath {};
+  QString _darkWindowMoviePath {};
   QPixmap *_lightWindowPix;
   QPixmap *_darkWindowPix;
   QMovie *_windowPaintMovie { nullptr };

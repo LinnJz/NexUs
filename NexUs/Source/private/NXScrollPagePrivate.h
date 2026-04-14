@@ -15,14 +15,14 @@ class NXBreadcrumbBar;
 
 class NXScrollPagePrivate : public QObject
 {
+  friend class NXScrollPageRouteCommand;
   Q_OBJECT
   Q_D_CREATE(NXScrollPage)
   Q_PROPERTY_CREATE_D(QWidget *, CustomWidget)
 
 public:
   explicit NXScrollPagePrivate(QObject *parent = nullptr);
-  ~NXScrollPagePrivate();
-  Q_INVOKABLE void onNavigationRoute(const QVariantMap& routeData);
+  ~NXScrollPagePrivate() override;
 
 private:
   QHBoxLayout *_pageTitleLayout { nullptr };

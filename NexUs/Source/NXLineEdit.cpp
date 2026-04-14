@@ -38,12 +38,15 @@ NXLineEdit::NXLineEdit(QWidget *parent)
   setStyleSheet(QStringLiteral("#NXLineEdit{background-color:transparent;padding-left: 10px;}"));
   d->onThemeChanged(nxTheme->getThemeMode());
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXLineEditPrivate::onThemeChanged);
-  connect(this, &QLineEdit::textEdited, d, [d](const QString&) { d->pushTextRoute(); });
+  connect(this, &QLineEdit::textEdited, d, [d](const QString &)
+  {
+    d->pushTextRoute();
+  });
   d->resetTextRoute();
   setVisible(true);
 }
 
-NXLineEdit::NXLineEdit(const QString& text, QWidget *parent)
+NXLineEdit::NXLineEdit(const QString &text, QWidget *parent)
     : NXLineEdit(parent)
 {
   Q_D(NXLineEdit);
@@ -51,9 +54,13 @@ NXLineEdit::NXLineEdit(const QString& text, QWidget *parent)
   d->resetTextRoute();
 }
 
-NXLineEdit::~NXLineEdit() { delete this->style(); }
+NXLineEdit::~NXLineEdit()
+{
+  delete this->style();
+}
 
-void NXLineEdit::setIsClearButtonEnabled(bool isClearButtonEnabled) noexcept
+void
+NXLineEdit::setIsClearButtonEnabled(bool isClearButtonEnabled) noexcept
 {
   Q_D(NXLineEdit);
   d->_pIsClearButtonEnabled = isClearButtonEnabled;
@@ -61,25 +68,29 @@ void NXLineEdit::setIsClearButtonEnabled(bool isClearButtonEnabled) noexcept
   Q_EMIT pIsClearButtonEnabledChanged();
 }
 
-bool NXLineEdit::getIsClearButtonEnabled() const noexcept
+bool
+NXLineEdit::getIsClearButtonEnabled() const noexcept
 {
   Q_D(const NXLineEdit);
   return d->_pIsClearButtonEnabled;
 }
 
-void NXLineEdit::setBorderRadius(int borderRadius) noexcept
+void
+NXLineEdit::setBorderRadius(int borderRadius) noexcept
 {
   Q_D(const NXLineEdit);
   d->_lineEditStyle->setLineEditBorderRadius(borderRadius);
 }
 
-int NXLineEdit::getBorderRadius() const noexcept
+int
+NXLineEdit::getBorderRadius() const noexcept
 {
   Q_D(const NXLineEdit);
   return d->_lineEditStyle->getLineEditBorderRadius();
 }
 
-void NXLineEdit::setContentsMargins(const QMargins& margins) noexcept
+void
+NXLineEdit::setContentsMargins(const QMargins &margins) noexcept
 {
   Q_D(NXLineEdit);
   d->_pContentMargins = margins;
@@ -97,33 +108,43 @@ void NXLineEdit::setContentsMargins(const QMargins& margins) noexcept
   setStyleSheet(styleSheet);
 }
 
-QMargins NXLineEdit::getContentsMargins() const noexcept
+QMargins
+NXLineEdit::getContentsMargins() const noexcept
 {
   Q_D(const NXLineEdit);
   return d->_pContentMargins;
 }
 
-void NXLineEdit::setLineEditIconMargin(int margin) noexcept
+void
+NXLineEdit::setLineEditIconMargin(int margin) noexcept
 {
   Q_D(NXLineEdit);
   d->_lineEditStyle->setLineEditIconMargin(margin);
 }
 
-int NXLineEdit::getLineEditIconMargin() const noexcept
+int
+NXLineEdit::getLineEditIconMargin() const noexcept
 {
   Q_D(const NXLineEdit);
   return d->_lineEditStyle->getLineEditIconMargin();
 }
 
-void NXLineEdit::focusInEvent(QFocusEvent *event)
+void
+NXLineEdit::focusInEvent(QFocusEvent *event)
 {
   Q_D(NXLineEdit);
   Q_EMIT focusIn(this->text());
   if (event->reason() == Qt::MouseFocusReason)
   {
-    if (d->_pIsClearButtonEnabled) { setClearButtonEnabled(true); }
+    if (d->_pIsClearButtonEnabled)
+    {
+      setClearButtonEnabled(true);
+    }
     QPropertyAnimation *markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
-    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
+    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+    {
+      update();
+    });
     markAnimation->setDuration(300);
     markAnimation->setEasingCurve(QEasingCurve::InOutSine);
     markAnimation->setStartValue(d->_pExpandMarkWidth);
@@ -133,15 +154,22 @@ void NXLineEdit::focusInEvent(QFocusEvent *event)
   QLineEdit::focusInEvent(event);
 }
 
-void NXLineEdit::focusOutEvent(QFocusEvent *event)
+void
+NXLineEdit::focusOutEvent(QFocusEvent *event)
 {
   Q_D(NXLineEdit);
   Q_EMIT focusOut(this->text());
   if (event->reason() != Qt::PopupFocusReason)
   {
-    if (d->_pIsClearButtonEnabled) { setClearButtonEnabled(false); }
+    if (d->_pIsClearButtonEnabled)
+    {
+      setClearButtonEnabled(false);
+    }
     QPropertyAnimation *markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
-    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
+    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+    {
+      update();
+    });
     markAnimation->setDuration(300);
     markAnimation->setEasingCurve(QEasingCurve::InOutSine);
     markAnimation->setStartValue(d->_pExpandMarkWidth);
@@ -152,10 +180,14 @@ void NXLineEdit::focusOutEvent(QFocusEvent *event)
   QLineEdit::focusOutEvent(event);
 }
 
-void NXLineEdit::paintEvent(QPaintEvent *event)
+void
+NXLineEdit::paintEvent(QPaintEvent *event)
 {
   Q_D(NXLineEdit);
-  if (palette().color(QPalette::Text) != NXThemeColor(d->_themeMode, BasicText)) { d->onThemeChanged(d->_themeMode); }
+  if (palette().color(QPalette::Text) != NXThemeColor(d->_themeMode, BasicText))
+  {
+    d->onThemeChanged(d->_themeMode);
+  }
   QLineEdit::paintEvent(event);
   QPainter painter(this);
   painter.save();
@@ -167,7 +199,8 @@ void NXLineEdit::paintEvent(QPaintEvent *event)
   painter.restore();
 }
 
-void NXLineEdit::contextMenuEvent(QContextMenuEvent *event)
+void
+NXLineEdit::contextMenuEvent(QContextMenuEvent *event)
 {
   Q_D(NXLineEdit);
   NXMenu *menu = new NXMenu(this);
@@ -178,21 +211,33 @@ void NXLineEdit::contextMenuEvent(QContextMenuEvent *event)
   {
     action = menu->addNXIconAction(NXIconType::ArrowRotateLeft, tr("撤销"), QKeySequence::Undo);
     action->setEnabled(d->canTextRouteBack());
-    connect(action, &QAction::triggered, this, [d]() { d->textRouteBack(); });
+    connect(action, &QAction::triggered, this, [d]()
+    {
+      d->textRouteBack();
+    });
 
     action = menu->addNXIconAction(NXIconType::ArrowRotateRight, tr("恢复"), QKeySequence::Redo);
     action->setEnabled(d->canTextRouteForward());
-    connect(action, &QAction::triggered, this, [d]() { d->textRouteForward(); });
+    connect(action, &QAction::triggered, this, [d]()
+    {
+      d->textRouteForward();
+    });
 
     action = menu->addNXIconAction(NXIconType::ArrowRotateLeft, tr("整体撤销"),
                                    QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Z));
     action->setEnabled(d->canOverallUndo());
-    connect(action, &QAction::triggered, this, [d]() { d->overallUndo(); });
+    connect(action, &QAction::triggered, this, [d]()
+    {
+      d->overallUndo();
+    });
 
     action = menu->addNXIconAction(NXIconType::ArrowRotateRight, tr("整体恢复"),
                                    QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Y));
     action->setEnabled(d->canOverallRedo());
-    connect(action, &QAction::triggered, this, [d]() { d->overallRedo(); });
+    connect(action, &QAction::triggered, this, [d]()
+    {
+      d->overallRedo();
+    });
     menu->addSeparator();
   }
 #ifndef QT_NO_CLIPBOARD
@@ -229,7 +274,10 @@ void NXLineEdit::contextMenuEvent(QContextMenuEvent *event)
       }
     });
   }
-  if (!menu->isEmpty()) { menu->addSeparator(); }
+  if (!menu->isEmpty())
+  {
+    menu->addSeparator();
+  }
   action = menu->addAction(tr("全选"));
   action->setShortcut(QKeySequence::SelectAll);
   action->setEnabled(!text().isEmpty() && !(selectedText() == text()));
@@ -237,7 +285,8 @@ void NXLineEdit::contextMenuEvent(QContextMenuEvent *event)
   menu->popup(event->globalPos());
 }
 
-void NXLineEdit::keyPressEvent(QKeyEvent *event)
+void
+NXLineEdit::keyPressEvent(QKeyEvent *event)
 {
   Q_D(NXLineEdit);
   if (event->modifiers().testFlag(Qt::ControlModifier))

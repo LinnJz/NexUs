@@ -11,14 +11,14 @@
 Q_PROPERTY_CREATE_CPP(NXIconButton, int, BorderRadius)
 Q_PROPERTY_CREATE_CPP(NXIconButton, bool, IsSelected)
 Q_PROPERTY_CREATE_CPP(NXIconButton, qreal, Opacity)
-Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor&, QColor, LightHoverColor)
-Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor&, QColor, DarkHoverColor)
-Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor&, QColor, LightIconColor)
-Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor&, QColor, DarkIconColor)
-Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor&, QColor, LightHoverIconColor)
-Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor&, QColor, DarkHoverIconColor)
+Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor &, QColor, LightHoverColor)
+Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor &, QColor, DarkHoverColor)
+Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor &, QColor, LightIconColor)
+Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor &, QColor, DarkIconColor)
+Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor &, QColor, LightHoverIconColor)
+Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor &, QColor, DarkHoverIconColor)
 
-NXIconButton::NXIconButton(const QPixmap& pix, QWidget *parent)
+NXIconButton::NXIconButton(const QPixmap &pix, QWidget *parent)
     : QPushButton(parent)
     , d_ptr(new NXIconButtonPrivate())
 {
@@ -36,9 +36,14 @@ NXIconButton::NXIconButton(const QPixmap& pix, QWidget *parent)
   d->_pIsSelected          = false;
   d->_pBorderRadius        = 0;
   d->_themeMode            = nxTheme->getThemeMode();
-  connect(this, &NXIconButton::pIsSelectedChanged, this, [=]() { update(); });
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(this, &NXIconButton::pIsSelectedChanged, this, [=]()
+  {
+    update();
+  });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
 }
 
 NXIconButton::NXIconButton(NXIconType::IconName awesome, QWidget *parent)
@@ -62,10 +67,15 @@ NXIconButton::NXIconButton(NXIconType::IconName awesome, QWidget *parent)
   iconFont.setPixelSize(15);
   this->setFont(iconFont);
   d->_pAwesome = awesome;
-  this->setText(QChar((unsigned short) awesome));
-  connect(this, &NXIconButton::pIsSelectedChanged, this, [=]() { update(); });
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  this->setText(QChar(awesome));
+  connect(this, &NXIconButton::pIsSelectedChanged, this, [=]()
+  {
+    update();
+  });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
 }
 
 NXIconButton::NXIconButton(NXIconType::IconName awesome, int pixelSize, QWidget *parent)
@@ -89,10 +99,15 @@ NXIconButton::NXIconButton(NXIconType::IconName awesome, int pixelSize, QWidget 
   iconFont.setPixelSize(pixelSize);
   this->setFont(iconFont);
   d->_pAwesome = awesome;
-  this->setText(QChar((unsigned short) awesome));
-  connect(this, &NXIconButton::pIsSelectedChanged, this, [=]() { update(); });
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  this->setText(QChar(awesome));
+  connect(this, &NXIconButton::pIsSelectedChanged, this, [=]()
+  {
+    update();
+  });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
 }
 
 NXIconButton::NXIconButton(
@@ -117,31 +132,45 @@ NXIconButton::NXIconButton(
   iconFont.setPixelSize(pixelSize);
   this->setFont(iconFont);
   d->_pAwesome = awesome;
-  this->setText(QChar((unsigned short) awesome));
+  this->setText(QChar(awesome));
   this->setFixedSize(fixedWidth, fixedHeight);
-  connect(this, &NXIconButton::pIsSelectedChanged, this, [=]() { update(); });
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(this, &NXIconButton::pIsSelectedChanged, this, [=]()
+  {
+    update();
+  });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
 }
 
-NXIconButton::~NXIconButton() { }
+NXIconButton::~NXIconButton()
+{
+}
 
-void NXIconButton::setAwesome(NXIconType::IconName awesome) noexcept
+void
+NXIconButton::setAwesome(NXIconType::IconName awesome) noexcept
 {
   Q_D(NXIconButton);
   d->_pAwesome = awesome;
-  this->setText(QChar((unsigned short) awesome));
+  this->setText(QChar(awesome));
 }
 
-NXIconType::IconName NXIconButton::getAwesome() const noexcept { return this->d_ptr->_pAwesome; }
+NXIconType::IconName
+NXIconButton::getAwesome() const noexcept
+{
+  return this->d_ptr->_pAwesome;
+}
 
-void NXIconButton::setPixmap(const QPixmap& pix) noexcept
+void
+NXIconButton::setPixmap(const QPixmap &pix) noexcept
 {
   Q_D(NXIconButton);
   d->_iconPix = pix.copy();
 }
 
-bool NXIconButton::event(QEvent *event)
+bool
+NXIconButton::event(QEvent *event)
 {
   Q_D(NXIconButton);
   switch (event->type())
@@ -152,8 +181,14 @@ bool NXIconButton::event(QEvent *event)
     {
       d->_isAlphaAnimationFinished       = false;
       QPropertyAnimation *alphaAnimation = new QPropertyAnimation(d, "pHoverAlpha");
-      connect(alphaAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
-      connect(alphaAnimation, &QPropertyAnimation::finished, this, [=]() { d->_isAlphaAnimationFinished = true; });
+      connect(alphaAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+      {
+        update();
+      });
+      connect(alphaAnimation, &QPropertyAnimation::finished, this, [=]()
+      {
+        d->_isAlphaAnimationFinished = true;
+      });
       alphaAnimation->setDuration(175);
       alphaAnimation->setStartValue(d->_pHoverAlpha);
       alphaAnimation->setEndValue(d->_themeMode == NXThemeType::Light ? d->_pLightHoverColor.alpha()
@@ -168,8 +203,14 @@ bool NXIconButton::event(QEvent *event)
     {
       d->_isAlphaAnimationFinished       = false;
       QPropertyAnimation *alphaAnimation = new QPropertyAnimation(d, "pHoverAlpha");
-      connect(alphaAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
-      connect(alphaAnimation, &QPropertyAnimation::finished, this, [=]() { d->_isAlphaAnimationFinished = true; });
+      connect(alphaAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+      {
+        update();
+      });
+      connect(alphaAnimation, &QPropertyAnimation::finished, this, [=]()
+      {
+        d->_isAlphaAnimationFinished = true;
+      });
       alphaAnimation->setDuration(175);
       alphaAnimation->setStartValue(d->_pHoverAlpha);
       alphaAnimation->setEndValue(0);
@@ -185,7 +226,8 @@ bool NXIconButton::event(QEvent *event)
   return QPushButton::event(event);
 }
 
-void NXIconButton::paintEvent(QPaintEvent *event)
+void
+NXIconButton::paintEvent(QPaintEvent *event)
 {
   Q_D(NXIconButton);
   QPainter painter(this);
@@ -219,11 +261,11 @@ void NXIconButton::paintEvent(QPaintEvent *event)
   else
   {
     painter.setPen(isEnabled() ? d->_themeMode == NXThemeType::Light
-                                     ? underMouse() ? d->_pLightHoverIconColor : d->_pLightIconColor
-                                 : underMouse() ? d->_pDarkHoverIconColor
-                                                : d->_pDarkIconColor
+                                   ? underMouse() ? d->_pLightHoverIconColor : d->_pLightIconColor
+                               : underMouse() ? d->_pDarkHoverIconColor
+                                              : d->_pDarkIconColor
                                : NXThemeColor(d->_themeMode, BasicTextDisable));
-    painter.drawText(rect(), Qt::AlignCenter, QChar((unsigned short) d->_pAwesome));
+    painter.drawText(rect(), Qt::AlignCenter, QChar(d->_pAwesome));
   }
   painter.restore();
 }

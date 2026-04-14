@@ -6,9 +6,12 @@ NXDrawerAreaPrivate::NXDrawerAreaPrivate(QObject *parent)
 {
 }
 
-NXDrawerAreaPrivate::~NXDrawerAreaPrivate() { }
+NXDrawerAreaPrivate::~NXDrawerAreaPrivate()
+{
+}
 
-void NXDrawerAreaPrivate::onDrawerHeaderClicked(bool isExpand) noexcept
+void
+NXDrawerAreaPrivate::onDrawerHeaderClicked(bool isExpand) noexcept
 {
   Q_Q(NXDrawerArea);
   _drawerContainer->doDrawerAnimation(isExpand);

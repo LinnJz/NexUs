@@ -11,15 +11,21 @@
 NXGroupBoxStyle::NXGroupBoxStyle(QStyle *style)
 {
   _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXGroupBoxStyle::~NXGroupBoxStyle() { }
+NXGroupBoxStyle::~NXGroupBoxStyle()
+{
+}
 
-void NXGroupBoxStyle::drawComplexControl(ComplexControl control,
-                                         const QStyleOptionComplex *option,
-                                         QPainter *painter,
-                                         const QWidget *widget) const
+void
+NXGroupBoxStyle::drawComplexControl(ComplexControl control,
+                                    const QStyleOptionComplex *option,
+                                    QPainter *painter,
+                                    const QWidget *widget) const
 {
   if (control == CC_GroupBox)
   {
@@ -64,12 +70,18 @@ void NXGroupBoxStyle::drawComplexControl(ComplexControl control,
         // painter->fillRect(titleBgRect, NXThemeColor(_themeMode, WindowBase));
 
         QColor textColor = NXThemeColor(_themeMode, BasicText);
-        if (option->state & State_HasFocus) { textColor = NXThemeColor(_themeMode, PrimaryNormal); }
+        if (option->state & State_HasFocus)
+        {
+          textColor = NXThemeColor(_themeMode, PrimaryNormal);
+        }
         painter->setPen(textColor);
         painter->setBrush(Qt::NoBrush);
 
         int alignment = int(groupBox->textAlignment);
-        if (!proxy()->styleHint(QStyle::SH_UnderlineShortcut, option, widget)) { alignment |= Qt::TextHideMnemonic; }
+        if (!proxy()->styleHint(QStyle::SH_UnderlineShortcut, option, widget))
+        {
+          alignment |= Qt::TextHideMnemonic;
+        }
 
         painter->drawText(textRect, Qt::TextShowMnemonic | Qt::AlignHCenter | alignment, groupBox->text);
       }
@@ -82,10 +94,11 @@ void NXGroupBoxStyle::drawComplexControl(ComplexControl control,
   QProxyStyle::drawComplexControl(control, option, painter, widget);
 }
 
-void NXGroupBoxStyle::drawPrimitive(PrimitiveElement element,
-                                    const QStyleOption *option,
-                                    QPainter *painter,
-                                    const QWidget *widget) const
+void
+NXGroupBoxStyle::drawPrimitive(PrimitiveElement element,
+                               const QStyleOption *option,
+                               QPainter *painter,
+                               const QWidget *widget) const
 {
   switch (element)
   {
@@ -99,7 +112,8 @@ void NXGroupBoxStyle::drawPrimitive(PrimitiveElement element,
   QProxyStyle::drawPrimitive(element, option, painter, widget);
 }
 
-int NXGroupBoxStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
+int
+NXGroupBoxStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
   return QProxyStyle::pixelMetric(metric, option, widget);
 }

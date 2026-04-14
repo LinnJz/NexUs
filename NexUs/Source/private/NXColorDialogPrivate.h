@@ -33,17 +33,17 @@ public:
   explicit NXColorDialogPrivate(QObject *parent = nullptr);
   ~NXColorDialogPrivate();
 
-  Q_SLOT void onColorPickerColorChanged(const QColor& selectedColor) noexcept;
+  Q_SLOT void onColorPickerColorChanged(const QColor &selectedColor) noexcept;
   Q_SLOT void onColorValueSliderChanged(int value) noexcept;
   Q_SLOT void onTransparencyValueSliderChanged(int value) noexcept;
 
   Q_SLOT void onColorModeChanged(int index) noexcept;
-  Q_SLOT void onHtmlEditFocusOut(const QString& text) noexcept;
-  Q_SLOT void onHtmlEditChanged(const QString& text) noexcept;
-  Q_SLOT void onColorEditChanged(const QString& text) noexcept;
+  Q_SLOT void onHtmlEditFocusOut(const QString &text) noexcept;
+  Q_SLOT void onHtmlEditChanged(const QString &text) noexcept;
+  Q_SLOT void onColorEditChanged(const QString &text) noexcept;
 
-  Q_SLOT void onBasicColorViewClicked(const QModelIndex& index) noexcept;
-  Q_SLOT void onCustomColorViewClicked(const QModelIndex& index) noexcept;
+  Q_SLOT void onBasicColorViewClicked(const QModelIndex &index) noexcept;
+  Q_SLOT void onCustomColorViewClicked(const QModelIndex &index) noexcept;
 
   Q_SLOT void onAddCustomColorButtonClicked() noexcept;
   Q_SLOT void onRemoveCustomColorButtonClicked() noexcept;

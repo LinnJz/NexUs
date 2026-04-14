@@ -19,9 +19,12 @@ NXLogPrivate::NXLogPrivate(QObject *parent)
 {
 }
 
-NXLogPrivate::~NXLogPrivate() { }
+NXLogPrivate::~NXLogPrivate()
+{
+}
 
-void NXLogPrivate::_messageLogHander(QtMsgType type, const QMessageLogContext& ctx, const QString& msg)
+void
+NXLogPrivate::_messageLogHander(QtMsgType type, const QMessageLogContext &ctx, const QString &msg)
 {
   QString logInfo;
   QString logTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
@@ -69,7 +72,8 @@ void NXLogPrivate::_messageLogHander(QtMsgType type, const QMessageLogContext& c
   QFile logfile;
   if (log->getIsLogFileNameWithTime())
   {
-    logfile.setFileName(log->getLogSavePath() + QStringLiteral("\\") + log->getLogFileName() + *logFileNameTime + QStringLiteral(".txt"));
+    logfile.setFileName(log->getLogSavePath() + QStringLiteral("\\") + log->getLogFileName() + *logFileNameTime +
+                        QStringLiteral(".txt"));
   }
   else
   {
@@ -88,7 +92,8 @@ void NXLogPrivate::_messageLogHander(QtMsgType type, const QMessageLogContext& c
   messageLogMutex->unlock();
 }
 
-void NXLogPrivate::_clearLogFile() noexcept
+void
+NXLogPrivate::_clearLogFile() noexcept
 {
   if (_pIsLogFileNameWithTime)
   {
@@ -103,7 +108,10 @@ void NXLogPrivate::_clearLogFile() noexcept
     QFile file(_pLogSavePath + QStringLiteral("\\") + _pLogFileName + QStringLiteral(".txt"));
     if (file.exists())
     {
-      if (file.open(QIODevice::WriteOnly | QIODevice::Text | QFile::Truncate)) { file.close(); }
+      if (file.open(QIODevice::WriteOnly | QIODevice::Text | QFile::Truncate))
+      {
+        file.close();
+      }
     }
   }
 }

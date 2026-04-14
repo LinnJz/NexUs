@@ -79,4 +79,6 @@ T_Card::T_Card(QWidget *parent)
   addCentralWidget(centralWidget, true, true, 0);
 }
 
-T_Card::~T_Card() { }
+T_Card::~T_Card()
+{
+}

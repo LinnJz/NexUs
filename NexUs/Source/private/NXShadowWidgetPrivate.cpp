@@ -5,4 +5,6 @@ NXShadowWidgetPrivate::NXShadowWidgetPrivate(QObject *parent)
 {
 }
 
-NXShadowWidgetPrivate::~NXShadowWidgetPrivate() { }
+NXShadowWidgetPrivate::~NXShadowWidgetPrivate()
+{
+}

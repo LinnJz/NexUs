@@ -6,7 +6,6 @@
 #include "NXTheme.h"
 #include "private/NXTextPrivate.h"
 Q_PROPERTY_CREATE_CPP(NXText, bool, IsAllowClick)
-Q_PROPERTY_CREATE_CPP(NXText, NXTextType::DisplayMode, DisplayMode)
 
 NXText::NXText(QWidget *parent)
     : QLabel(parent)
@@ -18,12 +17,11 @@ NXText::NXText(QWidget *parent)
   d->_pIsWrapAnywhere = false;
   d->_pTextStyle      = NXTextType::NoStyle;
   d->_pNXIcon         = NXIconType::None;
-  d->_pDisplayMode    = NXTextType::FollowStyle;
 
   setObjectName("NXText");
   setStyleSheet(QStringLiteral("#NXText{background-color:transparent;}"));
   QFont textFont = font();
-  textFont.setLetterSpacing(QFont::AbsoluteSpacing, d->_textSpacing);
+  textFont.setLetterSpacing(QFont::AbsoluteSpacing, 0.5);
   textFont.setPixelSize(28);
   setFont(textFont);
   setWordWrap(true);
@@ -32,13 +30,13 @@ NXText::NXText(QWidget *parent)
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXTextPrivate::onThemeChanged);
 }
 
-NXText::NXText(const QString& text, QWidget *parent)
+NXText::NXText(const QString &text, QWidget *parent)
     : NXText(parent)
 {
   setText(text);
 }
 
-NXText::NXText(const QString& text, int pixelSize, QWidget *parent)
+NXText::NXText(const QString &text, int pixelSize, QWidget *parent)
     : NXText(text, parent)
 {
   QFont font = this->font();
@@ -46,40 +44,55 @@ NXText::NXText(const QString& text, int pixelSize, QWidget *parent)
   setFont(font);
 }
 
-NXText::~NXText() { }
+NXText::~NXText()
+{
+}
 
-void NXText::setIsWrapAnywhere(bool isWrapAnywhere) noexcept
+void
+NXText::setIsWrapAnywhere(bool isWrapAnywhere) noexcept
 {
   Q_D(NXText);
   setWordWrap(isWrapAnywhere);
   d->_pIsWrapAnywhere = isWrapAnywhere;
 }
 
-bool NXText::getIsWrapAnywhere() const noexcept
+bool
+NXText::getIsWrapAnywhere() const noexcept
 {
   Q_D(const NXText);
   return d->_pIsWrapAnywhere;
 }
 
-void NXText::setTextPixelSize(int size) noexcept
+void
+NXText::setTextPixelSize(int size) noexcept
 {
   QFont font = this->font();
   font.setPixelSize(size);
   setFont(font);
 }
 
-int NXText::getTextPixelSize() const noexcept { return this->font().pixelSize(); }
+int
+NXText::getTextPixelSize() const noexcept
+{
+  return this->font().pixelSize();
+}
 
-void NXText::setTextPointSize(int size) noexcept
+void
+NXText::setTextPointSize(int size) noexcept
 {
   QFont font = this->font();
   font.setPointSize(size);
   setFont(font);
 }
 
-int NXText::getTextPointSize() const noexcept { return this->font().pointSize(); }
+int
+NXText::getTextPointSize() const noexcept
+{
+  return this->font().pointSize();
+}
 
-void NXText::setTextStyle(NXTextType::TextStyle textStyle) noexcept
+void
+NXText::setTextStyle(NXTextType::TextStyle textStyle) noexcept
 {
   Q_D(NXText);
   QFont textFont = font();
@@ -138,13 +151,15 @@ void NXText::setTextStyle(NXTextType::TextStyle textStyle) noexcept
   setFont(textFont);
 }
 
-NXTextType::TextStyle NXText::getTextStyle() const noexcept
+NXTextType::TextStyle
+NXText::getTextStyle() const noexcept
 {
   Q_D(const NXText);
   return d->_pTextStyle;
 }
 
-void NXText::setNXIcon(NXIconType::IconName icon) noexcept
+void
+NXText::setNXIcon(NXIconType::IconName icon) noexcept
 {
   Q_D(NXText);
   d->_pNXIcon = icon;
@@ -152,45 +167,118 @@ void NXText::setNXIcon(NXIconType::IconName icon) noexcept
   Q_EMIT pNXIconChanged();
 }
 
-NXIconType::IconName NXText::getNXIcon() const noexcept
+NXIconType::IconName
+NXText::getNXIcon() const noexcept
 {
   Q_D(const NXText);
   return d->_pNXIcon;
 }
 
-void NXText::mouseReleaseEvent(QMouseEvent *event)
+void
+NXText::mouseReleaseEvent(QMouseEvent *event)
 {
-  if (d_ptr->_pIsAllowClick && event->button() == Qt::LeftButton) { Q_EMIT clicked(); }
+  if (d_ptr->_pIsAllowClick && event->button() == Qt::LeftButton)
+  {
+    Q_EMIT clicked();
+  }
   QLabel::mouseReleaseEvent(event);
 }
 
-void NXText::enterEvent(QEnterEvent *event)
+void
+NXText::enterEvent(QEnterEvent *event)
 {
-  if (d_ptr->_pIsAllowClick) { setCursor(QCursor(Qt::PointingHandCursor)); }
+  if (d_ptr->_pIsAllowClick)
+  {
+    setCursor(QCursor(Qt::PointingHandCursor));
+  }
   QLabel::enterEvent(event);
 }
 
-void NXText::leaveEvent(QEvent *event)
+void
+NXText::leaveEvent(QEvent *event)
 {
-  if (d_ptr->_pIsAllowClick) { setCursor(QCursor(Qt::ArrowCursor)); }
+  if (d_ptr->_pIsAllowClick)
+  {
+    setCursor(QCursor(Qt::ArrowCursor));
+  }
   QLabel::leaveEvent(event);
 }
 
-void NXText::paintEvent(QPaintEvent *event)
+void
+NXText::paintEvent(QPaintEvent *event)
 {
   Q_D(NXText);
   if (palette().color(QPalette::WindowText) != NXThemeColor(d->_themeMode, BasicText))
   {
     d->onThemeChanged(d->_themeMode);
   }
-  QPainter painter(this);
-  painter.save();
-  painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-  if (!d->drawByDisplayMode(painter))
+
+  if (d->_pNXIcon != NXIconType::None)
   {
+    QPainter painter(this);
+    painter.save();
+    painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
+
+    QFont iconFont("NXAwesome");
+    iconFont.setPixelSize(this->font().pixelSize());
+    painter.setFont(iconFont);
+    painter.setPen(NXThemeColor(d->_themeMode, BasicText));
+
+    QChar iconChar = QChar(d->_pNXIcon);
+    QFontMetrics iconFm(iconFont);
+    int iconWidth = iconFm.horizontalAdvance(iconChar);
+
+    QString displayText = text();
+    if (displayText.isEmpty())
+    {
+      QRect iconRect(0, 0, iconWidth, height());
+      iconRect.moveLeft((width() - iconWidth) / 2);
+      painter.drawText(iconRect, Qt::AlignVCenter | Qt::AlignLeft, iconChar);
+      painter.restore();
+      return;
+    }
+
+    QFont textFont = this->font();
+    painter.setFont(textFont);
+    QFontMetrics textFm(textFont);
+    int textWidth = textFm.horizontalAdvance(displayText);
+
+    const int spacing = 8;
+    int overallWidth  = iconWidth + spacing + textWidth;
+    int startX        = (width() - overallWidth) / 2;
+    if (startX < 0)
+      startX = 0;
+
+    QRect iconRect(startX, 0, iconWidth, height());
+    painter.setFont(iconFont);
+    painter.drawText(iconRect, Qt::AlignVCenter | Qt::AlignLeft, iconChar);
+
+    int textFlags = Qt::AlignVCenter | Qt::AlignLeft;
+    if (wordWrap())
+      textFlags |= Qt::TextWordWrap;
+    if (d->_pIsWrapAnywhere)
+      textFlags |= Qt::TextWrapAnywhere;
+
+    QRect textRect(startX + iconWidth + spacing, 0, width() - (startX + iconWidth + spacing), height());
+    painter.setFont(textFont);
+    painter.drawText(textRect, textFlags, displayText);
+
     painter.restore();
-    QLabel::paintEvent(event);
-    return;
   }
-  painter.restore();
+  else
+  {
+    if (wordWrap() && d->_pIsWrapAnywhere)
+    {
+      QPainter painter(this);
+      painter.save();
+      painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+      painter.setPen(NXThemeColor(d->_themeMode, BasicText));
+      painter.drawText(rect(), Qt::AlignLeft | Qt::AlignVCenter | Qt::TextWordWrap | Qt::TextWrapAnywhere, text());
+      painter.restore();
+    }
+    else
+    {
+      QLabel::paintEvent(event);
+    }
+  }
 }

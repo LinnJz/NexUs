@@ -12,8 +12,8 @@ Q_PROPERTY_CREATE_CPP(NXMessageButton, int, DisplayMsec)
 Q_PROPERTY_CREATE_CPP(NXMessageButton, QWidget *, MessageTargetWidget)
 Q_PROPERTY_CREATE_CPP(NXMessageButton, NXMessageBarType::MessageMode, MessageMode)
 Q_PROPERTY_CREATE_CPP(NXMessageButton, NXMessageBarType::PositionPolicy, PositionPolicy)
-Q_PROPERTY_CREATE_2_CPP(NXMessageButton, const QString&, QString, BarTitle)
-Q_PROPERTY_CREATE_2_CPP(NXMessageButton, const QString&, QString, BarText)
+Q_PROPERTY_CREATE_2_CPP(NXMessageButton, const QString &, QString, BarTitle)
+Q_PROPERTY_CREATE_2_CPP(NXMessageButton, const QString &, QString, BarText)
 
 NXMessageButton::NXMessageButton(QWidget *parent)
     : QPushButton(parent)
@@ -35,41 +35,52 @@ NXMessageButton::NXMessageButton(QWidget *parent)
   d->_pPositionPolicy      = NXMessageBarType::TopRight;
   d->_themeMode            = nxTheme->getThemeMode();
   d->_pMessageTargetWidget = parent;
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
   connect(this, &NXMessageButton::clicked, d, &NXMessageButtonPrivate::_showMessage);
   connect(this, &NXMessageButton::showMessage, d, &NXMessageButtonPrivate::_showMessage);
 }
 
-NXMessageButton::NXMessageButton(const QString& text, QWidget *parent)
+NXMessageButton::NXMessageButton(const QString &text, QWidget *parent)
     : NXMessageButton(parent)
 {
   setText(text);
 }
 
-NXMessageButton::~NXMessageButton() { }
+NXMessageButton::~NXMessageButton()
+{
+}
 
-void NXMessageButton::disconnectInternalSignalOfClicked() noexcept
+void
+NXMessageButton::disconnectInternalSignalOfClicked() noexcept
 {
   Q_D(NXMessageButton);
   disconnect(this, &NXMessageButton::clicked, d, &NXMessageButtonPrivate::_showMessage);
 }
 
-void NXMessageButton::mousePressEvent(QMouseEvent *event)
+void
+NXMessageButton::mousePressEvent(QMouseEvent *event)
 {
   Q_D(NXMessageButton);
-  if (event->button() == Qt::LeftButton) { d->_isLeftButtonPress = true; }
+  if (event->button() == Qt::LeftButton)
+  {
+    d->_isLeftButtonPress = true;
+  }
   QPushButton::mousePressEvent(event);
 }
 
-void NXMessageButton::mouseReleaseEvent(QMouseEvent *event)
+void
+NXMessageButton::mouseReleaseEvent(QMouseEvent *event)
 {
   Q_D(NXMessageButton);
   d->_isLeftButtonPress = false;
   QPushButton::mouseReleaseEvent(event);
 }
 
-void NXMessageButton::paintEvent(QPaintEvent *event)
+void
+NXMessageButton::paintEvent(QPaintEvent *event)
 {
   Q_D(NXMessageButton);
   QPainter painter(this);

@@ -12,21 +12,34 @@ NXExponentialBlurPrivate::NXExponentialBlurPrivate(QObject *parent)
 {
 }
 
-NXExponentialBlurPrivate::~NXExponentialBlurPrivate() { }
-
-void NXExponentialBlurPrivate::_drawExponentialBlur(QImage& image, const quint16& qRadius) noexcept
+NXExponentialBlurPrivate::~NXExponentialBlurPrivate()
 {
-  if (qRadius < 1) { return; }
+}
+
+void
+NXExponentialBlurPrivate::_drawExponentialBlur(QImage &image, const quint16 &qRadius) noexcept
+{
+  if (qRadius < 1)
+  {
+    return;
+  }
   image      = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
   int alpha  = (int) ((1 << _aprec) * (1.0f - std::exp(-2.3f / (qRadius + 1.f))));
   int height = image.height();
   int width  = image.width();
-  for (int row = 0; row < height; row++) { _drawRowBlur(image, row, alpha); }
+  for (int row = 0; row < height; row++)
+  {
+    _drawRowBlur(image, row, alpha);
+  }
 
-  for (int col = 0; col < width; col++) { _drawColumnBlur(image, col, alpha); }
+  for (int col = 0; col < width; col++)
+  {
+    _drawColumnBlur(image, col, alpha);
+  }
 }
 
-void NXExponentialBlurPrivate::_drawRowBlur(QImage& image, const int& row, const int& alpha) noexcept
+void
+NXExponentialBlurPrivate::_drawRowBlur(QImage &image, const int &row, const int &alpha) noexcept
 {
   int zR, zG, zB, zA;
 
@@ -38,14 +51,18 @@ void NXExponentialBlurPrivate::_drawRowBlur(QImage& image, const int& row, const
   zB = *((unsigned char *) ptr + 2) << _zprec;
   zA = *((unsigned char *) ptr + 3) << _zprec;
 
-  for (int index = 0; index < width; index++) { _drawInnerBlur((unsigned char *) &ptr[index], zR, zG, zB, zA, alpha); }
+  for (int index = 0; index < width; index++)
+  {
+    _drawInnerBlur((unsigned char *) &ptr[index], zR, zG, zB, zA, alpha);
+  }
   for (int index = width - 2; index >= 0; index--)
   {
     _drawInnerBlur((unsigned char *) &ptr[index], zR, zG, zB, zA, alpha);
   }
 }
 
-void NXExponentialBlurPrivate::_drawColumnBlur(QImage& image, const int& column, const int& alpha) noexcept
+void
+NXExponentialBlurPrivate::_drawColumnBlur(QImage &image, const int &column, const int &alpha) noexcept
 {
   int zR, zG, zB, zA;
 
@@ -69,8 +86,8 @@ void NXExponentialBlurPrivate::_drawColumnBlur(QImage& image, const int& column,
   }
 }
 
-void NXExponentialBlurPrivate::_drawInnerBlur(
-    unsigned char *bptr, int& zR, int& zG, int& zB, int& zA, int alpha) noexcept
+void
+NXExponentialBlurPrivate::_drawInnerBlur(unsigned char *bptr, int &zR, int &zG, int &zB, int &zA, int alpha) noexcept
 {
   int R, G, B, A;
   R = *bptr;

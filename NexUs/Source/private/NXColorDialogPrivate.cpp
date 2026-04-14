@@ -21,16 +21,19 @@ NXColorDialogPrivate::NXColorDialogPrivate(QObject *parent)
 {
 }
 
-NXColorDialogPrivate::~NXColorDialogPrivate() { }
+NXColorDialogPrivate::~NXColorDialogPrivate()
+{
+}
 
-void NXColorDialogPrivate::onColorPickerColorChanged(const QColor& selectedColor) noexcept
+void
+NXColorDialogPrivate::onColorPickerColorChanged(const QColor &selectedColor) noexcept
 {
   Q_Q(NXColorDialog);
   // float <h, s, v, a> range from 0.0 to 1.0
   // int <h> range from 0 to 359, <s, v, a> range from 0 to 255
   _pCurrentColor = selectedColor;
   _pCurrentColor.setHsvF(selectedColor.hueF(), selectedColor.saturationF(), _colorValueSlider->value() * INV_255,
-           _transparencyValueSlider->value() * INV_255);
+                         _transparencyValueSlider->value() * INV_255);
   _updateHtmlEditValue();
   _updateEditValue();
   _updateColorPreview();
@@ -39,7 +42,8 @@ void NXColorDialogPrivate::onColorPickerColorChanged(const QColor& selectedColor
   Q_EMIT q->pCurrentColorChanged();
 }
 
-void NXColorDialogPrivate::onColorValueSliderChanged(int value) noexcept
+void
+NXColorDialogPrivate::onColorValueSliderChanged(int value) noexcept
 {
   Q_Q(NXColorDialog);
   QColor baseColor = _pCurrentColor;
@@ -48,7 +52,8 @@ void NXColorDialogPrivate::onColorValueSliderChanged(int value) noexcept
   q->setCurrentColor(baseColor);
 }
 
-void NXColorDialogPrivate::onTransparencyValueSliderChanged(int value) noexcept
+void
+NXColorDialogPrivate::onTransparencyValueSliderChanged(int value) noexcept
 {
   Q_Q(NXColorDialog);
   QColor baseColor = _pCurrentColor;
@@ -56,7 +61,8 @@ void NXColorDialogPrivate::onTransparencyValueSliderChanged(int value) noexcept
   q->setCurrentColor(baseColor);
 }
 
-void NXColorDialogPrivate::onColorModeChanged(int index) noexcept
+void
+NXColorDialogPrivate::onColorModeChanged(int index) noexcept
 {
   if (index == 0)
   {
@@ -77,7 +83,8 @@ void NXColorDialogPrivate::onColorModeChanged(int index) noexcept
   _updateEditValue();
 }
 
-void NXColorDialogPrivate::onHtmlEditFocusOut(const QString& text) noexcept
+void
+NXColorDialogPrivate::onHtmlEditFocusOut(const QString &text) noexcept
 {
   // 自动补全
   if (text == QStringLiteral("#"))
@@ -87,10 +94,14 @@ void NXColorDialogPrivate::onHtmlEditFocusOut(const QString& text) noexcept
     // #FF000000 is argb, qcolor(0,0,0,0) is rgba
     q->setCurrentColor(QColor(_completeColorText(QStringLiteral("#FFFFFFFF"))));
   }
-  else if (text.length() > 1 && text.length() < 9) { _htmlEdit->setText(_completeColorText(text.toUpper())); }
+  else if (text.length() > 1 && text.length() < 9)
+  {
+    _htmlEdit->setText(_completeColorText(text.toUpper()));
+  }
 }
 
-void NXColorDialogPrivate::onHtmlEditChanged(const QString& text) noexcept
+void
+NXColorDialogPrivate::onHtmlEditChanged(const QString &text) noexcept
 {
   Q_Q(NXColorDialog);
   if (text.length() > 1)
@@ -107,39 +118,54 @@ void NXColorDialogPrivate::onHtmlEditChanged(const QString& text) noexcept
   }
 }
 
-void NXColorDialogPrivate::onColorEditChanged(const QString& text) noexcept
+void
+NXColorDialogPrivate::onColorEditChanged(const QString &text) noexcept
 {
   Q_Q(NXColorDialog);
   q->setCurrentColor(_getColorFromEdit());
 }
 
-void NXColorDialogPrivate::onBasicColorViewClicked(const QModelIndex& index) noexcept
+void
+NXColorDialogPrivate::onBasicColorViewClicked(const QModelIndex &index) noexcept
 {
   Q_Q(NXColorDialog);
   QColor basicColor = index.data(Qt::UserRole).value<QColor>();
   q->setCurrentColor(basicColor);
 }
 
-void NXColorDialogPrivate::onCustomColorViewClicked(const QModelIndex& index) noexcept
+void
+NXColorDialogPrivate::onCustomColorViewClicked(const QModelIndex &index) noexcept
 {
   Q_Q(NXColorDialog);
   QColor color = index.data(Qt::UserRole).value<QColor>();
-  if (color.isValid()) { q->setCurrentColor(color); }
+  if (color.isValid())
+  {
+    q->setCurrentColor(color);
+  }
 }
 
-void NXColorDialogPrivate::onAddCustomColorButtonClicked() noexcept
+void
+NXColorDialogPrivate::onAddCustomColorButtonClicked() noexcept
 {
   QModelIndexList selectedIndexs = _customColorView->selectionModel()->selectedIndexes();
-  if (selectedIndexs.count() > 0) { _customColorModel->replaceDisplayColor(_pCurrentColor, selectedIndexs[0].row()); }
+  if (selectedIndexs.count() > 0)
+  {
+    _customColorModel->replaceDisplayColor(_pCurrentColor, selectedIndexs[0].row());
+  }
 }
 
-void NXColorDialogPrivate::onRemoveCustomColorButtonClicked() noexcept
+void
+NXColorDialogPrivate::onRemoveCustomColorButtonClicked() noexcept
 {
   QModelIndexList selectedIndexs = _customColorView->selectionModel()->selectedIndexes();
-  if (selectedIndexs.count() > 0) { _customColorModel->replaceDisplayColor(QColor(), selectedIndexs[0].row()); }
+  if (selectedIndexs.count() > 0)
+  {
+    _customColorModel->replaceDisplayColor(QColor(), selectedIndexs[0].row());
+  }
 }
 
-void NXColorDialogPrivate::_initBasicColor() noexcept
+void
+NXColorDialogPrivate::_initBasicColor() noexcept
 {
   QList<QColor> basicColorList;
   basicColorList << QColor(0xF0, 0x87, 0x84) << QColor(0xEB, 0x33, 0x24) << QColor(0x77, 0x43, 0x42)
@@ -161,14 +187,19 @@ void NXColorDialogPrivate::_initBasicColor() noexcept
   _basicColorModel->appendDisplayColor(basicColorList);
 }
 
-void NXColorDialogPrivate::_initCustomColor() noexcept
+void
+NXColorDialogPrivate::_initCustomColor() noexcept
 {
   QList<QColor> customColorList;
-  for (int i = 0; i < 24; i++) { customColorList.append(QColor()); }
+  for (int i = 0; i < 24; i++)
+  {
+    customColorList.append(QColor());
+  }
   _customColorModel->appendDisplayColor(customColorList);
 }
 
-void NXColorDialogPrivate::_updateHtmlEditValue() noexcept
+void
+NXColorDialogPrivate::_updateHtmlEditValue() noexcept
 {
   if (!_htmlEdit->hasFocus())
   {
@@ -177,7 +208,8 @@ void NXColorDialogPrivate::_updateHtmlEditValue() noexcept
   }
 }
 
-void NXColorDialogPrivate::_updateEditValue() noexcept
+void
+NXColorDialogPrivate::_updateEditValue() noexcept
 {
   if (_modeComboBox->currentIndex() == 0)
   {
@@ -190,7 +222,10 @@ void NXColorDialogPrivate::_updateEditValue() noexcept
   {
     QColor hsvColor = _pCurrentColor.toHsv();
     int hue         = hsvColor.hue();
-    if (hue < 0) { hue = 0; }
+    if (hue < 0)
+    {
+      hue = 0;
+    }
     _firstEdit->setText(QString::number(hue));
     _secondEdit->setText(QString::number(hsvColor.saturation()));
     _thridEdit->setText(QString::number(hsvColor.value()));
@@ -198,13 +233,15 @@ void NXColorDialogPrivate::_updateEditValue() noexcept
   }
 }
 
-void NXColorDialogPrivate::_updateColorPreview() noexcept
+void
+NXColorDialogPrivate::_updateColorPreview() noexcept
 {
   _colorPreview->setBaseColor(_pCurrentColor);
   _colorPreview->update();
 }
 
-void NXColorDialogPrivate::_updateColorValueSlider() noexcept
+void
+NXColorDialogPrivate::_updateColorValueSlider() noexcept
 {
   _colorValueSlider->blockSignals(true);
   _colorValueSlider->setValue(_pCurrentColor.value());
@@ -213,7 +250,8 @@ void NXColorDialogPrivate::_updateColorValueSlider() noexcept
   _colorValueSlider->update();
 }
 
-void NXColorDialogPrivate::_updateTransparencyValueSlider() noexcept
+void
+NXColorDialogPrivate::_updateTransparencyValueSlider() noexcept
 {
   _transparencyValueSlider->blockSignals(true);
   _transparencyValueSlider->setValue(_pCurrentColor.alpha());
@@ -222,35 +260,56 @@ void NXColorDialogPrivate::_updateTransparencyValueSlider() noexcept
   _transparencyValueSlider->update();
 }
 
-QString NXColorDialogPrivate::_completeColorText(QString text) const noexcept
+QString
+NXColorDialogPrivate::_completeColorText(QString text) const noexcept
 {
   text.remove(QStringLiteral("#"));
   if (_pColorSchemeType == NXColorSchemeType::Argb)
-    while (text.length() < 8) { text.length() == 6 ? text.prepend(QStringLiteral("FF")) : text.prepend(QStringLiteral("0")); }
+    while (text.length() < 8)
+    {
+      text.length() == 6 ? text.prepend(QStringLiteral("FF")) : text.prepend(QStringLiteral("0"));
+    }
   else if (_pColorSchemeType == NXColorSchemeType::Rgba)
-    while (text.length() < 8) { text.length() == 6 ? text.append(QStringLiteral("FF")) : text.append(QStringLiteral("0")); }
+    while (text.length() < 8)
+    {
+      text.length() == 6 ? text.append(QStringLiteral("FF")) : text.append(QStringLiteral("0"));
+    }
   text.prepend(QStringLiteral("#"));
   return text;
 }
 
-QString NXColorDialogPrivate::_getHex4ChanelValue() const noexcept
+QString
+NXColorDialogPrivate::_getHex4ChanelValue() const noexcept
 {
   QString colorHex;
   QString red = QString::number(_pCurrentColor.red(), 16);
-  if (red.length() < 2) { red.prepend(QStringLiteral("0")); }
+  if (red.length() < 2)
+  {
+    red.prepend(QStringLiteral("0"));
+  }
   QString green = QString::number(_pCurrentColor.green(), 16);
-  if (green.length() < 2) { green.prepend(QStringLiteral("0")); }
+  if (green.length() < 2)
+  {
+    green.prepend(QStringLiteral("0"));
+  }
   QString blue = QString::number(_pCurrentColor.blue(), 16);
-  if (blue.length() < 2) { blue.prepend(QStringLiteral("0")); }
+  if (blue.length() < 2)
+  {
+    blue.prepend(QStringLiteral("0"));
+  }
   QString alpha = QString::number(_pCurrentColor.alpha(), 16);
-  if (alpha.length() < 2) { alpha.prepend(QStringLiteral("0")); }
+  if (alpha.length() < 2)
+  {
+    alpha.prepend(QStringLiteral("0"));
+  }
   colorHex = _pColorSchemeType == NXColorSchemeType::Argb ? alpha + red + green + blue : red + green + blue + alpha;
   colorHex = colorHex.toUpper();
   colorHex.prepend(QStringLiteral("#"));
   return colorHex;
 }
 
-QColor NXColorDialogPrivate::_getColorFromEdit() const noexcept
+QColor
+NXColorDialogPrivate::_getColorFromEdit() const noexcept
 {
   QColor editColor;
   if (_modeComboBox->currentIndex() == 0)

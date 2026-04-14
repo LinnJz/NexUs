@@ -8,9 +8,12 @@ NXRadioButtonPrivate::NXRadioButtonPrivate(QObject *parent)
 {
 }
 
-NXRadioButtonPrivate::~NXRadioButtonPrivate() { }
+NXRadioButtonPrivate::~NXRadioButtonPrivate()
+{
+}
 
-void NXRadioButtonPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
+void
+NXRadioButtonPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_Q(NXRadioButton);
   _themeMode       = themeMode;

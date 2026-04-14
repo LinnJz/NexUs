@@ -5,4 +5,6 @@ NXAcrylicUrlCardPrivate::NXAcrylicUrlCardPrivate(QObject *parent)
 {
 }
 
-NXAcrylicUrlCardPrivate::~NXAcrylicUrlCardPrivate() { }
+NXAcrylicUrlCardPrivate::~NXAcrylicUrlCardPrivate()
+{
+}

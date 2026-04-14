@@ -15,7 +15,7 @@ public:
   explicit NXColorPicker(QWidget *parent = nullptr);
   ~NXColorPicker();
 
-  void setSelectedColor(const QColor& color) noexcept;
+  void setSelectedColor(const QColor &color) noexcept;
   QColor getSelectedColor() const noexcept;
 
 Q_SIGNALS:

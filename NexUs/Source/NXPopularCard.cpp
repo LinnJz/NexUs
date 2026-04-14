@@ -11,12 +11,12 @@
 #include "NXTheme.h"
 #include "private/NXPopularCardPrivate.h"
 Q_PROPERTY_CREATE_CPP(NXPopularCard, int, BorderRadius)
-Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QPixmap&, QPixmap, CardPixmap)
-Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QString&, QString, Title)
-Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QString&, QString, SubTitle)
-Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QString&, QString, InteractiveTips)
-Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QString&, QString, DetailedText)
-Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QPixmap&, QPixmap, CardFloatPixmap)
+Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QPixmap &, QPixmap, CardPixmap)
+Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QString &, QString, Title)
+Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QString &, QString, SubTitle)
+Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QString &, QString, InteractiveTips)
+Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QString &, QString, DetailedText)
+Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QPixmap &, QPixmap, CardFloatPixmap)
 
 NXPopularCard::NXPopularCard(QWidget *parent)
     : QWidget { parent }
@@ -38,43 +38,58 @@ NXPopularCard::NXPopularCard(QWidget *parent)
   connect(d->_floatTimer, &QTimer::timeout, d, &NXPopularCardPrivate::_showFloater);
 
   d->_themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
 }
 
-NXPopularCard::~NXPopularCard() { }
+NXPopularCard::~NXPopularCard()
+{
+}
 
-void NXPopularCard::setCardButtonText(const QString& cardButtonText) noexcept
+void
+NXPopularCard::setCardButtonText(const QString &cardButtonText) noexcept
 {
   Q_D(NXPopularCard);
-  if (cardButtonText.isEmpty()) { return; }
+  if (cardButtonText.isEmpty())
+  {
+    return;
+  }
   d->_pCardButtonText = cardButtonText;
   d->_floater->_overButton->setText(d->_pCardButtonText);
   Q_EMIT pCardButtonTextChanged();
 }
 
-QString NXPopularCard::getCardButtonText() const noexcept
+QString
+NXPopularCard::getCardButtonText() const noexcept
 {
   Q_D(const NXPopularCard);
   return d->_pCardButtonText;
 }
 
-void NXPopularCard::setCardFloatArea(QWidget *floatArea) noexcept
+void
+NXPopularCard::setCardFloatArea(QWidget *floatArea) noexcept
 {
   Q_D(NXPopularCard);
-  if (!floatArea || floatArea == this) { return; }
+  if (!floatArea || floatArea == this)
+  {
+    return;
+  }
   d->_pCardFloatArea = floatArea;
   d->_floater->setParent(floatArea);
   Q_EMIT pCardFloatAreaChanged();
 }
 
-QWidget *NXPopularCard::getCardFloatArea() const noexcept
+QWidget *
+NXPopularCard::getCardFloatArea() const noexcept
 {
   Q_D(const NXPopularCard);
   return d->_pCardFloatArea;
 }
 
-bool NXPopularCard::event(QEvent *event)
+bool
+NXPopularCard::event(QEvent *event)
 {
   Q_D(NXPopularCard);
   switch (event->type())
@@ -83,7 +98,10 @@ bool NXPopularCard::event(QEvent *event)
   {
     d->_floatTimer->start(450);
     QPropertyAnimation *hoverAnimation = new QPropertyAnimation(d, "pHoverYOffset");
-    connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]() { update(); });
+    connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]()
+    {
+      update();
+    });
     hoverAnimation->setDuration(130);
     hoverAnimation->setStartValue(d->_pHoverYOffset);
     hoverAnimation->setEndValue(6);
@@ -99,7 +117,10 @@ bool NXPopularCard::event(QEvent *event)
   {
     d->_floatTimer->stop();
     QPropertyAnimation *hoverAnimation = new QPropertyAnimation(d, "pHoverYOffset");
-    connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]() { update(); });
+    connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]()
+    {
+      update();
+    });
     hoverAnimation->setDuration(130);
     hoverAnimation->setStartValue(d->_pHoverYOffset);
     hoverAnimation->setEndValue(0);
@@ -124,10 +145,14 @@ bool NXPopularCard::event(QEvent *event)
   return QWidget::event(event);
 }
 
-void NXPopularCard::paintEvent(QPaintEvent *event)
+void
+NXPopularCard::paintEvent(QPaintEvent *event)
 {
   Q_D(NXPopularCard);
-  if (d->_isFloating) { return; }
+  if (d->_isFloating)
+  {
+    return;
+  }
   QPainter painter(this);
   painter.save();
   painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
@@ -161,7 +186,10 @@ void NXPopularCard::paintEvent(QPaintEvent *event)
   // 计算按钮最终矩形
   int buttonTargetWidth =
       d->_floater->_overButton->fontMetrics().horizontalAdvance(d->_floater->_overButton->text()) + 40;
-  if (buttonTargetWidth > width() * 0.25) { buttonTargetWidth = width() * 0.25; }
+  if (buttonTargetWidth > width() * 0.25)
+  {
+    buttonTargetWidth = width() * 0.25;
+  }
   // 处理NXPushButton的阴影偏移
   d->_buttonTargetRect = QRect(QPoint(width() + 2 * d->_floater->_floatGeometryOffset - d->_shadowBorderWidth + 3 -
                                           foregroundRect.height() * 0.15 - buttonTargetWidth,

@@ -41,4 +41,6 @@ T_ListView::T_ListView(QWidget *parent)
   addCentralWidget(centralWidget, true, false, 0);
 }
 
-T_ListView::~T_ListView() { }
+T_ListView::~T_ListView()
+{
+}

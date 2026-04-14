@@ -5,4 +5,6 @@ NXToolButtonPrivate::NXToolButtonPrivate(QObject *parent)
 {
 }
 
-NXToolButtonPrivate::~NXToolButtonPrivate() { }
+NXToolButtonPrivate::~NXToolButtonPrivate()
+{
+}

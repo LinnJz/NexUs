@@ -30,8 +30,8 @@ public:
   NXThemeType::ThemeMode getThemeMode() const noexcept;
 
   void
-  setThemeColor(NXThemeType::ThemeMode themeMode, NXThemeType::ThemeColor themeColor, const QColor& newColor) noexcept;
-  const QColor& getThemeColor(NXThemeType::ThemeMode themeMode, NXThemeType::ThemeColor themeColor) const noexcept;
+  setThemeColor(NXThemeType::ThemeMode themeMode, NXThemeType::ThemeColor themeColor, const QColor &newColor) noexcept;
+  const QColor &getThemeColor(NXThemeType::ThemeMode themeMode, NXThemeType::ThemeColor themeColor) const noexcept;
 
   void drawEffectShadow(QPainter *painter,
                         QRect widgetRect,
@@ -39,8 +39,8 @@ public:
                         int borderRadius,
                         int maxAlpha             = 32,
                         int extendPixels         = 1,
-                        const QColor& lightColor = QColor(0xC0, 0xC0, 0xC0),
-                        const QColor& darkColor  = QColor(0x80, 0x80, 0x80)) noexcept;
+                        const QColor &lightColor = QColor(0xC0, 0xC0, 0xC0),
+                        const QColor &darkColor  = QColor(0x80, 0x80, 0x80)) noexcept;
 
 Q_SIGNALS:
   void themeModeChanged(NXThemeType::ThemeMode themeMode);

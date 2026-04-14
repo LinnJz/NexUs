@@ -5,4 +5,6 @@ NXReminderCardPrivate::NXReminderCardPrivate(QObject *parent)
 {
 }
 
-NXReminderCardPrivate::~NXReminderCardPrivate() { }
+NXReminderCardPrivate::~NXReminderCardPrivate()
+{
+}

@@ -68,11 +68,15 @@ template<typename F, typename V>
 using invoke_result_t = typename invoke_result<F, V>::type;
 
 template<typename E, enum_subtype S, typename F, std::size_t... I>
-constexpr auto common_invocable(std::index_sequence<I...>) noexcept
+constexpr auto
+common_invocable(std::index_sequence<I...>) noexcept
 {
   static_assert(std::is_enum_v<E>, "magic_enum::detail::invocable_index requires enum type.");
 
-  if constexpr (count_v<E, S> == 0) { return identity<nonesuch> {}; }
+  if constexpr (count_v<E, S> == 0)
+  {
+    return identity<nonesuch> {};
+  }
   else
   {
     return std::common_type<invoke_result_t<F, enum_constant<values_v<E, S>[I]>>...> {};
@@ -80,7 +84,8 @@ constexpr auto common_invocable(std::index_sequence<I...>) noexcept
 }
 
 template<typename E, enum_subtype S, typename Result, typename F>
-constexpr auto result_type() noexcept
+constexpr auto
+result_type() noexcept
 {
   static_assert(std::is_enum_v<E>, "magic_enum::detail::result_type requires enum type.");
 
@@ -88,7 +93,10 @@ constexpr auto result_type() noexcept
   using R            = typename decltype(common_invocable<E, S, F>(seq))::type;
   if constexpr (std::is_same_v<Result, default_result_type>)
   {
-    if constexpr (std::is_same_v<R, nonesuch>) { return identity<void> {}; }
+    if constexpr (std::is_same_v<R, nonesuch>)
+    {
+      return identity<void> {};
+    }
     else
     {
       return identity<R> {};
@@ -96,8 +104,14 @@ constexpr auto result_type() noexcept
   }
   else
   {
-    if constexpr (std::is_convertible_v<R, Result>) { return identity<Result> {}; }
-    else if constexpr (std::is_convertible_v<Result, R>) { return identity<R> {}; }
+    if constexpr (std::is_convertible_v<R, Result>)
+    {
+      return identity<Result> {};
+    }
+    else if constexpr (std::is_convertible_v<Result, R>)
+    {
+      return identity<R> {};
+    }
     else
     {
       return identity<nonesuch> {};
@@ -117,20 +131,28 @@ using result_t = std::enable_if_t<std::is_enum_v<D> && !std::is_same_v<R, nonesu
 
 template<typename T = void>
 inline constexpr auto default_result_type_lambda = []() noexcept(std::is_nothrow_default_constructible_v<T>)
-{ return T {}; };
+{
+  return T {};
+};
 
 template<>
-inline constexpr auto default_result_type_lambda<void> = []() noexcept { };
+inline constexpr auto default_result_type_lambda<void> = []() noexcept
+{
+};
 
 template<std::size_t I, std::size_t End, typename R, typename E, enum_subtype S, typename F, typename Def>
-constexpr decltype(auto) constexpr_switch_impl(F&& f, E value, Def&& def)
+constexpr decltype(auto)
+constexpr_switch_impl(F &&f, E value, Def &&def)
 {
   if constexpr (I < End)
   {
     constexpr auto v = enum_constant<enum_value<E, I, S>()> {};
     if (value == v)
     {
-      if constexpr (std::is_invocable_r_v<R, F, decltype(v)>) { return static_cast<R>(std::forward<F>(f)(v)); }
+      if constexpr (std::is_invocable_r_v<R, F, decltype(v)>)
+      {
+        return static_cast<R>(std::forward<F>(f)(v));
+      }
       else
       {
         return def();
@@ -148,11 +170,15 @@ constexpr decltype(auto) constexpr_switch_impl(F&& f, E value, Def&& def)
 }
 
 template<typename R, typename E, enum_subtype S, typename F, typename Def>
-constexpr decltype(auto) constexpr_switch(F&& f, E value, Def&& def)
+constexpr decltype(auto)
+constexpr_switch(F &&f, E value, Def &&def)
 {
   static_assert(is_enum_v<E>, "magic_enum::detail::constexpr_switch requires enum type.");
 
-  if constexpr (count_v<E, S> == 0) { return def(); }
+  if constexpr (count_v<E, S> == 0)
+  {
+    return def();
+  }
   else
   {
     return constexpr_switch_impl<0, count_v<E, S>, R, E, S>(std::forward<F>(f), value, std::forward<Def>(def));
@@ -167,7 +193,8 @@ template<typename Result = detail::default_result_type,
          detail::enum_subtype S = detail::subtype_v<E>,
          typename F,
          typename R = detail::result_t<E, S, Result, F>>
-constexpr decltype(auto) enum_switch(F&& f, E value)
+constexpr decltype(auto)
+enum_switch(F &&f, E value)
 {
   using D = std::decay_t<E>;
   static_assert(std::is_enum_v<D>, "magic_enum::enum_switch requires enum type.");
@@ -186,7 +213,8 @@ template<typename Result = detail::default_result_type,
          typename E,
          typename F,
          typename R = detail::result_t<E, S, Result, F>>
-constexpr decltype(auto) enum_switch(F&& f, E value)
+constexpr decltype(auto)
+enum_switch(F &&f, E value)
 {
   return enum_switch<Result, E, S>(std::forward<F>(f), value);
 }
@@ -196,18 +224,24 @@ template<typename Result,
          detail::enum_subtype S = detail::subtype_v<E>,
          typename F,
          typename R = detail::result_t<E, S, Result, F>>
-constexpr decltype(auto) enum_switch(F&& f, E value, Result&& result)
+constexpr decltype(auto)
+enum_switch(F &&f, E value, Result &&result)
 {
   using D = std::decay_t<E>;
   static_assert(std::is_enum_v<D>, "magic_enum::enum_switch requires enum type.");
   static_assert(detail::is_reflected_v<D, S>, "magic_enum requires enum implementation and valid max and min.");
 
 #if defined(MAGIC_ENUM_ENABLE_HASH) || defined(MAGIC_ENUM_ENABLE_HASH_SWITCH)
-  return detail::constexpr_switch<&detail::values_v<D, S>, detail::case_call_t::value>(
-      std::forward<F>(f), value, [&result]() -> R { return std::forward<Result>(result); });
+  return detail::constexpr_switch<&detail::values_v<D, S>, detail::case_call_t::value>(std::forward<F>(f), value,
+                                                                                       [&result]() -> R
+  {
+    return std::forward<Result>(result);
+  });
 #else
-  return detail::constexpr_switch<R, D, S>(std::forward<F>(f), value,
-                                           [&result]() -> R { return std::forward<Result>(result); });
+  return detail::constexpr_switch<R, D, S>(std::forward<F>(f), value, [&result]() -> R
+  {
+    return std::forward<Result>(result);
+  });
 #endif
 }
 
@@ -216,7 +250,8 @@ template<typename Result,
          typename E,
          typename F,
          typename R = detail::result_t<E, S, Result, F>>
-constexpr decltype(auto) enum_switch(F&& f, E value, Result&& result)
+constexpr decltype(auto)
+enum_switch(F &&f, E value, Result &&result)
 {
   return enum_switch<Result, E, S>(std::forward<F>(f), value, std::forward<Result>(result));
 }

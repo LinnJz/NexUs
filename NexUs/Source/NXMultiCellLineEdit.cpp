@@ -26,20 +26,25 @@ namespace
 {
 constexpr const char *CLEAR_ALLOWED_PROPERTY = "NXMultiCellClearAllowed";
 
-int NormalizeCellIndex(const QList<QLineEdit *>& cells, int cellIndex, const char *actionName) noexcept
+int
+NormalizeCellIndex(const QList<QLineEdit *> &cells, int cellIndex, const char *actionName) noexcept
 {
   if (cells.isEmpty())
   {
     qWarning() << "NXMultiCellLineEdit" << actionName << "cell list empty";
     return -1;
   }
-  if (cellIndex >= 0 && cellIndex < cells.size()) { return cellIndex; }
+  if (cellIndex >= 0 && cellIndex < cells.size())
+  {
+    return cellIndex;
+  }
   qWarning() << "NXMultiCellLineEdit" << actionName << "cellIndex out of range:" << cellIndex
              << "max:" << cells.size() - 1;
   return cells.size() - 1;
 }
 
-int NormalizeListCount(const char *actionName, int cellCount, int listSize) noexcept
+int
+NormalizeListCount(const char *actionName, int cellCount, int listSize) noexcept
 {
   if (listSize > cellCount)
   {
@@ -49,19 +54,22 @@ int NormalizeListCount(const char *actionName, int cellCount, int listSize) noex
   return std::min(cellCount, listSize);
 }
 
-Q_ALWAYS_INLINE bool IsCtrlAltTab(const QKeyEvent& event) noexcept
+Q_ALWAYS_INLINE bool
+IsCtrlAltTab(const QKeyEvent &event) noexcept
 {
   return event.key() == Qt::Key_Tab && event.modifiers().testFlag(Qt::ControlModifier) &&
          event.modifiers().testFlag(Qt::AltModifier);
 }
 
-Q_ALWAYS_INLINE bool IsCtrlShift(const QKeyEvent& event, Qt::Key key) noexcept
+Q_ALWAYS_INLINE bool
+IsCtrlShift(const QKeyEvent &event, Qt::Key key) noexcept
 {
   return event.key() == key && event.modifiers().testFlag(Qt::ControlModifier) &&
          event.modifiers().testFlag(Qt::ShiftModifier);
 }
 
-Q_ALWAYS_INLINE bool IsCtrlOnly(const QKeyEvent& event, Qt::Key key) noexcept
+Q_ALWAYS_INLINE bool
+IsCtrlOnly(const QKeyEvent &event, Qt::Key key) noexcept
 {
   return event.key() == key && event.modifiers().testFlag(Qt::ControlModifier) &&
          !event.modifiers().testFlag(Qt::ShiftModifier) && !event.modifiers().testFlag(Qt::AltModifier);
@@ -109,7 +117,10 @@ NXMultiCellLineEdit::NXMultiCellLineEdit(QWidget *parent)
     this->setPalette(palette);
     for (auto *cell : d->_cellEdits)
     {
-      if (!cell) { continue; }
+      if (!cell)
+      {
+        continue;
+      }
       cell->setPalette(palette);
     }
     this->update();
@@ -120,44 +131,64 @@ NXMultiCellLineEdit::NXMultiCellLineEdit(QWidget *parent)
   d->rebuildCells(d->_pCellCount);
 }
 
-NXMultiCellLineEdit::NXMultiCellLineEdit(int cellCount, const QString& separator, QWidget *parent)
+NXMultiCellLineEdit::NXMultiCellLineEdit(int cellCount, const QString &separator, QWidget *parent)
     : NXMultiCellLineEdit(parent)
 {
   setCellSeparator(separator);
   setCellCount(cellCount);
 }
 
-NXMultiCellLineEdit::~NXMultiCellLineEdit() { delete this->style(); }
+NXMultiCellLineEdit::~NXMultiCellLineEdit()
+{
+  delete this->style();
+}
 
-void NXMultiCellLineEdit::setBorderRadius(int borderRadius) noexcept
+void
+NXMultiCellLineEdit::setBorderRadius(int borderRadius) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   d->_style->setBorderRadius(borderRadius);
   update();
 }
 
-int NXMultiCellLineEdit::getBorderRadius() const noexcept { return d_func()->_style->getBorderRadius(); }
+int
+NXMultiCellLineEdit::getBorderRadius() const noexcept
+{
+  return d_func()->_style->getBorderRadius();
+}
 
-void NXMultiCellLineEdit::setIsCellAutoAdvanceEnabled(bool isCellAutoAdvanceEnabled) noexcept
+void
+NXMultiCellLineEdit::setIsCellAutoAdvanceEnabled(bool isCellAutoAdvanceEnabled) noexcept
 {
   Q_D(NXMultiCellLineEdit);
-  if (d->_pIsCellAutoAdvanceEnabled == isCellAutoAdvanceEnabled) { return; }
+  if (d->_pIsCellAutoAdvanceEnabled == isCellAutoAdvanceEnabled)
+  {
+    return;
+  }
   d->_pIsCellAutoAdvanceEnabled = isCellAutoAdvanceEnabled;
   Q_EMIT pIsCellAutoAdvanceEnabledChanged();
 }
 
-bool NXMultiCellLineEdit::getIsCellAutoAdvanceEnabled() const noexcept
+bool
+NXMultiCellLineEdit::getIsCellAutoAdvanceEnabled() const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   return d->_pIsCellAutoAdvanceEnabled;
 }
 
-void NXMultiCellLineEdit::setCellCount(int cellCount) noexcept
+void
+NXMultiCellLineEdit::setCellCount(int cellCount) noexcept
 {
   Q_D(NXMultiCellLineEdit);
-  if (cellCount < 1) { cellCount = 1; }
+  if (cellCount < 1)
+  {
+    cellCount = 1;
+  }
   const int oldCount = d->_cellEdits.size();
-  if (oldCount == cellCount) { return; }
+  if (oldCount == cellCount)
+  {
+    return;
+  }
 
   if (cellCount > oldCount)
   {
@@ -192,75 +223,106 @@ void NXMultiCellLineEdit::setCellCount(int cellCount) noexcept
   update();
 }
 
-int NXMultiCellLineEdit::getCellCount() const noexcept
+int
+NXMultiCellLineEdit::getCellCount() const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   return d->_pCellCount;
 }
 
-void NXMultiCellLineEdit::setCellSpacing(int cellSpacing) noexcept
+void
+NXMultiCellLineEdit::setCellSpacing(int cellSpacing) noexcept
 {
   Q_D(NXMultiCellLineEdit);
-  if (d->_pCellSpacing == cellSpacing) { return; }
+  if (d->_pCellSpacing == cellSpacing)
+  {
+    return;
+  }
   d->_pCellSpacing = cellSpacing;
-  if (d->_cellLayout) { d->_cellLayout->setSpacing(cellSpacing); }
+  if (d->_cellLayout)
+  {
+    d->_cellLayout->setSpacing(cellSpacing);
+  }
   Q_EMIT pCellSpacingChanged();
 }
 
-int NXMultiCellLineEdit::getCellSpacing() const noexcept
+int
+NXMultiCellLineEdit::getCellSpacing() const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   return d->_pCellSpacing;
 }
 
-void NXMultiCellLineEdit::setContentsHorizontalMargin(int contentsHorizontalMargin) noexcept
+void
+NXMultiCellLineEdit::setContentsHorizontalMargin(int contentsHorizontalMargin) noexcept
 {
   Q_D(NXMultiCellLineEdit);
-  if (d->_pContentsHorizontalMargin == contentsHorizontalMargin) { return; }
+  if (d->_pContentsHorizontalMargin == contentsHorizontalMargin)
+  {
+    return;
+  }
   d->_pContentsHorizontalMargin = contentsHorizontalMargin;
-  if (d->_cellLayout) { d->_cellLayout->setContentsMargins(contentsHorizontalMargin, 0, contentsHorizontalMargin, 0); }
+  if (d->_cellLayout)
+  {
+    d->_cellLayout->setContentsMargins(contentsHorizontalMargin, 0, contentsHorizontalMargin, 0);
+  }
   Q_EMIT pContentsHorizontalMarginChanged();
 }
 
-int NXMultiCellLineEdit::getContentsHorizontalMargin() const noexcept
+int
+NXMultiCellLineEdit::getContentsHorizontalMargin() const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   return d->_pContentsHorizontalMargin;
 }
 
-void NXMultiCellLineEdit::setCellSeparator(const QString& cellSeparator) noexcept
+void
+NXMultiCellLineEdit::setCellSeparator(const QString &cellSeparator) noexcept
 {
   Q_D(NXMultiCellLineEdit);
-  if (d->_pCellSeparator == cellSeparator) { return; }
+  if (d->_pCellSeparator == cellSeparator)
+  {
+    return;
+  }
   d->_pCellSeparator = cellSeparator;
   for (auto *label : d->_cellSeparators)
   {
-    if (label) { label->setText(cellSeparator); }
+    if (label)
+    {
+      label->setText(cellSeparator);
+    }
   }
   Q_EMIT pCellSeparatorChanged();
 }
 
-QString NXMultiCellLineEdit::getCellSeparator() const noexcept
+QString
+NXMultiCellLineEdit::getCellSeparator() const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   return d->_pCellSeparator;
 }
 
-void NXMultiCellLineEdit::setCellEmptyFillText(const QString& cellEmptyFillText) noexcept
+void
+NXMultiCellLineEdit::setCellEmptyFillText(const QString &cellEmptyFillText) noexcept
 {
   Q_D(NXMultiCellLineEdit);
-  if (d->_pCellEmptyFillText == cellEmptyFillText) { return; }
+  if (d->_pCellEmptyFillText == cellEmptyFillText)
+  {
+    return;
+  }
   d->_pCellEmptyFillText = cellEmptyFillText;
   Q_EMIT pCellEmptyFillTextChanged();
 }
 
-QString NXMultiCellLineEdit::getCellEmptyFillText() const noexcept
+QString
+NXMultiCellLineEdit::getCellEmptyFillText() const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   return d->_pCellEmptyFillText;
 }
 
-void NXMultiCellLineEdit::setCombinedText(const QString& combinedText) noexcept
+void
+NXMultiCellLineEdit::setCombinedText(const QString &combinedText) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   if (d->_pCellSeparator.isEmpty())
@@ -277,261 +339,404 @@ void NXMultiCellLineEdit::setCombinedText(const QString& combinedText) noexcept
   setCellTexts(parts);
 }
 
-QString NXMultiCellLineEdit::getCombinedText() const noexcept
+QString
+NXMultiCellLineEdit::getCombinedText() const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   QStringList texts;
   texts.reserve(d->_cellEdits.size());
-  for (auto *cell : d->_cellEdits) { texts.append(cell ? cell->text() : QString()); }
+  for (auto *cell : d->_cellEdits)
+  {
+    texts.append(cell ? cell->text() : QString());
+  }
   return texts.join(d->_pCellSeparator);
 }
 
-void NXMultiCellLineEdit::setCellTexts(const QStringList& cellTexts) noexcept
+void
+NXMultiCellLineEdit::setCellTexts(const QStringList &cellTexts) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   const int count = NormalizeListCount("setCellTexts", d->_cellEdits.size(), cellTexts.size());
   for (int i = 0; i < count; ++i)
   {
-    if (QLineEdit *cell = d->_cellEdits[i]) { cell->setText(cellTexts[i]); }
+    if (QLineEdit *cell = d->_cellEdits[i])
+    {
+      cell->setText(cellTexts[i]);
+    }
   }
   for (int i = count; i < d->_cellEdits.size(); ++i)
   {
-    if (QLineEdit *cell = d->_cellEdits[i]) { cell->clear(); }
+    if (QLineEdit *cell = d->_cellEdits[i])
+    {
+      cell->clear();
+    }
   }
   d->pushGlobalRoute();
 }
 
-QStringList NXMultiCellLineEdit::getCellTexts() const noexcept
+QStringList
+NXMultiCellLineEdit::getCellTexts() const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   QStringList texts;
   texts.reserve(d->_cellEdits.size());
-  for (auto *cell : d->_cellEdits) { texts.append(cell ? cell->text() : QString()); }
+  for (auto *cell : d->_cellEdits)
+  {
+    texts.append(cell ? cell->text() : QString());
+  }
   return texts;
 }
 
-void NXMultiCellLineEdit::setCellRegularExpressionPatterns(const QStringList& cellRegularExpressionPatterns) noexcept
+void
+NXMultiCellLineEdit::setCellRegularExpressionPatterns(const QStringList &cellRegularExpressionPatterns) noexcept
 {
   const int count = NormalizeListCount("setCellRegularExpressionPatterns", getCellCount(),
                                        (int) cellRegularExpressionPatterns.size());
-  for (int i = 0; i < count; ++i) { setCellRegularExpression(i, QRegularExpression(cellRegularExpressionPatterns[i])); }
+  for (int i = 0; i < count; ++i)
+  {
+    setCellRegularExpression(i, QRegularExpression(cellRegularExpressionPatterns[i]));
+  }
 }
 
-QStringList NXMultiCellLineEdit::getCellRegularExpressionPatterns() const noexcept
+QStringList
+NXMultiCellLineEdit::getCellRegularExpressionPatterns() const noexcept
 {
   QStringList patterns;
   patterns.reserve(getCellCount());
-  for (int i = 0; i < getCellCount(); ++i) { patterns.append(getCellRegularExpression(i).pattern()); }
+  for (int i = 0; i < getCellCount(); ++i)
+  {
+    patterns.append(getCellRegularExpression(i).pattern());
+  }
   return patterns;
 }
 
-void NXMultiCellLineEdit::setIsCellClearButtonEnabledList(const QList<bool>& cellClearButtonEnabledList) noexcept
+void
+NXMultiCellLineEdit::setIsCellClearButtonEnabledList(const QList<bool> &cellClearButtonEnabledList) noexcept
 {
   const int count =
       NormalizeListCount("setIsCellClearButtonEnabledList", getCellCount(), (int) cellClearButtonEnabledList.size());
-  for (int i = 0; i < count; ++i) { setIsClearButtonEnabled(i, cellClearButtonEnabledList[i]); }
+  for (int i = 0; i < count; ++i)
+  {
+    setIsClearButtonEnabled(i, cellClearButtonEnabledList[i]);
+  }
 }
 
-QList<bool> NXMultiCellLineEdit::getIsCellClearButtonEnabledList() const noexcept
+QList<bool>
+NXMultiCellLineEdit::getIsCellClearButtonEnabledList() const noexcept
 {
   QList<bool> values;
   values.reserve(getCellCount());
-  for (int i = 0; i < getCellCount(); ++i) { values.append(getIsClearButtonEnabled(i)); }
+  for (int i = 0; i < getCellCount(); ++i)
+  {
+    values.append(getIsClearButtonEnabled(i));
+  }
   return values;
 }
 
-void NXMultiCellLineEdit::setCellMaxLengths(const QList<int>& cellMaxLengths) noexcept
+void
+NXMultiCellLineEdit::setCellMaxLengths(const QList<int> &cellMaxLengths) noexcept
 {
   const int count = NormalizeListCount("setCellMaxLengths", getCellCount(), (int) cellMaxLengths.size());
-  for (int i = 0; i < count; ++i) { setCellMaxLength(i, cellMaxLengths[i]); }
+  for (int i = 0; i < count; ++i)
+  {
+    setCellMaxLength(i, cellMaxLengths[i]);
+  }
 }
 
-QList<int> NXMultiCellLineEdit::getCellMaxLengths() const noexcept
+QList<int>
+NXMultiCellLineEdit::getCellMaxLengths() const noexcept
 {
   QList<int> values;
   values.reserve(getCellCount());
-  for (int i = 0; i < getCellCount(); ++i) { values.append(getCellMaxLength(i)); }
+  for (int i = 0; i < getCellCount(); ++i)
+  {
+    values.append(getCellMaxLength(i));
+  }
   return values;
 }
 
-void NXMultiCellLineEdit::setCellContentsMarginsList(const QList<QMargins>& cellContentsMarginsList) noexcept
+void
+NXMultiCellLineEdit::setCellContentsMarginsList(const QList<QMargins> &cellContentsMarginsList) noexcept
 {
   const int count =
       NormalizeListCount("setCellContentsMarginsList", getCellCount(), (int) cellContentsMarginsList.size());
-  for (int i = 0; i < count; ++i) { setCellMargins(i, cellContentsMarginsList[i]); }
+  for (int i = 0; i < count; ++i)
+  {
+    setCellMargins(i, cellContentsMarginsList[i]);
+  }
 }
 
-QList<QMargins> NXMultiCellLineEdit::getCellContentsMarginsList() const noexcept
+QList<QMargins>
+NXMultiCellLineEdit::getCellContentsMarginsList() const noexcept
 {
   QList<QMargins> values;
   values.reserve(getCellCount());
-  for (int i = 0; i < getCellCount(); ++i) { values.append(getCellMargins(i)); }
+  for (int i = 0; i < getCellCount(); ++i)
+  {
+    values.append(getCellMargins(i));
+  }
   return values;
 }
 
-void NXMultiCellLineEdit::setIsCellReadOnlyList(const QList<bool>& cellReadOnlyList) noexcept
+void
+NXMultiCellLineEdit::setIsCellReadOnlyList(const QList<bool> &cellReadOnlyList) noexcept
 {
   const int count = NormalizeListCount("setIsCellReadOnlyList", getCellCount(), (int) cellReadOnlyList.size());
-  for (int i = 0; i < count; ++i) { setIsCellReadOnly(i, cellReadOnlyList[i]); }
+  for (int i = 0; i < count; ++i)
+  {
+    setIsCellReadOnly(i, cellReadOnlyList[i]);
+  }
 }
 
-QList<bool> NXMultiCellLineEdit::getIsCellReadOnlyList() const noexcept
+QList<bool>
+NXMultiCellLineEdit::getIsCellReadOnlyList() const noexcept
 {
   QList<bool> values;
   values.reserve(getCellCount());
-  for (int i = 0; i < getCellCount(); ++i) { values.append(getIsCellReadOnly(i)); }
+  for (int i = 0; i < getCellCount(); ++i)
+  {
+    values.append(getIsCellReadOnly(i));
+  }
   return values;
 }
 
-void NXMultiCellLineEdit::setCellPlaceholderTexts(const QList<QString>& cellPlaceholderTexts) noexcept
+void
+NXMultiCellLineEdit::setCellPlaceholderTexts(const QList<QString> &cellPlaceholderTexts) noexcept
 {
   const int count = NormalizeListCount("setCellPlaceholderTexts", getCellCount(), (int) cellPlaceholderTexts.size());
-  for (int i = 0; i < count; ++i) { setCellPlaceholderText(i, cellPlaceholderTexts[i]); }
+  for (int i = 0; i < count; ++i)
+  {
+    setCellPlaceholderText(i, cellPlaceholderTexts[i]);
+  }
 }
 
-QList<QString> NXMultiCellLineEdit::getCellPlaceholderTexts() const noexcept
+QList<QString>
+NXMultiCellLineEdit::getCellPlaceholderTexts() const noexcept
 {
   QList<QString> values;
   values.reserve(getCellCount());
-  for (int i = 0; i < getCellCount(); ++i) { values.append(getCellPlaceholderText(i)); }
+  for (int i = 0; i < getCellCount(); ++i)
+  {
+    values.append(getCellPlaceholderText(i));
+  }
   return values;
 }
 
-void NXMultiCellLineEdit::setCellAlignments(const QList<Qt::Alignment>& cellAlignments) noexcept
+void
+NXMultiCellLineEdit::setCellAlignments(const QList<Qt::Alignment> &cellAlignments) noexcept
 {
   const int count = NormalizeListCount("setCellAlignments", getCellCount(), (int) cellAlignments.size());
-  for (int i = 0; i < count; ++i) { setCellAlignment(i, cellAlignments[i]); }
+  for (int i = 0; i < count; ++i)
+  {
+    setCellAlignment(i, cellAlignments[i]);
+  }
 }
 
-QList<Qt::Alignment> NXMultiCellLineEdit::getCellAlignments() const noexcept
+QList<Qt::Alignment>
+NXMultiCellLineEdit::getCellAlignments() const noexcept
 {
   QList<Qt::Alignment> values;
   values.reserve(getCellCount());
-  for (int i = 0; i < getCellCount(); ++i) { values.append(getCellAlignment(i)); }
+  for (int i = 0; i < getCellCount(); ++i)
+  {
+    values.append(getCellAlignment(i));
+  }
   return values;
 }
 
-void NXMultiCellLineEdit::setCellFonts(const QList<QFont>& cellFonts) noexcept
+void
+NXMultiCellLineEdit::setCellFonts(const QList<QFont> &cellFonts) noexcept
 {
   const int count = NormalizeListCount("setCellFonts", getCellCount(), (int) cellFonts.size());
-  for (int i = 0; i < count; ++i) { setCellFont(i, cellFonts[i]); }
+  for (int i = 0; i < count; ++i)
+  {
+    setCellFont(i, cellFonts[i]);
+  }
 }
 
-QList<QFont> NXMultiCellLineEdit::getCellFonts() const noexcept
+QList<QFont>
+NXMultiCellLineEdit::getCellFonts() const noexcept
 {
   QList<QFont> values;
   values.reserve(getCellCount());
-  for (int i = 0; i < getCellCount(); ++i) { values.append(getCellFont(i)); }
+  for (int i = 0; i < getCellCount(); ++i)
+  {
+    values.append(getCellFont(i));
+  }
   return values;
 }
 
-void NXMultiCellLineEdit::setCellInputMasks(const QList<QString>& cellInputMasks) noexcept
+void
+NXMultiCellLineEdit::setCellInputMasks(const QList<QString> &cellInputMasks) noexcept
 {
   const int count = NormalizeListCount("setCellInputMasks", getCellCount(), (int) cellInputMasks.size());
-  for (int i = 0; i < count; ++i) { setCellInputMask(i, cellInputMasks[i]); }
+  for (int i = 0; i < count; ++i)
+  {
+    setCellInputMask(i, cellInputMasks[i]);
+  }
 }
 
-QList<QString> NXMultiCellLineEdit::getCellInputMasks() const noexcept
+QList<QString>
+NXMultiCellLineEdit::getCellInputMasks() const noexcept
 {
   QList<QString> values;
   values.reserve(getCellCount());
-  for (int i = 0; i < getCellCount(); ++i) { values.append(getCellInputMask(i)); }
+  for (int i = 0; i < getCellCount(); ++i)
+  {
+    values.append(getCellInputMask(i));
+  }
   return values;
 }
 
-void NXMultiCellLineEdit::setIsCellEnabledList(const QList<bool>& cellEnabledList) noexcept
+void
+NXMultiCellLineEdit::setIsCellEnabledList(const QList<bool> &cellEnabledList) noexcept
 {
   const int count = NormalizeListCount("setIsCellEnabledList", getCellCount(), (int) cellEnabledList.size());
-  for (int i = 0; i < count; ++i) { setIsCellEnabled(i, cellEnabledList[i]); }
+  for (int i = 0; i < count; ++i)
+  {
+    setIsCellEnabled(i, cellEnabledList[i]);
+  }
 }
 
-QList<bool> NXMultiCellLineEdit::getIsCellEnabledList() const noexcept
+QList<bool>
+NXMultiCellLineEdit::getIsCellEnabledList() const noexcept
 {
   QList<bool> values;
   values.reserve(getCellCount());
-  for (int i = 0; i < getCellCount(); ++i) { values.append(getIsCellEnabled(i)); }
+  for (int i = 0; i < getCellCount(); ++i)
+  {
+    values.append(getIsCellEnabled(i));
+  }
   return values;
 }
 
-void NXMultiCellLineEdit::setCellInputMethodHintsList(
-    const QList<Qt::InputMethodHints>& cellInputMethodHintsList) noexcept
+void
+NXMultiCellLineEdit::setCellInputMethodHintsList(const QList<Qt::InputMethodHints> &cellInputMethodHintsList) noexcept
 {
   const int count =
       NormalizeListCount("setCellInputMethodHintsList", getCellCount(), (int) cellInputMethodHintsList.size());
-  for (int i = 0; i < count; ++i) { setCellInputMethodHints(i, cellInputMethodHintsList[i]); }
+  for (int i = 0; i < count; ++i)
+  {
+    setCellInputMethodHints(i, cellInputMethodHintsList[i]);
+  }
 }
 
-QList<Qt::InputMethodHints> NXMultiCellLineEdit::getCellInputMethodHintsList() const noexcept
+QList<Qt::InputMethodHints>
+NXMultiCellLineEdit::getCellInputMethodHintsList() const noexcept
 {
   QList<Qt::InputMethodHints> values;
   values.reserve(getCellCount());
-  for (int i = 0; i < getCellCount(); ++i) { values.append(getCellInputMethodHints(i)); }
+  for (int i = 0; i < getCellCount(); ++i)
+  {
+    values.append(getCellInputMethodHints(i));
+  }
   return values;
 }
 
-void NXMultiCellLineEdit::setCellEchoModes(const QList<QLineEdit::EchoMode>& cellEchoModes) noexcept
+void
+NXMultiCellLineEdit::setCellEchoModes(const QList<QLineEdit::EchoMode> &cellEchoModes) noexcept
 {
   const int count = NormalizeListCount("setCellEchoModes", getCellCount(), (int) cellEchoModes.size());
-  for (int i = 0; i < count; ++i) { setCellEchoMode(i, cellEchoModes[i]); }
+  for (int i = 0; i < count; ++i)
+  {
+    setCellEchoMode(i, cellEchoModes[i]);
+  }
 }
 
-QList<QLineEdit::EchoMode> NXMultiCellLineEdit::getCellEchoModes() const noexcept
+QList<QLineEdit::EchoMode>
+NXMultiCellLineEdit::getCellEchoModes() const noexcept
 {
   QList<QLineEdit::EchoMode> values;
   values.reserve(getCellCount());
-  for (int i = 0; i < getCellCount(); ++i) { values.append(getCellEchoMode(i)); }
+  for (int i = 0; i < getCellCount(); ++i)
+  {
+    values.append(getCellEchoMode(i));
+  }
   return values;
 }
 
-void NXMultiCellLineEdit::setCustomLineEdit(int cellIndex, QLineEdit *lineEdit) noexcept
+void
+NXMultiCellLineEdit::setCustomLineEdit(int cellIndex, QLineEdit *lineEdit) noexcept
 {
   Q_D(NXMultiCellLineEdit);
-  if (!lineEdit) { return; }
+  if (!lineEdit)
+  {
+    return;
+  }
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "setCustomLineEdit");
-  if (normalizedIndex < 0) { return; }
-  if (d->_cellEdits[normalizedIndex] == lineEdit) { return; }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
+  if (d->_cellEdits[normalizedIndex] == lineEdit)
+  {
+    return;
+  }
 
   QLineEdit *old = d->_cellEdits[normalizedIndex];
-  if (old) { old->removeEventFilter(this); }
+  if (old)
+  {
+    old->removeEventFilter(this);
+  }
 
   d->setupCell(lineEdit, true);
 
   d->_cellEdits[normalizedIndex] = lineEdit;
   d->_connectCellSignals(normalizedIndex, lineEdit);
 
-  if (old) { old->deleteLater(); }
+  if (old)
+  {
+    old->deleteLater();
+  }
   d->rebuildLayout();
   d->resetGlobalRoute();
 }
 
-QLineEdit *NXMultiCellLineEdit::getCustomLineEdit(int cellIndex) const noexcept
+QLineEdit *
+NXMultiCellLineEdit::getCustomLineEdit(int cellIndex) const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "getCustomLineEdit");
-  if (normalizedIndex < 0) { return nullptr; }
+  if (normalizedIndex < 0)
+  {
+    return nullptr;
+  }
   return d->_cellEdits.value(normalizedIndex, nullptr);
 }
 
-QLineEdit *NXMultiCellLineEdit::getCellLineEdit(int cellIndex) const noexcept { return getCustomLineEdit(cellIndex); }
+QLineEdit *
+NXMultiCellLineEdit::getCellLineEdit(int cellIndex) const noexcept
+{
+  return getCustomLineEdit(cellIndex);
+}
 
-int NXMultiCellLineEdit::getCellIndex(const QLineEdit *lineEdit) const noexcept
+int
+NXMultiCellLineEdit::getCellIndex(const QLineEdit *lineEdit) const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
-  if (!lineEdit) { return -1; }
+  if (!lineEdit)
+  {
+    return -1;
+  }
   return d->_cellEdits.indexOf(const_cast<QLineEdit *>(lineEdit));
 }
 
-QList<QLineEdit *> NXMultiCellLineEdit::getCellLineEdits() const noexcept
+QList<QLineEdit *>
+NXMultiCellLineEdit::getCellLineEdits() const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   return d->_cellEdits;
 }
 
-void NXMultiCellLineEdit::setCellRegularExpression(int cellIndex, const QRegularExpression& regularExpression) noexcept
+void
+NXMultiCellLineEdit::setCellRegularExpression(int cellIndex, const QRegularExpression &regularExpression) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "setCellRegularExpression");
-  if (normalizedIndex < 0) { return; }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
   if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
   {
     cell->setValidator(new QRegularExpressionValidator(regularExpression, cell));
@@ -539,11 +744,15 @@ void NXMultiCellLineEdit::setCellRegularExpression(int cellIndex, const QRegular
   }
 }
 
-QRegularExpression NXMultiCellLineEdit::getCellRegularExpression(int cellIndex) const noexcept
+QRegularExpression
+NXMultiCellLineEdit::getCellRegularExpression(int cellIndex) const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "getCellRegularExpression");
-  if (normalizedIndex < 0) { return {}; }
+  if (normalizedIndex < 0)
+  {
+    return {};
+  }
   if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
   {
     if (const auto *validator = qobject_cast<const QRegularExpressionValidator *>(cell->validator()))
@@ -554,28 +763,46 @@ QRegularExpression NXMultiCellLineEdit::getCellRegularExpression(int cellIndex) 
   return {};
 }
 
-void NXMultiCellLineEdit::setCellMaxLength(int cellIndex, int maxLength) noexcept
+void
+NXMultiCellLineEdit::setCellMaxLength(int cellIndex, int maxLength) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "setCellMaxLength");
-  if (normalizedIndex < 0) { return; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { cell->setMaxLength(maxLength); }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    cell->setMaxLength(maxLength);
+  }
 }
 
-int NXMultiCellLineEdit::getCellMaxLength(int cellIndex) const noexcept
+int
+NXMultiCellLineEdit::getCellMaxLength(int cellIndex) const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "getCellMaxLength");
-  if (normalizedIndex < 0) { return 0; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { return cell->maxLength(); }
+  if (normalizedIndex < 0)
+  {
+    return 0;
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    return cell->maxLength();
+  }
   return 0;
 }
 
-void NXMultiCellLineEdit::setIsClearButtonEnabled(int cellIndex, bool isEnabled) noexcept
+void
+NXMultiCellLineEdit::setIsClearButtonEnabled(int cellIndex, bool isEnabled) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "setIsClearButtonEnabled");
-  if (normalizedIndex < 0) { return; }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
   if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
   {
     cell->setProperty(CLEAR_ALLOWED_PROPERTY, isEnabled);
@@ -583,11 +810,15 @@ void NXMultiCellLineEdit::setIsClearButtonEnabled(int cellIndex, bool isEnabled)
   }
 }
 
-bool NXMultiCellLineEdit::getIsClearButtonEnabled(int cellIndex) const noexcept
+bool
+NXMultiCellLineEdit::getIsClearButtonEnabled(int cellIndex) const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "getIsClearButtonEnabled");
-  if (normalizedIndex < 0) { return false; }
+  if (normalizedIndex < 0)
+  {
+    return false;
+  }
   if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
   {
     return cell->property(CLEAR_ALLOWED_PROPERTY).toBool();
@@ -595,11 +826,15 @@ bool NXMultiCellLineEdit::getIsClearButtonEnabled(int cellIndex) const noexcept
   return false;
 }
 
-void NXMultiCellLineEdit::setCellMargins(int cellIndex, const QMargins& contentsMargins) noexcept
+void
+NXMultiCellLineEdit::setCellMargins(int cellIndex, const QMargins &contentsMargins) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "setCellMargins");
-  if (normalizedIndex < 0) { return; }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
   if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
   {
     cell->setTextMargins(contentsMargins.left(), contentsMargins.top(), contentsMargins.right(),
@@ -607,271 +842,457 @@ void NXMultiCellLineEdit::setCellMargins(int cellIndex, const QMargins& contents
   }
 }
 
-QMargins NXMultiCellLineEdit::getCellMargins(int cellIndex) const noexcept
+QMargins
+NXMultiCellLineEdit::getCellMargins(int cellIndex) const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "getCellMargins");
-  if (normalizedIndex < 0) { return {}; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { return cell->textMargins(); }
+  if (normalizedIndex < 0)
+  {
+    return {};
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    return cell->textMargins();
+  }
   return {};
 }
 
-void NXMultiCellLineEdit::setIsCellReadOnly(int cellIndex, bool readOnly) noexcept
+void
+NXMultiCellLineEdit::setIsCellReadOnly(int cellIndex, bool readOnly) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "setIsCellReadOnly");
-  if (normalizedIndex < 0) { return; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { cell->setReadOnly(readOnly); }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    cell->setReadOnly(readOnly);
+  }
 }
 
-bool NXMultiCellLineEdit::getIsCellReadOnly(int cellIndex) const noexcept
+bool
+NXMultiCellLineEdit::getIsCellReadOnly(int cellIndex) const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "getIsCellReadOnly");
-  if (normalizedIndex < 0) { return true; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { return cell->isReadOnly(); }
+  if (normalizedIndex < 0)
+  {
+    return true;
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    return cell->isReadOnly();
+  }
   return true;
 }
 
-void NXMultiCellLineEdit::setCellText(int cellIndex, const QString& text) noexcept
+void
+NXMultiCellLineEdit::setCellText(int cellIndex, const QString &text) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "setCellText");
-  if (normalizedIndex < 0) { return; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { cell->setText(text); }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    cell->setText(text);
+  }
   d->pushGlobalRoute();
 }
 
-QString NXMultiCellLineEdit::getCellText(int cellIndex) const noexcept
+QString
+NXMultiCellLineEdit::getCellText(int cellIndex) const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "getCellText");
-  if (normalizedIndex < 0) { return {}; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { return cell->text(); }
+  if (normalizedIndex < 0)
+  {
+    return {};
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    return cell->text();
+  }
   return {};
 }
 
-void NXMultiCellLineEdit::setCellPlaceholderText(int cellIndex, const QString& placeholder) noexcept
+void
+NXMultiCellLineEdit::setCellPlaceholderText(int cellIndex, const QString &placeholder) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "setCellPlaceholderText");
-  if (normalizedIndex < 0) { return; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { cell->setPlaceholderText(placeholder); }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    cell->setPlaceholderText(placeholder);
+  }
 }
 
-QString NXMultiCellLineEdit::getCellPlaceholderText(int cellIndex) const noexcept
+QString
+NXMultiCellLineEdit::getCellPlaceholderText(int cellIndex) const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "getCellPlaceholderText");
-  if (normalizedIndex < 0) { return {}; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { return cell->placeholderText(); }
+  if (normalizedIndex < 0)
+  {
+    return {};
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    return cell->placeholderText();
+  }
   return {};
 }
 
-void NXMultiCellLineEdit::setCellAlignment(int cellIndex, Qt::Alignment alignment) noexcept
+void
+NXMultiCellLineEdit::setCellAlignment(int cellIndex, Qt::Alignment alignment) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "setCellAlignment");
-  if (normalizedIndex < 0) { return; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { cell->setAlignment(alignment); }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    cell->setAlignment(alignment);
+  }
 }
 
-Qt::Alignment NXMultiCellLineEdit::getCellAlignment(int cellIndex) const noexcept
+Qt::Alignment
+NXMultiCellLineEdit::getCellAlignment(int cellIndex) const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "getCellAlignment");
-  if (normalizedIndex < 0) { return Qt::AlignLeft; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { return cell->alignment(); }
+  if (normalizedIndex < 0)
+  {
+    return Qt::AlignLeft;
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    return cell->alignment();
+  }
   return Qt::AlignLeft;
 }
 
-void NXMultiCellLineEdit::setCellFont(int cellIndex, const QFont& font) noexcept
+void
+NXMultiCellLineEdit::setCellFont(int cellIndex, const QFont &font) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "setCellFont");
-  if (normalizedIndex < 0) { return; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { cell->setFont(font); }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    cell->setFont(font);
+  }
 }
 
-QFont NXMultiCellLineEdit::getCellFont(int cellIndex) const noexcept
+QFont
+NXMultiCellLineEdit::getCellFont(int cellIndex) const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "getCellFont");
-  if (normalizedIndex < 0) { return {}; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { return cell->font(); }
+  if (normalizedIndex < 0)
+  {
+    return {};
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    return cell->font();
+  }
   return {};
 }
 
-void NXMultiCellLineEdit::setCellInputMask(int cellIndex, const QString& inputMask) noexcept
+void
+NXMultiCellLineEdit::setCellInputMask(int cellIndex, const QString &inputMask) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "setCellInputMask");
-  if (normalizedIndex < 0) { return; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { cell->setInputMask(inputMask); }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    cell->setInputMask(inputMask);
+  }
 }
 
-QString NXMultiCellLineEdit::getCellInputMask(int cellIndex) const noexcept
+QString
+NXMultiCellLineEdit::getCellInputMask(int cellIndex) const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "getCellInputMask");
-  if (normalizedIndex < 0) { return {}; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { return cell->inputMask(); }
+  if (normalizedIndex < 0)
+  {
+    return {};
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    return cell->inputMask();
+  }
   return {};
 }
 
-void NXMultiCellLineEdit::setIsCellEnabled(int cellIndex, bool enabled) noexcept
+void
+NXMultiCellLineEdit::setIsCellEnabled(int cellIndex, bool enabled) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "setIsCellEnabled");
-  if (normalizedIndex < 0) { return; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { cell->setEnabled(enabled); }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    cell->setEnabled(enabled);
+  }
 }
 
-bool NXMultiCellLineEdit::getIsCellEnabled(int cellIndex) const noexcept
+bool
+NXMultiCellLineEdit::getIsCellEnabled(int cellIndex) const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "getIsCellEnabled");
-  if (normalizedIndex < 0) { return false; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { return cell->isEnabled(); }
+  if (normalizedIndex < 0)
+  {
+    return false;
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    return cell->isEnabled();
+  }
   return false;
 }
 
-void NXMultiCellLineEdit::setCellValidator(int cellIndex, QValidator *validator) noexcept
+void
+NXMultiCellLineEdit::setCellValidator(int cellIndex, QValidator *validator) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "setCellValidator");
-  if (normalizedIndex < 0) { return; }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
   if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
   {
-    if (validator && !validator->parent()) { validator->setParent(cell); }
+    if (validator && !validator->parent())
+    {
+      validator->setParent(cell);
+    }
     cell->setValidator(validator);
     d->_updateCellValidState(normalizedIndex);
   }
 }
 
-const QValidator *NXMultiCellLineEdit::getCellValidator(int cellIndex) const noexcept
+const QValidator *
+NXMultiCellLineEdit::getCellValidator(int cellIndex) const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "getCellValidator");
-  if (normalizedIndex < 0) { return nullptr; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { return cell->validator(); }
+  if (normalizedIndex < 0)
+  {
+    return nullptr;
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    return cell->validator();
+  }
   return nullptr;
 }
 
-void NXMultiCellLineEdit::setCellInputMethodHints(int cellIndex, Qt::InputMethodHints hints) noexcept
+void
+NXMultiCellLineEdit::setCellInputMethodHints(int cellIndex, Qt::InputMethodHints hints) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "setCellInputMethodHints");
-  if (normalizedIndex < 0) { return; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { cell->setInputMethodHints(hints); }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    cell->setInputMethodHints(hints);
+  }
 }
 
-Qt::InputMethodHints NXMultiCellLineEdit::getCellInputMethodHints(int cellIndex) const noexcept
+Qt::InputMethodHints
+NXMultiCellLineEdit::getCellInputMethodHints(int cellIndex) const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "getCellInputMethodHints");
-  if (normalizedIndex < 0) { return {}; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { return cell->inputMethodHints(); }
+  if (normalizedIndex < 0)
+  {
+    return {};
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    return cell->inputMethodHints();
+  }
   return {};
 }
 
-void NXMultiCellLineEdit::setCellEchoMode(int cellIndex, QLineEdit::EchoMode mode) noexcept
+void
+NXMultiCellLineEdit::setCellEchoMode(int cellIndex, QLineEdit::EchoMode mode) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "setCellEchoMode");
-  if (normalizedIndex < 0) { return; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { cell->setEchoMode(mode); }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    cell->setEchoMode(mode);
+  }
 }
 
-QLineEdit::EchoMode NXMultiCellLineEdit::getCellEchoMode(int cellIndex) const noexcept
+QLineEdit::EchoMode
+NXMultiCellLineEdit::getCellEchoMode(int cellIndex) const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "getCellEchoMode");
-  if (normalizedIndex < 0) { return QLineEdit::Normal; }
-  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex)) { return cell->echoMode(); }
+  if (normalizedIndex < 0)
+  {
+    return QLineEdit::Normal;
+  }
+  if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
+  {
+    return cell->echoMode();
+  }
   return QLineEdit::Normal;
 }
 
-bool NXMultiCellLineEdit::getIsCellValid(int cellIndex) const noexcept
+bool
+NXMultiCellLineEdit::getIsCellValid(int cellIndex) const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "getIsCellValid");
-  if (normalizedIndex < 0) { return false; }
+  if (normalizedIndex < 0)
+  {
+    return false;
+  }
   return d->_cellValidStates.value(normalizedIndex, false);
 }
 
-QList<bool> NXMultiCellLineEdit::getCellValidStates() const noexcept
+QList<bool>
+NXMultiCellLineEdit::getCellValidStates() const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
   return d->_cellValidStates;
 }
 
-void NXMultiCellLineEdit::setIsAllCellReadOnly(bool readOnly) noexcept
+void
+NXMultiCellLineEdit::setIsAllCellReadOnly(bool readOnly) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   for (auto *cell : d->_cellEdits)
   {
-    if (cell) { cell->setReadOnly(readOnly); }
+    if (cell)
+    {
+      cell->setReadOnly(readOnly);
+    }
   }
 }
 
-void NXMultiCellLineEdit::setIsAllCellEnabled(bool enabled) noexcept
+void
+NXMultiCellLineEdit::setIsAllCellEnabled(bool enabled) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   for (auto *cell : d->_cellEdits)
   {
-    if (cell) { cell->setEnabled(enabled); }
+    if (cell)
+    {
+      cell->setEnabled(enabled);
+    }
   }
 }
 
-void NXMultiCellLineEdit::clear(int cellIndex) noexcept
+void
+NXMultiCellLineEdit::clear(int cellIndex) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "clear");
-  if (normalizedIndex < 0) { return; }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
   if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
   {
-    if (!cell->isReadOnly()) { cell->clear(); }
+    if (!cell->isReadOnly())
+    {
+      cell->clear();
+    }
   }
   d->pushGlobalRoute();
 }
 
-void NXMultiCellLineEdit::clearAll() noexcept
+void
+NXMultiCellLineEdit::clearAll() noexcept
 {
   Q_D(NXMultiCellLineEdit);
   for (auto *cell : d->_cellEdits)
   {
-    if (!cell || cell->isReadOnly()) { continue; }
+    if (!cell || cell->isReadOnly())
+    {
+      continue;
+    }
     QSignalBlocker blocker(cell);
     cell->clear();
   }
   d->pushGlobalRoute();
 }
 
-void NXMultiCellLineEdit::setFocusToCell(int cellIndex) noexcept
+void
+NXMultiCellLineEdit::setFocusToCell(int cellIndex) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "setFocusToCell");
-  if (normalizedIndex < 0) { return; }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
   if (QLineEdit *cell = d->_cellEdits.value(normalizedIndex))
   {
-    if (!cell->isEnabled()) { return; }
+    if (!cell->isEnabled())
+    {
+      return;
+    }
     cell->setFocus();
   }
 }
 
-int NXMultiCellLineEdit::currentFocusCellIndex() const noexcept
+int
+NXMultiCellLineEdit::currentFocusCellIndex() const noexcept
 {
   Q_D(const NXMultiCellLineEdit);
-  if (d->_currentFocusCellIndex >= 0) { return d->_currentFocusCellIndex; }
+  if (d->_currentFocusCellIndex >= 0)
+  {
+    return d->_currentFocusCellIndex;
+  }
   for (int i = 0; i < d->_cellEdits.size(); ++i)
   {
-    if (d->_cellEdits[i] && d->_cellEdits[i]->hasFocus()) { return i; }
+    if (d->_cellEdits[i] && d->_cellEdits[i]->hasFocus())
+    {
+      return i;
+    }
   }
   return -1;
 }
 
-void NXMultiCellLineEdit::insertCell(int cellIndex, const QString& initialText) noexcept
+void
+NXMultiCellLineEdit::insertCell(int cellIndex, const QString &initialText) noexcept
 {
   Q_D(NXMultiCellLineEdit);
   if (cellIndex < 0 || cellIndex > d->_cellEdits.size())
@@ -897,12 +1318,19 @@ void NXMultiCellLineEdit::insertCell(int cellIndex, const QString& initialText) 
   cell->setFocus();
 }
 
-void NXMultiCellLineEdit::removeCell(int cellIndex) noexcept
+void
+NXMultiCellLineEdit::removeCell(int cellIndex) noexcept
 {
   Q_D(NXMultiCellLineEdit);
-  if (d->_cellEdits.size() <= 1) { return; }
+  if (d->_cellEdits.size() <= 1)
+  {
+    return;
+  }
   const int normalizedIndex = NormalizeCellIndex(d->_cellEdits, cellIndex, "removeCell");
-  if (normalizedIndex < 0) { return; }
+  if (normalizedIndex < 0)
+  {
+    return;
+  }
 
   const bool hadFocus = d->_cellEdits[normalizedIndex] && d->_cellEdits[normalizedIndex]->hasFocus();
   QLineEdit *removed  = d->_cellEdits.takeAt(normalizedIndex);
@@ -924,21 +1352,33 @@ void NXMultiCellLineEdit::removeCell(int cellIndex) noexcept
   if (hadFocus)
   {
     const int nextIndex = std::min(normalizedIndex, (int) d->_cellEdits.size() - 1);
-    if (QLineEdit *cell = d->_cellEdits.value(nextIndex)) { cell->setFocus(); }
+    if (QLineEdit *cell = d->_cellEdits.value(nextIndex))
+    {
+      cell->setFocus();
+    }
   }
 }
 
-void NXMultiCellLineEdit::focusInEvent(QFocusEvent *event)
+void
+NXMultiCellLineEdit::focusInEvent(QFocusEvent *event)
 {
   Q_D(NXMultiCellLineEdit);
   QWidget::focusInEvent(event);
   const int targetIndex = std::clamp(d->_currentFocusCellIndex, 0, (int) d->_cellEdits.size() - 1);
-  if (QLineEdit *cell = d->_cellEdits.value(targetIndex)) { cell->setFocus(); }
+  if (QLineEdit *cell = d->_cellEdits.value(targetIndex))
+  {
+    cell->setFocus();
+  }
 }
 
-void NXMultiCellLineEdit::focusOutEvent(QFocusEvent *event) { QWidget::focusOutEvent(event); }
+void
+NXMultiCellLineEdit::focusOutEvent(QFocusEvent *event)
+{
+  QWidget::focusOutEvent(event);
+}
 
-void NXMultiCellLineEdit::paintEvent(QPaintEvent *event)
+void
+NXMultiCellLineEdit::paintEvent(QPaintEvent *event)
 {
   Q_D(NXMultiCellLineEdit);
   QWidget::paintEvent(event);
@@ -960,8 +1400,14 @@ void NXMultiCellLineEdit::paintEvent(QPaintEvent *event)
       }
     }
   }
-  if (hasCellFocus) { option.state |= QStyle::State_HasFocus; }
-  if (d->_hoverCellIndex >= 0 || underMouse()) { option.state |= QStyle::State_MouseOver; }
+  if (hasCellFocus)
+  {
+    option.state |= QStyle::State_HasFocus;
+  }
+  if (d->_hoverCellIndex >= 0 || underMouse())
+  {
+    option.state |= QStyle::State_MouseOver;
+  }
   style()->drawPrimitive(QStyle::PE_Widget, &option, &painter, this);
   painter.restore();
 
@@ -987,18 +1433,25 @@ void NXMultiCellLineEdit::paintEvent(QPaintEvent *event)
   for (int i = 0; i < d->_cellEdits.size(); ++i)
   {
     QLineEdit *cell = d->_cellEdits[i];
-    if (!cell) { continue; }
+    if (!cell)
+    {
+      continue;
+    }
 
     const QRect geo         = cell->geometry();
     const qreal expandWidth = d->_cellExpandMarkWidths.value(i, 0);
-    if (expandWidth <= 0) { continue; }
+    if (expandWidth <= 0)
+    {
+      continue;
+    }
     painter.drawRoundedRect(QRectF(geo.center().x() - expandWidth, markY, expandWidth * 2, markHeight), 2, 2);
   }
 
   painter.restore();
 }
 
-void NXMultiCellLineEdit::contextMenuEvent(QContextMenuEvent *event)
+void
+NXMultiCellLineEdit::contextMenuEvent(QContextMenuEvent *event)
 {
   Q_D(NXMultiCellLineEdit);
   const int cellIndex = currentFocusCellIndex();
@@ -1017,21 +1470,33 @@ void NXMultiCellLineEdit::contextMenuEvent(QContextMenuEvent *event)
     {
       action = menu->addNXIconAction(NXIconType::ArrowRotateLeft, tr("撤销"), QKeySequence::Undo);
       action->setEnabled(!isOverallMode && cell->isUndoAvailable());
-      connect(action, &QAction::triggered, this, [cell]() { cell->undo(); });
+      connect(action, &QAction::triggered, this, [cell]()
+      {
+        cell->undo();
+      });
 
       action = menu->addNXIconAction(NXIconType::ArrowRotateRight, tr("恢复"), QKeySequence::Redo);
       action->setEnabled(!isOverallMode && cell->isRedoAvailable());
-      connect(action, &QAction::triggered, this, [cell]() { cell->redo(); });
+      connect(action, &QAction::triggered, this, [cell]()
+      {
+        cell->redo();
+      });
 
       action = menu->addNXIconAction(NXIconType::ArrowRotateLeft, tr("整体撤销"),
                                      QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Z));
       action->setEnabled(d->canGlobalUndo());
-      connect(action, &QAction::triggered, this, [d]() { d->globalUndo(); });
+      connect(action, &QAction::triggered, this, [d]()
+      {
+        d->globalUndo();
+      });
 
       action = menu->addNXIconAction(NXIconType::ArrowRotateRight, tr("整体恢复"),
                                      QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Y));
       action->setEnabled(d->canGlobalRedo());
-      connect(action, &QAction::triggered, this, [d]() { d->globalRedo(); });
+      connect(action, &QAction::triggered, this, [d]()
+      {
+        d->globalRedo();
+      });
 
       menu->addSeparator();
     }
@@ -1052,7 +1517,10 @@ void NXMultiCellLineEdit::contextMenuEvent(QContextMenuEvent *event)
       else
       {
         action->setEnabled(cell->hasSelectedText() && cell->echoMode() == QLineEdit::Normal);
-        connect(action, &QAction::triggered, this, [cell]() { cell->cut(); });
+        connect(action, &QAction::triggered, this, [cell]()
+        {
+          cell->cut();
+        });
       }
     }
 
@@ -1060,22 +1528,34 @@ void NXMultiCellLineEdit::contextMenuEvent(QContextMenuEvent *event)
     if (isOverallMode)
     {
       action->setEnabled(isAllEchoNormal);
-      connect(action, &QAction::triggered, this, [d]() { d->copyAllCells(); });
+      connect(action, &QAction::triggered, this, [d]()
+      {
+        d->copyAllCells();
+      });
     }
     else
     {
       action->setEnabled(cell->hasSelectedText() && cell->echoMode() == QLineEdit::Normal);
-      connect(action, &QAction::triggered, this, [cell]() { cell->copy(); });
+      connect(action, &QAction::triggered, this, [cell]()
+      {
+        cell->copy();
+      });
     }
 
     if (!cell->isReadOnly())
     {
       action = menu->addNXIconAction(NXIconType::Paste, tr("粘贴"), QKeySequence::Paste);
-      if (isOverallMode) { action->setEnabled(false); }
+      if (isOverallMode)
+      {
+        action->setEnabled(false);
+      }
       else
       {
         action->setEnabled(!QGuiApplication::clipboard()->text().isEmpty());
-        connect(action, &QAction::triggered, this, [cell]() { cell->paste(); });
+        connect(action, &QAction::triggered, this, [cell]()
+        {
+          cell->paste();
+        });
       }
     }
 #endif
@@ -1086,14 +1566,20 @@ void NXMultiCellLineEdit::contextMenuEvent(QContextMenuEvent *event)
       if (isOverallMode)
       {
         action->setEnabled(d->isAnyEditable());
-        connect(action, &QAction::triggered, this, [d]() { d->clearAllEditableCells(); });
+        connect(action, &QAction::triggered, this, [d]()
+        {
+          d->clearAllEditableCells();
+        });
       }
       else
       {
         action->setEnabled(!cell->text().isEmpty() && cell->hasSelectedText());
         connect(action, &QAction::triggered, this, [d, cell]()
         {
-          if (!cell->hasSelectedText()) { return; }
+          if (!cell->hasSelectedText())
+          {
+            return;
+          }
           const int startIndex = cell->selectionStart();
           const int endIndex   = cell->selectionEnd();
           cell->setText(cell->text().remove(startIndex, endIndex - startIndex));
@@ -1102,18 +1588,27 @@ void NXMultiCellLineEdit::contextMenuEvent(QContextMenuEvent *event)
       }
     }
 
-    if (!menu->isEmpty()) { menu->addSeparator(); }
+    if (!menu->isEmpty())
+    {
+      menu->addSeparator();
+    }
     action = menu->addAction(tr("全选"));
     action->setShortcut(QKeySequence::SelectAll);
     if (isOverallMode)
     {
       action->setEnabled(isAllEchoNormal);
-      connect(action, &QAction::triggered, this, [d]() { d->selectAllCells(); });
+      connect(action, &QAction::triggered, this, [d]()
+      {
+        d->selectAllCells();
+      });
     }
     else
     {
       action->setEnabled(!cell->text().isEmpty() && !(cell->selectedText() == cell->text()));
-      connect(action, &QAction::triggered, this, [cell]() { cell->selectAll(); });
+      connect(action, &QAction::triggered, this, [cell]()
+      {
+        cell->selectAll();
+      });
     }
 
     menu->popup(event->globalPos());
@@ -1123,13 +1618,20 @@ void NXMultiCellLineEdit::contextMenuEvent(QContextMenuEvent *event)
   QWidget::contextMenuEvent(event);
 }
 
-bool NXMultiCellLineEdit::eventFilter(QObject *watched, QEvent *event)
+bool
+NXMultiCellLineEdit::eventFilter(QObject *watched, QEvent *event)
 {
   Q_D(NXMultiCellLineEdit);
   QLineEdit *cell = qobject_cast<QLineEdit *>(watched);
-  if (!cell) { return QWidget::eventFilter(watched, event); }
+  if (!cell)
+  {
+    return QWidget::eventFilter(watched, event);
+  }
   const int cellIndex = d->_cellEdits.indexOf(cell);
-  if (cellIndex < 0) { return QWidget::eventFilter(watched, event); }
+  if (cellIndex < 0)
+  {
+    return QWidget::eventFilter(watched, event);
+  }
   switch (event->type())
   {
   case QEvent::FocusIn :
@@ -1161,7 +1663,10 @@ bool NXMultiCellLineEdit::eventFilter(QObject *watched, QEvent *event)
   }
   case QEvent::Leave :
   {
-    if (d->_hoverCellIndex == cellIndex) { d->_hoverCellIndex = -1; }
+    if (d->_hoverCellIndex == cellIndex)
+    {
+      d->_hoverCellIndex = -1;
+    }
     update();
     break;
   }
@@ -1214,7 +1719,10 @@ bool NXMultiCellLineEdit::eventFilter(QObject *watched, QEvent *event)
       {
         for (auto *item : d->_cellEdits)
         {
-          if (item) { item->selectAll(); }
+          if (item)
+          {
+            item->selectAll();
+          }
         }
         keyEvent->accept();
         return true;

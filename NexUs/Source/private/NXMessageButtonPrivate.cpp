@@ -10,9 +10,12 @@ NXMessageButtonPrivate::NXMessageButtonPrivate(QObject *parent)
 {
 }
 
-NXMessageButtonPrivate::~NXMessageButtonPrivate() { }
+NXMessageButtonPrivate::~NXMessageButtonPrivate()
+{
+}
 
-void NXMessageButtonPrivate::_showMessage()
+void
+NXMessageButtonPrivate::_showMessage()
 {
   switch (_pMessageMode)
   {

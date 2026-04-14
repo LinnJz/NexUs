@@ -17,7 +17,7 @@ class NXPlainTextEditPrivate : public QObject
 public:
   explicit NXPlainTextEditPrivate(QObject *parent = nullptr);
   ~NXPlainTextEditPrivate() override;
-  Q_INVOKABLE void onWMWindowClickedEvent(const QVariantMap& data);
+  Q_INVOKABLE void onWMWindowClickedEvent(const QVariantMap &data);
   Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept;
 
 private:

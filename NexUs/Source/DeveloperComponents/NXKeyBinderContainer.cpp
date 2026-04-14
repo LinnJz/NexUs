@@ -26,9 +26,12 @@ NXKeyBinderContainer::NXKeyBinderContainer(QWidget *parent)
   });
 }
 
-NXKeyBinderContainer::~NXKeyBinderContainer() { }
+NXKeyBinderContainer::~NXKeyBinderContainer()
+{
+}
 
-void NXKeyBinderContainer::logOrResetHistoryData(bool isLog) noexcept
+void
+NXKeyBinderContainer::logOrResetHistoryData(bool isLog) noexcept
 {
   if (isLog)
   {
@@ -43,18 +46,23 @@ void NXKeyBinderContainer::logOrResetHistoryData(bool isLog) noexcept
   }
 }
 
-void NXKeyBinderContainer::saveBinderChanged() noexcept
+void
+NXKeyBinderContainer::saveBinderChanged() noexcept
 {
   Q_EMIT _keyBinder->binderKeyTextChanged(_pBinderKeyText);
   Q_EMIT _keyBinder->nativeVirtualBinderKeyChanged(_pNativeVirtualBinderKey);
-  if (_pBinderKeyText.isEmpty()) {_keyBinder->setText(QStringLiteral("  按键: 未绑定      ")); }
+  if (_pBinderKeyText.isEmpty())
+  {
+    _keyBinder->setText(QStringLiteral("  按键: 未绑定      "));
+  }
   else
   {
     _keyBinder->setText(QStringLiteral("  按键: ") + _pBinderKeyText + QStringLiteral("      "));
   }
 }
 
-bool NXKeyBinderContainer::event(QEvent *event)
+bool
+NXKeyBinderContainer::event(QEvent *event)
 {
   switch (event->type())
   {
@@ -105,7 +113,8 @@ bool NXKeyBinderContainer::event(QEvent *event)
   return QWidget::event(event);
 }
 
-void NXKeyBinderContainer::mousePressEvent(QMouseEvent *event)
+void
+NXKeyBinderContainer::mousePressEvent(QMouseEvent *event)
 {
   switch (event->button())
   {
@@ -148,13 +157,15 @@ void NXKeyBinderContainer::mousePressEvent(QMouseEvent *event)
   update();
 }
 
-void NXKeyBinderContainer::focusOutEvent(QFocusEvent *event)
+void
+NXKeyBinderContainer::focusOutEvent(QFocusEvent *event)
 {
   QWidget::focusOutEvent(event);
   setFocus();
 }
 
-void NXKeyBinderContainer::paintEvent(QPaintEvent *event)
+void
+NXKeyBinderContainer::paintEvent(QPaintEvent *event)
 {
   QPainter painter(this);
   painter.save();

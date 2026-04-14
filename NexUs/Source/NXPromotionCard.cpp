@@ -14,16 +14,16 @@ Q_PROPERTY_CREATE_CPP(NXPromotionCard, int, CardTitlePixelSize)
 Q_PROPERTY_CREATE_CPP(NXPromotionCard, int, PromotionTitlePixelSize)
 Q_PROPERTY_CREATE_CPP(NXPromotionCard, int, TitlePixelSize)
 Q_PROPERTY_CREATE_CPP(NXPromotionCard, int, SubTitlePixelSize)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QPixmap&, QPixmap, CardPixmap)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QString&, QString, CardTitle)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QString&, QString, PromotionTitle)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QString&, QString, Title)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QString&, QString, SubTitle)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QColor&, QColor, CardTitleColor)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QColor&, QColor, PromotionTitleColor)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QColor&, QColor, PromotionTitleBaseColor)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QColor&, QColor, TitleColor)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QColor&, QColor, SubTitleColor)
+Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QPixmap &, QPixmap, CardPixmap)
+Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QString &, QString, CardTitle)
+Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QString &, QString, PromotionTitle)
+Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QString &, QString, Title)
+Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QString &, QString, SubTitle)
+Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QColor &, QColor, CardTitleColor)
+Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QColor &, QColor, PromotionTitleColor)
+Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QColor &, QColor, PromotionTitleBaseColor)
+Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QColor &, QColor, TitleColor)
+Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QColor &, QColor, SubTitleColor)
 
 NXPromotionCard::NXPromotionCard(QWidget *parent)
     : QWidget { parent }
@@ -70,7 +70,8 @@ NXPromotionCard::~NXPromotionCard()
   delete d->_pressGradient;
 }
 
-void NXPromotionCard::setHorizontalCardPixmapRatio(qreal pixmapRatio) noexcept
+void
+NXPromotionCard::setHorizontalCardPixmapRatio(qreal pixmapRatio) noexcept
 {
   Q_D(NXPromotionCard);
   if (pixmapRatio > 0 && pixmapRatio <= 1)
@@ -80,13 +81,15 @@ void NXPromotionCard::setHorizontalCardPixmapRatio(qreal pixmapRatio) noexcept
   }
 }
 
-qreal NXPromotionCard::getHorizontalCardPixmapRatio() const noexcept
+qreal
+NXPromotionCard::getHorizontalCardPixmapRatio() const noexcept
 {
   Q_D(const NXPromotionCard);
   return d->_pHorizontalCardPixmapRatio;
 }
 
-void NXPromotionCard::setVerticalCardPixmapRatio(qreal pixmapRatio) noexcept
+void
+NXPromotionCard::setVerticalCardPixmapRatio(qreal pixmapRatio) noexcept
 {
   Q_D(NXPromotionCard);
   if (pixmapRatio > 0 && pixmapRatio <= 1)
@@ -96,13 +99,15 @@ void NXPromotionCard::setVerticalCardPixmapRatio(qreal pixmapRatio) noexcept
   }
 }
 
-qreal NXPromotionCard::getVerticalCardPixmapRatio() const noexcept
+qreal
+NXPromotionCard::getVerticalCardPixmapRatio() const noexcept
 {
   Q_D(const NXPromotionCard);
   return d->_pVerticalCardPixmapRatio;
 }
 
-bool NXPromotionCard::event(QEvent *event)
+bool
+NXPromotionCard::event(QEvent *event)
 {
   Q_D(NXPromotionCard);
   switch (event->type())
@@ -111,8 +116,14 @@ bool NXPromotionCard::event(QEvent *event)
   {
     QMouseEvent *mouseEvent              = dynamic_cast<QMouseEvent *>(event);
     QPropertyAnimation *opacityAnimation = new QPropertyAnimation(d, "pPressOpacity");
-    connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
-    connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]() { d->_isPressAnimationFinished = true; });
+    connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+    {
+      update();
+    });
+    connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]()
+    {
+      d->_isPressAnimationFinished = true;
+    });
     opacityAnimation->setDuration(300);
     opacityAnimation->setEasingCurve(QEasingCurve::InQuad);
     opacityAnimation->setStartValue(1);
@@ -120,8 +131,10 @@ bool NXPromotionCard::event(QEvent *event)
     opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
     QPropertyAnimation *pressAnimation = new QPropertyAnimation(d, "pPressRadius");
-    connect(pressAnimation, &QPropertyAnimation::valueChanged, this,
-            [=](const QVariant& value) { d->_pressGradient->setRadius(value.toReal()); });
+    connect(pressAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+    {
+      d->_pressGradient->setRadius(value.toReal());
+    });
     pressAnimation->setDuration(300);
     pressAnimation->setEasingCurve(QEasingCurve::InQuad);
     pressAnimation->setStartValue(30);
@@ -142,7 +155,10 @@ bool NXPromotionCard::event(QEvent *event)
   case QEvent::MouseMove :
   {
     QMouseEvent *mouseEvent = dynamic_cast<QMouseEvent *>(event);
-    if (d->_pHoverOpacity < 1 && d->_isPressAnimationFinished) { d->_startHoverOpacityAnimation(true); }
+    if (d->_pHoverOpacity < 1 && d->_isPressAnimationFinished)
+    {
+      d->_startHoverOpacityAnimation(true);
+    }
     if (d->_isPressAnimationFinished)
     {
       d->_hoverGradient->setCenter(mouseEvent->pos());
@@ -169,7 +185,8 @@ bool NXPromotionCard::event(QEvent *event)
   return QWidget::event(event);
 }
 
-void NXPromotionCard::paintEvent(QPaintEvent *event)
+void
+NXPromotionCard::paintEvent(QPaintEvent *event)
 {
   Q_D(NXPromotionCard);
   QPainter painter(this);

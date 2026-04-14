@@ -30,9 +30,14 @@ NXCustomTabWidget::NXCustomTabWidget(QWidget *parent)
   setAcceptDrops(true);
   _customTabBar = new NXTabBar(this);
   _customTabBar->setObjectName("NXCustomTabBar");
-  connect(_customTabBar, &NXTabBar::tabMoved, this,
-          [=](int from, int to) { _customTabWidget->tabBar()->moveTab(from, to); });
-  connect(_customTabBar, &NXTabBar::currentChanged, this, [=](int index) { _customTabWidget->setCurrentIndex(index); });
+  connect(_customTabBar, &NXTabBar::tabMoved, this, [=](int from, int to)
+  {
+    _customTabWidget->tabBar()->moveTab(from, to);
+  });
+  connect(_customTabBar, &NXTabBar::currentChanged, this, [=](int index)
+  {
+    _customTabWidget->setCurrentIndex(index);
+  });
   connect(_customTabWidget, &NXTabWidget::currentChanged, this, [=](int index)
   {
     if (index == -1)
@@ -41,8 +46,7 @@ NXCustomTabWidget::NXCustomTabWidget(QWidget *parent)
       hide();
     }
   });
-  connect(_customTabBar, &NXTabBar::tabCloseRequested, _customTabWidget->d_func(),
-          &NXTabWidgetPrivate::onTabCloseRequested);
+  connect(_customTabBar, &NXTabBar::tabCloseRequested, originTabBar, &QTabBar::tabCloseRequested);
 
   _customTabWidget->d_ptr->_customTabBar = _customTabBar;
   connect(_customTabBar, &NXTabBar::tabDragCreate, _customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragCreate);
@@ -77,17 +81,27 @@ NXCustomTabWidget::~NXCustomTabWidget()
   }
 }
 
-void NXCustomTabWidget::addTab(QWidget *widget, QIcon tabIcon, const QString& tabTitle) noexcept
+void
+NXCustomTabWidget::addTab(QWidget *widget, QIcon tabIcon, const QString &tabTitle) noexcept
 {
   _customTabBar->addTab(tabIcon, tabTitle);
   _customTabWidget->addTab(widget, tabIcon, tabTitle);
 }
 
-NXTabBar *NXCustomTabWidget::getCustomTabBar() const noexcept { return _customTabBar; }
+NXTabBar *
+NXCustomTabWidget::getCustomTabBar() const noexcept
+{
+  return _customTabBar;
+}
 
-NXTabWidget *NXCustomTabWidget::getCustomTabWidget() const noexcept { return _customTabWidget; }
+NXTabWidget *
+NXCustomTabWidget::getCustomTabWidget() const noexcept
+{
+  return _customTabWidget;
+}
 
-bool NXCustomTabWidget::processHitTest()
+bool
+NXCustomTabWidget::processHitTest()
 {
   auto point = _customTabBar->mapFromGlobal(QCursor::pos());
   return _customTabBar->tabAt(point) < 0;

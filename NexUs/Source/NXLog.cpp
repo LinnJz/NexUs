@@ -5,8 +5,8 @@
 #include "private/NXLogPrivate.h"
 
 Q_PROPERTY_CREATE_CPP(NXLog, bool, IsLogFileNameWithTime)
-Q_PROPERTY_CREATE_2_CPP(NXLog, const QString&, QString, LogSavePath)
-Q_PROPERTY_CREATE_2_CPP(NXLog, const QString&, QString, LogFileName)
+Q_PROPERTY_CREATE_2_CPP(NXLog, const QString &, QString, LogSavePath)
+Q_PROPERTY_CREATE_2_CPP(NXLog, const QString &, QString, LogFileName)
 
 NXLog::NXLog(QObject *parent)
     : QObject { parent }
@@ -23,9 +23,12 @@ NXLog::NXLog(QObject *parent)
   connect(this, &NXLog::pIsLogFileNameWithTimeChanged, d, &NXLogPrivate::_clearLogFile);
 }
 
-NXLog::~NXLog() { }
+NXLog::~NXLog()
+{
+}
 
-void NXLog::initMessageLog(bool isEnable) noexcept
+void
+NXLog::initMessageLog(bool isEnable) noexcept
 {
   Q_D(NXLog);
   qInstallMessageHandler(isEnable ? d->_messageLogHander : 0);

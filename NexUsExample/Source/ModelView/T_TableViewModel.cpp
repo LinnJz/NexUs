@@ -85,26 +85,59 @@ T_TableViewModel::T_TableViewModel(QObject *parent)
                              .scaled(38, 38, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
 }
 
-T_TableViewModel::~T_TableViewModel() { }
-
-int T_TableViewModel::rowCount(const QModelIndex& parent) const { return 100; }
-
-int T_TableViewModel::columnCount(const QModelIndex& parent) const { return _header.count(); }
-
-QVariant T_TableViewModel::data(const QModelIndex& index, int role) const
+T_TableViewModel::~T_TableViewModel()
 {
-  if (role == Qt::DisplayRole && index.column() != 0) { return _dataList[index.row() % 9][index.column() - 1]; }
-  else if (role == Qt::DecorationRole && index.column() == 0) { return _iconList[index.row() % 9]; }
-  else if (role == Qt::DecorationPropertyRole) { return Qt::AlignCenter; }
-  else if (role == Qt::TextAlignmentRole && index.column() == 4) { return Qt::AlignCenter; }
-  else if (role == Qt::CheckStateRole && index.column() == 0) { return Qt::Checked; }
+}
+
+int
+T_TableViewModel::rowCount(const QModelIndex &parent) const
+{
+  return 100;
+}
+
+int
+T_TableViewModel::columnCount(const QModelIndex &parent) const
+{
+  return _header.count();
+}
+
+QVariant
+T_TableViewModel::data(const QModelIndex &index, int role) const
+{
+  if (role == Qt::DisplayRole && index.column() != 0)
+  {
+    return _dataList[index.row() % 9][index.column() - 1];
+  }
+  else if (role == Qt::DecorationRole && index.column() == 0)
+  {
+    return _iconList[index.row() % 9];
+  }
+  else if (role == Qt::DecorationPropertyRole)
+  {
+    return Qt::AlignCenter;
+  }
+  else if (role == Qt::TextAlignmentRole && index.column() == 4)
+  {
+    return Qt::AlignCenter;
+  }
+  else if (role == Qt::CheckStateRole && index.column() == 0)
+  {
+    return Qt::Checked;
+  }
 
   return QVariant();
 }
 
-QVariant T_TableViewModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant
+T_TableViewModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole) { return _header[section]; }
-  if (orientation == Qt::Horizontal && role == Qt::CheckStateRole && section == 0) { return Qt::Checked; }
+  if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+  {
+    return _header[section];
+  }
+  if (orientation == Qt::Horizontal && role == Qt::CheckStateRole && section == 0)
+  {
+    return Qt::Checked;
+  }
   return QAbstractTableModel::headerData(section, orientation, role);
 }

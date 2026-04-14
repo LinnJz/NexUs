@@ -25,7 +25,7 @@ public:
   explicit NXCalendarPrivate(QObject *parent = nullptr);
   ~NXCalendarPrivate();
   Q_SLOT void onSwitchButtonClicked() noexcept;
-  Q_SLOT void onCalendarViewClicked(const QModelIndex& index) noexcept;
+  Q_SLOT void onCalendarViewClicked(const QModelIndex &index) noexcept;
   Q_SLOT void onUpButtonClicked() noexcept;
   Q_SLOT void onDownButtonClicked() noexcept;
 

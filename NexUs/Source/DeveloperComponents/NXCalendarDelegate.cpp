@@ -15,14 +15,20 @@ NXCalendarDelegate::NXCalendarDelegate(NXCalendarModel *calendarModel, QObject *
   _pItemHeight    = 42;
   _nowDate        = QDate::currentDate();
   _themeMode      = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
   connect(_calendarModel, &NXCalendarModel::displayModeChanged, this,
           &NXCalendarDelegate::onCalendarModelDisplayModeChanged);
 }
 
-NXCalendarDelegate::~NXCalendarDelegate() { }
+NXCalendarDelegate::~NXCalendarDelegate()
+{
+}
 
-void NXCalendarDelegate::onCalendarModelDisplayModeChanged() noexcept
+void
+NXCalendarDelegate::onCalendarModelDisplayModeChanged() noexcept
 {
   switch (_calendarModel->getDisplayMode())
   {
@@ -42,9 +48,13 @@ void NXCalendarDelegate::onCalendarModelDisplayModeChanged() noexcept
   }
 }
 
-void NXCalendarDelegate::paint(QPainter *painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void
+NXCalendarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-  if (_pIsTransparent) { return; }
+  if (_pIsTransparent)
+  {
+    return;
+  }
   painter->save();
   painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
   NXCalendarType displayModel = _calendarModel->getDisplayMode();
@@ -66,14 +76,16 @@ void NXCalendarDelegate::paint(QPainter *painter, const QStyleOptionViewItem& op
   QStyledItemDelegate::paint(painter, option, index);
 }
 
-QSize NXCalendarDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+QSize
+NXCalendarDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
   return QSize(_pItemWidth, _pItemHeight);
 }
 
-void NXCalendarDelegate::_drawYearOrMonth(QPainter *painter,
-                                          const QStyleOptionViewItem& option,
-                                          const QModelIndex& index) const
+void
+NXCalendarDelegate::_drawYearOrMonth(QPainter *painter,
+                                     const QStyleOptionViewItem &option,
+                                     const QModelIndex &index) const
 {
   QRectF itemRect     = option.rect;
   bool isNow          = false;
@@ -117,9 +129,8 @@ void NXCalendarDelegate::_drawYearOrMonth(QPainter *painter,
   }
 }
 
-void NXCalendarDelegate::_drawDays(QPainter *painter,
-                                   const QStyleOptionViewItem& option,
-                                   const QModelIndex& index) const
+void
+NXCalendarDelegate::_drawDays(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
   qreal penWidth   = 1.5;
   qreal baseRadius = _pItemWidth * 0.5 - penWidth;

@@ -10,15 +10,25 @@ T_IconModel::T_IconModel(QObject *parent)
   _pIsSearchMode = false;
 }
 
-T_IconModel::~T_IconModel() { }
+T_IconModel::~T_IconModel()
+{
+}
 
-int T_IconModel::rowCount(const QModelIndex& parent) const { return _rowCount; }
+int
+T_IconModel::rowCount(const QModelIndex &parent) const
+{
+  return _rowCount;
+}
 
-void T_IconModel::setSearchKeyList(QStringList list)
+void
+T_IconModel::setSearchKeyList(QStringList list)
 {
   beginResetModel();
   this->_searchKeyList = list;
-  if (_pIsSearchMode) { _rowCount = this->getSearchKeyList().count(); }
+  if (_pIsSearchMode)
+  {
+    _rowCount = this->getSearchKeyList().count();
+  }
   else
   {
     _rowCount = _metaEnum.keyCount() - 1;
@@ -26,21 +36,32 @@ void T_IconModel::setSearchKeyList(QStringList list)
   endResetModel();
 }
 
-QStringList T_IconModel::getSearchKeyList() { return this->_searchKeyList; }
+QStringList
+T_IconModel::getSearchKeyList()
+{
+  return this->_searchKeyList;
+}
 
-QVariant T_IconModel::data(const QModelIndex& index, int role) const
+QVariant
+T_IconModel::data(const QModelIndex &index, int role) const
 {
   if (role == Qt::UserRole)
   {
     if (!_pIsSearchMode)
     {
-      if (index.row() >= _metaEnum.keyCount() - 1) { return QVariant(); }
+      if (index.row() >= _metaEnum.keyCount() - 1)
+      {
+        return QVariant();
+      }
       return QStringList { _metaEnum.key(index.row() + 1), QChar(_metaEnum.value(index.row() + 1)) };
     }
     else
     {
       QStringList iconList;
-      if (index.row() >= _searchKeyList.count()) { return QVariant(); }
+      if (index.row() >= _searchKeyList.count())
+      {
+        return QVariant();
+      }
       iconList.append(_searchKeyList.at(index.row()));
       iconList.append(QChar(_metaEnum.keyToValue(_searchKeyList.at(index.row()).toUtf8().constData())));
       return iconList;
@@ -49,16 +70,23 @@ QVariant T_IconModel::data(const QModelIndex& index, int role) const
   return QVariant();
 }
 
-QString T_IconModel::getIconNameFromModelIndex(const QModelIndex& index) const
+QString
+T_IconModel::getIconNameFromModelIndex(const QModelIndex &index) const
 {
   QString iconName;
   if (_pIsSearchMode)
   {
-    if (index.row() < _searchKeyList.count()) { iconName = QString("NXIconType::") + _searchKeyList.at(index.row()); }
+    if (index.row() < _searchKeyList.count())
+    {
+      iconName = QString("NXIconType::") + _searchKeyList.at(index.row());
+    }
   }
   else
   {
-    if (index.row() < _metaEnum.keyCount() - 1) { iconName = QString("NXIconType::") + _metaEnum.key(index.row() + 1); }
+    if (index.row() < _metaEnum.keyCount() - 1)
+    {
+      iconName = QString("NXIconType::") + _metaEnum.key(index.row() + 1);
+    }
   }
   return iconName;
 }

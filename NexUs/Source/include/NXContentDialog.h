@@ -35,7 +35,7 @@ public:
   NXPushButton *rightButton() const noexcept;
   NXPushButton *button(ButtonType button) const noexcept;
 
-  void setButtonText(ButtonType button, const QString& text) noexcept;
+  void setButtonText(ButtonType button, const QString &text) noexcept;
   QString getButtonText(ButtonType button) const noexcept;
 
   void setIsButtonVisible(ButtonType button, bool visible) noexcept;

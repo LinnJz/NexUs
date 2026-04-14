@@ -7,9 +7,12 @@ NXLCDNumberPrivate::NXLCDNumberPrivate(QObject *parent)
 {
 }
 
-NXLCDNumberPrivate::~NXLCDNumberPrivate() { }
+NXLCDNumberPrivate::~NXLCDNumberPrivate()
+{
+}
 
-void NXLCDNumberPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept
+void
+NXLCDNumberPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_Q(NXLCDNumber);
   _themeMode       = themeMode;

@@ -17,10 +17,10 @@ class NX_EXPORT NXGraphicsItem : public QGraphicsObject
   Q_PROPERTY_CREATE_H(int, Width)
   Q_PROPERTY_CREATE_H(int, Height)
   Q_PROPERTY_CREATE_H(int, MaxLinkPortCount)
-  Q_PROPERTY_CREATE_2_H(const QImage&, QImage, ItemImage)
-  Q_PROPERTY_CREATE_2_H(const QImage&, QImage, ItemSelectedImage)
-  Q_PROPERTY_CREATE_2_H(const QString&, QString, ItemName)
-  Q_PROPERTY_CREATE_2_H(const QVariantMap&, QVariantMap, DataRoutes)
+  Q_PROPERTY_CREATE_2_H(const QImage &, QImage, ItemImage)
+  Q_PROPERTY_CREATE_2_H(const QImage &, QImage, ItemSelectedImage)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, ItemName)
+  Q_PROPERTY_CREATE_2_H(const QVariantMap &, QVariantMap, DataRoutes)
 
 public:
   explicit NXGraphicsItem(QGraphicsItem *parent = nullptr);
@@ -43,8 +43,8 @@ public:
 protected:
   QRectF boundingRect() const override;
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
-  friend QDataStream& operator<< (QDataStream& stream, const NXGraphicsItem *item);
-  friend QDataStream& operator>> (QDataStream& stream, NXGraphicsItem *item);
+  friend QDataStream &operator<< (QDataStream &stream, const NXGraphicsItem *item);
+  friend QDataStream &operator>> (QDataStream &stream, NXGraphicsItem *item);
 };
 
 #endif // NXGRAPHICSITEM_H

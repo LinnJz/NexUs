@@ -9,10 +9,10 @@
 #include "private/NXGraphicsScenePrivate.h"
 Q_PROPERTY_CREATE_CPP(NXGraphicsItem, int, Width)
 Q_PROPERTY_CREATE_CPP(NXGraphicsItem, int, Height)
-Q_PROPERTY_CREATE_2_CPP(NXGraphicsItem, const QImage&, QImage, ItemImage)
-Q_PROPERTY_CREATE_2_CPP(NXGraphicsItem, const QImage&, QImage, ItemSelectedImage)
-Q_PROPERTY_CREATE_2_CPP(NXGraphicsItem, const QString&, QString, ItemName)
-Q_PROPERTY_CREATE_2_CPP(NXGraphicsItem, const QVariantMap&, QVariantMap, DataRoutes)
+Q_PROPERTY_CREATE_2_CPP(NXGraphicsItem, const QImage &, QImage, ItemImage)
+Q_PROPERTY_CREATE_2_CPP(NXGraphicsItem, const QImage &, QImage, ItemSelectedImage)
+Q_PROPERTY_CREATE_2_CPP(NXGraphicsItem, const QString &, QString, ItemName)
+Q_PROPERTY_CREATE_2_CPP(NXGraphicsItem, const QVariantMap &, QVariantMap, DataRoutes)
 
 NXGraphicsItem::NXGraphicsItem(QGraphicsItem *parent)
     : QGraphicsObject(parent)
@@ -24,9 +24,13 @@ NXGraphicsItem::NXGraphicsItem(QGraphicsItem *parent)
   setAcceptedMouseButtons(Qt::AllButtons);
   setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsSelectable |
            ItemAcceptsInputMethod);
-  d->_pWidth             = 50;
-  d->_pHeight            = 50;
-  d->_itemUID            = QUuid::createUuid().toString().remove(QStringLiteral("{")).remove(QStringLiteral("}")).remove(QStringLiteral("-"));
+  d->_pWidth  = 50;
+  d->_pHeight = 50;
+  d->_itemUID = QUuid::createUuid()
+                    .toString()
+                    .remove(QStringLiteral("{"))
+                    .remove(QStringLiteral("}"))
+                    .remove(QStringLiteral("-"));
   d->_pItemImage         = QImage(QStringLiteral(":/Resource/Image/Moon.jpg"));
   d->_pItemSelectedImage = QImage(QStringLiteral(":/Resource/Image/Cirno.jpg"));
   d->_pItemName          = {};
@@ -43,106 +47,151 @@ NXGraphicsItem::NXGraphicsItem(int width, int height, QGraphicsItem *parent)
   d->_pHeight = height;
 }
 
-NXGraphicsItem::~NXGraphicsItem() { }
+NXGraphicsItem::~NXGraphicsItem()
+{
+}
 
-void NXGraphicsItem::setMaxLinkPortCount(int maxLinkPortCount) noexcept
+void
+NXGraphicsItem::setMaxLinkPortCount(int maxLinkPortCount) noexcept
 {
   Q_D(NXGraphicsItem);
-  if (maxLinkPortCount < 0) { maxLinkPortCount = 0; }
+  if (maxLinkPortCount < 0)
+  {
+    maxLinkPortCount = 0;
+  }
   d->_pMaxLinkPortCount = maxLinkPortCount;
   if (d->_currentLinkPortState.count() > maxLinkPortCount)
   {
-    while (d->_currentLinkPortState.count() > maxLinkPortCount) { d->_currentLinkPortState.removeLast(); }
+    while (d->_currentLinkPortState.count() > maxLinkPortCount)
+    {
+      d->_currentLinkPortState.removeLast();
+    }
   }
   else
   {
-    while (d->_currentLinkPortState.count() < maxLinkPortCount) { d->_currentLinkPortState.append(false); }
+    while (d->_currentLinkPortState.count() < maxLinkPortCount)
+    {
+      d->_currentLinkPortState.append(false);
+    }
   }
 }
 
-int NXGraphicsItem::getMaxLinkPortCount() const noexcept
+int
+NXGraphicsItem::getMaxLinkPortCount() const noexcept
 {
   Q_D(const NXGraphicsItem);
   return d->_pMaxLinkPortCount;
 }
 
-QString NXGraphicsItem::getItemUID() const noexcept { return d_ptr->_itemUID; }
+QString
+NXGraphicsItem::getItemUID() const noexcept
+{
+  return d_ptr->_itemUID;
+}
 
-void NXGraphicsItem::setLinkPortState(bool isFullLink) noexcept
+void
+NXGraphicsItem::setLinkPortState(bool isFullLink) noexcept
 {
   Q_D(NXGraphicsItem);
   d->_currentLinkPortState.fill(isFullLink);
 }
 
-void NXGraphicsItem::setLinkPortState(bool isLink, int portIndex) noexcept
+void
+NXGraphicsItem::setLinkPortState(bool isLink, int portIndex) noexcept
 {
   Q_D(NXGraphicsItem);
-  if (portIndex >= 0 && portIndex < d->_pMaxLinkPortCount) { d->_currentLinkPortState[portIndex] = isLink; }
+  if (portIndex >= 0 && portIndex < d->_pMaxLinkPortCount)
+  {
+    d->_currentLinkPortState[portIndex] = isLink;
+  }
 }
 
-QList<bool> NXGraphicsItem::getLinkPortState() const noexcept
+QList<bool>
+NXGraphicsItem::getLinkPortState() const noexcept
 {
   Q_D(const NXGraphicsItem);
   return d->_currentLinkPortState;
 }
 
-bool NXGraphicsItem::getLinkPortState(int portIndex) const noexcept
+bool
+NXGraphicsItem::getLinkPortState(int portIndex) const noexcept
 {
   Q_D(const NXGraphicsItem);
-  if (portIndex >= 0 && portIndex < d->_pMaxLinkPortCount) { return d->_currentLinkPortState[portIndex]; }
+  if (portIndex >= 0 && portIndex < d->_pMaxLinkPortCount)
+  {
+    return d->_currentLinkPortState[portIndex];
+  }
   return false;
 }
 
-int NXGraphicsItem::getUsedLinkPortCount() const noexcept
+int
+NXGraphicsItem::getUsedLinkPortCount() const noexcept
 {
   Q_D(const NXGraphicsItem);
   int currentLinkPortCount = 0;
   for (auto isLink : d->_currentLinkPortState)
   {
-    if (isLink) { currentLinkPortCount++; }
+    if (isLink)
+    {
+      currentLinkPortCount++;
+    }
   }
   return currentLinkPortCount;
 }
 
-QList<int> NXGraphicsItem::getUsedLinkPort() const noexcept
+QList<int>
+NXGraphicsItem::getUsedLinkPort() const noexcept
 {
   Q_D(const NXGraphicsItem);
   QList<int> usedPortVector;
   for (int i = 0; i < d->_pMaxLinkPortCount; i++)
   {
-    if (d->_currentLinkPortState[i]) { usedPortVector.append(i); }
+    if (d->_currentLinkPortState[i])
+    {
+      usedPortVector.append(i);
+    }
   }
   return usedPortVector;
 }
 
-int NXGraphicsItem::getUnusedLinkPortCount() const noexcept
+int
+NXGraphicsItem::getUnusedLinkPortCount() const noexcept
 {
   Q_D(const NXGraphicsItem);
   return d->_pMaxLinkPortCount - getUsedLinkPortCount();
 }
 
-QList<int> NXGraphicsItem::getUnusedLinkPort() const noexcept
+QList<int>
+NXGraphicsItem::getUnusedLinkPort() const noexcept
 {
   Q_D(const NXGraphicsItem);
   QList<int> unusedPortVector;
   for (int i = 0; i < d->_pMaxLinkPortCount; i++)
   {
-    if (!(d->_currentLinkPortState[i])) { unusedPortVector.append(i); }
+    if (!(d->_currentLinkPortState[i]))
+    {
+      unusedPortVector.append(i);
+    }
   }
   return unusedPortVector;
 }
 
-QRectF NXGraphicsItem::boundingRect() const
+QRectF
+NXGraphicsItem::boundingRect() const
 {
   return QRect(-d_ptr->_pWidth / 2, -d_ptr->_pHeight / 2, d_ptr->_pWidth, d_ptr->_pHeight);
 }
 
-void NXGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void
+NXGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
   Q_D(NXGraphicsItem);
   painter->save();
   painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
-  if (isSelected()) { painter->drawImage(boundingRect(), d->_pItemSelectedImage); }
+  if (isSelected())
+  {
+    painter->drawImage(boundingRect(), d->_pItemSelectedImage);
+  }
   else
   {
     painter->drawImage(boundingRect(), d->_pItemImage);
@@ -150,7 +199,8 @@ void NXGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
   painter->restore();
 }
 
-QDataStream& operator<< (QDataStream& stream, const NXGraphicsItem *item)
+QDataStream &
+operator<< (QDataStream &stream, const NXGraphicsItem *item)
 {
   stream << item->x();
   stream << item->y();
@@ -161,7 +211,8 @@ QDataStream& operator<< (QDataStream& stream, const NXGraphicsItem *item)
   return stream;
 }
 
-QDataStream& operator>> (QDataStream& stream, NXGraphicsItem *item)
+QDataStream &
+operator>> (QDataStream &stream, NXGraphicsItem *item)
 {
   qreal itemX;
   qreal itemY;

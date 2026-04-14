@@ -41,33 +41,43 @@ namespace detail
 {
 
 template<typename E>
-constexpr optional<std::uintmax_t> fuse_one_enum(optional<std::uintmax_t> hash, E value) noexcept
+constexpr optional<std::uintmax_t>
+fuse_one_enum(optional<std::uintmax_t> hash, E value) noexcept
 {
   if (hash)
   {
-    if (const auto index = enum_index(value)) { return (*hash << log2((enum_count<E>() << 1) - 1)) | *index; }
+    if (const auto index = enum_index(value))
+    {
+      return (*hash << log2((enum_count<E>() << 1) - 1)) | *index;
+    }
   }
   return {};
 }
 
 template<typename E>
-constexpr optional<std::uintmax_t> fuse_enum(E value) noexcept
+constexpr optional<std::uintmax_t>
+fuse_enum(E value) noexcept
 {
   return fuse_one_enum(0, value);
 }
 
 template<typename E, typename... Es>
-constexpr optional<std::uintmax_t> fuse_enum(E head, Es... tail) noexcept
+constexpr optional<std::uintmax_t>
+fuse_enum(E head, Es... tail) noexcept
 {
   return fuse_one_enum(fuse_enum(tail...), head);
 }
 
 template<typename... Es>
-constexpr auto typesafe_fuse_enum(Es... values) noexcept
+constexpr auto
+typesafe_fuse_enum(Es... values) noexcept
 {
   enum class enum_fuse_t : std::uintmax_t;
   const auto fuse = fuse_enum(values...);
-  if (fuse) { return optional<enum_fuse_t> { static_cast<enum_fuse_t>(*fuse) }; }
+  if (fuse)
+  {
+    return optional<enum_fuse_t> { static_cast<enum_fuse_t>(*fuse) };
+  }
   return optional<enum_fuse_t> {};
 }
 
@@ -75,7 +85,8 @@ constexpr auto typesafe_fuse_enum(Es... values) noexcept
 
 // Returns a bijective mix of several enum values. This can be used to emulate 2D switch/case statements.
 template<typename... Es>
-[[nodiscard]] constexpr auto enum_fuse(Es... values) noexcept
+[[nodiscard]] constexpr auto
+enum_fuse(Es... values) noexcept
 {
   static_assert((std::is_enum_v<std::decay_t<Es>> && ...), "magic_enum::enum_fuse requires enum type.");
   static_assert(sizeof...(Es) >= 2, "magic_enum::enum_fuse requires at least 2 values.");

@@ -13,9 +13,9 @@ class NXSuggestion : public QObject
 {
   Q_OBJECT
   Q_PROPERTY_CREATE(NXIconType::IconName, NXIcon)
-  Q_PROPERTY_CREATE_2(const QString&, QString, SuggestText)
-  Q_PROPERTY_CREATE_2(const QString&, QString, SuggestKey)
-  Q_PROPERTY_CREATE_2(const QVariantMap&, QVariantMap, SuggestData)
+  Q_PROPERTY_CREATE_2(const QString &, QString, SuggestText)
+  Q_PROPERTY_CREATE_2(const QString &, QString, SuggestKey)
+  Q_PROPERTY_CREATE_2(const QVariantMap &, QVariantMap, SuggestData)
 
 public:
   explicit NXSuggestion(QObject *parent = nullptr);
@@ -42,8 +42,8 @@ public:
   explicit NXSuggestBoxPrivate(QObject *parent = nullptr);
   ~NXSuggestBoxPrivate();
   Q_SLOT void onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept;
-  Q_SLOT void onSearchEditTextEdit(const QString& searchText) noexcept;
-  Q_SLOT void onSearchViewClicked(const QModelIndex& index) noexcept;
+  Q_SLOT void onSearchEditTextEdit(const QString &searchText) noexcept;
+  Q_SLOT void onSearchViewClicked(const QModelIndex &index) noexcept;
 
 private:
   bool _isExpandAnimationFinished { true };

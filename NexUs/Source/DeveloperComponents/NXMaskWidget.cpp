@@ -11,15 +11,24 @@ NXMaskWidget::NXMaskWidget(QWidget *parent)
   _pMaskAlpha = 0;
 }
 
-NXMaskWidget::~NXMaskWidget() { }
+NXMaskWidget::~NXMaskWidget()
+{
+}
 
-void NXMaskWidget::doMaskAnimation(int endValue) noexcept
+void
+NXMaskWidget::doMaskAnimation(int endValue) noexcept
 {
   QPropertyAnimation *opacityAnimation = new QPropertyAnimation(this, "pMaskAlpha");
-  connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
+  connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+  {
+    update();
+  });
   connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]()
   {
-    if (endValue == 0) { setVisible(false); }
+    if (endValue == 0)
+    {
+      setVisible(false);
+    }
   });
   opacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
   opacityAnimation->setDuration(250);
@@ -28,7 +37,8 @@ void NXMaskWidget::doMaskAnimation(int endValue) noexcept
   opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXMaskWidget::paintEvent(QPaintEvent *event)
+void
+NXMaskWidget::paintEvent(QPaintEvent *event)
 {
   QPainter painter(this);
   painter.save();

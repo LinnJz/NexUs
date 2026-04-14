@@ -102,17 +102,26 @@ T_TableWidget::T_TableWidget(QWidget *parent)
     if (row == 0)
     {
       // 第一行 - 红色背景
-      for (int col = 0; col < 5; ++col) { _tableWidget->item(row, col)->setBackground(QColor(255, 150, 150)); }
+      for (int col = 0; col < 5; ++col)
+      {
+        _tableWidget->item(row, col)->setBackground(QColor(255, 150, 150));
+      }
     }
     else if (row == 1)
     {
       // 第二行 - 绿色背景
-      for (int col = 0; col < 5; ++col) { _tableWidget->item(row, col)->setBackground(QColor(150, 255, 150)); }
+      for (int col = 0; col < 5; ++col)
+      {
+        _tableWidget->item(row, col)->setBackground(QColor(150, 255, 150));
+      }
     }
     else if (row == 2)
     {
       // 第三行 - 蓝色文字（不改变背景）
-      for (int col = 0; col < 5; ++col) { _tableWidget->item(row, col)->setForeground(QColor(50, 50, 255)); }
+      for (int col = 0; col < 5; ++col)
+      {
+        _tableWidget->item(row, col)->setForeground(QColor(50, 50, 255));
+      }
     }
   }
 
@@ -146,4 +155,6 @@ T_TableWidget::T_TableWidget(QWidget *parent)
   addCentralWidget(centralWidget, true, false, 0);
 }
 
-T_TableWidget::~T_TableWidget() { }
+T_TableWidget::~T_TableWidget()
+{
+}

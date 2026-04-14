@@ -13,8 +13,8 @@
 
 NXMessageBar::NXMessageBar(NXMessageBarType::PositionPolicy policy,
                            NXMessageBarType::MessageMode messageMode,
-                           const QString& title,
-                           const QString& text,
+                           const QString &title,
+                           const QString &text,
                            int displayMsec,
                            QWidget *parent)
     : QWidget { parent }
@@ -71,24 +71,26 @@ NXMessageBar::NXMessageBar(NXMessageBarType::PositionPolicy policy,
   }
   }
   d->_closeButton->setBorderRadius(5);
-  connect(d->_closeButton, &NXIconButton::clicked, d, &NXMessageBarPrivate::onCloseButtonClicked);
+  connect(d->_closeButton, &NXIconButton::clicked, d, &NXMessageBarPrivate::messageBarEnd);
   QHBoxLayout *mainLayout = new QHBoxLayout(this);
   mainLayout->setContentsMargins(0, 0, 10, 0);
   mainLayout->addStretch();
   mainLayout->addWidget(d->_closeButton);
   setObjectName("NXMessageBar");
   setStyleSheet(QStringLiteral("#NXMessageBar{background-color:transparent;}"));
-  connect(nxTheme, &NXTheme::themeModeChanged, d, &NXMessageBarPrivate::onThemeChanged);
   d->_messageBarCreate(displayMsec);
 }
 
-NXMessageBar::~NXMessageBar() { }
+NXMessageBar::~NXMessageBar()
+{
+}
 
-void NXMessageBar::success(NXMessageBarType::PositionPolicy policy,
-                           const QString& title,
-                           const QString& text,
-                           int displayMsec,
-                           QWidget *parent) noexcept
+void
+NXMessageBar::success(NXMessageBarType::PositionPolicy policy,
+                      const QString &title,
+                      const QString &text,
+                      int displayMsec,
+                      QWidget *parent) noexcept
 {
   // qDebug() << QApplication::topLevelWidgets();
   if (!parent)
@@ -96,73 +98,101 @@ void NXMessageBar::success(NXMessageBarType::PositionPolicy policy,
     QList<QWidget *> widgetList = QApplication::topLevelWidgets();
     for (auto widget : widgetList)
     {
-      if (widget->property("NXBaseClassName").toString() == "NXWindow") { parent = widget; }
+      if (widget->property("NXBaseClassName").toString() == "NXWindow")
+      {
+        parent = widget;
+      }
     }
-    if (!parent) { return; }
+    if (!parent)
+    {
+      return;
+    }
   }
 
   NXMessageBar *bar = new NXMessageBar(policy, NXMessageBarType::Success, title, text, displayMsec, parent);
   Q_UNUSED(bar);
 }
 
-void NXMessageBar::warning(NXMessageBarType::PositionPolicy policy,
-                           const QString& title,
-                           const QString& text,
-                           int displayMsec,
-                           QWidget *parent) noexcept
+void
+NXMessageBar::warning(NXMessageBarType::PositionPolicy policy,
+                      const QString &title,
+                      const QString &text,
+                      int displayMsec,
+                      QWidget *parent) noexcept
 {
   if (!parent)
   {
     QList<QWidget *> widgetList = QApplication::topLevelWidgets();
     for (auto widget : widgetList)
     {
-      if (widget->property("NXBaseClassName").toString() == "NXWindow") { parent = widget; }
+      if (widget->property("NXBaseClassName").toString() == "NXWindow")
+      {
+        parent = widget;
+      }
     }
-    if (!parent) { return; }
+    if (!parent)
+    {
+      return;
+    }
   }
   NXMessageBar *bar = new NXMessageBar(policy, NXMessageBarType::Warning, title, text, displayMsec, parent);
   Q_UNUSED(bar);
 }
 
-void NXMessageBar::information(NXMessageBarType::PositionPolicy policy,
-                               const QString& title,
-                               const QString& text,
-                               int displayMsec,
-                               QWidget *parent) noexcept
+void
+NXMessageBar::information(NXMessageBarType::PositionPolicy policy,
+                          const QString &title,
+                          const QString &text,
+                          int displayMsec,
+                          QWidget *parent) noexcept
 {
   if (!parent)
   {
     QList<QWidget *> widgetList = QApplication::topLevelWidgets();
     for (auto widget : widgetList)
     {
-      if (widget->property("NXBaseClassName").toString() == "NXWindow") { parent = widget; }
+      if (widget->property("NXBaseClassName").toString() == "NXWindow")
+      {
+        parent = widget;
+      }
     }
-    if (!parent) { return; }
+    if (!parent)
+    {
+      return;
+    }
   }
   NXMessageBar *bar = new NXMessageBar(policy, NXMessageBarType::Information, title, text, displayMsec, parent);
   Q_UNUSED(bar);
 }
 
-void NXMessageBar::error(NXMessageBarType::PositionPolicy policy,
-                         const QString& title,
-                         const QString& text,
-                         int displayMsec,
-                         QWidget *parent) noexcept
+void
+NXMessageBar::error(NXMessageBarType::PositionPolicy policy,
+                    const QString &title,
+                    const QString &text,
+                    int displayMsec,
+                    QWidget *parent) noexcept
 {
   if (!parent)
   {
     QList<QWidget *> widgetList = QApplication::topLevelWidgets();
     for (auto widget : widgetList)
     {
-      if (widget->property("NXBaseClassName").toString() == "NXWindow") { parent = widget; }
+      if (widget->property("NXBaseClassName").toString() == "NXWindow")
+      {
+        parent = widget;
+      }
     }
-    if (!parent) { return; }
+    if (!parent)
+    {
+      return;
+    }
   }
   NXMessageBar *bar = new NXMessageBar(policy, NXMessageBarType::Error, title, text, displayMsec, parent);
   Q_UNUSED(bar);
 }
 
-void NXMessageBar::paintEvent(QPaintEvent *event)
+void
+NXMessageBar::paintEvent(QPaintEvent *event)
 {
   Q_D(NXMessageBar);
   QPainter painter(this);
@@ -204,7 +234,10 @@ void NXMessageBar::paintEvent(QPaintEvent *event)
   font.setPixelSize(16);
   painter.setFont(font);
   int titleTextWidth = painter.fontMetrics().horizontalAdvance(d->_title) + 1;
-  if (titleTextWidth > 100) { titleTextWidth = 100; }
+  if (titleTextWidth > 100)
+  {
+    titleTextWidth = 100;
+  }
   int textFlags = Qt::AlignLeft | Qt::AlignVCenter | Qt::TextWordWrap | Qt::TextWrapAnywhere;
   painter.drawText(QRect(d->_leftPadding + d->_titleLeftSpacing, -1, titleTextWidth, height()), textFlags, d->_title);
   // 正文
@@ -224,11 +257,15 @@ void NXMessageBar::paintEvent(QPaintEvent *event)
                               height()),
                         textFlags, d->_text)
           .height();
-  if (textHeight >= minimumHeight() - 20) { setMinimumHeight(textHeight + 20); }
+  if (textHeight >= minimumHeight() - 20)
+  {
+    setMinimumHeight(textHeight + 20);
+  }
   painter.restore();
 }
 
-bool NXMessageBar::eventFilter(QObject *watched, QEvent *event)
+bool
+NXMessageBar::eventFilter(QObject *watched, QEvent *event)
 {
   Q_D(NXMessageBar);
   if (watched == parentWidget())

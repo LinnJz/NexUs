@@ -14,14 +14,17 @@ NXFooterDelegate::NXFooterDelegate(QObject *parent)
 {
   _pNXListView = nullptr;
   _themeMode   = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
   setProperty("lastSelectMarkTop", 10.0);
   setProperty("lastSelectMarkBottom", 10.0);
   setProperty("selectMarkTop", 10.0);
   setProperty("selectMarkBottom", 10.0);
   // Mark向上
   _lastSelectMarkTopAnimation = new QPropertyAnimation(this, "lastSelectMarkTop");
-  connect(_lastSelectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value)
+  connect(_lastSelectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
   {
     _lastSelectMarkTop = value.toReal();
     _pNXListView->viewport()->update();
@@ -30,7 +33,7 @@ NXFooterDelegate::NXFooterDelegate(QObject *parent)
   _lastSelectMarkTopAnimation->setEasingCurve(QEasingCurve::InOutSine);
 
   _selectMarkBottomAnimation = new QPropertyAnimation(this, "selectMarkBottom");
-  connect(_selectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value)
+  connect(_selectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
   {
     _selectMarkBottom = value.toReal();
     _pNXListView->viewport()->update();
@@ -48,7 +51,7 @@ NXFooterDelegate::NXFooterDelegate(QObject *parent)
 
   // Mark向下
   _lastSelectMarkBottomAnimation = new QPropertyAnimation(this, "lastSelectMarkBottom");
-  connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value)
+  connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
   {
     _lastSelectMarkBottom = value.toReal();
     _pNXListView->viewport()->update();
@@ -57,7 +60,7 @@ NXFooterDelegate::NXFooterDelegate(QObject *parent)
   _lastSelectMarkBottomAnimation->setEasingCurve(QEasingCurve::InOutSine);
 
   _selectMarkTopAnimation = new QPropertyAnimation(this, "selectMarkTop");
-  connect(_selectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value)
+  connect(_selectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
   {
     _selectMarkTop = value.toReal();
     _pNXListView->viewport()->update();
@@ -74,9 +77,12 @@ NXFooterDelegate::NXFooterDelegate(QObject *parent)
   });
 }
 
-NXFooterDelegate::~NXFooterDelegate() { }
+NXFooterDelegate::~NXFooterDelegate()
+{
+}
 
-void NXFooterDelegate::navigationNodeStateChange(const QVariantMap& data) noexcept
+void
+NXFooterDelegate::navigationNodeStateChange(const QVariantMap &data) noexcept
 {
   if (data.contains(QStringLiteral("SelectMarkChanged")))
   {
@@ -108,13 +114,17 @@ void NXFooterDelegate::navigationNodeStateChange(const QVariantMap& data) noexce
   }
 }
 
-void NXFooterDelegate::paint(QPainter *painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void
+NXFooterDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
   QStyleOptionViewItem viewOption(option);
   initStyleOption(&viewOption, index);
   NXFooterModel *model   = dynamic_cast<NXFooterModel *>(const_cast<QAbstractItemModel *>(index.model()));
   NXNavigationNode *node = index.data(Qt::UserRole).value<NXNavigationNode *>();
-  if (option.state.testFlag(QStyle::State_HasFocus)) { viewOption.state &= ~QStyle::State_HasFocus; }
+  if (option.state.testFlag(QStyle::State_HasFocus))
+  {
+    viewOption.state &= ~QStyle::State_HasFocus;
+  }
   QStyledItemDelegate::paint(painter, viewOption, index);
   // 背景绘制
   QRect itemRect = option.rect;
@@ -183,7 +193,7 @@ void NXFooterDelegate::paint(QPainter *painter, const QStyleOptionViewItem& opti
     iconFont.setPixelSize(17);
     painter->setFont(iconFont);
     painter->drawText(QRect(itemRect.x(), itemRect.y(), _iconAreaWidth, itemRect.height()), Qt::AlignCenter,
-                      QChar((unsigned short) node->getAwesome()));
+                      QChar(node->getAwesome()));
     painter->restore();
   }
 
@@ -200,8 +210,14 @@ void NXFooterDelegate::paint(QPainter *painter, const QStyleOptionViewItem& opti
     painter->setPen(QPen(Qt::white, 2));
     QFont font = painter->font();
     font.setBold(true);
-    if (keyPoints > 99) { keyPoints = 99; }
-    if (keyPoints > 9) { font.setPixelSize(11); }
+    if (keyPoints > 99)
+    {
+      keyPoints = 99;
+    }
+    if (keyPoints > 9)
+    {
+      font.setPixelSize(11);
+    }
     else
     {
       font.setPixelSize(12);
@@ -248,18 +264,29 @@ void NXFooterDelegate::paint(QPainter *painter, const QStyleOptionViewItem& opti
   painter->restore();
 }
 
-QSize NXFooterDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+QSize
+NXFooterDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
   QSize size = QStyledItemDelegate::sizeHint(option, index);
   size.setHeight(40);
   return size;
 }
 
-bool NXFooterDelegate::_compareItemY(NXNavigationNode *node1, NXNavigationNode *node2)
+bool
+NXFooterDelegate::_compareItemY(NXNavigationNode *node1, NXNavigationNode *node2)
 {
-  if (!node1) { return true; }
-  if (!node2) { return false; }
-  if (node1->getModelIndex().row() < node2->getModelIndex().row()) { return true; }
+  if (!node1)
+  {
+    return true;
+  }
+  if (!node2)
+  {
+    return false;
+  }
+  if (node1->getModelIndex().row() < node2->getModelIndex().row())
+  {
+    return true;
+  }
   else
   {
     return false;

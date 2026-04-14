@@ -12,16 +12,15 @@ class NX_EXPORT NXKeyBinder : public QLabel
   Q_Q_CREATE(NXKeyBinder)
   Q_PROPERTY_CREATE_H(int, BorderRadius)
   Q_PROPERTY_CREATE_H(quint32, NativeVirtualBinderKey)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, BinderKeyText)
 
 public:
   explicit NXKeyBinder(QWidget *parent = nullptr);
   ~NXKeyBinder();
-  void setBinderKeyText(const QString& binderKeyText) noexcept;
-  QString getBinderKeyText() const noexcept;
+
 Q_SIGNALS:
-  void binderKeyTextChanged(const QString& binderKeyText);
+  void binderKeyTextChanged(const QString &binderKeyText);
   void nativeVirtualBinderKeyChanged(quint32 binderKey);
-  void pBinderKeyTextChanged();
 
 protected:
   bool event(QEvent *event) override;

@@ -5,4 +5,6 @@ NXDialogPrivate::NXDialogPrivate(QObject *parent)
 {
 }
 
-NXDialogPrivate::~NXDialogPrivate() { }
+NXDialogPrivate::~NXDialogPrivate()
+{
+}

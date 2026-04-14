@@ -21,14 +21,23 @@ NXDrawerHeader::NXDrawerHeader(QWidget *parent)
   setContentsMargins(0, 0, 30, 0);
 
   _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXDrawerHeader::~NXDrawerHeader() { }
-
-void NXDrawerHeader::setHeaderWidget(QWidget *widget) noexcept
+NXDrawerHeader::~NXDrawerHeader()
 {
-  if (!widget) { return; }
+}
+
+void
+NXDrawerHeader::setHeaderWidget(QWidget *widget) noexcept
+{
+  if (!widget)
+  {
+    return;
+  }
   if (_headerWidget)
   {
     _mainLayout->removeWidget(_headerWidget);
@@ -38,10 +47,14 @@ void NXDrawerHeader::setHeaderWidget(QWidget *widget) noexcept
   _headerWidget = widget;
 }
 
-void NXDrawerHeader::doExpandOrCollapseAnimation()
+void
+NXDrawerHeader::doExpandOrCollapseAnimation()
 {
   QPropertyAnimation *rotateAnimation = new QPropertyAnimation(this, "pExpandIconRotate");
-  connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
+  connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+  {
+    update();
+  });
   rotateAnimation->setDuration(300);
   rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
   rotateAnimation->setStartValue(_pExpandIconRotate);
@@ -49,7 +62,8 @@ void NXDrawerHeader::doExpandOrCollapseAnimation()
   rotateAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-bool NXDrawerHeader::event(QEvent *event)
+bool
+NXDrawerHeader::event(QEvent *event)
 {
   switch (event->type())
   {
@@ -67,7 +81,8 @@ bool NXDrawerHeader::event(QEvent *event)
   return QWidget::event(event);
 }
 
-void NXDrawerHeader::mousePressEvent(QMouseEvent *event)
+void
+NXDrawerHeader::mousePressEvent(QMouseEvent *event)
 {
   QWidget *posWidget = childAt(event->pos());
   if (!posWidget || (posWidget && posWidget->objectName().isEmpty()))
@@ -78,7 +93,8 @@ void NXDrawerHeader::mousePressEvent(QMouseEvent *event)
   QWidget::mousePressEvent(event);
 }
 
-void NXDrawerHeader::mouseReleaseEvent(QMouseEvent *event)
+void
+NXDrawerHeader::mouseReleaseEvent(QMouseEvent *event)
 {
   QWidget *posWidget = childAt(event->pos());
   if (!posWidget || (posWidget && posWidget->objectName().isEmpty()))
@@ -92,13 +108,15 @@ void NXDrawerHeader::mouseReleaseEvent(QMouseEvent *event)
   QWidget::mouseReleaseEvent(event);
 }
 
-void NXDrawerHeader::mouseMoveEvent(QMouseEvent *event)
+void
+NXDrawerHeader::mouseMoveEvent(QMouseEvent *event)
 {
   update();
   QWidget::mouseMoveEvent(event);
 }
 
-void NXDrawerHeader::paintEvent(QPaintEvent *event)
+void
+NXDrawerHeader::paintEvent(QPaintEvent *event)
 {
   bool isUnderMouse = underMouse();
   QPainter painter(this);
@@ -111,8 +129,14 @@ void NXDrawerHeader::paintEvent(QPaintEvent *event)
   QRect foregroundRect(1, 1, width() - 2, _pIsExpand ? height() + _pBorderRadius : height() - 2);
   painter.drawRoundedRect(foregroundRect, _pBorderRadius, _pBorderRadius);
   // 底边线绘制
-  if (isUnderMouse) { painter.setPen(NXThemeColor(_themeMode, BasicBorderDeep)); }
-  if (_pIsExpand) { painter.drawLine(0, height() - 1, width(), height() - 1); }
+  if (isUnderMouse)
+  {
+    painter.setPen(NXThemeColor(_themeMode, BasicBorderDeep));
+  }
+  if (_pIsExpand)
+  {
+    painter.drawLine(0, height() - 1, width(), height() - 1);
+  }
   else
   {
     painter.drawLine(_pBorderRadius, height() - 1, width() - _pBorderRadius, height() - 1);
@@ -134,7 +158,7 @@ void NXDrawerHeader::paintEvent(QPaintEvent *event)
   painter.rotate(_pExpandIconRotate);
   painter.translate(-expandIconRect.x() - (qreal) expandIconRect.width() / 2 + 2,
                     -expandIconRect.y() - (qreal) expandIconRect.height() / 2);
-  painter.drawText(expandIconRect, Qt::AlignVCenter, QChar((unsigned short) NXIconType::AngleDown));
+  painter.drawText(expandIconRect, Qt::AlignVCenter, QChar(NXIconType::AngleDown));
 
   painter.restore();
 }

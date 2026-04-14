@@ -13,15 +13,21 @@ NXMenuStyle::NXMenuStyle(QStyle *style)
   _pMenuItemHeight = 32;
   _pBorderRadius   = 6;
   _themeMode       = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXMenuStyle::~NXMenuStyle() { }
+NXMenuStyle::~NXMenuStyle()
+{
+}
 
-void NXMenuStyle::drawPrimitive(PrimitiveElement element,
-                                const QStyleOption *option,
-                                QPainter *painter,
-                                const QWidget *widget) const
+void
+NXMenuStyle::drawPrimitive(PrimitiveElement element,
+                           const QStyleOption *option,
+                           QPainter *painter,
+                           const QWidget *widget) const
 {
   switch (element)
   {
@@ -52,10 +58,11 @@ void NXMenuStyle::drawPrimitive(PrimitiveElement element,
   QProxyStyle::drawPrimitive(element, option, painter, widget);
 }
 
-void NXMenuStyle::drawControl(ControlElement element,
-                              const QStyleOption *option,
-                              QPainter *painter,
-                              const QWidget *widget) const
+void
+NXMenuStyle::drawControl(ControlElement element,
+                         const QStyleOption *option,
+                         QPainter *painter,
+                         const QWidget *widget) const
 {
   switch (element)
   {
@@ -113,9 +120,8 @@ void NXMenuStyle::drawControl(ControlElement element,
           QFont iconFont = QFont(QStringLiteral("NXAwesome"));
           iconFont.setPixelSize(_pMenuItemHeight * 0.57);
           painter->setFont(iconFont);
-          painter->drawText(
-              QRectF(menuRect.x() + contentPadding, menuRect.y(), _iconWidth, menuRect.height()), Qt::AlignCenter,
-              mopt->checked ? QChar((unsigned short) NXIconType::Check) : QChar((unsigned short) NXIconType::None));
+          painter->drawText(QRectF(menuRect.x() + contentPadding, menuRect.y(), _iconWidth, menuRect.height()),
+                            Qt::AlignCenter, mopt->checked ? QChar(NXIconType::Check) : QChar(NXIconType::None));
           painter->restore();
         }
         else
@@ -125,7 +131,10 @@ void NXMenuStyle::drawControl(ControlElement element,
           if (menu)
           {
             QAction *action = menu->actionAt(menuRect.center());
-            if (action) { iconText = action->property("NXIconType").toString(); }
+            if (action)
+            {
+              iconText = action->property("NXIconType").toString();
+            }
           }
           if (!iconText.isEmpty())
           {
@@ -189,7 +198,7 @@ void NXMenuStyle::drawControl(ControlElement element,
           iconFont.setPixelSize(18);
           painter->setFont(iconFont);
           painter->drawText(QRect(menuRect.right() - 25, menuRect.y(), 25, menuRect.height()), Qt::AlignVCenter,
-                            QChar((unsigned short) NXIconType::AngleRight));
+                            QChar(NXIconType::AngleRight));
           painter->restore();
         }
         painter->restore();
@@ -210,7 +219,8 @@ void NXMenuStyle::drawControl(ControlElement element,
   QProxyStyle::drawControl(element, option, painter, widget);
 }
 
-int NXMenuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
+int
+NXMenuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
   switch (metric)
   {
@@ -233,10 +243,11 @@ int NXMenuStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
   return QProxyStyle::pixelMetric(metric, option, widget);
 }
 
-QSize NXMenuStyle::sizeFromContents(ContentsType type,
-                                    const QStyleOption *option,
-                                    const QSize& size,
-                                    const QWidget *widget) const
+QSize
+NXMenuStyle::sizeFromContents(ContentsType type,
+                              const QStyleOption *option,
+                              const QSize &size,
+                              const QWidget *widget) const
 {
   switch (type)
   {
@@ -244,11 +255,20 @@ QSize NXMenuStyle::sizeFromContents(ContentsType type,
   {
     if (const QStyleOptionMenuItem *mopt = qstyleoption_cast<const QStyleOptionMenuItem *>(option))
     {
-      if (mopt->menuItemType == QStyleOptionMenuItem::Separator) { break; }
+      if (mopt->menuItemType == QStyleOptionMenuItem::Separator)
+      {
+        break;
+      }
       QSize menuItemSize = QProxyStyle::sizeFromContents(type, option, size, widget);
       const NXMenu *menu = dynamic_cast<const NXMenu *>(widget);
-      if (menu->isHasIcon() || mopt->menuHasCheckableItems) { _isAnyoneItemHasIcon = true; }
-      if (menu->isHasChildMenu()) { return QSize(menuItemSize.width() + 20, _pMenuItemHeight); }
+      if (menu->isHasIcon() || mopt->menuHasCheckableItems)
+      {
+        _isAnyoneItemHasIcon = true;
+      }
+      if (menu->isHasChildMenu())
+      {
+        return QSize(menuItemSize.width() + 20, _pMenuItemHeight);
+      }
       else
       {
         return QSize(menuItemSize.width(), _pMenuItemHeight);

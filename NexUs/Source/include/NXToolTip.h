@@ -18,7 +18,7 @@ class NX_EXPORT NXToolTip : public QWidget
   Q_PROPERTY_CREATE_H(int, ShowDelayMsec)
   Q_PROPERTY_CREATE_H(int, HideDelayMsec)
   Q_PROPERTY_CREATE_H(QWidget *, CustomWidget)
-  Q_PROPERTY_CREATE_2_H(const QString&, QString, ToolTip)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, ToolTip)
 
 public:
   explicit NXToolTip(QWidget *parent = nullptr);

@@ -39,7 +39,10 @@ T_Setting::T_Setting(QWidget *parent)
   themeSwitchLayout->addWidget(_themeComboBox);
   connect(_themeComboBox, QOverload<int>::of(&NXComboBox::currentIndexChanged), this, [=](int index)
   {
-    if (index == 0) { nxTheme->setThemeMode(NXThemeType::Light); }
+    if (index == 0)
+    {
+      nxTheme->setThemeMode(NXThemeType::Light);
+    }
     else
     {
       nxTheme->setThemeMode(NXThemeType::Dark);
@@ -48,7 +51,10 @@ T_Setting::T_Setting(QWidget *parent)
   connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
     _themeComboBox->blockSignals(true);
-    if (themeMode == NXThemeType::Light) { _themeComboBox->setCurrentIndex(0); }
+    if (themeMode == NXThemeType::Light)
+    {
+      _themeComboBox->setCurrentIndex(0);
+    }
     else
     {
       _themeComboBox->setCurrentIndex(1);
@@ -71,13 +77,19 @@ T_Setting::T_Setting(QWidget *parent)
   connect(windowPaintButtonGroup, QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled), this,
           [=](QAbstractButton *button, bool isToggled)
   {
-    if (isToggled) { window->setWindowPaintMode((NXWindowType::PaintMode) windowPaintButtonGroup->id(button)); }
+    if (isToggled)
+    {
+      window->setWindowPaintMode((NXWindowType::PaintMode) windowPaintButtonGroup->id(button));
+    }
   });
   connect(window, &NXWindow::pWindowPaintModeChanged, this, [=]()
   {
     auto button                   = windowPaintButtonGroup->button(window->getWindowPaintMode());
     NXRadioButton *elaRadioButton = dynamic_cast<NXRadioButton *>(button);
-    if (elaRadioButton) { elaRadioButton->setChecked(true); }
+    if (elaRadioButton)
+    {
+      elaRadioButton->setChecked(true);
+    }
   });
   NXScrollPageArea *windowPaintModeArea = new NXScrollPageArea(this);
   QHBoxLayout *windowPaintModeLayout    = new QHBoxLayout(windowPaintModeArea);
@@ -124,7 +136,10 @@ T_Setting::T_Setting(QWidget *parent)
   {
     auto button                   = displayButtonGroup->button(nxApp->getWindowDisplayMode());
     NXRadioButton *elaRadioButton = dynamic_cast<NXRadioButton *>(button);
-    if (elaRadioButton) { elaRadioButton->setChecked(true); }
+    if (elaRadioButton)
+    {
+      elaRadioButton->setChecked(true);
+    }
   });
   NXScrollPageArea *micaSwitchArea = new NXScrollPageArea(this);
   QHBoxLayout *micaSwitchLayout    = new QHBoxLayout(micaSwitchArea);
@@ -151,7 +166,10 @@ T_Setting::T_Setting(QWidget *parent)
   connect(_logSwitchButton, &NXToggleSwitch::toggled, this, [=](bool checked)
   {
     NXLog::getInstance()->initMessageLog(checked);
-    if (checked) { qDebug() << "日志已启用!"; }
+    if (checked)
+    {
+      qDebug() << "日志已启用!";
+    }
     else
     {
       qDebug() << "日志已关闭!";
@@ -167,8 +185,10 @@ T_Setting::T_Setting(QWidget *parent)
   userCardSwitchLayout->addWidget(userCardSwitchText);
   userCardSwitchLayout->addStretch();
   userCardSwitchLayout->addWidget(_userCardSwitchButton);
-  connect(_userCardSwitchButton, &NXToggleSwitch::toggled, this,
-          [=](bool checked) { window->setUserInfoCardVisible(!checked); });
+  connect(_userCardSwitchButton, &NXToggleSwitch::toggled, this, [=](bool checked)
+  {
+    window->setUserInfoCardVisible(!checked);
+  });
 
   _minimumButton = new NXRadioButton("Minimum", this);
   _compactButton = new NXRadioButton("Compact", this);
@@ -229,13 +249,19 @@ T_Setting::T_Setting(QWidget *parent)
   connect(stackSwitchGroup, QOverload<QAbstractButton *, bool>::of(&QButtonGroup::buttonToggled), this,
           [=](QAbstractButton *button, bool isToggled)
   {
-    if (isToggled) { window->setStackSwitchMode((NXWindowType::StackSwitchMode) stackSwitchGroup->id(button)); }
+    if (isToggled)
+    {
+      window->setStackSwitchMode((NXWindowType::StackSwitchMode) stackSwitchGroup->id(button));
+    }
   });
   connect(window, &NXWindow::pStackSwitchModeChanged, this, [=]()
   {
     auto button                   = stackSwitchGroup->button(window->getStackSwitchMode());
     NXRadioButton *elaRadioButton = dynamic_cast<NXRadioButton *>(button);
-    if (elaRadioButton) { elaRadioButton->setChecked(true); }
+    if (elaRadioButton)
+    {
+      elaRadioButton->setChecked(true);
+    }
   });
 
   QWidget *centralWidget = new QWidget(this);
@@ -259,4 +285,6 @@ T_Setting::T_Setting(QWidget *parent)
   addCentralWidget(centralWidget, true, true, 0);
 }
 
-T_Setting::~T_Setting() { }
+T_Setting::~T_Setting()
+{
+}

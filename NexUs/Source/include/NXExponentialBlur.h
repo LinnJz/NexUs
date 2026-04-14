@@ -23,7 +23,7 @@ private:
   ~NXExponentialBlur();
 
 public:
-  static QPixmap doExponentialBlur(const QImage& img, const quint16& blurRadius) noexcept;
+  static QPixmap doExponentialBlur(const QImage &img, const quint16 &blurRadius) noexcept;
 };
 
 #pragma pop_macro("Q_DISABLE_COPY")

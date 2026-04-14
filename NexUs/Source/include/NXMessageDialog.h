@@ -15,8 +15,8 @@ class NX_EXPORT NXMessageDialog : public QWidget
   Q_PROPERTY_CREATE_H(int, BorderRadius)
   Q_PROPERTY_CREATE_H(int, TitlePixelSize)
   Q_PROPERTY_CREATE_H(int, ContentPixelSize)
-  Q_PROPERTY_CREATE_2_H(const QString&, QString, Title)
-  Q_PROPERTY_CREATE_2_H(const QString&, QString, Content)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, Title)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, Content)
 
 public:
   explicit NXMessageDialog(QWidget *parent = nullptr);

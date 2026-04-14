@@ -58,4 +58,6 @@ T_TableView::T_TableView(QWidget *parent)
   addCentralWidget(centralWidget, true, false, 0);
 }
 
-T_TableView::~T_TableView() { }
+T_TableView::~T_TableView()
+{
+}

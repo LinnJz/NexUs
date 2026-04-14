@@ -70,4 +70,6 @@ T_About::T_About(QWidget *parent)
   mainLayout->addLayout(contentLayout);
 }
 
-T_About::~T_About() { }
+T_About::~T_About()
+{
+}

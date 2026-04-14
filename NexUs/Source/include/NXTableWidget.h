@@ -24,15 +24,15 @@ public:
   void insertColumns(int column, int count) noexcept;
   void removeColumns(int column, int count) noexcept;
 
-  void setItemText(int row, int column, const QString& text) noexcept;
+  void setItemText(int row, int column, const QString &text) noexcept;
   QString getItemText(int row, int column) const noexcept;
-  void setRowData(int row, const QStringList& data) noexcept;
+  void setRowData(int row, const QStringList &data) noexcept;
   QStringList getRowData(int row) const noexcept;
 
 Q_SIGNALS:
   void tableWidgetShow();
   void tableWidgetHide();
-  void hoverIndexChanged(const QModelIndex& index);
+  void hoverIndexChanged(const QModelIndex &index);
 
 protected:
   void showEvent(QShowEvent *event) override;

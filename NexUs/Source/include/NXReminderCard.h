@@ -17,9 +17,9 @@ class NX_EXPORT NXReminderCard : public QPushButton
   Q_PROPERTY_CREATE_H(int, CardPixmapBorderRadius)
   Q_PROPERTY_CREATE_H(NXCardPixType::PixMode, CardPixMode)
   Q_PROPERTY_CREATE_H(QSize, CardPixmapSize)
-  Q_PROPERTY_CREATE_2_H(const QString&, QString, Title)
-  Q_PROPERTY_CREATE_2_H(const QString&, QString, SubTitle)
-  Q_PROPERTY_CREATE_2_H(const QPixmap&, QPixmap, CardPixmap)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, Title)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, SubTitle)
+  Q_PROPERTY_CREATE_2_H(const QPixmap &, QPixmap, CardPixmap)
 
 public:
   explicit NXReminderCard(QWidget *parent = nullptr);

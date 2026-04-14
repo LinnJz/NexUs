@@ -12,9 +12,12 @@ NXIntValidator::NXIntValidator(int bottom, int top, QObject *parent)
   _pIsHexMode = false;
 }
 
-NXIntValidator::~NXIntValidator() { }
+NXIntValidator::~NXIntValidator()
+{
+}
 
-QValidator::State NXIntValidator::validate(QString& input, int& pos) const
+QValidator::State
+NXIntValidator::validate(QString &input, int &pos) const
 {
   QString inputCopy = input;
   if (_pIsHexMode)
@@ -24,26 +27,45 @@ QValidator::State NXIntValidator::validate(QString& input, int& pos) const
     {
       bool isInt = false;
       int value  = inputCopy.toInt(&isInt, 16);
-      if (!isInt) { return QValidator::Invalid; }
-      if (value < bottom() || value > top()) { return QValidator::Invalid; }
+      if (!isInt)
+      {
+        return QValidator::Invalid;
+      }
+      if (value < bottom() || value > top())
+      {
+        return QValidator::Invalid;
+      }
       int topLength = QString::number(top(), 16).length();
-      if (inputCopy.length() > topLength) { return QValidator::Invalid; }
+      if (inputCopy.length() > topLength)
+      {
+        return QValidator::Invalid;
+      }
     }
     inputCopy.prepend(QStringLiteral("#"));
   }
   else
   {
-    if (input.isEmpty()) { return QValidator::Intermediate; }
+    if (input.isEmpty())
+    {
+      return QValidator::Intermediate;
+    }
     bool isInt = false;
     int value  = inputCopy.toInt(&isInt);
-    if (!isInt) { return QValidator::Invalid; }
-    if (value < bottom() || value > top()) { return QValidator::Invalid; }
+    if (!isInt)
+    {
+      return QValidator::Invalid;
+    }
+    if (value < bottom() || value > top())
+    {
+      return QValidator::Invalid;
+    }
   }
   input = inputCopy;
   return QValidator::Acceptable;
 }
 
-void NXIntValidator::fixup(QString& input) const
+void
+NXIntValidator::fixup(QString &input) const
 {
   if (_pIsHexMode)
   {
@@ -56,8 +78,12 @@ void NXIntValidator::fixup(QString& input) const
   }
 }
 
-QString NXIntValidator::_completeInput(QString input, int length) const
+QString
+NXIntValidator::_completeInput(QString input, int length) const
 {
-  while (input.length() < length) {input.prepend(QStringLiteral("0")); }
+  while (input.length() < length)
+  {
+    input.prepend(QStringLiteral("0"));
+  }
   return input;
 }

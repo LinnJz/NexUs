@@ -19,7 +19,7 @@ public:
   ~NXLogPrivate();
 
 private:
-  static void _messageLogHander(QtMsgType type, const QMessageLogContext& ctx, const QString& msg);
+  static void _messageLogHander(QtMsgType type, const QMessageLogContext &ctx, const QString &msg);
   void _clearLogFile() noexcept;
 };
 

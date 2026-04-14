@@ -14,9 +14,13 @@ NXDxgi::NXDxgi(QObject *parent)
   _pIsGrabCenter   = false;
 }
 
-NXDxgi::~NXDxgi() { releaseInterface(); }
+NXDxgi::~NXDxgi()
+{
+  releaseInterface();
+}
 
-bool NXDxgi::initialize(int dxID, int outputID)
+bool
+NXDxgi::initialize(int dxID, int outputID)
 {
   _pIsInitSuccess  = false;
   _pDxDeviceID     = dxID;
@@ -31,8 +35,14 @@ bool NXDxgi::initialize(int dxID, int outputID)
   {
     _pLastError = QStringLiteral("Failed to D3D11CreateDevice ErrorCode = ") + QString::number(uint(hr), 16);
     qDebug() << _pLastError;
-    if (d3dDevice) { d3dDevice->Release(); }
-    if (d3dContext) { d3dContext->Release(); }
+    if (d3dDevice)
+    {
+      d3dDevice->Release();
+    }
+    if (d3dContext)
+    {
+      d3dContext->Release();
+    }
     return false;
   }
 
@@ -54,7 +64,10 @@ bool NXDxgi::initialize(int dxID, int outputID)
     adapt->GetDesc(&desc);
     _pDxDeviceList.append(QString::fromWCharArray(desc.Description));
   }
-  if (dxID >= 0 && dxID < dxgiAdapterVector.count()) { dxgiAdapter = dxgiAdapterVector.at(dxID); }
+  if (dxID >= 0 && dxID < dxgiAdapterVector.count())
+  {
+    dxgiAdapter = dxgiAdapterVector.at(dxID);
+  }
 
   if (!dxgiAdapter)
   {
@@ -62,7 +75,10 @@ bool NXDxgi::initialize(int dxID, int outputID)
     qDebug() << _pLastError;
     d3dDevice->Release();
     d3dContext->Release();
-    for (auto adapter : dxgiAdapterVector) { adapter->Release(); }
+    for (auto adapter : dxgiAdapterVector)
+    {
+      adapter->Release();
+    }
     return false;
   }
 
@@ -72,17 +88,23 @@ bool NXDxgi::initialize(int dxID, int outputID)
   {
     dxgiOutputVector.append(dxgiOutput);
   }
-  for (auto adapter : dxgiAdapterVector) { adapter->Release(); }
+  for (auto adapter : dxgiAdapterVector)
+  {
+    adapter->Release();
+  }
   dxgiOutput = nullptr;
   _pOutputDeviceList.clear();
   for (int i = 0; i < dxgiOutputVector.count(); i++)
   {
-    const auto& output = dxgiOutputVector.at(i);
+    const auto &output = dxgiOutputVector.at(i);
     DXGI_OUTPUT_DESC desc;
     output->GetDesc(&desc);
     _pOutputDeviceList.append(QString::fromWCharArray(desc.DeviceName));
   }
-  if (outputID >= 0 && outputID < dxgiOutputVector.count()) { dxgiOutput = dxgiOutputVector.at(outputID); }
+  if (outputID >= 0 && outputID < dxgiOutputVector.count())
+  {
+    dxgiOutput = dxgiOutputVector.at(outputID);
+  }
 
   if (!dxgiOutput)
   {
@@ -90,12 +112,18 @@ bool NXDxgi::initialize(int dxID, int outputID)
     qDebug() << _pLastError;
     d3dDevice->Release();
     d3dContext->Release();
-    for (auto output : dxgiOutputVector) { output->Release(); }
+    for (auto output : dxgiOutputVector)
+    {
+      output->Release();
+    }
     return false;
   }
   IDXGIOutput6 *dxgiOutput6 = nullptr;
   hr = dxgiOutput->QueryInterface(__uuidof(IDXGIOutput6), reinterpret_cast<void **>(&dxgiOutput6));
-  for (auto output : dxgiOutputVector) { output->Release(); }
+  for (auto output : dxgiOutputVector)
+  {
+    output->Release();
+  }
   if (FAILED(hr))
   {
     _pLastError = QStringLiteral("Failed to QueryInterface IDXGIOutput6 ErrorCode = ") + QString::number(uint(hr), 16);
@@ -128,7 +156,8 @@ bool NXDxgi::initialize(int dxID, int outputID)
   return true;
 }
 
-QImage NXDxgi::getGrabImage() const noexcept
+QImage
+NXDxgi::getGrabImage() const noexcept
 {
   QImage grabImage(_imageBits, _descWidth, _descHeight, QImage::Format_ARGB32);
   if (_pIsGrabCenter)
@@ -142,7 +171,8 @@ QImage NXDxgi::getGrabImage() const noexcept
   }
 }
 
-void NXDxgi::onGrabScreen()
+void
+NXDxgi::onGrabScreen()
 {
   if (!_duplication || !_device || !_context)
   {
@@ -180,12 +210,18 @@ void NXDxgi::onGrabScreen()
               setIsGrabStoped(true);
               return;
             }
-            if (initialize(_pDxDeviceID, _pOutputDeviceID)) { break; }
+            if (initialize(_pDxDeviceID, _pOutputDeviceID))
+            {
+              break;
+            }
           }
         }
         continue;
       }
-      if (frameInfo.LastPresentTime.QuadPart) { break; }
+      if (frameInfo.LastPresentTime.QuadPart)
+      {
+        break;
+      }
     }
     D3D11_TEXTURE2D_DESC desc;
     ID3D11Texture2D *textrueRes = nullptr;
@@ -253,7 +289,8 @@ void NXDxgi::onGrabScreen()
   setIsGrabStoped(true);
 }
 
-void NXDxgi::releaseInterface()
+void
+NXDxgi::releaseInterface()
 {
   if (_duplication)
   {
@@ -272,9 +309,13 @@ void NXDxgi::releaseInterface()
   }
 }
 
-void NXDxgi::cpuSleep(qint64 usec)
+void
+NXDxgi::cpuSleep(qint64 usec)
 {
-  if (usec <= 0) { return; }
+  if (usec <= 0)
+  {
+    return;
+  }
   LARGE_INTEGER cpuFerq;
   LARGE_INTEGER startTime;
   LARGE_INTEGER endTime;
@@ -283,7 +324,10 @@ void NXDxgi::cpuSleep(qint64 usec)
   while (true)
   {
     QueryPerformanceCounter(&endTime);
-    if (((endTime.QuadPart - startTime.QuadPart) * 1000000) / cpuFerq.QuadPart > usec) { break; }
+    if (((endTime.QuadPart - startTime.QuadPart) * 1000000) / cpuFerq.QuadPart > usec)
+    {
+      break;
+    }
   }
 }
 #endif

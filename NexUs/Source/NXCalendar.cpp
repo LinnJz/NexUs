@@ -62,7 +62,10 @@ NXCalendar::NXCalendar(QWidget *parent)
   d->_modeSwitchButton->setToolButtonStyle(Qt::ToolButtonTextOnly);
   d->_modeSwitchButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
   connect(d->_modeSwitchButton, &NXToolButton::clicked, d, &NXCalendarPrivate::onSwitchButtonClicked);
-  connect(d->_calendarView->verticalScrollBar(), &QScrollBar::valueChanged, d, [=]() { d->_updateSwitchButtonText(); });
+  connect(d->_calendarView->verticalScrollBar(), &QScrollBar::valueChanged, d, [=]()
+  {
+    d->_updateSwitchButtonText();
+  });
 
   // 翻页按钮
   d->_upButton = new NXToolButton(this);
@@ -88,8 +91,10 @@ NXCalendar::NXCalendar(QWidget *parent)
   mainLayout->addWidget(d->_calendarView);
 
   d->_themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
   setVisible(true);
   QDate currentDate     = QDate::currentDate();
   d->_lastSelectedYear  = currentDate.year();
@@ -97,9 +102,12 @@ NXCalendar::NXCalendar(QWidget *parent)
   d->_scrollToDate(currentDate);
 }
 
-NXCalendar::~NXCalendar() { }
+NXCalendar::~NXCalendar()
+{
+}
 
-void NXCalendar::setSelectedDate(QDate selectedDate) noexcept
+void
+NXCalendar::setSelectedDate(QDate selectedDate) noexcept
 {
   Q_D(NXCalendar);
   if (!selectedDate.isValid() || selectedDate.daysTo(d->_calendarModel->getMaximumDate()) < 0 ||
@@ -113,42 +121,54 @@ void NXCalendar::setSelectedDate(QDate selectedDate) noexcept
   Q_EMIT pSelectedDateChanged();
 }
 
-QDate NXCalendar::getSelectedDate() const noexcept
+QDate
+NXCalendar::getSelectedDate() const noexcept
 {
   Q_D(const NXCalendar);
   return d->_pSelectedDate;
   // return d->_calendarModel->getDateFromIndex(d->_calendarView->selectionModel()->currentIndex());
 }
 
-void NXCalendar::setMinimumDate(QDate minimudate) noexcept
+void
+NXCalendar::setMinimumDate(QDate minimudate) noexcept
 {
   Q_D(NXCalendar);
-  if (!minimudate.isValid() || minimudate.daysTo(d->_calendarModel->getMaximumDate()) < 0) { return; }
+  if (!minimudate.isValid() || minimudate.daysTo(d->_calendarModel->getMaximumDate()) < 0)
+  {
+    return;
+  }
   d->_calendarModel->setMaximumDate(minimudate);
   Q_EMIT pMinimumDateChanged();
 }
 
-QDate NXCalendar::getMinimumDate() const noexcept
+QDate
+NXCalendar::getMinimumDate() const noexcept
 {
   Q_D(const NXCalendar);
   return d->_calendarModel->getMinimumDate();
 }
 
-void NXCalendar::setMaximumDate(QDate maximumDate) noexcept
+void
+NXCalendar::setMaximumDate(QDate maximumDate) noexcept
 {
   Q_D(NXCalendar);
-  if (!maximumDate.isValid() || maximumDate.daysTo(d->_calendarModel->getMinimumDate()) > 0) { return; }
+  if (!maximumDate.isValid() || maximumDate.daysTo(d->_calendarModel->getMinimumDate()) > 0)
+  {
+    return;
+  }
   d->_calendarModel->setMaximumDate(maximumDate);
   Q_EMIT pMaximumDateChanged();
 }
 
-QDate NXCalendar::getMaximumDate() const noexcept
+QDate
+NXCalendar::getMaximumDate() const noexcept
 {
   Q_D(const NXCalendar);
   return d->_calendarModel->getMaximumDate();
 }
 
-void NXCalendar::paintEvent(QPaintEvent *event)
+void
+NXCalendar::paintEvent(QPaintEvent *event)
 {
   Q_D(NXCalendar);
   QPainter painter(this);

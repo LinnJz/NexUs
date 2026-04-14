@@ -10,22 +10,31 @@ NXSliderStyle::NXSliderStyle(QStyle *style)
 {
   setProperty("circleRadius", 0.01);
   _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXSliderStyle::~NXSliderStyle() { }
+NXSliderStyle::~NXSliderStyle()
+{
+}
 
-void NXSliderStyle::drawComplexControl(ComplexControl control,
-                                       const QStyleOptionComplex *option,
-                                       QPainter *painter,
-                                       const QWidget *widget) const
+void
+NXSliderStyle::drawComplexControl(ComplexControl control,
+                                  const QStyleOptionComplex *option,
+                                  QPainter *painter,
+                                  const QWidget *widget) const
 {
   switch (control)
   {
   case QStyle::CC_Slider :
   {
     const QStyleOptionSlider *sopt = qstyleoption_cast<const QStyleOptionSlider *>(option);
-    if (!sopt) { break; }
+    if (!sopt)
+    {
+      break;
+    }
 
     painter->save();
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
@@ -72,8 +81,14 @@ void NXSliderStyle::drawComplexControl(ComplexControl control,
     // 内圆形
     painter->setPen(Qt::NoPen);
     painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
-    if (_lastState == 0) { _lastState = sopt->state; }
-    if (_circleRadius == 0) { _circleRadius = sliderHandleRect.width() / 3.8; }
+    if (_lastState == 0)
+    {
+      _lastState = sopt->state;
+    }
+    if (_circleRadius == 0)
+    {
+      _circleRadius = sliderHandleRect.width() / 3.8;
+    }
     if (sopt->activeSubControls == SC_SliderHandle)
     {
       if (sopt->state & QStyle::State_Sunken)
@@ -131,7 +146,8 @@ void NXSliderStyle::drawComplexControl(ComplexControl control,
   QProxyStyle::drawComplexControl(control, option, painter, widget);
 }
 
-int NXSliderStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
+int
+NXSliderStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
   switch (metric)
   {
@@ -151,20 +167,25 @@ int NXSliderStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, c
   return QProxyStyle::pixelMetric(metric, option, widget);
 }
 
-int NXSliderStyle::styleHint(StyleHint hint,
-                             const QStyleOption *option,
-                             const QWidget *widget,
-                             QStyleHintReturn *returnData) const
+int
+NXSliderStyle::styleHint(StyleHint hint,
+                         const QStyleOption *option,
+                         const QWidget *widget,
+                         QStyleHintReturn *returnData) const
 {
-  if (hint == QStyle::SH_Slider_AbsoluteSetButtons) { return Qt::LeftButton; }
+  if (hint == QStyle::SH_Slider_AbsoluteSetButtons)
+  {
+    return Qt::LeftButton;
+  }
   return QProxyStyle::styleHint(hint, option, widget, returnData);
 }
 
-void NXSliderStyle::_startRadiusAnimation(qreal startRadius, qreal endRadius, QWidget *widget) const
+void
+NXSliderStyle::_startRadiusAnimation(qreal startRadius, qreal endRadius, QWidget *widget) const
 {
   NXSliderStyle *style                      = const_cast<NXSliderStyle *>(this);
   QPropertyAnimation *circleRadiusAnimation = new QPropertyAnimation(style, "circleRadius");
-  connect(circleRadiusAnimation, &QPropertyAnimation::valueChanged, style, [=](const QVariant& value)
+  connect(circleRadiusAnimation, &QPropertyAnimation::valueChanged, style, [=](const QVariant &value)
   {
     this->_circleRadius = value.toReal();
     widget->update();

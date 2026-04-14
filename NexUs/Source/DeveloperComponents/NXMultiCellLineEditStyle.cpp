@@ -11,15 +11,21 @@ NXMultiCellLineEditStyle::NXMultiCellLineEditStyle(QStyle *style)
 {
   _pBorderRadius = 6;
   _themeMode     = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXMultiCellLineEditStyle::~NXMultiCellLineEditStyle() { }
+NXMultiCellLineEditStyle::~NXMultiCellLineEditStyle()
+{
+}
 
-void NXMultiCellLineEditStyle::drawPrimitive(PrimitiveElement element,
-                                             const QStyleOption *option,
-                                             QPainter *painter,
-                                             const QWidget *widget) const
+void
+NXMultiCellLineEditStyle::drawPrimitive(PrimitiveElement element,
+                                        const QStyleOption *option,
+                                        QPainter *painter,
+                                        const QWidget *widget) const
 {
   switch (element)
   {
@@ -27,7 +33,10 @@ void NXMultiCellLineEditStyle::drawPrimitive(PrimitiveElement element,
   {
     QStyleOptionFrame frame;
     const QStyleOptionFrame *fopt = qstyleoption_cast<const QStyleOptionFrame *>(option);
-    if (fopt) { frame = *fopt; }
+    if (fopt)
+    {
+      frame = *fopt;
+    }
     else if (option)
     {
       frame.rect    = option->rect;
@@ -44,8 +53,14 @@ void NXMultiCellLineEditStyle::drawPrimitive(PrimitiveElement element,
       painter->setBrush(Qt::NoBrush);
       painter->drawRoundedRect(lineEditRect, _pBorderRadius, _pBorderRadius);
       painter->setPen(Qt::NoPen);
-      if (frame.state & QStyle::State_HasFocus) { painter->setBrush(NXThemeColor(_themeMode, DialogBase)); }
-      else if (frame.state & QStyle::State_MouseOver) { painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha)); }
+      if (frame.state & QStyle::State_HasFocus)
+      {
+        painter->setBrush(NXThemeColor(_themeMode, DialogBase));
+      }
+      else if (frame.state & QStyle::State_MouseOver)
+      {
+        painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
+      }
       else
       {
         painter->setBrush(NXThemeColor(_themeMode, BasicBaseAlpha));
@@ -75,9 +90,10 @@ void NXMultiCellLineEditStyle::drawPrimitive(PrimitiveElement element,
   QProxyStyle::drawPrimitive(element, option, painter, widget);
 }
 
-int NXMultiCellLineEditStyle::pixelMetric(PixelMetric metric,
-                                          const QStyleOption *option /*= nullptr*/,
-                                          const QWidget *widget /*= nullptr*/) const
+int
+NXMultiCellLineEditStyle::pixelMetric(PixelMetric metric,
+                                      const QStyleOption *option /*= nullptr*/,
+                                      const QWidget *widget /*= nullptr*/) const
 {
   return QProxyStyle::pixelMetric(metric, option, widget);
 }

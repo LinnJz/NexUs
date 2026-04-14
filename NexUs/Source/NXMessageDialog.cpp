@@ -11,8 +11,8 @@
 Q_PROPERTY_CREATE_CPP(NXMessageDialog, int, BorderRadius)
 Q_PROPERTY_CREATE_CPP(NXMessageDialog, int, TitlePixelSize)
 Q_PROPERTY_CREATE_CPP(NXMessageDialog, int, ContentPixelSize)
-Q_PROPERTY_CREATE_2_CPP(NXMessageDialog, const QString&, QString, Title)
-Q_PROPERTY_CREATE_2_CPP(NXMessageDialog, const QString&, QString, Content)
+Q_PROPERTY_CREATE_2_CPP(NXMessageDialog, const QString &, QString, Title)
+Q_PROPERTY_CREATE_2_CPP(NXMessageDialog, const QString &, QString, Content)
 
 NXMessageDialog::NXMessageDialog(QWidget *parent)
     : QWidget(parent)
@@ -67,9 +67,12 @@ NXMessageDialog::NXMessageDialog(QWidget *parent)
   });
 }
 
-NXMessageDialog::~NXMessageDialog() { }
+NXMessageDialog::~NXMessageDialog()
+{
+}
 
-void NXMessageDialog::paintEvent(QPaintEvent *event)
+void
+NXMessageDialog::paintEvent(QPaintEvent *event)
 {
   Q_D(NXMessageDialog);
   QPainter painter(this);

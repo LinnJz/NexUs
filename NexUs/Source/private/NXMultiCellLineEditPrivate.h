@@ -90,7 +90,7 @@ private:
   void _updateCellValidState(int cellIndex) noexcept;
 
   GlobalTextRouteState _currentGlobalTextRouteState() const noexcept;
-  void _applyGlobalTextRouteState(const GlobalTextRouteState& state) noexcept;
+  void _applyGlobalTextRouteState(const GlobalTextRouteState &state) noexcept;
 };
 
 #endif // NXMULTICELLLINEEDITPRIVATE_H

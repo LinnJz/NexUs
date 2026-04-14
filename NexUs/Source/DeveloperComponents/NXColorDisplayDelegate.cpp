@@ -13,11 +13,12 @@ NXColorDisplayDelegate::NXColorDisplayDelegate(QObject *parent)
   _pThemeMode = nxTheme->getThemeMode();
 }
 
-NXColorDisplayDelegate::~NXColorDisplayDelegate() { }
+NXColorDisplayDelegate::~NXColorDisplayDelegate()
+{
+}
 
-void NXColorDisplayDelegate::paint(QPainter *painter,
-                                   const QStyleOptionViewItem& option,
-                                   const QModelIndex& index) const
+void
+NXColorDisplayDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
   painter->save();
   painter->setRenderHints(QPainter::Antialiasing);
@@ -48,7 +49,8 @@ void NXColorDisplayDelegate::paint(QPainter *painter,
   QStyledItemDelegate::paint(painter, option, index);
 }
 
-QSize NXColorDisplayDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+QSize
+NXColorDisplayDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
   return QSize(30, 30);
 }

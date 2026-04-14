@@ -15,4 +15,6 @@ NXStatusBar::NXStatusBar(QWidget *parent)
   setStyle(new NXStatusBarStyle(style()));
 }
 
-NXStatusBar::~NXStatusBar() { }
+NXStatusBar::~NXStatusBar()
+{
+}

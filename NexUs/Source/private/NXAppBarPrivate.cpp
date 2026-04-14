@@ -23,15 +23,19 @@ NXAppBarPrivate::NXAppBarPrivate(QObject *parent)
 {
 }
 
-NXAppBarPrivate::~NXAppBarPrivate() { }
+NXAppBarPrivate::~NXAppBarPrivate()
+{
+}
 
-void NXAppBarPrivate::onMinButtonClicked() noexcept
+void
+NXAppBarPrivate::onMinButtonClicked() noexcept
 {
   Q_Q(NXAppBar);
   q->window()->showMinimized();
 }
 
-void NXAppBarPrivate::onMaxButtonClicked() noexcept
+void
+NXAppBarPrivate::onMaxButtonClicked() noexcept
 {
   Q_Q(NXAppBar);
   bool isMaximized = q->window()->isMaximized();
@@ -41,17 +45,22 @@ void NXAppBarPrivate::onMaxButtonClicked() noexcept
 #endif
 }
 
-void NXAppBarPrivate::onCloseButtonClicked() noexcept
+void
+NXAppBarPrivate::onCloseButtonClicked() noexcept
 {
   Q_Q(NXAppBar);
-  if (_pIsDefaultClosed) { q->window()->close(); }
+  if (_pIsDefaultClosed)
+  {
+    q->window()->close();
+  }
   else
   {
     Q_EMIT q_ptr->closeButtonClicked();
   }
 }
 
-void NXAppBarPrivate::onStayTopButtonClicked() noexcept
+void
+NXAppBarPrivate::onStayTopButtonClicked() noexcept
 {
 #ifdef Q_OS_WIN
   HWND hwnd = (HWND) _currentWinID;
@@ -72,25 +81,39 @@ void NXAppBarPrivate::onStayTopButtonClicked() noexcept
   _stayTopButton->update();
 }
 
-void NXAppBarPrivate::_changeMaxButtonAwesome(bool isMaximized) noexcept
+void
+NXAppBarPrivate::_changeMaxButtonAwesome(bool isMaximized) noexcept
 {
-  if (isMaximized) { _maxButton->setNXIcon(NXIconType::WindowRestore); }
+  if (isMaximized)
+  {
+    _maxButton->setNXIcon(NXIconType::WindowRestore);
+  }
   else
   {
     _maxButton->setNXIcon(NXIconType::Square);
   }
 }
 
-void NXAppBarPrivate::_showAppBarMenu(QPoint point) noexcept
+void
+NXAppBarPrivate::_showAppBarMenu(QPoint point) noexcept
 {
   Q_Q(const NXAppBar);
-  if (_pCustomMenu) { _pCustomMenu->exec(point); }
+  if (_pCustomMenu)
+  {
+    _pCustomMenu->exec(point);
+  }
   else
   {
 #ifdef Q_OS_WIN
     QScreen *screen = qApp->screenAt(QCursor::pos());
-    if (!screen) { screen = QGuiApplication::primaryScreen(); }
-    if (!screen) { return; }
+    if (!screen)
+    {
+      screen = QGuiApplication::primaryScreen();
+    }
+    if (!screen)
+    {
+      return;
+    }
     const QPoint origin = screen->geometry().topLeft();
     auto nativePos      = QPointF(QPointF(point - origin) * screen->devicePixelRatio()).toPoint() + origin;
     HWND hwnd           = reinterpret_cast<HWND>(q->window()->winId());
@@ -118,12 +141,16 @@ void NXAppBarPrivate::_showAppBarMenu(QPoint point) noexcept
     const int result =
         ::TrackPopupMenu(hMenu, (TPM_RETURNCMD | (QGuiApplication::isRightToLeft() ? TPM_RIGHTALIGN : TPM_LEFTALIGN)),
                          nativePos.x(), nativePos.y(), 0, hwnd, nullptr);
-    if (result != FALSE) { ::PostMessageW(hwnd, WM_SYSCOMMAND, result, 0); }
+    if (result != FALSE)
+    {
+      ::PostMessageW(hwnd, WM_SYSCOMMAND, result, 0);
+    }
 #endif
   }
 }
 
-void NXAppBarPrivate::_updateCursor(int edges) noexcept
+void
+NXAppBarPrivate::_updateCursor(int edges) noexcept
 {
   Q_Q(const NXAppBar);
   switch (edges)
@@ -164,17 +191,23 @@ void NXAppBarPrivate::_updateCursor(int edges) noexcept
   }
 }
 
-bool NXAppBarPrivate::_containsCursorToItem(QWidget *item) noexcept
+bool
+NXAppBarPrivate::_containsCursorToItem(QWidget *item) noexcept
 {
   Q_Q(const NXAppBar);
-  if (!item || !item->isVisible()) { return false; }
-  auto point  = item->window()->mapFromGlobal(QCursor::pos());
-  QRectF rect = QRectF(item->mapTo(item->window(), QPoint(0, 0)), item->size());
+  if (!item || !item->isVisible())
+  {
+    return false;
+  }
+  auto itemRect = QRect(item->mapToGlobal(QPoint(0, 0)), item->size());
   if (item == q)
   {
     for (int i = 0; i < _clientWidgetList.count(); i++)
     {
-      if (_containsCursorToItem(_clientWidgetList[i])) { return false; }
+      if (_containsCursorToItem(_clientWidgetList[i]))
+      {
+        return false;
+      }
     }
     for (int i = 0; i < _customAreaWidgetList.count(); i++)
     {
@@ -190,85 +223,83 @@ bool NXAppBarPrivate::_containsCursorToItem(QWidget *item) noexcept
                                     Q_RETURN_ARG(bool, isContainsInAppBar));
           return isContainsInAppBar;
         }
-        else
-        {
-          return false;
-        }
+        return false;
       }
     }
   }
-  else if (item == _maxButton) { rect.adjust(0, 8, 0, 0); }
-  if (rect.contains(point)) { return true; }
+  else if (item == _maxButton)
+  {
+    itemRect.adjust(0, 8, 0, 0);
+  }
+  if (itemRect.contains(QCursor::pos()))
+  {
+    return true;
+  }
   return false;
 }
 
-void NXAppBarPrivate::_onThemeModeChange(NXThemeType::ThemeMode themeMode) noexcept
+void
+NXAppBarPrivate::_onThemeModeChange(NXThemeType::ThemeMode themeMode) noexcept
 {
-  if (themeMode == NXThemeType::Light) { _themeChangeButton->setNXIcon(NXIconType::MoonStars); }
+  if (themeMode == NXThemeType::Light)
+  {
+    _themeChangeButton->setNXIcon(NXIconType::MoonStars);
+  }
   else
   {
     _themeChangeButton->setNXIcon(NXIconType::SunBright);
   }
 }
 
-int NXAppBarPrivate::_calculateMinimumWidth() noexcept
+int
+NXAppBarPrivate::_calculateMinimumWidth() noexcept
 {
   Q_Q(NXAppBar);
-  int width = 0;
+  int appBarWidth = 0;
   if (_titleLabel->isVisible())
   {
-    width += _titleLabel->width();
-    width += 10;
+    appBarWidth += _titleLabel->width();
+    appBarWidth += 10;
   }
   if (_iconLabel->isVisible())
   {
-    width += _iconLabel->width();
-    width += 10;
+    appBarWidth += _iconLabel->width();
+    appBarWidth += 10;
   }
-  bool isHasNavigationBar = false;
-  if (q->parentWidget()->findChild<NXNavigationBar *>())
-  {
-    isHasNavigationBar = true;
-    width += 305;
-  }
-  else
-  {
-    width += 5;
-  }
-
-  int customWidgetWidth = 0;
   for (int i = 0; i < _customAreaWidgetList.count(); i++)
   {
-    customWidgetWidth += _customAreaWidgetList[i]->minimumWidth();
-  }
-  if (isHasNavigationBar)
-  {
-    if (customWidgetWidth > 300) { width += customWidgetWidth - 300; }
-  }
-  else
-  {
-    width += customWidgetWidth;
-  }
-
-  QList<QAbstractButton *> buttonList = q->findChildren<QAbstractButton *>();
-  for (auto button : buttonList)
-  {
-    // fixed bug scrollarea add components，double click will let window size change
-    if (button->isVisible() && button->objectName() != QStringLiteral("NavigationButton") && button->parentWidget() == q)
+    auto customAreaWidget = _customAreaWidgetList[i];
+    if (customAreaWidget->isVisible())
     {
-      width += button->width();
+      appBarWidth += customAreaWidget->minimumWidth();
     }
   }
-  return width;
+  QList<QAbstractButton *> buttonList = q->findChildren<QAbstractButton *>();
+  for (const auto clientWidget : _clientWidgetList)
+  {
+    if (clientWidget->isVisible())
+    {
+      appBarWidth += clientWidget->minimumWidth();
+    }
+  }
+  auto windowMinWidth = q->parentWidget()->minimumWidth() + 20;
+  return qMax(appBarWidth, windowMinWidth);
 }
 
-QVBoxLayout *NXAppBarPrivate::_createVLayout(QWidget *widget) noexcept
+QVBoxLayout *
+NXAppBarPrivate::_createVLayout(QWidget *widget) noexcept
 {
-  if (!widget) { return nullptr; }
+  if (!widget)
+  {
+    return nullptr;
+  }
   QVBoxLayout *vLayout = new QVBoxLayout();
   vLayout->setContentsMargins(0, 0, 0, 0);
   vLayout->setSpacing(0);
-  if (widget == _iconLabel || widget == _titleLabel) { vLayout->addSpacing(6); }
+  if (widget == _iconLabel || widget == _titleLabel)
+  {
+    vLayout->addSpacing(6);
+  }
   vLayout->addWidget(widget);
   vLayout->addStretch();
   return vLayout;

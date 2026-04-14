@@ -12,7 +12,7 @@ class NXMicaBaseInitObject : public QObject
 public:
   explicit NXMicaBaseInitObject(NXApplicationPrivate *appPrivate, QObject *parent = nullptr);
   ~NXMicaBaseInitObject();
-  Q_SLOT void onInitMicaBase(const QImage& img) noexcept;
+  Q_SLOT void onInitMicaBase(const QImage &img) noexcept;
 
 Q_SIGNALS:
   void initFinished();

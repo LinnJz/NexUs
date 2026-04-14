@@ -14,7 +14,7 @@ class NXCustomTabWidget : public NXCustomWidget
 public:
   explicit NXCustomTabWidget(QWidget *parent = nullptr);
   ~NXCustomTabWidget() override;
-  void addTab(QWidget *widget, QIcon tabIcon, const QString& tabTitle) noexcept;
+  void addTab(QWidget *widget, QIcon tabIcon, const QString &tabTitle) noexcept;
   NXTabBar *getCustomTabBar() const noexcept;
   NXTabWidget *getCustomTabWidget() const noexcept;
 

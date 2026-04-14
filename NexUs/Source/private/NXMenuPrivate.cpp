@@ -12,4 +12,6 @@ NXMenuPrivate::NXMenuPrivate(QObject *parent)
 {
 }
 
-NXMenuPrivate::~NXMenuPrivate() { }
+NXMenuPrivate::~NXMenuPrivate()
+{
+}

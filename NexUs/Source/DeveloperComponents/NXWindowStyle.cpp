@@ -11,15 +11,21 @@
 NXWindowStyle::NXWindowStyle(QStyle *style)
 {
   _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXWindowStyle::~NXWindowStyle() { }
+NXWindowStyle::~NXWindowStyle()
+{
+}
 
-void NXWindowStyle::drawPrimitive(PrimitiveElement element,
-                                  const QStyleOption *option,
-                                  QPainter *painter,
-                                  const QWidget *widget) const
+void
+NXWindowStyle::drawPrimitive(PrimitiveElement element,
+                             const QStyleOption *option,
+                             QPainter *painter,
+                             const QWidget *widget) const
 {
   switch (element)
   {
@@ -122,10 +128,11 @@ void NXWindowStyle::drawPrimitive(PrimitiveElement element,
   QProxyStyle::drawPrimitive(element, option, painter, widget);
 }
 
-void NXWindowStyle::drawControl(ControlElement element,
-                                const QStyleOption *option,
-                                QPainter *painter,
-                                const QWidget *widget) const
+void
+NXWindowStyle::drawControl(ControlElement element,
+                           const QStyleOption *option,
+                           QPainter *painter,
+                           const QWidget *widget) const
 {
   // qDebug() << element << option->rect;
   switch (element)

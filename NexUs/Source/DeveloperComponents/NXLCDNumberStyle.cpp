@@ -9,15 +9,21 @@ NXLCDNumberStyle::NXLCDNumberStyle(QStyle *style)
 {
   _pIsTransparent = false;
   _themeMode      = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXLCDNumberStyle::~NXLCDNumberStyle() { }
+NXLCDNumberStyle::~NXLCDNumberStyle()
+{
+}
 
-void NXLCDNumberStyle::drawControl(QStyle::ControlElement element,
-                                   const QStyleOption *option,
-                                   QPainter *painter,
-                                   const QWidget *widget) const
+void
+NXLCDNumberStyle::drawControl(QStyle::ControlElement element,
+                              const QStyleOption *option,
+                              QPainter *painter,
+                              const QWidget *widget) const
 {
   switch (element)
   {

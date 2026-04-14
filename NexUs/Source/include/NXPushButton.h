@@ -14,18 +14,18 @@ class NX_EXPORT NXPushButton : public QPushButton
   Q_PROPERTY_CREATE_H(int, TextPixelSize)
   Q_PROPERTY_CREATE_H(int, TextPointSize)
   Q_PROPERTY_CREATE_H(NXTextType::TextStyle, TextStyle)
-  Q_PROPERTY_CREATE_2_H(const QColor&, QColor, LightDefaultColor)
-  Q_PROPERTY_CREATE_2_H(const QColor&, QColor, DarkDefaultColor)
-  Q_PROPERTY_CREATE_2_H(const QColor&, QColor, LightHoverColor)
-  Q_PROPERTY_CREATE_2_H(const QColor&, QColor, DarkHoverColor)
-  Q_PROPERTY_CREATE_2_H(const QColor&, QColor, LightPressColor)
-  Q_PROPERTY_CREATE_2_H(const QColor&, QColor, DarkPressColor)
-  Q_PROPERTY_CREATE_2_H(const QColor&, QColor, LightTextColor)
-  Q_PROPERTY_CREATE_2_H(const QColor&, QColor, DarkTextColor)
+  Q_PROPERTY_CREATE_2_H(const QColor &, QColor, LightDefaultColor)
+  Q_PROPERTY_CREATE_2_H(const QColor &, QColor, DarkDefaultColor)
+  Q_PROPERTY_CREATE_2_H(const QColor &, QColor, LightHoverColor)
+  Q_PROPERTY_CREATE_2_H(const QColor &, QColor, DarkHoverColor)
+  Q_PROPERTY_CREATE_2_H(const QColor &, QColor, LightPressColor)
+  Q_PROPERTY_CREATE_2_H(const QColor &, QColor, DarkPressColor)
+  Q_PROPERTY_CREATE_2_H(const QColor &, QColor, LightTextColor)
+  Q_PROPERTY_CREATE_2_H(const QColor &, QColor, DarkTextColor)
 
 public:
   explicit NXPushButton(QWidget *parent = nullptr);
-  explicit NXPushButton(const QString& text, QWidget *parent = nullptr);
+  explicit NXPushButton(const QString &text, QWidget *parent = nullptr);
   ~NXPushButton();
 
   void setNXIcon(NXIconType::IconName icon) noexcept;

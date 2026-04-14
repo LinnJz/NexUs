@@ -21,7 +21,7 @@ class NXLineEditPrivate : public QObject
 public:
   explicit NXLineEditPrivate(QObject *parent = nullptr);
   ~NXLineEditPrivate() override;
-  Q_INVOKABLE void onWMWindowClickedEvent(const QVariantMap& data);
+  Q_INVOKABLE void onWMWindowClickedEvent(const QVariantMap &data);
   Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept;
   void resetTextRoute() noexcept;
   void pushTextRoute() noexcept;
@@ -56,7 +56,7 @@ private:
   QList<TextRouteState> _textRouteList;
 
   TextRouteState _currentTextRouteState() const noexcept;
-  void _applyTextRouteState(const TextRouteState& state) noexcept;
+  void _applyTextRouteState(const TextRouteState &state) noexcept;
 };
 
 #endif // NXLINEEDITPRIVATE_H

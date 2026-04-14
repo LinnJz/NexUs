@@ -5,4 +5,6 @@ NXProgressBarPrivate::NXProgressBarPrivate(QObject *parent)
 {
 }
 
-NXProgressBarPrivate::~NXProgressBarPrivate() { }
+NXProgressBarPrivate::~NXProgressBarPrivate()
+{
+}

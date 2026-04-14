@@ -9,15 +9,21 @@
 NXStatusBarStyle::NXStatusBarStyle(QStyle *style)
 {
   _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXStatusBarStyle::~NXStatusBarStyle() { }
+NXStatusBarStyle::~NXStatusBarStyle()
+{
+}
 
-void NXStatusBarStyle::drawPrimitive(PrimitiveElement element,
-                                     const QStyleOption *option,
-                                     QPainter *painter,
-                                     const QWidget *widget) const
+void
+NXStatusBarStyle::drawPrimitive(PrimitiveElement element,
+                                const QStyleOption *option,
+                                QPainter *painter,
+                                const QWidget *widget) const
 {
   switch (element)
   {
@@ -60,10 +66,11 @@ void NXStatusBarStyle::drawPrimitive(PrimitiveElement element,
   QProxyStyle::drawPrimitive(element, option, painter, widget);
 }
 
-void NXStatusBarStyle::drawControl(ControlElement element,
-                                   const QStyleOption *option,
-                                   QPainter *painter,
-                                   const QWidget *widget) const
+void
+NXStatusBarStyle::drawControl(ControlElement element,
+                              const QStyleOption *option,
+                              QPainter *painter,
+                              const QWidget *widget) const
 {
   switch (element)
   {
@@ -80,16 +87,18 @@ void NXStatusBarStyle::drawControl(ControlElement element,
   QProxyStyle::drawControl(element, option, painter, widget);
 }
 
-QSize NXStatusBarStyle::sizeFromContents(ContentsType type,
-                                         const QStyleOption *option,
-                                         const QSize& size,
-                                         const QWidget *widget) const
+QSize
+NXStatusBarStyle::sizeFromContents(ContentsType type,
+                                   const QStyleOption *option,
+                                   const QSize &size,
+                                   const QWidget *widget) const
 {
   // qDebug() << type << QProxyStyle::sizeFromContents(type, option, size, widget);
   return QProxyStyle::sizeFromContents(type, option, size, widget);
 }
 
-int NXStatusBarStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
+int
+NXStatusBarStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
   return QProxyStyle::pixelMetric(metric, option, widget);
 }

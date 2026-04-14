@@ -22,13 +22,18 @@ NXDrawerArea::NXDrawerArea(QWidget *parent)
   mainLayout->addWidget(d->_drawerContainer);
 
   d->_themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
 }
 
-NXDrawerArea::~NXDrawerArea() { }
+NXDrawerArea::~NXDrawerArea()
+{
+}
 
-void NXDrawerArea::setBorderRadius(int borderRadius) noexcept
+void
+NXDrawerArea::setBorderRadius(int borderRadius) noexcept
 {
   Q_D(NXDrawerArea);
   d->_drawerHeader->setBorderRadius(borderRadius);
@@ -36,43 +41,50 @@ void NXDrawerArea::setBorderRadius(int borderRadius) noexcept
   Q_EMIT pBorderRadiusChanged();
 }
 
-int NXDrawerArea::getBorderRadius() const noexcept
+int
+NXDrawerArea::getBorderRadius() const noexcept
 {
   Q_D(const NXDrawerArea);
   return d->_drawerHeader->getBorderRadius();
 }
 
-void NXDrawerArea::setHeaderHeight(int headerHeight) noexcept
+void
+NXDrawerArea::setHeaderHeight(int headerHeight) noexcept
 {
   Q_D(NXDrawerArea);
   d->_drawerHeader->setFixedHeight(headerHeight);
 }
 
-int NXDrawerArea::getHeaderHeight() const noexcept
+int
+NXDrawerArea::getHeaderHeight() const noexcept
 {
   Q_D(const NXDrawerArea);
   return d->_drawerHeader->height();
 }
 
-void NXDrawerArea::setDrawerHeader(QWidget *widget) noexcept
+void
+NXDrawerArea::setDrawerHeader(QWidget *widget) noexcept
 {
   Q_D(NXDrawerArea);
   d->_drawerHeader->setHeaderWidget(widget);
 }
 
-void NXDrawerArea::addDrawer(QWidget *widget) noexcept
+void
+NXDrawerArea::addDrawer(QWidget *widget) noexcept
 {
   Q_D(NXDrawerArea);
   d->_drawerContainer->addWidget(widget);
 }
 
-void NXDrawerArea::removeDrawer(QWidget *widget) noexcept
+void
+NXDrawerArea::removeDrawer(QWidget *widget) noexcept
 {
   Q_D(NXDrawerArea);
   d->_drawerContainer->removeWidget(widget);
 }
 
-void NXDrawerArea::expand() noexcept
+void
+NXDrawerArea::expand() noexcept
 {
   Q_D(NXDrawerArea);
   d->_drawerHeader->setIsExpand(true);
@@ -81,7 +93,8 @@ void NXDrawerArea::expand() noexcept
   Q_EMIT expandStateChanged(true);
 }
 
-void NXDrawerArea::collapse() noexcept
+void
+NXDrawerArea::collapse() noexcept
 {
   Q_D(NXDrawerArea);
   d->_drawerHeader->setIsExpand(false);
@@ -90,7 +103,8 @@ void NXDrawerArea::collapse() noexcept
   Q_EMIT expandStateChanged(false);
 }
 
-bool NXDrawerArea::getIsExpand() const noexcept
+bool
+NXDrawerArea::getIsExpand() const noexcept
 {
   Q_D(const NXDrawerArea);
   return d->_drawerHeader->getIsExpand();

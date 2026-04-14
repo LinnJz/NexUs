@@ -13,9 +13,12 @@ NXSpinBoxPrivate::NXSpinBoxPrivate(QObject *parent)
 {
 }
 
-NXSpinBoxPrivate::~NXSpinBoxPrivate() { }
+NXSpinBoxPrivate::~NXSpinBoxPrivate()
+{
+}
 
-void NXSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
+void
+NXSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_Q(NXSpinBox);
   _themeMode = themeMode;
@@ -25,7 +28,8 @@ void NXSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
   q->lineEdit()->setPalette(palette);
 }
 
-NXMenu *NXSpinBoxPrivate::_createStandardContextMenu() noexcept
+NXMenu *
+NXSpinBoxPrivate::_createStandardContextMenu() noexcept
 {
   Q_Q(NXSpinBox);
   QLineEdit *lineEdit = q->lineEdit();
@@ -78,7 +82,10 @@ NXMenu *NXSpinBoxPrivate::_createStandardContextMenu() noexcept
       }
     });
   }
-  if (!menu->isEmpty()) { menu->addSeparator(); }
+  if (!menu->isEmpty())
+  {
+    menu->addSeparator();
+  }
   action = menu->addAction(tr("全选"));
   action->setShortcut(QKeySequence::SelectAll);
   action->setEnabled(!lineEdit->text().isEmpty() && !(lineEdit->selectedText() == lineEdit->text()));

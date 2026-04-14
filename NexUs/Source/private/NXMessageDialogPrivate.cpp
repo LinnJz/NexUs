@@ -17,15 +17,24 @@ NXMessageDialogButton::NXMessageDialogButton(ButtonType type, QWidget *parent)
   setCursor(Qt::PointingHandCursor);
 }
 
-NXMessageDialogButton::~NXMessageDialogButton() { }
+NXMessageDialogButton::~NXMessageDialogButton()
+{
+}
 
-void NXMessageDialogButton::paintEvent(QPaintEvent *event)
+void
+NXMessageDialogButton::paintEvent(QPaintEvent *event)
 {
   QPainter painter(this);
   painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
-  if (_isPressed) { painter.fillRect(rect(), QColor(0, 0, 0, 20)); }
-  else if (_isHovered) { painter.fillRect(rect(), QColor(0, 0, 0, 10)); }
+  if (_isPressed)
+  {
+    painter.fillRect(rect(), QColor(0, 0, 0, 20));
+  }
+  else if (_isHovered)
+  {
+    painter.fillRect(rect(), QColor(0, 0, 0, 10));
+  }
 
   int centerX = width() / 2;
   int centerY = height() / 2;
@@ -49,7 +58,8 @@ void NXMessageDialogButton::paintEvent(QPaintEvent *event)
   }
 }
 
-void NXMessageDialogButton::mousePressEvent(QMouseEvent *event)
+void
+NXMessageDialogButton::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton)
   {
@@ -59,25 +69,31 @@ void NXMessageDialogButton::mousePressEvent(QMouseEvent *event)
   QWidget::mousePressEvent(event);
 }
 
-void NXMessageDialogButton::mouseReleaseEvent(QMouseEvent *event)
+void
+NXMessageDialogButton::mouseReleaseEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton && _isPressed)
   {
     _isPressed = false;
     update();
-    if (rect().contains(event->pos())) { Q_EMIT clicked(); }
+    if (rect().contains(event->pos()))
+    {
+      Q_EMIT clicked();
+    }
   }
   QWidget::mouseReleaseEvent(event);
 }
 
-void NXMessageDialogButton::enterEvent(QEnterEvent *event)
+void
+NXMessageDialogButton::enterEvent(QEnterEvent *event)
 {
   _isHovered = true;
   update();
   QWidget::enterEvent(event);
 }
 
-void NXMessageDialogButton::leaveEvent(QEvent *event)
+void
+NXMessageDialogButton::leaveEvent(QEvent *event)
 {
   _isHovered = false;
   _isPressed = false;
@@ -90,4 +106,6 @@ NXMessageDialogPrivate::NXMessageDialogPrivate(QObject *parent)
 {
 }
 
-NXMessageDialogPrivate::~NXMessageDialogPrivate() { }
+NXMessageDialogPrivate::~NXMessageDialogPrivate()
+{
+}

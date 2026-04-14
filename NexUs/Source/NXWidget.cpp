@@ -50,53 +50,74 @@ NXWidget::NXWidget(QWidget *parent)
   nxApp->syncWindowDisplayMode(this);
 }
 
-NXWidget::~NXWidget() { nxApp->syncWindowDisplayMode(this, false); }
+NXWidget::~NXWidget()
+{
+  nxApp->syncWindowDisplayMode(this, false);
+}
 
-void NXWidget::setIsStayTop(bool isStayTop) noexcept
+void
+NXWidget::setIsStayTop(bool isStayTop) noexcept
 {
   Q_D(NXWidget);
   d->_appBar->setIsStayTop(isStayTop);
 }
 
-bool NXWidget::getIsStayTop() const noexcept { return d_ptr->_appBar->getIsStayTop(); }
+bool
+NXWidget::getIsStayTop() const noexcept
+{
+  return d_ptr->_appBar->getIsStayTop();
+}
 
-void NXWidget::setIsFixedSize(bool isFixedSize) noexcept
+void
+NXWidget::setIsFixedSize(bool isFixedSize) noexcept
 {
   Q_D(NXWidget);
   d->_appBar->setIsFixedSize(isFixedSize);
 }
 
-bool NXWidget::getIsFixedSize() const noexcept { return d_ptr->_appBar->getIsFixedSize(); }
+bool
+NXWidget::getIsFixedSize() const noexcept
+{
+  return d_ptr->_appBar->getIsFixedSize();
+}
 
-void NXWidget::setIsDefaultClosed(bool isDefaultClosed) noexcept
+void
+NXWidget::setIsDefaultClosed(bool isDefaultClosed) noexcept
 {
   Q_D(NXWidget);
   d->_appBar->setIsDefaultClosed(isDefaultClosed);
   Q_EMIT pIsDefaultClosedChanged();
 }
 
-bool NXWidget::getIsDefaultClosed() const noexcept
+bool
+NXWidget::getIsDefaultClosed() const noexcept
 {
   Q_D(const NXWidget);
   return d->_appBar->getIsDefaultClosed();
 }
 
-void NXWidget::setAppBarHeight(int appBarHeight) noexcept
+void
+NXWidget::setAppBarHeight(int appBarHeight) noexcept
 {
   Q_D(NXWidget);
   d->_appBar->setAppBarHeight(appBarHeight);
   Q_EMIT pAppBarHeightChanged();
 }
 
-int NXWidget::getAppBarHeight() const noexcept
+int
+NXWidget::getAppBarHeight() const noexcept
 {
   Q_D(const NXWidget);
   return d->_appBar->getAppBarHeight();
 }
 
-void NXWidget::moveToCenter() noexcept
+void
+NXWidget::moveToCenter() noexcept
 {
-  if (isMaximized() || isFullScreen()) { return; }
+  if (isMaximized() || isFullScreen())
+  {
+    return;
+  }
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
   auto geometry = screen()->availableGeometry();
 #else
@@ -106,30 +127,35 @@ void NXWidget::moveToCenter() noexcept
               width(), height());
 }
 
-void NXWidget::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable) noexcept
+void
+NXWidget::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable) noexcept
 {
   Q_D(NXWidget);
   d->_appBar->setWindowButtonFlag(buttonFlag, isEnable);
 }
 
-void NXWidget::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags) noexcept
+void
+NXWidget::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags) noexcept
 {
   Q_D(NXWidget);
   d->_appBar->setWindowButtonFlags(buttonFlags);
 }
 
-NXAppBarType::ButtonFlags NXWidget::getWindowButtonFlags() const noexcept
+NXAppBarType::ButtonFlags
+NXWidget::getWindowButtonFlags() const noexcept
 {
   return d_ptr->_appBar->getWindowButtonFlags();
 }
 
-NXAppBar *NXWidget::getAppBar() const noexcept
+NXAppBar *
+NXWidget::getAppBar() const noexcept
 {
   Q_D(const NXWidget);
   return d->_appBar;
 }
 
-void NXWidget::paintEvent(QPaintEvent *event)
+void
+NXWidget::paintEvent(QPaintEvent *event)
 {
   Q_D(NXWidget);
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))

@@ -45,4 +45,6 @@ T_Graphics::T_Graphics(QWidget *parent)
   addCentralWidget(centralWidget, true, false, 0);
 }
 
-T_Graphics::~T_Graphics() { }
+T_Graphics::~T_Graphics()
+{
+}

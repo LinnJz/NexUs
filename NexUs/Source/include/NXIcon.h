@@ -15,12 +15,12 @@ private:
 
 public:
   QIcon getNXIcon(NXIconType::IconName awesome) noexcept;
-  QIcon getNXIcon(NXIconType::IconName awesome, const QColor& iconColor) noexcept;
+  QIcon getNXIcon(NXIconType::IconName awesome, const QColor &iconColor) noexcept;
   QIcon getNXIcon(NXIconType::IconName awesome, int pixelSize) noexcept;
-  QIcon getNXIcon(NXIconType::IconName awesome, int pixelSize, const QColor& iconColor) noexcept;
+  QIcon getNXIcon(NXIconType::IconName awesome, int pixelSize, const QColor &iconColor) noexcept;
   QIcon getNXIcon(NXIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight) noexcept;
   QIcon getNXIcon(
-      NXIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight, const QColor& iconColor) noexcept;
+      NXIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight, const QColor &iconColor) noexcept;
 };
 
 #endif // NXICON_H

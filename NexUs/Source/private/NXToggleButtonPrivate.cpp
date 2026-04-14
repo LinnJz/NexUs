@@ -8,4 +8,6 @@ NXToggleButtonPrivate::NXToggleButtonPrivate(QObject *parent)
 {
 }
 
-NXToggleButtonPrivate::~NXToggleButtonPrivate() { }
+NXToggleButtonPrivate::~NXToggleButtonPrivate()
+{
+}

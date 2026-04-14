@@ -15,15 +15,15 @@ class NX_EXPORT NXMultiSelectComboBox : public QComboBox
 public:
   explicit NXMultiSelectComboBox(QWidget *parent = nullptr);
   ~NXMultiSelectComboBox();
-  void setCurrentSelection(const QString& selection) noexcept;
-  void setCurrentSelection(const QStringList& selection) noexcept;
+  void setCurrentSelection(const QString &selection) noexcept;
+  void setCurrentSelection(const QStringList &selection) noexcept;
   void setCurrentSelection(int index) noexcept;
-  void setCurrentSelection(const QList<int>& selectionIndex) noexcept;
+  void setCurrentSelection(const QList<int> &selectionIndex) noexcept;
   QStringList getCurrentSelection() const noexcept;
   QList<int> getCurrentSelectionIndex() const noexcept;
 Q_SIGNALS:
-  void itemSelectionChanged(const QList<bool>& itemSelection);
-  void currentTextListChanged(const QStringList& selectedTextList);
+  void itemSelectionChanged(const QList<bool> &itemSelection);
+  void currentTextListChanged(const QStringList &selectedTextList);
 
 protected:
   void paintEvent(QPaintEvent *e) override;

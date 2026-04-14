@@ -6,7 +6,7 @@
 #include "NXDef.h"
 
 class QWidget;
-class QStackedWidget;
+class NXLazyStackedWidget;
 class QVBoxLayout;
 class QGraphicsBlurEffect;
 class NXCentralStackedWidget;
@@ -15,6 +15,7 @@ class NXCentralStackedWidgetPrivate : public QObject
 {
   Q_OBJECT
   Q_D_CREATE(NXCentralStackedWidget)
+  Q_PROPERTY_CREATE(int, LastTargetIndex)
   Q_PROPERTY_CREATE(int, BlurAnimationRadius)
   Q_PROPERTY_CREATE(int, PopupAnimationYOffset)
   Q_PROPERTY_CREATE(qreal, ScaleAnimationRatio)
@@ -36,7 +37,7 @@ private:
   bool _isTransparent { false };
   QVBoxLayout *_mainLayout { nullptr };
   QWidget *_customWidget { nullptr };
-  QStackedWidget *_containerStackedWidget { nullptr };
+  NXLazyStackedWidget *_containerStackedWidget { nullptr };
   bool _isHasRadius { true };
   bool _isDrawNewPix { false };
   void _getTargetStackPix() noexcept;

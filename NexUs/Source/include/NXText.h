@@ -16,12 +16,11 @@ class NX_EXPORT NXText : public QLabel
   Q_PROPERTY_CREATE_H(int, TextPointSize)
   Q_PROPERTY_CREATE_H(NXTextType::TextStyle, TextStyle)
   Q_PROPERTY_CREATE_H(NXIconType::IconName, NXIcon)
-  Q_PROPERTY_CREATE_H(NXTextType::DisplayMode, DisplayMode)
 
 public:
   explicit NXText(QWidget *parent = nullptr);
-  explicit NXText(const QString& text, QWidget *parent = nullptr);
-  explicit NXText(const QString& text, int pixelSize, QWidget *parent = nullptr);
+  explicit NXText(const QString &text, QWidget *parent = nullptr);
+  explicit NXText(const QString &text, int pixelSize, QWidget *parent = nullptr);
   ~NXText() override;
 
   Q_SIGNAL void clicked();

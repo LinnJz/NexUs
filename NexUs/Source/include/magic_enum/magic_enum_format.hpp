@@ -39,7 +39,8 @@ namespace magic_enum::detail
 {
 
 template<typename E, std::enable_if_t<std::is_enum_v<std::decay_t<E>>, int> = 0>
-std::string format_as(E e)
+std::string
+format_as(E e)
 {
   using D = std::decay_t<E>;
   static_assert(std::is_same_v<char, magic_enum::string_view::value_type>,
@@ -48,11 +49,17 @@ std::string format_as(E e)
   {
     if constexpr (magic_enum::detail::subtype_v<D> == magic_enum::detail::enum_subtype::flags)
     {
-      if (const auto name = magic_enum::enum_flags_name<D>(e); !name.empty()) { return { name.data(), name.size() }; }
+      if (const auto name = magic_enum::enum_flags_name<D>(e); !name.empty())
+      {
+        return { name.data(), name.size() };
+      }
     }
     else
     {
-      if (const auto name = magic_enum::enum_name<D>(e); !name.empty()) { return { name.data(), name.size() }; }
+      if (const auto name = magic_enum::enum_name<D>(e); !name.empty())
+      {
+        return { name.data(), name.size() };
+      }
     }
   }
   return std::to_string(magic_enum::enum_integer<D>(e));
@@ -71,7 +78,7 @@ struct std::formatter<E, std::enable_if_t<std::is_enum_v<std::decay_t<E>>, char>
     : std::formatter<std::string_view, char>
 {
   template<class FormatContext>
-  auto format(E e, FormatContext& ctx) const
+  auto format(E e, FormatContext &ctx) const
   {
     return std::formatter<std::string_view, char>::format(magic_enum::detail::format_as<E>(e), ctx);
   }
@@ -86,7 +93,7 @@ struct fmt::formatter<E, std::enable_if_t<std::is_enum_v<std::decay_t<E>>, char>
     : fmt::formatter<std::string_view, char>
 {
   template<class FormatContext>
-  auto format(E e, FormatContext& ctx) const
+  auto format(E e, FormatContext &ctx) const
   {
     return fmt::formatter<std::string_view, char>::format(magic_enum::detail::format_as<E>(e), ctx);
   }

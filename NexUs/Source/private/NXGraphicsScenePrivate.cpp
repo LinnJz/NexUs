@@ -9,31 +9,45 @@ NXGraphicsScenePrivate::NXGraphicsScenePrivate(QObject *parent)
 {
 }
 
-NXGraphicsScenePrivate::~NXGraphicsScenePrivate() { }
+NXGraphicsScenePrivate::~NXGraphicsScenePrivate()
+{
+}
 
-QDataStream& operator<< (QDataStream& stream, const NXGraphicsScenePrivate *data)
+QDataStream &
+operator<< (QDataStream &stream, const NXGraphicsScenePrivate *data)
 {
   QStringList keyList              = data->_items.keys();
   QList<NXGraphicsItem *> itemList = data->_items.values();
   stream << keyList;
-  for (int i = 0; i < keyList.count(); i++) { stream << itemList[i]; }
+  for (int i = 0; i < keyList.count(); i++)
+  {
+    stream << itemList[i];
+  }
   stream << data->_itemsLink;
   return stream;
 }
 
-QDataStream& operator>> (QDataStream& stream, NXGraphicsScenePrivate *data)
+QDataStream &
+operator>> (QDataStream &stream, NXGraphicsScenePrivate *data)
 {
   QStringList keyList;
   stream >> keyList;
   QList<NXGraphicsItem *> itemList = data->_serializeItem(keyList.count());
-  for (int i = 0; i < keyList.count(); i++) { stream >> itemList[i]; }
-  for (int i = 0; i < keyList.count(); i++) { data->_items.insert(keyList[i], itemList[i]); }
+  for (int i = 0; i < keyList.count(); i++)
+  {
+    stream >> itemList[i];
+  }
+  for (int i = 0; i < keyList.count(); i++)
+  {
+    data->_items.insert(keyList[i], itemList[i]);
+  }
   stream >> data->_itemsLink;
   data->_deserializeLink();
   return stream;
 }
 
-QList<NXGraphicsItem *> NXGraphicsScenePrivate::_serializeItem(int count) noexcept
+QList<NXGraphicsItem *>
+NXGraphicsScenePrivate::_serializeItem(int count) noexcept
 {
   Q_Q(NXGraphicsScene);
   QList<NXGraphicsItem *> itemList;
@@ -48,7 +62,8 @@ QList<NXGraphicsItem *> NXGraphicsScenePrivate::_serializeItem(int count) noexce
   return itemList;
 }
 
-void NXGraphicsScenePrivate::_removeLinkLineItem() noexcept
+void
+NXGraphicsScenePrivate::_removeLinkLineItem() noexcept
 {
   Q_Q(NXGraphicsScene);
   if (_linkLineItem)
@@ -59,7 +74,8 @@ void NXGraphicsScenePrivate::_removeLinkLineItem() noexcept
   }
 }
 
-void NXGraphicsScenePrivate::_deserializeLink() noexcept
+void
+NXGraphicsScenePrivate::_deserializeLink() noexcept
 {
   Q_Q(NXGraphicsScene);
   for (int i = 0; i < _itemsLink.count(); i++)

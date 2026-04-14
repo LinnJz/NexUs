@@ -22,9 +22,12 @@ NXToolTipPrivate::NXToolTipPrivate(QObject *parent)
   connect(_autoHideTimer, &QTimer::timeout, this, &NXToolTipPrivate::onAutoHideTimeout);
 }
 
-NXToolTipPrivate::~NXToolTipPrivate() { }
+NXToolTipPrivate::~NXToolTipPrivate()
+{
+}
 
-bool NXToolTipPrivate::eventFilter(QObject *watched, QEvent *event)
+bool
+NXToolTipPrivate::eventFilter(QObject *watched, QEvent *event)
 {
   Q_Q(NXToolTip);
   if (_toolTipText && !_toolTipText->text().isEmpty())
@@ -35,7 +38,10 @@ bool NXToolTipPrivate::eventFilter(QObject *watched, QEvent *event)
     {
       _hideTimer->stop();
       _autoHideTimer->stop();
-      if (!q->isVisible()) { _showTimer->start(_pShowDelayMsec); }
+      if (!q->isVisible())
+      {
+        _showTimer->start(_pShowDelayMsec);
+      }
       break;
     }
     case QEvent::Leave :
@@ -48,7 +54,10 @@ bool NXToolTipPrivate::eventFilter(QObject *watched, QEvent *event)
     case QEvent::HoverMove :
     case QEvent::MouseMove :
     {
-      if (_pIsMoveEnabled) { _updatePos(); }
+      if (_pIsMoveEnabled)
+      {
+        _updatePos();
+      }
       break;
     }
     default : break;
@@ -57,23 +66,30 @@ bool NXToolTipPrivate::eventFilter(QObject *watched, QEvent *event)
   return QObject::eventFilter(watched, event);
 }
 
-void NXToolTipPrivate::onShowTimeout() noexcept { _doShowAnimation(); }
+void
+NXToolTipPrivate::onShowTimeout() noexcept
+{
+  _doShowAnimation();
+}
 
-void NXToolTipPrivate::onHideTimeout() noexcept
+void
+NXToolTipPrivate::onHideTimeout() noexcept
 {
   Q_Q(NXToolTip);
   q->hide();
   _stopAllTimers();
 }
 
-void NXToolTipPrivate::onAutoHideTimeout() noexcept
+void
+NXToolTipPrivate::onAutoHideTimeout() noexcept
 {
   Q_Q(NXToolTip);
   q->hide();
   _stopAllTimers();
 }
 
-void NXToolTipPrivate::_doShowAnimation() noexcept
+void
+NXToolTipPrivate::_doShowAnimation() noexcept
 {
   Q_Q(NXToolTip);
   QPoint cursorPoint = QCursor::pos();
@@ -86,17 +102,22 @@ void NXToolTipPrivate::_doShowAnimation() noexcept
   showAnimation->setEndValue(1);
   showAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
-  if (_pDisplayMsec > 0) { _autoHideTimer->start(_pDisplayMsec); }
+  if (_pDisplayMsec > 0)
+  {
+    _autoHideTimer->start(_pDisplayMsec);
+  }
 }
 
-void NXToolTipPrivate::_updatePos() noexcept
+void
+NXToolTipPrivate::_updatePos() noexcept
 {
   Q_Q(NXToolTip);
   QPoint cursorPoint = QCursor::pos();
   q->move(cursorPoint.x() + _pOffSetX, cursorPoint.y() + _pOffSetY);
 }
 
-void NXToolTipPrivate::_stopAllTimers() noexcept
+void
+NXToolTipPrivate::_stopAllTimers() noexcept
 {
   _showTimer->stop();
   _hideTimer->stop();

@@ -16,20 +16,31 @@ NXTabBarStyle::NXTabBarStyle(QStyle *style)
   _pTabBarStyle                = NXTabBarType::Firefox;
   _closeIndicatorSize          = 24;
   _themeMode                   = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXTabBarStyle::~NXTabBarStyle() { }
+NXTabBarStyle::~NXTabBarStyle()
+{
+}
 
-void NXTabBarStyle::setTabBarStyle(NXTabBarType::TabBarStyle tabBarStyle) noexcept
+void
+NXTabBarStyle::setTabBarStyle(NXTabBarType::TabBarStyle tabBarStyle) noexcept
 {
   _pTabBarStyle       = tabBarStyle;
   _closeIndicatorSize = tabBarStyle == NXTabBarType::Firefox ? 24 : 20;
 }
 
-NXTabBarType::TabBarStyle NXTabBarStyle::getTabBarStyle() const noexcept { return _pTabBarStyle; }
+NXTabBarType::TabBarStyle
+NXTabBarStyle::getTabBarStyle() const noexcept
+{
+  return _pTabBarStyle;
+}
 
-void NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, QPainter *p, const QWidget *w) const
+void
+NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, QPainter *p, const QWidget *w) const
 {
   // qDebug() << pe << opt->rect;
   switch (pe)
@@ -61,7 +72,7 @@ void NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, 
     //{
     //   p->setPen(Qt::NoPen);
     //   p->setBrush(opt->state.testFlag(QStyle::State_Selected) ? NXThemeColor(_themeMode, TabBarSelectedCloseHover)
-    //                                                           : NXThemeColor(_themeMode, TabBarCloseHover));
+    //                                                           : NXThemeColor(_themeMode, TabBarCloseButtonHover));
     //   p->drawRoundedRect(tabRect, 6, 6);
     // }
     // QFont iconFont = QFont(QStringLiteral("NXAwesome"));
@@ -70,7 +81,7 @@ void NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, 
     // p->setPen(arrowColor);
     // p->drawText(tabRect,
     //             Qt::AlignCenter,
-    //             QChar((unsigned short) (QStyle::PE_IndicatorArrowLeft == pe ? NXIconType::ChevronLeft
+    //             QChar((QStyle::PE_IndicatorArrowLeft == pe ? NXIconType::ChevronLeft
     //                                                                         : NXIconType::ChevronRight)));
     // p->restore();
     return;
@@ -121,9 +132,12 @@ void NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, 
     if (opt->state.testFlag(QStyle::State_MouseOver))
     {
       p->setPen(Qt::NoPen);
-      p->setBrush(opt->state.testFlag(QStyle::State_Selected) ? NXThemeColor(_themeMode, TabBarSelectedCloseHover)
-                                                              : NXThemeColor(_themeMode, TabBarCloseHover));
-      if (_pTabBarStyle == NXTabBarType::Google) { p->drawEllipse(opt->rect); }
+      p->setBrush(opt->state.testFlag(QStyle::State_Selected) ? NXThemeColor(_themeMode, TabBarSelectedCloseButtonHover)
+                                                              : NXThemeColor(_themeMode, TabBarCloseButtonHover));
+      if (_pTabBarStyle == NXTabBarType::Google)
+      {
+        p->drawEllipse(opt->rect);
+      }
       else
       {
         p->drawRoundedRect(opt->rect, 4, 4);
@@ -133,7 +147,7 @@ void NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, 
     iconFont.setPixelSize(16);
     p->setFont(iconFont);
     p->setPen(NXThemeColor(_themeMode, BasicText));
-    p->drawText(opt->rect, Qt::AlignCenter, QChar((unsigned short) NXIconType::Xmark));
+    p->drawText(opt->rect, Qt::AlignCenter, QChar(NXIconType::Xmark));
     p->restore();
     return;
   }
@@ -145,10 +159,11 @@ void NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, 
   QProxyStyle::drawPrimitive(pe, opt, p, w);
 }
 
-void NXTabBarStyle::drawControl(ControlElement element,
-                                const QStyleOption *option,
-                                QPainter *painter,
-                                const QWidget *widget) const
+void
+NXTabBarStyle::drawControl(ControlElement element,
+                           const QStyleOption *option,
+                           QPainter *painter,
+                           const QWidget *widget) const
 {
   constexpr int margin = 9;
   switch (element)
@@ -283,10 +298,11 @@ void NXTabBarStyle::drawControl(ControlElement element,
   QProxyStyle::drawControl(element, option, painter, widget);
 }
 
-QSize NXTabBarStyle::sizeFromContents(ContentsType type,
-                                      const QStyleOption *option,
-                                      const QSize& size,
-                                      const QWidget *widget) const
+QSize
+NXTabBarStyle::sizeFromContents(ContentsType type,
+                                const QStyleOption *option,
+                                const QSize &size,
+                                const QWidget *widget) const
 {
   switch (type)
   {
@@ -302,10 +318,11 @@ QSize NXTabBarStyle::sizeFromContents(ContentsType type,
   return QProxyStyle::sizeFromContents(type, option, size, widget);
 }
 
-int NXTabBarStyle::styleHint(StyleHint hint,
-                             const QStyleOption *option,
-                             const QWidget *widget,
-                             QStyleHintReturn *returnData) const
+int
+NXTabBarStyle::styleHint(StyleHint hint,
+                         const QStyleOption *option,
+                         const QWidget *widget,
+                         QStyleHintReturn *returnData) const
 {
   switch (hint)
   {
@@ -318,7 +335,8 @@ int NXTabBarStyle::styleHint(StyleHint hint,
   return QProxyStyle::styleHint(hint, option, widget, returnData);
 }
 
-int NXTabBarStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
+int
+NXTabBarStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
   switch (metric)
   {
@@ -335,7 +353,8 @@ int NXTabBarStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, c
   return QProxyStyle::pixelMetric(metric, option, widget);
 }
 
-QRect NXTabBarStyle::subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const
+QRect
+NXTabBarStyle::subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const
 {
   // QMargins margins  = widget->contentsMargins();
   // QRect contentRect = option->rect.adjusted(margins.left(), margins.top(), -margins.right(), -margins.bottom());

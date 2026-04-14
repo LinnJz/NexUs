@@ -10,9 +10,12 @@ NXPopularCardPrivate::NXPopularCardPrivate(QObject *parent)
 {
 }
 
-NXPopularCardPrivate::~NXPopularCardPrivate() { }
+NXPopularCardPrivate::~NXPopularCardPrivate()
+{
+}
 
-void NXPopularCardPrivate::_showFloater() noexcept
+void
+NXPopularCardPrivate::_showFloater() noexcept
 {
   Q_Q(NXPopularCard);
   q->update();

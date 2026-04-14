@@ -2,26 +2,44 @@
 #define NXPIVOTMODEL_H
 
 #include <QAbstractListModel>
+#include <QPixmap>
+
+#include "NXDef.h"
 
 class NXPivotModel : public QAbstractListModel
 {
   Q_OBJECT
 
 public:
-  explicit NXPivotModel(QObject *parent = nullptr);
-  ~NXPivotModel();
+  struct PivotItem
+  {
+    QString text;
+    QPixmap icon;
+  };
 
-  void appendPivot(const QString& pivot) noexcept;
-  void removePivot(const QString& pivot) noexcept;
+  explicit NXPivotModel(QObject *parent = nullptr);
+  ~NXPivotModel() override;
+
+  void appendPivot(const QPixmap &pixmap) noexcept;
+  void appendPivot(const QString &text, const QPixmap &pixmap = {}) noexcept;
+
+  void insertPivot(int index, const QPixmap &pixmap) noexcept;
+  void insertPivot(int index, const QString &text, const QPixmap &pixmap = {}) noexcept;
+
+  void removePivot(int index) noexcept;
+
+  void setPivot(int index, const QPixmap &pixmap) noexcept;
+  void setPivot(int index, const QString &text, const QPixmap &pixmap = {}) noexcept;
 
   int getPivotListCount() const noexcept;
 
-protected:
-  int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-  QVariant data(const QModelIndex& index, int role) const override;
+  int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+  QVariant data(const QModelIndex &index, int role) const override;
 
 private:
-  QStringList _pivotList;
+  QList<PivotItem> _pivotList;
 };
+
+Q_DECLARE_METATYPE(NXPivotModel::PivotItem);
 
 #endif // NXPIVOTMODEL_H

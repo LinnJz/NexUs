@@ -27,15 +27,19 @@ NXGroupBox::NXGroupBox(QWidget *parent)
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXGroupBoxPrivate::onThemeChanged);
 }
 
-NXGroupBox::NXGroupBox(const QString& title, QWidget *parent)
+NXGroupBox::NXGroupBox(const QString &title, QWidget *parent)
     : NXGroupBox(parent)
 {
   setTitle(title);
 }
 
-NXGroupBox::~NXGroupBox() { delete this->style(); }
+NXGroupBox::~NXGroupBox()
+{
+  delete this->style();
+}
 
-void NXGroupBox::paintEvent(QPaintEvent *event)
+void
+NXGroupBox::paintEvent(QPaintEvent *event)
 {
   Q_D(NXGroupBox);
   if (palette().color(QPalette::WindowText) != NXThemeColor(d->_themeMode, BasicText))

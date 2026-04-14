@@ -5,11 +5,18 @@ NXCalendarTitleModel::NXCalendarTitleModel(QObject *parent)
 {
 }
 
-NXCalendarTitleModel::~NXCalendarTitleModel() { }
+NXCalendarTitleModel::~NXCalendarTitleModel()
+{
+}
 
-int NXCalendarTitleModel::rowCount(const QModelIndex& parent) const { return 7; }
+int
+NXCalendarTitleModel::rowCount(const QModelIndex &parent) const
+{
+  return 7;
+}
 
-QVariant NXCalendarTitleModel::data(const QModelIndex& index, int role) const
+QVariant
+NXCalendarTitleModel::data(const QModelIndex &index, int role) const
 {
   if (role == Qt::UserRole)
   {

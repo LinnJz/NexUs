@@ -7,4 +7,6 @@ NXScrollAreaPrivate::NXScrollAreaPrivate(QObject *parent)
 {
 }
 
-NXScrollAreaPrivate::~NXScrollAreaPrivate() { }
+NXScrollAreaPrivate::~NXScrollAreaPrivate()
+{
+}

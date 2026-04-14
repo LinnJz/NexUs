@@ -42,7 +42,7 @@ public:
   quint32 getResizeBorderThickness(const HWND hwnd) const;
   quint32 getDpiForWindow(const HWND hwnd) const;
   int getSystemMetricsForDpi(const HWND hwnd, const int index) const;
-  bool compareWindowsVersion(const QString& windowsVersion);
+  bool compareWindowsVersion(const QString &windowsVersion) const;
 
 private:
   enum _DWM_SYSTEMBACKDROP_TYPE

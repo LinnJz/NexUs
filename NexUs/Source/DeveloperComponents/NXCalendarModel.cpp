@@ -8,25 +8,38 @@ NXCalendarModel::NXCalendarModel(QObject *parent)
   _initRowCount();
 }
 
-NXCalendarModel::~NXCalendarModel() { }
+NXCalendarModel::~NXCalendarModel()
+{
+}
 
-void NXCalendarModel::setMinimumDate(QDate minimudate) noexcept
+void
+NXCalendarModel::setMinimumDate(QDate minimudate) noexcept
 {
   _pMinimumDate = minimudate;
   _initRowCount();
 }
 
-QDate NXCalendarModel::getMinimumDate() const noexcept { return _pMinimumDate; }
+QDate
+NXCalendarModel::getMinimumDate() const noexcept
+{
+  return _pMinimumDate;
+}
 
-void NXCalendarModel::setMaximumDate(QDate maximumDate) noexcept
+void
+NXCalendarModel::setMaximumDate(QDate maximumDate) noexcept
 {
   _pMaximumDate = maximumDate;
   _initRowCount();
 }
 
-QDate NXCalendarModel::getMaximumDate() const noexcept { return _pMaximumDate; }
+QDate
+NXCalendarModel::getMaximumDate() const noexcept
+{
+  return _pMaximumDate;
+}
 
-void NXCalendarModel::setDisplayMode(NXCalendarType displayMode) noexcept
+void
+NXCalendarModel::setDisplayMode(NXCalendarType displayMode) noexcept
 {
   beginResetModel();
   _displayMode = displayMode;
@@ -34,9 +47,14 @@ void NXCalendarModel::setDisplayMode(NXCalendarType displayMode) noexcept
   Q_EMIT displayModeChanged();
 }
 
-NXCalendarType NXCalendarModel::getDisplayMode() const noexcept { return _displayMode; }
+NXCalendarType
+NXCalendarModel::getDisplayMode() const noexcept
+{
+  return _displayMode;
+}
 
-QModelIndex NXCalendarModel::getIndexFromDate(QDate date) const noexcept
+QModelIndex
+NXCalendarModel::getIndexFromDate(QDate date) const noexcept
 {
   switch (_displayMode)
   {
@@ -56,13 +74,18 @@ QModelIndex NXCalendarModel::getIndexFromDate(QDate date) const noexcept
   return QModelIndex();
 }
 
-QDate NXCalendarModel::getDateFromIndex(const QModelIndex& index) const noexcept
+QDate
+NXCalendarModel::getDateFromIndex(const QModelIndex &index) const noexcept
 {
-  if (!index.isValid() || index.row() < _offset) { return QDate(); }
+  if (!index.isValid() || index.row() < _offset)
+  {
+    return QDate();
+  }
   return _pMinimumDate.addDays(index.row() - _offset);
 }
 
-QVariant NXCalendarModel::data(const QModelIndex& index, int role) const
+QVariant
+NXCalendarModel::data(const QModelIndex &index, int role) const
 {
   if (role == Qt::UserRole)
   {
@@ -106,7 +129,8 @@ QVariant NXCalendarModel::data(const QModelIndex& index, int role) const
   return QVariant();
 }
 
-int NXCalendarModel::rowCount(const QModelIndex& parent) const
+int
+NXCalendarModel::rowCount(const QModelIndex &parent) const
 {
   switch (_displayMode)
   {
@@ -126,11 +150,16 @@ int NXCalendarModel::rowCount(const QModelIndex& parent) const
   return 0;
 }
 
-void NXCalendarModel::_initRowCount()
+void
+NXCalendarModel::_initRowCount()
 {
   _dayRowCount = _pMinimumDate.daysTo(_pMaximumDate);
   _offset      = _pMinimumDate.dayOfWeek();
   _dayRowCount += _offset + 1;
 }
 
-int NXCalendarModel::_getCurrentDay(int row) const { return _pMinimumDate.addDays(row - _offset).day(); }
+int
+NXCalendarModel::_getCurrentDay(int row) const
+{
+  return _pMinimumDate.addDays(row - _offset).day();
+}

@@ -12,7 +12,7 @@ class NXDrawerContainer : public QWidget
 {
   Q_OBJECT
   Q_PROPERTY_CREATE(qreal, Opacity)
-  Q_PRIVATE_CREATE_2(const QPixmap&, QPixmap, ContainerPix)
+  Q_PRIVATE_CREATE_2(const QPixmap &, QPixmap, ContainerPix)
   Q_PRIVATE_CREATE(int, BorderRadius)
 
 public:
@@ -35,8 +35,6 @@ private:
   QVBoxLayout *_containerLayout { nullptr };
   QWidget *_containerWidget { nullptr };
   QList<QWidget *> _drawerWidgetList;
-
-  int _calculateContainerMinimumHeight() const;
 };
 
 #endif // NXFRAMEWORK_NEXUS_DEVELOPERCOMPONENTS_NXDRAWERCONTAINER_H_

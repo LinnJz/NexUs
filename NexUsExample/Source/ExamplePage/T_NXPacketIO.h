@@ -34,10 +34,10 @@ private:
   QByteArray _imageArray;
   std::unique_ptr<NXXIO_Interface> _interface;
   UtCallbackHolder _callback;
-  void _handleScreenPkt(NXXIO_ScreenPkt& screenPkt);
+  void _handleScreenPkt(NXXIO_ScreenPkt &screenPkt);
   NXXIO_Connection *_connection { nullptr };
   NXXIO_Connection *_multicastConnection { nullptr };
-  void _sendToXIO(NXXIO_Packet& packet, bool isMulticast = false);
+  void _sendToXIO(NXXIO_Packet &packet, bool isMulticast = false);
 };
 #endif
 #endif // NXFRAMEWORK_NXWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_NXPACKETIO_H_

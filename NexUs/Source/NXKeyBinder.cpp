@@ -31,41 +31,54 @@ NXKeyBinder::NXKeyBinder(QWidget *parent)
   d->_binderDialog->setButtonText(NXContentDialog::RightButton, QStringLiteral("确认"));
   connect(d->_binderDialog, &NXContentDialog::buttonClicked, this, [=](NXContentDialog::ButtonType buttonType)
   {
-    if (buttonType == NXContentDialog::MiddleButton) { d->_binderContainer->logOrResetHistoryData(false); }
-    else if (buttonType == NXContentDialog::RightButton) { d->_binderContainer->saveBinderChanged(); }
+    if (buttonType == NXContentDialog::MiddleButton)
+    {
+      d->_binderContainer->logOrResetHistoryData(false);
+    }
+    else if (buttonType == NXContentDialog::RightButton)
+    {
+      d->_binderContainer->saveBinderChanged();
+    }
   });
   d->onThemeChanged(nxTheme->getThemeMode());
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXKeyBinderPrivate::onThemeChanged);
 }
 
-NXKeyBinder::~NXKeyBinder() { }
+NXKeyBinder::~NXKeyBinder()
+{
+}
 
-void NXKeyBinder::setBinderKeyText(const QString& binderKeyText) noexcept
+void
+NXKeyBinder::setBinderKeyText(const QString &binderKeyText) noexcept
 {
   Q_D(NXKeyBinder);
   d->_binderContainer->setBinderKeyText(binderKeyText);
   setText(QStringLiteral("  按键: ") + binderKeyText + QStringLiteral("      "));
 }
 
-QString NXKeyBinder::getBinderKeyText() const noexcept
+QString
+NXKeyBinder::getBinderKeyText() const noexcept
 {
   Q_D(const NXKeyBinder);
   return d->_binderContainer->getBinderKeyText();
 }
 
-void NXKeyBinder::setNativeVirtualBinderKey(quint32 binderKey) noexcept
+void
+NXKeyBinder::setNativeVirtualBinderKey(quint32 binderKey) noexcept
 {
   Q_D(NXKeyBinder);
   d->_binderContainer->setNativeVirtualBinderKey(binderKey);
 }
 
-quint32 NXKeyBinder::getNativeVirtualBinderKey() const noexcept
+quint32
+NXKeyBinder::getNativeVirtualBinderKey() const noexcept
 {
   Q_D(const NXKeyBinder);
   return d->_binderContainer->getNativeVirtualBinderKey();
 }
 
-bool NXKeyBinder::event(QEvent *event)
+bool
+NXKeyBinder::event(QEvent *event)
 {
   switch (event->type())
   {
@@ -83,7 +96,8 @@ bool NXKeyBinder::event(QEvent *event)
   return QLabel::event(event);
 }
 
-void NXKeyBinder::mouseReleaseEvent(QMouseEvent *event)
+void
+NXKeyBinder::mouseReleaseEvent(QMouseEvent *event)
 {
   Q_D(NXKeyBinder);
   if (event->button() == Qt::LeftButton)
@@ -95,7 +109,8 @@ void NXKeyBinder::mouseReleaseEvent(QMouseEvent *event)
   QLabel::mouseReleaseEvent(event);
 }
 
-void NXKeyBinder::paintEvent(QPaintEvent *event)
+void
+NXKeyBinder::paintEvent(QPaintEvent *event)
 {
   Q_D(NXKeyBinder);
   if (palette().color(QPalette::WindowText) != NXThemeColor(d->_themeMode, BasicText))
@@ -117,7 +132,7 @@ void NXKeyBinder::paintEvent(QPaintEvent *event)
   painter.setPen(NXThemeColor(d->_themeMode, BasicText));
   QRect iconRect = rect();
   iconRect.adjust(0, 0, -10, 0);
-  painter.drawText(iconRect, Qt::AlignVCenter | Qt::AlignRight, QChar((unsigned short) NXIconType::Pencil));
+  painter.drawText(iconRect, Qt::AlignVCenter | Qt::AlignRight, QChar(NXIconType::Pencil));
   painter.restore();
   QLabel::paintEvent(event);
 }

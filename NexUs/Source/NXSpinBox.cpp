@@ -35,10 +35,14 @@ NXSpinBox::~NXSpinBox()
   delete d->_style;
 }
 
-void NXSpinBox::setButtonMode(NXSpinBoxType::ButtonMode buttonMode) noexcept
+void
+NXSpinBox::setButtonMode(NXSpinBoxType::ButtonMode buttonMode) noexcept
 {
   Q_D(NXSpinBox);
-  if (minimumWidth() < 90) { setMinimumWidth(90); }
+  if (minimumWidth() < 90)
+  {
+    setMinimumWidth(90);
+  }
   d->_style->setButtonMode(buttonMode);
   switch (buttonMode)
   {
@@ -62,19 +66,24 @@ void NXSpinBox::setButtonMode(NXSpinBoxType::ButtonMode buttonMode) noexcept
   Q_EMIT pButtonModeChanged();
 }
 
-NXSpinBoxType::ButtonMode NXSpinBox::getButtonMode() const noexcept
+NXSpinBoxType::ButtonMode
+NXSpinBox::getButtonMode() const noexcept
 {
   Q_D(const NXSpinBox);
   return d->_style->getButtonMode();
 }
 
-void NXSpinBox::focusInEvent(QFocusEvent *event)
+void
+NXSpinBox::focusInEvent(QFocusEvent *event)
 {
   Q_D(NXSpinBox);
   if (event->reason() == Qt::MouseFocusReason)
   {
     QPropertyAnimation *markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
-    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
+    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+    {
+      update();
+    });
     markAnimation->setDuration(300);
     markAnimation->setEasingCurve(QEasingCurve::InOutSine);
     markAnimation->setStartValue(d->_pExpandMarkWidth);
@@ -84,13 +93,17 @@ void NXSpinBox::focusInEvent(QFocusEvent *event)
   QSpinBox::focusInEvent(event);
 }
 
-void NXSpinBox::focusOutEvent(QFocusEvent *event)
+void
+NXSpinBox::focusOutEvent(QFocusEvent *event)
 {
   Q_D(NXSpinBox);
   if (event->reason() != Qt::PopupFocusReason)
   {
     QPropertyAnimation *markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
-    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
+    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+    {
+      update();
+    });
     markAnimation->setDuration(300);
     markAnimation->setEasingCurve(QEasingCurve::InOutSine);
     markAnimation->setStartValue(d->_pExpandMarkWidth);
@@ -100,10 +113,14 @@ void NXSpinBox::focusOutEvent(QFocusEvent *event)
   QSpinBox::focusOutEvent(event);
 }
 
-void NXSpinBox::paintEvent(QPaintEvent *event)
+void
+NXSpinBox::paintEvent(QPaintEvent *event)
 {
   Q_D(NXSpinBox);
-  if (palette().color(QPalette::Text) != NXThemeColor(d->_themeMode, BasicText)) { d->onThemeChanged(d->_themeMode); }
+  if (palette().color(QPalette::Text) != NXThemeColor(d->_themeMode, BasicText))
+  {
+    d->onThemeChanged(d->_themeMode);
+  }
   QSpinBox::paintEvent(event);
   QPainter painter(this);
   painter.save();
@@ -115,11 +132,15 @@ void NXSpinBox::paintEvent(QPaintEvent *event)
   painter.restore();
 }
 
-void NXSpinBox::contextMenuEvent(QContextMenuEvent *event)
+void
+NXSpinBox::contextMenuEvent(QContextMenuEvent *event)
 {
   Q_D(NXSpinBox);
   NXMenu *menu = d->_createStandardContextMenu();
-  if (!menu) { return; }
+  if (!menu)
+  {
+    return;
+  }
   menu->addSeparator();
   const uint se = stepEnabled();
   QAction *up   = menu->addNXIconAction(NXIconType::Plus, tr("增加"));
@@ -130,14 +151,20 @@ void NXSpinBox::contextMenuEvent(QContextMenuEvent *event)
 
   const QAbstractSpinBox *that = this;
   const QPoint pos             = (event->reason() == QContextMenuEvent::Mouse)
-                                     ? event->globalPos()
-                                     : mapToGlobal(QPoint(event->pos().x(), 0)) + QPoint(width() / 2, height() / 2);
+                                   ? event->globalPos()
+                                   : mapToGlobal(QPoint(event->pos().x(), 0)) + QPoint(width() / 2, height() / 2);
   const QAction *action        = menu->exec(pos);
   delete menu;
   if (that && action)
   {
-    if (action == up) { stepBy(1); }
-    else if (action == down) { stepBy(-1); }
+    if (action == up)
+    {
+      stepBy(1);
+    }
+    else if (action == down)
+    {
+      stepBy(-1);
+    }
   }
   event->accept();
 }

@@ -7,34 +7,43 @@
 
 #ifdef Q_OS_WIN
 #  if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-#    define Q_TAKEOVER_NATIVEEVENT_H                                                          \
-      bool nativeEvent(const QByteArray& eventType, void *message, qintptr *result) override;
+#    define Q_TAKEOVER_NATIVEEVENT_H                                                                                   \
+      bool nativeEvent(const QByteArray &eventType, void *message, qintptr *result) override;
 #  else
-#    define Q_TAKEOVER_NATIVEEVENT_H                                                       \
-      bool nativeEvent(const QByteArray& eventType, void *message, long *result) override;
+#    define Q_TAKEOVER_NATIVEEVENT_H                                                                                   \
+      bool nativeEvent(const QByteArray &eventType, void *message, long *result) override;
 #  endif
 #else
 #  define Q_TAKEOVER_NATIVEEVENT_H
 #endif
 
 #ifdef Q_OS_WIN
-#  define NXAPPBAR_HANDLE(NXAppBar)                                               \
-    if (NXAppBar)                                                                 \
-    {                                                                             \
-      int ret = NXAppBar->takeOverNativeEvent(eventType, message, result);        \
-      if (ret == -1) { return QWidget::nativeEvent(eventType, message, result); } \
-      return (bool) ret;                                                          \
-    }                                                                             \
+#  define NXAPPBAR_HANDLE(NXAppBar)                                                                                    \
+    if (NXAppBar)                                                                                                      \
+    {                                                                                                                  \
+      int ret = NXAppBar->takeOverNativeEvent(eventType, message, result);                                             \
+      if (ret == -1)                                                                                                   \
+      {                                                                                                                \
+        return QWidget::nativeEvent(eventType, message, result);                                                       \
+      }                                                                                                                \
+      return (bool) ret;                                                                                               \
+    }                                                                                                                  \
     return QWidget::nativeEvent(eventType, message, result);
 #endif
 
 #ifdef Q_OS_WIN
 #  if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-#    define Q_TAKEOVER_NATIVEEVENT_CPP(CLASS, NXAppBar) \
-      bool CLASS::nativeEvent(const QByteArray& eventType, void *message, qintptr *result) { NXAPPBAR_HANDLE(NXAppBar) }
+#    define Q_TAKEOVER_NATIVEEVENT_CPP(CLASS, NXAppBar)                                                                \
+      bool CLASS::nativeEvent(const QByteArray &eventType, void *message, qintptr *result)                             \
+      {                                                                                                                \
+        NXAPPBAR_HANDLE(NXAppBar)                                                                                      \
+      }
 #  else
-#    define Q_TAKEOVER_NATIVEEVENT_CPP(CLASS, NXAppBar)                                                               \
-      bool CLASS::nativeEvent(const QByteArray& eventType, void *message, long *result) { NXAPPBAR_HANDLE(NXAppBar) }
+#    define Q_TAKEOVER_NATIVEEVENT_CPP(CLASS, NXAppBar)                                                                \
+      bool CLASS::nativeEvent(const QByteArray &eventType, void *message, long *result)                                \
+      {                                                                                                                \
+        NXAPPBAR_HANDLE(NXAppBar)                                                                                      \
+      }
 #  endif
 #else
 #  define Q_TAKEOVER_NATIVEEVENT_CPP(CLASS, NXAppBar)
@@ -59,7 +68,7 @@ public:
   void setCustomWidget(NXAppBarType::CustomArea customArea,
                        QWidget *customWidget,
                        QObject *hitTestObject             = nullptr,
-                       const QString& hitTestFunctionName = {}) noexcept;
+                       const QString &hitTestFunctionName = {}) noexcept;
   QWidget *getCustomWidget(NXAppBarType::CustomArea customArea) const noexcept;
   void setCustomMenu(QMenu *customMenu) noexcept;
   QMenu *getCustomMenu() const noexcept;
@@ -74,9 +83,9 @@ public:
   void closeWindow() noexcept;
 #ifdef Q_OS_WIN
 #  if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-  int takeOverNativeEvent(const QByteArray& eventType, void *message, qintptr *result);
+  int takeOverNativeEvent(const QByteArray &eventType, void *message, qintptr *result);
 #  else
-  int takeOverNativeEvent(const QByteArray& eventType, void *message, long *result);
+  int takeOverNativeEvent(const QByteArray &eventType, void *message, long *result);
 #  endif
 #endif
 Q_SIGNALS:

@@ -19,9 +19,12 @@ NXCalendarPickerContainer::NXCalendarPickerContainer(QWidget *parent)
   });
 }
 
-NXCalendarPickerContainer::~NXCalendarPickerContainer() { }
+NXCalendarPickerContainer::~NXCalendarPickerContainer()
+{
+}
 
-void NXCalendarPickerContainer::paintEvent(QPaintEvent *event)
+void
+NXCalendarPickerContainer::paintEvent(QPaintEvent *event)
 {
   QPainter painter(this);
   painter.save();

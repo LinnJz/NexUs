@@ -5,4 +5,6 @@ NXListViewPrivate::NXListViewPrivate(QObject *parent)
 {
 }
 
-NXListViewPrivate::~NXListViewPrivate() { }
+NXListViewPrivate::~NXListViewPrivate()
+{
+}

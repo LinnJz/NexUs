@@ -34,7 +34,7 @@ NXPlainTextEdit::NXPlainTextEdit(QWidget *parent)
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXPlainTextEditPrivate::onThemeChanged);
 }
 
-NXPlainTextEdit::NXPlainTextEdit(const QString& text, QWidget *parent)
+NXPlainTextEdit::NXPlainTextEdit(const QString &text, QWidget *parent)
     : NXPlainTextEdit(parent)
 {
   setPlainText(text);
@@ -46,13 +46,17 @@ NXPlainTextEdit::~NXPlainTextEdit()
   delete d->_style;
 }
 
-void NXPlainTextEdit::focusInEvent(QFocusEvent *event)
+void
+NXPlainTextEdit::focusInEvent(QFocusEvent *event)
 {
   Q_D(NXPlainTextEdit);
   if (event->reason() == Qt::MouseFocusReason)
   {
     QPropertyAnimation *markAnimation = new QPropertyAnimation(d->_style, "pExpandMarkWidth");
-    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
+    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+    {
+      update();
+    });
     markAnimation->setDuration(300);
     markAnimation->setEasingCurve(QEasingCurve::InOutSine);
     markAnimation->setStartValue(d->_style->getExpandMarkWidth());
@@ -62,13 +66,17 @@ void NXPlainTextEdit::focusInEvent(QFocusEvent *event)
   QPlainTextEdit::focusInEvent(event);
 }
 
-void NXPlainTextEdit::focusOutEvent(QFocusEvent *event)
+void
+NXPlainTextEdit::focusOutEvent(QFocusEvent *event)
 {
   Q_D(NXPlainTextEdit);
   if (event->reason() != Qt::PopupFocusReason)
   {
     QPropertyAnimation *markAnimation = new QPropertyAnimation(d->_style, "pExpandMarkWidth");
-    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
+    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+    {
+      update();
+    });
     markAnimation->setDuration(300);
     markAnimation->setEasingCurve(QEasingCurve::InOutSine);
     markAnimation->setStartValue(d->_style->getExpandMarkWidth());
@@ -78,7 +86,8 @@ void NXPlainTextEdit::focusOutEvent(QFocusEvent *event)
   QPlainTextEdit::focusOutEvent(event);
 }
 
-void NXPlainTextEdit::contextMenuEvent(QContextMenuEvent *event)
+void
+NXPlainTextEdit::contextMenuEvent(QContextMenuEvent *event)
 {
   NXMenu *menu = new NXMenu(this);
   menu->setMenuItemHeight(27);
@@ -120,10 +129,16 @@ void NXPlainTextEdit::contextMenuEvent(QContextMenuEvent *event)
     action->setEnabled(!isReadOnly() && !toPlainText().isEmpty() && !textCursor().selectedText().isEmpty());
     connect(action, &QAction::triggered, this, [=](bool checked)
     {
-      if (!textCursor().selectedText().isEmpty()) { textCursor().deleteChar(); }
+      if (!textCursor().selectedText().isEmpty())
+      {
+        textCursor().deleteChar();
+      }
     });
   }
-  if (!menu->isEmpty()) { menu->addSeparator(); }
+  if (!menu->isEmpty())
+  {
+    menu->addSeparator();
+  }
   action = menu->addAction("全选");
   action->setShortcut(QKeySequence::SelectAll);
   action->setEnabled(!toPlainText().isEmpty() && !(textCursor().selectedText() == toPlainText()));
@@ -132,9 +147,13 @@ void NXPlainTextEdit::contextMenuEvent(QContextMenuEvent *event)
   this->setFocus();
 }
 
-void NXPlainTextEdit::paintEvent(QPaintEvent *event)
+void
+NXPlainTextEdit::paintEvent(QPaintEvent *event)
 {
   Q_D(NXPlainTextEdit);
-  if (palette().color(QPalette::Text) != NXThemeColor(d->_themeMode, BasicText)) { d->onThemeChanged(d->_themeMode); }
+  if (palette().color(QPalette::Text) != NXThemeColor(d->_themeMode, BasicText))
+  {
+    d->onThemeChanged(d->_themeMode);
+  }
   QPlainTextEdit::paintEvent(event);
 }

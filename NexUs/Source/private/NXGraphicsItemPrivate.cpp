@@ -5,9 +5,12 @@ NXGraphicsItemPrivate::NXGraphicsItemPrivate(QObject *parent)
 {
 }
 
-NXGraphicsItemPrivate::~NXGraphicsItemPrivate() { }
+NXGraphicsItemPrivate::~NXGraphicsItemPrivate()
+{
+}
 
-QDataStream& operator<< (QDataStream& stream, const NXGraphicsItemPrivate *data)
+QDataStream &
+operator<< (QDataStream &stream, const NXGraphicsItemPrivate *data)
 {
   stream << data->_itemUID;
   stream << data->_pItemName;
@@ -19,7 +22,8 @@ QDataStream& operator<< (QDataStream& stream, const NXGraphicsItemPrivate *data)
   return stream;
 }
 
-QDataStream& operator>> (QDataStream& stream, NXGraphicsItemPrivate *data)
+QDataStream &
+operator>> (QDataStream &stream, NXGraphicsItemPrivate *data)
 {
   stream >> data->_itemUID;
   stream >> data->_pItemName;

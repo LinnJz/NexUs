@@ -33,26 +33,33 @@ NXCalendarPicker::NXCalendarPicker(QWidget *parent)
   setSelectedDate(QDate::currentDate());
 
   d->_themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
 }
 
-NXCalendarPicker::~NXCalendarPicker() { }
+NXCalendarPicker::~NXCalendarPicker()
+{
+}
 
-void NXCalendarPicker::setSelectedDate(QDate selectedDate) noexcept
+void
+NXCalendarPicker::setSelectedDate(QDate selectedDate) noexcept
 {
   Q_D(NXCalendarPicker);
   d->_calendar->setSelectedDate(selectedDate);
   Q_EMIT selectedDateChanged(selectedDate);
 }
 
-QDate NXCalendarPicker::getSelectedDate() const noexcept
+QDate
+NXCalendarPicker::getSelectedDate() const noexcept
 {
   Q_D(const NXCalendarPicker);
   return d->_calendar->getSelectedDate();
 }
 
-void NXCalendarPicker::paintEvent(QPaintEvent *event)
+void
+NXCalendarPicker::paintEvent(QPaintEvent *event)
 {
   Q_D(NXCalendarPicker);
   QPainter painter(this);
@@ -67,7 +74,7 @@ void NXCalendarPicker::paintEvent(QPaintEvent *event)
 
   // 日期绘制
   QDate selectedDate = getSelectedDate();
-  QString date       = QStringLiteral("%1/%2/%3").arg(selectedDate.year()).arg(selectedDate.month()).arg(selectedDate.day());
+  QString date = QStringLiteral("%1/%2/%3").arg(selectedDate.year()).arg(selectedDate.month()).arg(selectedDate.day());
   painter.setPen(NXThemeColor(d->_themeMode, BasicText));
   QRect textRect = baseRect;
   textRect.adjust(10, 0, 0, 0);
@@ -78,6 +85,6 @@ void NXCalendarPicker::paintEvent(QPaintEvent *event)
   iconFont.setPixelSize(17);
   painter.setFont(iconFont);
   painter.drawText(QRect(baseRect.right() - 25, 0, 15, height()), Qt::AlignVCenter | Qt::AlignRight,
-                   QChar((unsigned short) NXIconType::CalendarRange));
+                   QChar(NXIconType::CalendarRange));
   painter.restore();
 }

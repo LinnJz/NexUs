@@ -11,7 +11,7 @@ class QStyleOptionViewItem;
 class NXTableWidgetStyle : public QProxyStyle
 {
   Q_OBJECT
-  Q_PROPERTY_CREATE_2(const QModelIndex&, QModelIndex, CurrentHoverIndex)
+  Q_PROPERTY_CREATE_2(const QModelIndex &, QModelIndex, CurrentHoverIndex)
   Q_PROPERTY_CREATE(int, ItemHeight)
   Q_PROPERTY_CREATE(int, HeaderMargin)
   Q_PROPERTY_CREATE(bool, IsTransparent)
@@ -29,11 +29,10 @@ public:
                    const QWidget *widget = nullptr) const override;
   QSize sizeFromContents(ContentsType type,
                          const QStyleOption *option,
-                         const QSize& size,
+                         const QSize &size,
                          const QWidget *widget) const override;
-  int pixelMetric(PixelMetric metric,
-                  const QStyleOption *option = nullptr,
-                  const QWidget *widget      = nullptr) const override;
+  int
+  pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr, const QWidget *widget = nullptr) const override;
 
 private:
   NXThemeType::ThemeMode _themeMode;

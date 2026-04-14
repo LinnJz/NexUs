@@ -42,7 +42,10 @@ NXComboBox::NXComboBox(QWidget *parent)
   comboBoxView->setStyleSheet(QStringLiteral("#NXComboBoxView{background-color:transparent;}"));
   comboBoxView->setStyle(d->_comboBoxStyle);
   auto *container = qobject_cast<QWidget *>(view()->parentWidget());
-  if (!container || container == this) { container = qobject_cast<QWidget *>(view()->window()); }
+  if (!container || container == this)
+  {
+    container = qobject_cast<QWidget *>(view()->window());
+  }
   if (container && container != this && container != view())
   {
     container->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
@@ -50,8 +53,14 @@ NXComboBox::NXComboBox(QWidget *parent)
     container->setObjectName("NXComboBoxContainer");
     container->setStyle(d->_comboBoxStyle);
     QLayout *layout = container->layout();
-    if (!layout) { layout = new QVBoxLayout(container); }
-    while (layout->count()) { layout->takeAt(0); }
+    if (!layout)
+    {
+      layout = new QVBoxLayout(container);
+    }
+    while (layout->count())
+    {
+      layout->takeAt(0);
+    }
     layout->addWidget(view());
     layout->setContentsMargins(6, 0, 6, 6);
 #ifndef Q_OS_WIN
@@ -70,7 +79,8 @@ NXComboBox::~NXComboBox()
   delete d->_comboBoxStyle;
 }
 
-void NXComboBox::setEditable(bool editable)
+void
+NXComboBox::setEditable(bool editable)
 {
   Q_D(NXComboBox);
   QComboBox::setEditable(editable);
@@ -81,7 +91,8 @@ void NXComboBox::setEditable(bool editable)
   }
 }
 
-void NXComboBox::showPopup()
+void
+NXComboBox::showPopup()
 {
   Q_D(NXComboBox);
   bool oldAnimationEffects = qApp->isEffectEnabled(Qt::UI_AnimateCombo);
@@ -90,36 +101,30 @@ void NXComboBox::showPopup()
   qApp->setEffectEnabled(Qt::UI_AnimateCombo, oldAnimationEffects);
   if (count() > 0)
   {
-    auto *container = qobject_cast<QWidget *>(view()->window());
-    if (container && container != this && container != view())
+    QWidget *container = this->findChild<QFrame *>();
+    if (container)
     {
       int containerHeight = 0;
-      if (count() >= maxVisibleItems()) { containerHeight = maxVisibleItems() * 35 + 8; }
+      if (count() >= maxVisibleItems())
+      {
+        containerHeight = maxVisibleItems() * 35 + 8;
+      }
       else
       {
         containerHeight = count() * 35 + 8;
       }
-      QPoint globalPos           = mapToGlobal(QPoint(0, 0));
-      const QScreen *screen      = QApplication::primaryScreen();
-      const QRect screenGeometry = screen ? screen->availableGeometry() : QRect();
-
-      bool showAbove = (globalPos.y() + height() + containerHeight > screenGeometry.bottom()) &&
-                       (globalPos.y() - containerHeight >= screenGeometry.top());
-
-      QPoint containerPos;
-      if (showAbove) { containerPos = QPoint(globalPos.x(), globalPos.y() - containerHeight - 3); }
-      else
-      {
-        containerPos = QPoint(globalPos.x(), globalPos.y() + height() + 3);
-      }
-      container->move(containerPos);
       view()->resize(view()->width(), containerHeight - 8);
+      container->move(container->x(), container->y() + 3);
       QLayout *layout = container->layout();
-      if (!layout) { layout = new QVBoxLayout(container); }
-      while (layout->count()) { layout->takeAt(0); }
+      while (layout->count())
+      {
+        layout->takeAt(0);
+      }
       QPropertyAnimation *fixedSizeAnimation = new QPropertyAnimation(container, "maximumHeight");
-      connect(fixedSizeAnimation, &QPropertyAnimation::valueChanged, this,
-              [=](const QVariant& value) { container->setFixedHeight(value.toUInt()); });
+      connect(fixedSizeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+      {
+        container->setFixedHeight(value.toUInt());
+      });
       fixedSizeAnimation->setStartValue(1);
       fixedSizeAnimation->setEndValue(containerHeight);
       fixedSizeAnimation->setEasingCurve(QEasingCurve::OutCubic);
@@ -139,9 +144,12 @@ void NXComboBox::showPopup()
       viewPosAnimation->setDuration(400);
       viewPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     }
-    // 指示器动画
+    //指示器动画
     QPropertyAnimation *rotateAnimation = new QPropertyAnimation(d->_comboBoxStyle, "pExpandIconRotate");
-    connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
+    connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+    {
+      update();
+    });
     rotateAnimation->setDuration(300);
     rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
     rotateAnimation->setStartValue(d->_comboBoxStyle->getExpandIconRotate());
@@ -156,19 +164,21 @@ void NXComboBox::showPopup()
   }
 }
 
-void NXComboBox::hidePopup()
+void
+NXComboBox::hidePopup()
 {
   Q_D(NXComboBox);
   if (d->_isAllowHidePopup)
   {
-    auto *container = qobject_cast<QWidget *>(view()->window());
-    if (container && container != this && container != view())
+    QWidget *container  = this->findChild<QFrame *>();
+    int containerHeight = container->height();
+    if (container)
     {
-      const int containerHeight = container->height();
-      QLayout *layout           = container->layout();
-      if (!layout) { layout = new QVBoxLayout(container); }
-      while (layout->count()) { layout->takeAt(0); }
-      QPoint viewPos                       = view()->pos();
+      QLayout *layout = container->layout();
+      while (layout->count())
+      {
+        layout->takeAt(0);
+      }
       QPropertyAnimation *viewPosAnimation = new QPropertyAnimation(view(), "pos");
       connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]()
       {
@@ -178,6 +188,10 @@ void NXComboBox::hidePopup()
         QApplication::sendEvent(parentWidget(), &focusEvent);
         QComboBox::hidePopup();
         container->setFixedHeight(containerHeight);
+      });
+      QPoint viewPos = view()->pos();
+      connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]()
+      {
         view()->move(viewPos);
       });
       viewPosAnimation->setStartValue(viewPos);
@@ -186,17 +200,22 @@ void NXComboBox::hidePopup()
       viewPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
       QPropertyAnimation *fixedSizeAnimation = new QPropertyAnimation(container, "maximumHeight");
-      connect(fixedSizeAnimation, &QPropertyAnimation::valueChanged, this,
-              [=](const QVariant& value) { container->setFixedHeight(value.toUInt()); });
+      connect(fixedSizeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+      {
+        container->setFixedHeight(value.toUInt());
+      });
       fixedSizeAnimation->setStartValue(container->height());
       fixedSizeAnimation->setEndValue(1);
       fixedSizeAnimation->setEasingCurve(QEasingCurve::InCubic);
       fixedSizeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
       d->_isAllowHidePopup = false;
     }
-    // 指示器动画
+    //指示器动画
     QPropertyAnimation *rotateAnimation = new QPropertyAnimation(d->_comboBoxStyle, "pExpandIconRotate");
-    connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
+    connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+    {
+      update();
+    });
     rotateAnimation->setDuration(300);
     rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
     rotateAnimation->setStartValue(d->_comboBoxStyle->getExpandIconRotate());
@@ -211,7 +230,8 @@ void NXComboBox::hidePopup()
   }
 }
 
-void NXComboBox::paintEvent(QPaintEvent *event)
+void
+NXComboBox::paintEvent(QPaintEvent *event)
 {
   Q_D(NXComboBox);
   if (lineEdit() && lineEdit()->palette().color(QPalette::Text) != NXThemeColor(d->_themeMode, BasicText))

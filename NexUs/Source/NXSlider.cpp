@@ -23,8 +23,10 @@ NXSlider::NXSlider(QWidget *parent)
   d->_valueToolTip->setIsMoveEnabled(true);
   d->_valueToolTip->setOffSetX(-20);
   d->_valueToolTip->setOffSetY(-60);
-  connect(this, &NXSlider::valueChanged, this,
-          [=](const int value) { d->_valueToolTip->setToolTip(QString::number(value)); });
+  connect(this, &NXSlider::valueChanged, this, [=](const int value)
+  {
+    d->_valueToolTip->setToolTip(QString::number(value));
+  });
 }
 
 NXSlider::NXSlider(Qt::Orientation orientation, QWidget *parent)
@@ -33,9 +35,13 @@ NXSlider::NXSlider(Qt::Orientation orientation, QWidget *parent)
   setStyle(new NXSliderStyle(style()));
 }
 
-NXSlider::~NXSlider() { delete this->style(); }
+NXSlider::~NXSlider()
+{
+  delete this->style();
+}
 
-void NXSlider::mousePressEvent(QMouseEvent *event)
+void
+NXSlider::mousePressEvent(QMouseEvent *event)
 {
   Q_D(NXSlider);
   QSlider::mousePressEvent(event);
@@ -45,7 +51,10 @@ void NXSlider::mousePressEvent(QMouseEvent *event)
     QStyleOptionSlider opt;
     initStyleOption(&opt);
     QRect handleRect = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
-    if (handleRect.contains(event->pos())) { d->_valueToolTip->show(); }
+    if (handleRect.contains(event->pos()))
+    {
+      d->_valueToolTip->show();
+    }
     else
     {
       d->_valueToolTip->hide();
@@ -53,7 +62,8 @@ void NXSlider::mousePressEvent(QMouseEvent *event)
   }
 }
 
-void NXSlider::mouseMoveEvent(QMouseEvent *event)
+void
+NXSlider::mouseMoveEvent(QMouseEvent *event)
 {
   Q_D(NXSlider);
   QSlider::mouseMoveEvent(event);
@@ -62,7 +72,10 @@ void NXSlider::mouseMoveEvent(QMouseEvent *event)
     QStyleOptionSlider opt;
     initStyleOption(&opt);
     QRect handleRect = style()->subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
-    if (handleRect.contains(event->pos())) { d->_valueToolTip->show(); }
+    if (handleRect.contains(event->pos()))
+    {
+      d->_valueToolTip->show();
+    }
     else
     {
       d->_valueToolTip->hide();
@@ -74,7 +87,8 @@ void NXSlider::mouseMoveEvent(QMouseEvent *event)
   }
 }
 
-void NXSlider::mouseReleaseEvent(QMouseEvent *event)
+void
+NXSlider::mouseReleaseEvent(QMouseEvent *event)
 {
   Q_D(NXSlider);
   QSlider::mouseReleaseEvent(event);

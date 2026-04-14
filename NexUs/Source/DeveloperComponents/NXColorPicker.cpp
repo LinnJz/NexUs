@@ -32,9 +32,12 @@ NXColorPicker::NXColorPicker(QWidget *parent)
   _colorPickerImage = colorPickerImage;
 }
 
-NXColorPicker::~NXColorPicker() { }
+NXColorPicker::~NXColorPicker()
+{
+}
 
-void NXColorPicker::setSelectedColor(const QColor& color) noexcept
+void
+NXColorPicker::setSelectedColor(const QColor &color) noexcept
 {
   _selectedColor = std::move(color);
   _selectedPoint =
@@ -42,9 +45,14 @@ void NXColorPicker::setSelectedColor(const QColor& color) noexcept
   update();
 }
 
-QColor NXColorPicker::getSelectedColor() const noexcept { return _selectedColor; }
+QColor
+NXColorPicker::getSelectedColor() const noexcept
+{
+  return _selectedColor;
+}
 
-void NXColorPicker::mousePressEvent(QMouseEvent *event)
+void
+NXColorPicker::mousePressEvent(QMouseEvent *event)
 {
   _selectedPoint = _adjustPointLimit(event->pos());
   QPointF colorPoint((_selectedPoint.x() - 3) / 254.0 * 359, (_selectedPoint.y() - 3) / 254.0 * 359);
@@ -58,7 +66,8 @@ void NXColorPicker::mousePressEvent(QMouseEvent *event)
   update();
 }
 
-void NXColorPicker::mouseReleaseEvent(QMouseEvent *event)
+void
+NXColorPicker::mouseReleaseEvent(QMouseEvent *event)
 {
   _selectedPoint = _adjustPointLimit(event->pos());
   QPointF colorPoint((_selectedPoint.x() - 3) / 254.0 * 359, (_selectedPoint.y() - 3) / 254.0 * 359);
@@ -72,7 +81,8 @@ void NXColorPicker::mouseReleaseEvent(QMouseEvent *event)
   update();
 }
 
-void NXColorPicker::mouseMoveEvent(QMouseEvent *event)
+void
+NXColorPicker::mouseMoveEvent(QMouseEvent *event)
 {
   _selectedPoint = _adjustPointLimit(event->pos());
   QPointF colorPoint((_selectedPoint.x() - 3) / 254.0 * 359, (_selectedPoint.y() - 3) / 254.0 * 359);
@@ -86,7 +96,8 @@ void NXColorPicker::mouseMoveEvent(QMouseEvent *event)
   update();
 }
 
-void NXColorPicker::paintEvent(QPaintEvent *event)
+void
+NXColorPicker::paintEvent(QPaintEvent *event)
 {
   int penWidth     = 3;
   int borderRadius = 5;
@@ -113,12 +124,25 @@ void NXColorPicker::paintEvent(QPaintEvent *event)
   painter.restore();
 }
 
-QPoint NXColorPicker::_adjustPointLimit(QPoint point)
+QPoint
+NXColorPicker::_adjustPointLimit(QPoint point)
 {
   QRect pickerRect = rect();
-  if (point.x() < 3) { point.setX(3); }
-  else if (point.x() > pickerRect.width() - 3) { point.setX(pickerRect.width() - 3); }
-  if (point.y() < 3) { point.setY(3); }
-  else if (point.y() > pickerRect.height() - 3) { point.setY(pickerRect.height() - 3); }
+  if (point.x() < 3)
+  {
+    point.setX(3);
+  }
+  else if (point.x() > pickerRect.width() - 3)
+  {
+    point.setX(pickerRect.width() - 3);
+  }
+  if (point.y() < 3)
+  {
+    point.setY(3);
+  }
+  else if (point.y() > pickerRect.height() - 3)
+  {
+    point.setY(pickerRect.height() - 3);
+  }
   return point;
 }

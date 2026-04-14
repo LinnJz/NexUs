@@ -14,52 +14,64 @@ NXTheme::NXTheme(QObject *parent)
   d->_initThemeColor();
 }
 
-NXTheme::~NXTheme() { }
+NXTheme::~NXTheme()
+{
+}
 
-void NXTheme::setThemeMode(NXThemeType::ThemeMode themeMode) noexcept
+void
+NXTheme::setThemeMode(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_D(NXTheme);
   d->_themeMode = themeMode;
   Q_EMIT themeModeChanged(d->_themeMode);
 }
 
-NXThemeType::ThemeMode NXTheme::getThemeMode() const noexcept
+NXThemeType::ThemeMode
+NXTheme::getThemeMode() const noexcept
 {
   Q_D(const NXTheme);
   return d->_themeMode;
 }
 
-void NXTheme::setThemeColor(NXThemeType::ThemeMode themeMode,
-                            NXThemeType::ThemeColor themeColor,
-                            const QColor& newColor) noexcept
+void
+NXTheme::setThemeColor(NXThemeType::ThemeMode themeMode,
+                       NXThemeType::ThemeColor themeColor,
+                       const QColor &newColor) noexcept
 {
   Q_D(NXTheme);
-  if (themeMode == NXThemeType::Light) { d->_lightThemeColorList[themeColor] = newColor; }
+  if (themeMode == NXThemeType::Light)
+  {
+    d->_lightThemeColorList[themeColor] = newColor;
+  }
   else
   {
     d->_darkThemeColorList[themeColor] = newColor;
   }
 }
 
-const QColor& NXTheme::getThemeColor(NXThemeType::ThemeMode themeMode,
-                                     NXThemeType::ThemeColor themeColor) const noexcept
+const QColor &
+NXTheme::getThemeColor(NXThemeType::ThemeMode themeMode, NXThemeType::ThemeColor themeColor) const noexcept
 {
   Q_D(const NXTheme);
-  if (themeMode == NXThemeType::Light) { return d->_lightThemeColorList[themeColor]; }
+  if (themeMode == NXThemeType::Light)
+  {
+    return d->_lightThemeColorList[themeColor];
+  }
   else
   {
     return d->_darkThemeColorList[themeColor];
   }
 }
 
-void NXTheme::drawEffectShadow(QPainter *painter,
-                               QRect widgetRect,
-                               int shadowBorderWidth,
-                               int borderRadius,
-                               int maxAlpha,
-                               int extendPixels,
-                               const QColor& lightColor,
-                               const QColor& darkColor) noexcept
+void
+NXTheme::drawEffectShadow(QPainter *painter,
+                          QRect widgetRect,
+                          int shadowBorderWidth,
+                          int borderRadius,
+                          int maxAlpha,
+                          int extendPixels,
+                          const QColor &lightColor,
+                          const QColor &darkColor) noexcept
 {
   Q_D(NXTheme);
   painter->save();

@@ -15,20 +15,29 @@ NXSuggestion::NXSuggestion(QObject *parent)
 {
   _pNXIcon      = NXIconType::None;
   _pSuggestText = {};
-  _pSuggestKey  = QUuid::createUuid().toString().remove(QStringLiteral("{")).remove(QStringLiteral("}")).remove(QStringLiteral("-"));
+  _pSuggestKey  = QUuid::createUuid()
+                     .toString()
+                     .remove(QStringLiteral("{"))
+                     .remove(QStringLiteral("}"))
+                     .remove(QStringLiteral("-"));
   _pSuggestData = QVariantMap();
 }
 
-NXSuggestion::~NXSuggestion() { }
+NXSuggestion::~NXSuggestion()
+{
+}
 
 NXSuggestBoxPrivate::NXSuggestBoxPrivate(QObject *parent)
     : QObject { parent }
 {
 }
 
-NXSuggestBoxPrivate::~NXSuggestBoxPrivate() { }
+NXSuggestBoxPrivate::~NXSuggestBoxPrivate()
+{
+}
 
-void NXSuggestBoxPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept
+void
+NXSuggestBoxPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   _themeMode = themeMode;
   _searchEdit->removeAction(_themeMode == NXThemeType::Light ? _darkSearchAction : _lightSearchAction);
@@ -37,7 +46,8 @@ void NXSuggestBoxPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode) n
   _searchEdit->update();
 }
 
-void NXSuggestBoxPrivate::onSearchEditTextEdit(const QString& searchText) noexcept
+void
+NXSuggestBoxPrivate::onSearchEditTextEdit(const QString &searchText) noexcept
 {
   Q_Q(NXSuggestBox);
   if (searchText.isEmpty())
@@ -46,15 +56,21 @@ void NXSuggestBoxPrivate::onSearchEditTextEdit(const QString& searchText) noexce
     return;
   }
   QList<NXSuggestion *> suggestionVector;
-  for (const auto& suggest : _suggestionVector)
+  for (const auto &suggest : _suggestionVector)
   {
-    if (suggest->getSuggestText().contains(searchText, _pCaseSensitivity)) { suggestionVector.append(suggest); }
+    if (suggest->getSuggestText().contains(searchText, _pCaseSensitivity))
+    {
+      suggestionVector.append(suggest);
+    }
   }
   if (!suggestionVector.isEmpty())
   {
     _searchModel->setSearchSuggestion(suggestionVector);
     int rowCount = suggestionVector.count();
-    if (rowCount > 4) { rowCount = 4; }
+    if (rowCount > 4)
+    {
+      rowCount = 4;
+    }
     if (!_searchViewBaseWidget->isVisible())
     {
       q->raise();
@@ -77,12 +93,16 @@ void NXSuggestBoxPrivate::onSearchEditTextEdit(const QString& searchText) noexce
   }
 }
 
-void NXSuggestBoxPrivate::onSearchViewClicked(const QModelIndex& index) noexcept
+void
+NXSuggestBoxPrivate::onSearchViewClicked(const QModelIndex &index) noexcept
 {
   Q_Q(NXSuggestBox);
   _searchEdit->clear();
   _searchView->clearSelection();
-  if (!index.isValid()) { return; }
+  if (!index.isValid())
+  {
+    return;
+  }
   NXSuggestion *suggest = _searchModel->getSearchSuggestion(index.row());
   NXSuggestBox::SuggestData data(suggest->getNXIcon(), suggest->getSuggestText(), suggest->getSuggestData());
   data.setSuggestKey(suggest->getSuggestKey());
@@ -90,14 +110,23 @@ void NXSuggestBoxPrivate::onSearchViewClicked(const QModelIndex& index) noexcept
   _startCloseAnimation();
 }
 
-void NXSuggestBoxPrivate::_startSizeAnimation(QSize oldSize, QSize newSize) noexcept
+void
+NXSuggestBoxPrivate::_startSizeAnimation(QSize oldSize, QSize newSize) noexcept
 {
-  if (_lastSize.isValid() && _lastSize == newSize) { return; }
+  if (_lastSize.isValid() && _lastSize == newSize)
+  {
+    return;
+  }
   _shadowLayout->removeWidget(_searchView);
   QPropertyAnimation *expandAnimation = new QPropertyAnimation(_searchViewBaseWidget, "size");
-  connect(expandAnimation, &QPropertyAnimation::valueChanged, this,
-          [=]() { _searchView->resize(_searchViewBaseWidget->size()); });
-  connect(expandAnimation, &QPropertyAnimation::finished, this, [=]() { _shadowLayout->addWidget(_searchView); });
+  connect(expandAnimation, &QPropertyAnimation::valueChanged, this, [=]()
+  {
+    _searchView->resize(_searchViewBaseWidget->size());
+  });
+  connect(expandAnimation, &QPropertyAnimation::finished, this, [=]()
+  {
+    _shadowLayout->addWidget(_searchView);
+  });
   expandAnimation->setDuration(300);
   expandAnimation->setEasingCurve(QEasingCurve::InOutSine);
   expandAnimation->setStartValue(oldSize);
@@ -106,9 +135,13 @@ void NXSuggestBoxPrivate::_startSizeAnimation(QSize oldSize, QSize newSize) noex
   _lastSize = newSize;
 }
 
-void NXSuggestBoxPrivate::_startExpandAnimation() noexcept
+void
+NXSuggestBoxPrivate::_startExpandAnimation() noexcept
 {
-  if (!_isExpandAnimationFinished) { return; }
+  if (!_isExpandAnimationFinished)
+  {
+    return;
+  }
   _isCloseAnimationFinished           = true;
   _isExpandAnimationFinished          = false;
   QPropertyAnimation *expandAnimation = new QPropertyAnimation(_searchView, "pos");
@@ -124,9 +157,13 @@ void NXSuggestBoxPrivate::_startExpandAnimation() noexcept
   expandAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXSuggestBoxPrivate::_startCloseAnimation() noexcept
+void
+NXSuggestBoxPrivate::_startCloseAnimation() noexcept
 {
-  if (!_isCloseAnimationFinished) { return; }
+  if (!_isCloseAnimationFinished)
+  {
+    return;
+  }
   _isExpandAnimationFinished               = true;
   _isCloseAnimationFinished                = false;
   QPropertyAnimation *baseWidgetsAnimation = new QPropertyAnimation(_searchViewBaseWidget, "size");

@@ -5,4 +5,6 @@ NXTableViewPrivate::NXTableViewPrivate(QObject *parent)
 {
 }
 
-NXTableViewPrivate::~NXTableViewPrivate() { }
+NXTableViewPrivate::~NXTableViewPrivate()
+{
+}

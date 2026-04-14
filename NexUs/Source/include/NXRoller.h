@@ -16,17 +16,17 @@ class NX_EXPORT NXRoller : public QWidget
   Q_PROPERTY_CREATE_H(int, ItemHeight)
   Q_PROPERTY_CREATE_H(int, MaxVisibleItems)
   Q_PROPERTY_CREATE_H(int, CurrentIndex)
-  Q_PROPERTY_CREATE_2_H(const QStringList&, QStringList, ItemList)
+  Q_PROPERTY_CREATE_2_H(const QStringList &, QStringList, ItemList)
 
 public:
   explicit NXRoller(QWidget *parent = nullptr);
   ~NXRoller() override;
 
-  void setCurrentData(const QString& data) noexcept;
+  void setCurrentData(const QString &data) noexcept;
   QString getCurrentData() const noexcept;
 
 Q_SIGNALS:
-  void currentDataChanged(const QString& data);
+  void currentDataChanged(const QString &data);
 
 protected:
   void wheelEvent(QWheelEvent *event) override;

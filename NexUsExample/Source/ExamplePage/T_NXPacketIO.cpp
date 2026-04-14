@@ -16,9 +16,12 @@ T_NXPacketIO::T_NXPacketIO(QObject *parent)
   _pInterfaceIP = "192.168.1";
 }
 
-T_NXPacketIO::~T_NXPacketIO() { }
+T_NXPacketIO::~T_NXPacketIO()
+{
+}
 
-void T_NXPacketIO::handleGrabImage()
+void
+T_NXPacketIO::handleGrabImage()
 {
   _interface = std::make_unique<NXXIO_Interface>();
   NXXIO_Interface::UDP_Target udp_target;
@@ -36,14 +39,20 @@ void T_NXPacketIO::handleGrabImage()
     {
       qDebug() << "Recv Link Message! ApplicationName: "
                << QString::fromLocal8Bit(connection->getApplicationName().data());
-      if (connection->getApplicationName() == "T_NXPacketIO_Recv") { _connection = connection; }
+      if (connection->getApplicationName() == "T_NXPacketIO_Recv")
+      {
+        _connection = connection;
+      }
     }
   });
   DISCONNECT_HANDLE_FUNC_DEFINE(_interface, [this](NXXIO_Connection *connection)
   {
     qDebug() << "Recv DisConnect Message! ApplicationName: "
              << QString::fromLocal8Bit(connection->getApplicationName().data());
-    if (connection->getApplicationName() == "T_NXPacketIO_Recv") { _connection = nullptr; }
+    if (connection->getApplicationName() == "T_NXPacketIO_Recv")
+    {
+      _connection = nullptr;
+    }
   });
   _interface->init(53000);
 
@@ -76,7 +85,10 @@ void T_NXPacketIO::handleGrabImage()
       continue;
     }
     int targetIndex = 0;
-    if (dataTotalLen % 1024 == 0) { targetIndex = dataTotalLen / 1024; }
+    if (dataTotalLen % 1024 == 0)
+    {
+      targetIndex = dataTotalLen / 1024;
+    }
     else
     {
       targetIndex = dataTotalLen / 1024 + 1;
@@ -89,7 +101,10 @@ void T_NXPacketIO::handleGrabImage()
       screenPkt._dataID       = i;
       screenPkt._dataOffset   = i * 1024;
       screenPkt._dataTotalLen = dataTotalLen;
-      if (dataTotalLen - i * 1024 >= 1024) { screenPkt._currentDataLen = 1024; }
+      if (dataTotalLen - i * 1024 >= 1024)
+      {
+        screenPkt._currentDataLen = 1024;
+      }
       else
       {
         screenPkt._currentDataLen = dataTotalLen - i * 1024;
@@ -103,7 +118,8 @@ void T_NXPacketIO::handleGrabImage()
   }
 }
 
-void T_NXPacketIO::handleImagePacket()
+void
+T_NXPacketIO::handleImagePacket()
 {
   _interface = std::make_unique<NXXIO_Interface>();
   NXXIO_Interface::UDP_Target udp_target;
@@ -123,13 +139,17 @@ void T_NXPacketIO::handleImagePacket()
     {
       qDebug() << "Recv Link Message! ApplicationName: "
                << QString::fromLocal8Bit(connection->getApplicationName().data());
-      if (connection->getApplicationName() == "T_NXPacketIO_Send") { _connection = connection; }
+      if (connection->getApplicationName() == "T_NXPacketIO_Send")
+      {
+        _connection = connection;
+      }
     }
   });
   _interface->init(53001);
 }
 
-void T_NXPacketIO::_handleScreenPkt(NXXIO_ScreenPkt& screenPkt)
+void
+T_NXPacketIO::_handleScreenPkt(NXXIO_ScreenPkt &screenPkt)
 {
   if (screenPkt._dataOffset == 0)
   {
@@ -140,7 +160,10 @@ void T_NXPacketIO::_handleScreenPkt(NXXIO_ScreenPkt& screenPkt)
   }
   else
   {
-    if (_imageArray.isEmpty()) { return; }
+    if (_imageArray.isEmpty())
+    {
+      return;
+    }
     _imageArray.append(screenPkt._data, screenPkt._currentDataLen);
     if (screenPkt._currentDataLen + screenPkt._dataOffset == screenPkt._dataTotalLen)
     {
@@ -173,21 +196,31 @@ void T_NXPacketIO::_handleScreenPkt(NXXIO_ScreenPkt& screenPkt)
   _lastImageIndex = screenPkt._dataID;
 }
 
-void T_NXPacketIO::_sendToXIO(NXXIO_Packet& packet, bool isMulticast)
+void
+T_NXPacketIO::_sendToXIO(NXXIO_Packet &packet, bool isMulticast)
 {
   if (isMulticast)
   {
     if (!_multicastConnection)
     {
-      const std::vector<NXXIO_Interface::UDP_Target>& udpTargetVector = _interface->getUDP_Targets();
-      if (udpTargetVector.empty()) { return; }
+      const std::vector<NXXIO_Interface::UDP_Target> &udpTargetVector = _interface->getUDP_Targets();
+      if (udpTargetVector.empty())
+      {
+        return;
+      }
       _multicastConnection = _interface->FindConnection(udpTargetVector[0]._connectionId);
     }
-    if (_multicastConnection && _multicastConnection->isInitialized()) { _multicastConnection->send(packet); }
+    if (_multicastConnection && _multicastConnection->isInitialized())
+    {
+      _multicastConnection->send(packet);
+    }
   }
   else
   {
-    if (_connection) { _connection->send(packet); }
+    if (_connection)
+    {
+      _connection->send(packet);
+    }
   }
 }
 #endif

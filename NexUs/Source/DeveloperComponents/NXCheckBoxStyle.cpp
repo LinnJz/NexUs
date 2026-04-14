@@ -9,17 +9,23 @@
 NXCheckBoxStyle::NXCheckBoxStyle(QStyle *style)
 {
   _pCheckIndicatorWidth = 21;
-  _pBorderRadius   = 2;
-  _themeMode       = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  _pBorderRadius        = 2;
+  _themeMode            = nxTheme->getThemeMode();
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXCheckBoxStyle::~NXCheckBoxStyle() { }
+NXCheckBoxStyle::~NXCheckBoxStyle()
+{
+}
 
-void NXCheckBoxStyle::drawControl(ControlElement element,
-                                  const QStyleOption *option,
-                                  QPainter *painter,
-                                  const QWidget *widget) const
+void
+NXCheckBoxStyle::drawControl(ControlElement element,
+                             const QStyleOption *option,
+                             QPainter *painter,
+                             const QWidget *widget) const
 {
   // qDebug() << element << option->rect;
   switch (element)
@@ -32,7 +38,7 @@ void NXCheckBoxStyle::drawControl(ControlElement element,
       painter->save();
       painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
       QRect checkBoxRect = bopt->rect;
-      int yOffset = (checkBoxRect.height() - _pCheckIndicatorWidth) / 2;
+      int yOffset        = (checkBoxRect.height() - _pCheckIndicatorWidth) / 2;
       QRect checkRect(checkBoxRect.x(), checkBoxRect.y() + yOffset, _pCheckIndicatorWidth, _pCheckIndicatorWidth);
       checkRect.adjust(1, 1, -1, -1);
       // 复选框绘制
@@ -40,7 +46,10 @@ void NXCheckBoxStyle::drawControl(ControlElement element,
       if (bopt->state.testFlag(QStyle::State_On) || bopt->state.testFlag(QStyle::State_NoChange))
       {
         painter->setPen(Qt::NoPen);
-        if (bopt->state.testFlag(QStyle::State_Sunken)) { painter->setBrush(NXThemeColor(_themeMode, PrimaryPress)); }
+        if (bopt->state.testFlag(QStyle::State_Sunken))
+        {
+          painter->setBrush(NXThemeColor(_themeMode, PrimaryPress));
+        }
         else
         {
           if (bopt->state.testFlag(QStyle::State_MouseOver))
@@ -82,7 +91,7 @@ void NXCheckBoxStyle::drawControl(ControlElement element,
         QFont iconFont = QFont(QStringLiteral("NXAwesome"));
         iconFont.setPixelSize(_pCheckIndicatorWidth * 0.75);
         painter->setFont(iconFont);
-        painter->drawText(checkRect, Qt::AlignCenter, QChar((unsigned short) NXIconType::Check));
+        painter->drawText(checkRect, Qt::AlignCenter, QChar(NXIconType::Check));
         painter->restore();
       }
       else if (bopt->state.testFlag(QStyle::State_NoChange))
@@ -108,7 +117,8 @@ void NXCheckBoxStyle::drawControl(ControlElement element,
   QProxyStyle::drawControl(element, option, painter, widget);
 }
 
-int NXCheckBoxStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
+int
+NXCheckBoxStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
   // qDebug() << metric << QProxyStyle::pixelMetric(metric, option, widget);
   switch (metric)

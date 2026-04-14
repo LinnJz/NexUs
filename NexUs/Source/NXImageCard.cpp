@@ -9,7 +9,7 @@
 
 Q_PROPERTY_CREATE_CPP(NXImageCard, int, BorderRadius)
 Q_PROPERTY_CREATE_CPP(NXImageCard, bool, IsPreserveAspectCrop)
-Q_PROPERTY_CREATE_2_CPP(NXImageCard, const QImage&, QImage, CardImage)
+Q_PROPERTY_CREATE_2_CPP(NXImageCard, const QImage &, QImage, CardImage)
 
 NXImageCard::NXImageCard(QWidget *parent)
     : QWidget(parent)
@@ -21,13 +21,18 @@ NXImageCard::NXImageCard(QWidget *parent)
   d->_pIsPreserveAspectCrop = true;
   setMinimumSize(350, 260);
   d->_themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
 }
 
-NXImageCard::~NXImageCard() { }
+NXImageCard::~NXImageCard()
+{
+}
 
-void NXImageCard::paintEvent(QPaintEvent *event)
+void
+NXImageCard::paintEvent(QPaintEvent *event)
 {
   Q_D(NXImageCard);
   QPainter painter(this);

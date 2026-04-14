@@ -24,7 +24,10 @@ NXToolBar::NXToolBar(QWidget *parent)
   connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
     d->_themeMode = themeMode;
-    if (this->isFloating()) { update(); }
+    if (this->isFloating())
+    {
+      update();
+    }
   });
   setAttribute(Qt::WA_TranslucentBackground);
 
@@ -42,39 +45,52 @@ NXToolBar::NXToolBar(QWidget *parent)
   });
 }
 
-NXToolBar::NXToolBar(const QString& title, QWidget *parent)
+NXToolBar::NXToolBar(const QString &title, QWidget *parent)
     : NXToolBar(parent)
 {
   setWindowTitle(title);
 }
 
-NXToolBar::~NXToolBar() { delete this->style(); }
+NXToolBar::~NXToolBar()
+{
+  delete this->style();
+}
 
-void NXToolBar::setToolBarSpacing(int spacing) noexcept { layout()->setSpacing(spacing); }
+void
+NXToolBar::setToolBarSpacing(int spacing) noexcept
+{
+  layout()->setSpacing(spacing);
+}
 
-int NXToolBar::getToolBarSpacing() const noexcept { return layout()->spacing(); }
+int
+NXToolBar::getToolBarSpacing() const noexcept
+{
+  return layout()->spacing();
+}
 
-QAction *NXToolBar::addNXIconAction(NXIconType::IconName icon, const QString& text) noexcept
+QAction *
+NXToolBar::addNXIconAction(NXIconType::IconName icon, const QString &text) noexcept
 {
   QAction *action = new QAction(text, this);
-  action->setProperty("NXIconType", QChar((unsigned short) icon));
+  action->setProperty("NXIconType", QChar(icon));
   action->setIcon(NXIcon::getInstance()->getNXIcon(NXIconType::Broom, 1));
   addAction(action);
   return action;
 }
 
 QAction *
-NXToolBar::addNXIconAction(NXIconType::IconName icon, const QString& text, const QKeySequence& shortcut) noexcept
+NXToolBar::addNXIconAction(NXIconType::IconName icon, const QString &text, const QKeySequence &shortcut) noexcept
 {
   QAction *action = new QAction(text, this);
   action->setShortcut(shortcut);
-  action->setProperty("NXIconType", QChar((unsigned short) icon));
+  action->setProperty("NXIconType", QChar(icon));
   action->setIcon(NXIcon::getInstance()->getNXIcon(NXIconType::Broom, 1));
   addAction(action);
   return action;
 }
 
-void NXToolBar::paintEvent(QPaintEvent *event)
+void
+NXToolBar::paintEvent(QPaintEvent *event)
 {
   Q_D(NXToolBar);
   QPainter painter(this);
@@ -94,7 +110,10 @@ void NXToolBar::paintEvent(QPaintEvent *event)
     QStyleOptionToolBar opt;
     initStyleOption(&opt);
     opt.rect = style->subElementRect(QStyle::SE_ToolBarHandle, &opt, this);
-    if (opt.rect.isValid()) { style->drawPrimitive(QStyle::PE_IndicatorToolBarHandle, &opt, &painter, this); }
+    if (opt.rect.isValid())
+    {
+      style->drawPrimitive(QStyle::PE_IndicatorToolBarHandle, &opt, &painter, this);
+    }
   }
   else
   {

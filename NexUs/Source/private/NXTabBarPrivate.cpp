@@ -5,4 +5,6 @@ NXTabBarPrivate::NXTabBarPrivate(QObject *parent)
 {
 }
 
-NXTabBarPrivate::~NXTabBarPrivate() { }
+NXTabBarPrivate::~NXTabBarPrivate()
+{
+}

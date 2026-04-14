@@ -10,9 +10,12 @@ NXThemeAnimationWidget::NXThemeAnimationWidget(QWidget *parent)
   _pEndRadius = 0.01;
 }
 
-NXThemeAnimationWidget::~NXThemeAnimationWidget() { }
+NXThemeAnimationWidget::~NXThemeAnimationWidget()
+{
+}
 
-void NXThemeAnimationWidget::startAnimation(int msec) noexcept
+void
+NXThemeAnimationWidget::startAnimation(int msec) noexcept
 {
   QPropertyAnimation *themeChangeAnimation = new QPropertyAnimation(this, "pRadius");
   themeChangeAnimation->setDuration(msec);
@@ -22,14 +25,18 @@ void NXThemeAnimationWidget::startAnimation(int msec) noexcept
     Q_EMIT animationFinished();
     this->deleteLater();
   });
-  connect(themeChangeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
+  connect(themeChangeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+  {
+    update();
+  });
   themeChangeAnimation->setStartValue(0);
   themeChangeAnimation->setEndValue(_pEndRadius);
   themeChangeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
   show();
 }
 
-void NXThemeAnimationWidget::paintEvent(QPaintEvent *event)
+void
+NXThemeAnimationWidget::paintEvent(QPaintEvent *event)
 {
   QPainter painter(this);
   painter.save();

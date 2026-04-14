@@ -44,12 +44,22 @@ T_ListViewModel::T_ListViewModel(QObject *parent)
   _dataList.append("最重一粒微光");
 }
 
-T_ListViewModel::~T_ListViewModel() { }
-
-int T_ListViewModel::rowCount(const QModelIndex& parent) const { return this->_dataList.count(); }
-
-QVariant T_ListViewModel::data(const QModelIndex& index, int role) const
+T_ListViewModel::~T_ListViewModel()
 {
-  if (role == Qt::DisplayRole) { return _dataList[index.row()]; }
+}
+
+int
+T_ListViewModel::rowCount(const QModelIndex &parent) const
+{
+  return this->_dataList.count();
+}
+
+QVariant
+T_ListViewModel::data(const QModelIndex &index, int role) const
+{
+  if (role == Qt::DisplayRole)
+  {
+    return _dataList[index.row()];
+  }
   return QVariant();
 }

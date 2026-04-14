@@ -42,16 +42,15 @@ public:
   explicit NXNavigationBarPrivate(QObject *parent = nullptr);
   ~NXNavigationBarPrivate() override;
   Q_SLOT void onNavigationButtonClicked() noexcept;
-  Q_SLOT void onNavigationOpenNewWindow(const QString& nodeKey) noexcept;
-  Q_SLOT void onNavigationCloseCurrentWindow(const QString& nodeKey) noexcept;
-  Q_INVOKABLE void onNavigationRoute(const QVariantMap& routeData);
+  Q_SLOT void onNavigationOpenNewWindow(const QString &nodeKey) noexcept;
+  Q_SLOT void onNavigationCloseCurrentWindow(const QString &nodeKey) noexcept;
 
   // 核心跳转逻辑
-  void onTreeViewClicked(const QModelIndex& index, bool isLogRoute = true, bool isRouteBack = false);
-  void onFooterViewClicked(const QModelIndex& index, bool isLogRoute = true, bool isRouteBack = false);
+  void onTreeViewClicked(const QModelIndex &index, bool isLogRoute = true, bool isRouteBack = false);
+  void onFooterViewClicked(const QModelIndex &index, bool isLogRoute = true, bool isRouteBack = false);
 
 protected:
-  bool eventFilter(QObject *watched, QEvent *event);
+  bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
   bool _isShowUserCard { true };
@@ -64,7 +63,7 @@ private:
   QMap<NXNavigationNode *, NXMenu *> _compactMenuMap;
   QList<NXSuggestBox::SuggestData> _suggestDataList;
   QList<NXNavigationNode *> _lastExpandedNodesList;
-  std::function<void(const QString&)> _openPageFunc {};
+  std::function<void(const QString &)> _openPageFunc {};
   QVBoxLayout *_navigationButtonLayout { nullptr };
   QHBoxLayout *_navigationSuggestLayout { nullptr };
   QVBoxLayout *_userButtonLayout { nullptr };
@@ -81,16 +80,16 @@ private:
   NXSuggestBox *_navigationSuggestBox { nullptr };
   NXInteractiveCard *_userCard { nullptr };
 
-  void _initNodeModelIndex(const QModelIndex& parentIndex) noexcept;
+  void _initNodeModelIndex(const QModelIndex &parentIndex) noexcept;
   void _resetNodeSelected() noexcept;
   void _expandSelectedNodeParent() noexcept;
   void _expandOrCollapseExpanderNode(NXNavigationNode *node, bool isExpand) noexcept;
 
-  void _addStackedPage(QWidget *page, const QString& pageKey) noexcept;
-  void _addFooterPage(QWidget *page, const QString& footKey) noexcept;
+  void _addStackedPage(QWidget *page, const QString &pageKey) noexcept;
+  void _addFooterPage(QWidget *page, const QString &footKey) noexcept;
 
   void _raiseNavigationBar() noexcept;
-  void _smoothScrollNavigationView(const QModelIndex& index) noexcept;
+  void _smoothScrollNavigationView(const QModelIndex &index) noexcept;
   void _doComponentAnimation(NXNavigationType::NavigationDisplayMode displayMode, bool isAnimation) noexcept;
   void _handleNavigationExpandState(bool isSave) noexcept;
   // void _handleMaximalToCompactLayout();

@@ -33,55 +33,64 @@ NXTabBar::~NXTabBar()
   delete d->_style;
 }
 
-void NXTabBar::setTabSize(QSize tabSize) noexcept
+void
+NXTabBar::setTabSize(QSize tabSize) noexcept
 {
   Q_D(NXTabBar);
   d->_style->setTabSize(tabSize);
 }
 
-QSize NXTabBar::getTabSize() const noexcept
+QSize
+NXTabBar::getTabSize() const noexcept
 {
   Q_D(const NXTabBar);
   return d->_style->getTabSize();
 }
 
-void NXTabBar::setTabBarStyle(NXTabBarType::TabBarStyle style) noexcept
+void
+NXTabBar::setTabBarStyle(NXTabBarType::TabBarStyle style) noexcept
 {
   Q_D(NXTabBar);
   d->_style->setTabBarStyle(style);
 }
 
-NXTabBarType::TabBarStyle NXTabBar::getTabBarStyle() const noexcept
+NXTabBarType::TabBarStyle
+NXTabBar::getTabBarStyle() const noexcept
 {
   Q_D(const NXTabBar);
   return d->_style->getTabBarStyle();
 }
 
-void NXTabBar::setTabCornerRadius(int radius) noexcept
+void
+NXTabBar::setTabCornerRadius(int radius) noexcept
 {
   Q_D(NXTabBar);
   d->_style->setTabCornerRadius(radius);
 }
 
-int NXTabBar::getTabCornerRadius() const noexcept
+int
+NXTabBar::getTabCornerRadius() const noexcept
 {
   Q_D(const NXTabBar);
   return d->_style->getTabCornerRadius();
 }
 
-void NXTabBar::setIsSelectedIndicatorVisible(bool isVisible) noexcept
+void
+NXTabBar::setIsSelectedIndicatorVisible(bool isVisible) noexcept
 {
   Q_D(NXTabBar);
   d->_style->setIsSelectedIndicatorVisible(isVisible);
 }
 
-bool NXTabBar::getIsSelectedIndicatorVisible() const noexcept
+bool
+NXTabBar::getIsSelectedIndicatorVisible() const noexcept
 {
   Q_D(const NXTabBar);
   return d->_style->getIsSelectedIndicatorVisible();
 }
 
-QSize NXTabBar::sizeHint() const
+QSize
+NXTabBar::sizeHint() const
 {
   QSize oldSize = QTabBar::sizeHint();
   QSize newSize = oldSize;
@@ -89,7 +98,8 @@ QSize NXTabBar::sizeHint() const
   return oldSize.expandedTo(newSize);
 }
 
-void NXTabBar::mouseMoveEvent(QMouseEvent *event)
+void
+NXTabBar::mouseMoveEvent(QMouseEvent *event)
 {
   QTabBar::mouseMoveEvent(event);
   Q_D(NXTabBar);
@@ -117,7 +127,7 @@ void NXTabBar::mouseMoveEvent(QMouseEvent *event)
     }
     else
     {
-      auto& pressTabData = d->_tabBarPrivate->tabList[d->_tabBarPrivate->pressedIndex];
+      auto &pressTabData = d->_tabBarPrivate->tabList[d->_tabBarPrivate->pressedIndex];
       QRect firstTabRect = tabRect(0);
 #if (QT_VERSION > QT_VERSION_CHECK(6, 0, 0))
       QRect pressTabRect = pressTabData->rect;
@@ -163,7 +173,8 @@ void NXTabBar::mouseMoveEvent(QMouseEvent *event)
   }
 }
 
-void NXTabBar::dragEnterEvent(QDragEnterEvent *event)
+void
+NXTabBar::dragEnterEvent(QDragEnterEvent *event)
 {
   Q_D(NXTabBar);
   if (event->mimeData()->property("DragType").toString() == "NXTabBarDrag")
@@ -209,7 +220,8 @@ void NXTabBar::dragEnterEvent(QDragEnterEvent *event)
   QTabBar::dragEnterEvent(event);
 }
 
-void NXTabBar::dragMoveEvent(QDragMoveEvent *event)
+void
+NXTabBar::dragMoveEvent(QDragMoveEvent *event)
 {
   if (event->mimeData()->property("DragType").toString() == "NXTabBarDrag")
   {
@@ -226,7 +238,8 @@ void NXTabBar::dragMoveEvent(QDragMoveEvent *event)
   QWidget::dragMoveEvent(event);
 }
 
-void NXTabBar::dragLeaveEvent(QDragLeaveEvent *event)
+void
+NXTabBar::dragLeaveEvent(QDragLeaveEvent *event)
 {
   Q_D(NXTabBar);
   if (d->_mimeData)
@@ -240,7 +253,8 @@ void NXTabBar::dragLeaveEvent(QDragLeaveEvent *event)
   QTabBar::dragLeaveEvent(event);
 }
 
-void NXTabBar::dropEvent(QDropEvent *event)
+void
+NXTabBar::dropEvent(QDropEvent *event)
 {
   Q_D(NXTabBar);
   d->_mimeData = nullptr;
@@ -260,13 +274,15 @@ void NXTabBar::dropEvent(QDropEvent *event)
   QTabBar::dropEvent(event);
 }
 
-void NXTabBar::wheelEvent(QWheelEvent *event)
+void
+NXTabBar::wheelEvent(QWheelEvent *event)
 {
   QTabBar::wheelEvent(event);
   event->accept();
 }
 
-void NXTabBar::paintEvent(QPaintEvent *event)
+void
+NXTabBar::paintEvent(QPaintEvent *event)
 {
   Q_D(NXTabBar);
   QSize tabSize = d->_style->getTabSize();

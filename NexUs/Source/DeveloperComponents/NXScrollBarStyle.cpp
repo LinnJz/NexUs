@@ -16,15 +16,21 @@ NXScrollBarStyle::NXScrollBarStyle(QStyle *style)
   _pScrollBar    = nullptr;
   _pSliderExtent = 2.4;
   _themeMode     = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXScrollBarStyle::~NXScrollBarStyle() { }
+NXScrollBarStyle::~NXScrollBarStyle()
+{
+}
 
-void NXScrollBarStyle::drawComplexControl(ComplexControl control,
-                                          const QStyleOptionComplex *option,
-                                          QPainter *painter,
-                                          const QWidget *widget) const
+void
+NXScrollBarStyle::drawComplexControl(ComplexControl control,
+                                     const QStyleOptionComplex *option,
+                                     QPainter *painter,
+                                     const QWidget *widget) const
 {
   // QStyle::SC_ScrollBarGroove QStyle::SC_ScrollBarAddLine   QStyle::SC_ScrollBarSubLine上指示器
   switch (control)
@@ -123,7 +129,8 @@ void NXScrollBarStyle::drawComplexControl(ComplexControl control,
   QProxyStyle::drawComplexControl(control, option, painter, widget);
 }
 
-int NXScrollBarStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
+int
+NXScrollBarStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
   // qDebug() << metric << QProxyStyle::pixelMetric(metric, option, widget);
   switch (metric)
@@ -140,22 +147,30 @@ int NXScrollBarStyle::pixelMetric(PixelMetric metric, const QStyleOption *option
   return QProxyStyle::pixelMetric(metric, option, widget);
 }
 
-int NXScrollBarStyle::styleHint(StyleHint hint,
-                                const QStyleOption *option,
-                                const QWidget *widget,
-                                QStyleHintReturn *returnData) const
+int
+NXScrollBarStyle::styleHint(StyleHint hint,
+                            const QStyleOption *option,
+                            const QWidget *widget,
+                            QStyleHintReturn *returnData) const
 {
-  if (hint == QStyle::SH_ScrollBar_LeftClickAbsolutePosition) { return true; }
+  if (hint == QStyle::SH_ScrollBar_LeftClickAbsolutePosition)
+  {
+    return true;
+  }
   return QProxyStyle::styleHint(hint, option, widget, returnData);
 }
 
-void NXScrollBarStyle::startExpandAnimation(bool isExpand) noexcept
+void
+NXScrollBarStyle::startExpandAnimation(bool isExpand) noexcept
 {
   if (isExpand)
   {
     _pIsExpand                           = true;
     QPropertyAnimation *opacityAnimation = new QPropertyAnimation(this, "pOpacity");
-    connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() { _pScrollBar->update(); });
+    connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]()
+    {
+      _pScrollBar->update();
+    });
     opacityAnimation->setDuration(250);
     opacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
     opacityAnimation->setStartValue(_pOpacity);
@@ -172,8 +187,14 @@ void NXScrollBarStyle::startExpandAnimation(bool isExpand) noexcept
   else
   {
     QPropertyAnimation *opacityAnimation = new QPropertyAnimation(this, "pOpacity");
-    connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]() { _pIsExpand = false; });
-    connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() { _pScrollBar->update(); });
+    connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]()
+    {
+      _pIsExpand = false;
+    });
+    connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]()
+    {
+      _pScrollBar->update();
+    });
     opacityAnimation->setDuration(250);
     opacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
     opacityAnimation->setStartValue(_pOpacity);

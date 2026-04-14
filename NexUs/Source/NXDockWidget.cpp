@@ -41,27 +41,32 @@ NXDockWidget::NXDockWidget(QWidget *parent, Qt::WindowFlags flags)
   });
 }
 
-NXDockWidget::NXDockWidget(const QString& title, QWidget *parent, Qt::WindowFlags flags)
+NXDockWidget::NXDockWidget(const QString &title, QWidget *parent, Qt::WindowFlags flags)
     : NXDockWidget(parent, flags)
 {
   this->setWindowTitle(title);
 }
 
-NXDockWidget::~NXDockWidget() { }
+NXDockWidget::~NXDockWidget()
+{
+}
 
-void NXDockWidget::resizeEvent(QResizeEvent *event)
+void
+NXDockWidget::resizeEvent(QResizeEvent *event)
 {
   Q_EMIT dockResized(this->size());
   QDockWidget::resizeEvent(event);
 }
 
-void NXDockWidget::closeEvent(QCloseEvent *event)
+void
+NXDockWidget::closeEvent(QCloseEvent *event)
 {
   Q_EMIT dockClosed();
   QDockWidget::closeEvent(event);
 }
 
-void NXDockWidget::paintEvent(QPaintEvent *event)
+void
+NXDockWidget::paintEvent(QPaintEvent *event)
 {
   Q_D(NXDockWidget);
   if (isFloating())
@@ -93,7 +98,8 @@ void NXDockWidget::paintEvent(QPaintEvent *event)
 }
 
 #ifdef Q_OS_WIN
-bool NXDockWidget::event(QEvent *event)
+bool
+NXDockWidget::event(QEvent *event)
 {
   Q_D(NXDockWidget);
   switch (event->type())
@@ -107,7 +113,10 @@ bool NXDockWidget::event(QEvent *event)
     NXWinShadowHelper::getInstance()->setWindowShadow(d->_currentWinID);
 #  if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
     bool hasCaption = (style & WS_CAPTION) == WS_CAPTION;
-    if (!hasCaption) { ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_CAPTION); }
+    if (!hasCaption)
+    {
+      ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_CAPTION);
+    }
 #  endif
     break;
   }
@@ -120,16 +129,24 @@ bool NXDockWidget::event(QEvent *event)
 }
 
 #  if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-bool NXDockWidget::nativeEvent(const QByteArray& eventType, void *message, qintptr *result)
+bool
+NXDockWidget::nativeEvent(const QByteArray &eventType, void *message, qintptr *result)
 #  else
-bool NXDockWidget::nativeEvent(const QByteArray& eventType, void *message, long *result)
+bool
+NXDockWidget::nativeEvent(const QByteArray &eventType, void *message, long *result)
 #  endif
 {
   Q_D(NXDockWidget);
-  if ((eventType != "windows_generic_MSG") || !message) { return false; }
+  if ((eventType != "windows_generic_MSG") || !message)
+  {
+    return false;
+  }
   const auto msg  = static_cast<const MSG *>(message);
   const HWND hwnd = msg->hwnd;
-  if (!hwnd || !msg) { return false; }
+  if (!hwnd || !msg)
+  {
+    return false;
+  }
   d->_currentWinID    = (qint64) hwnd;
   const UINT uMsg     = msg->message;
   const WPARAM wParam = msg->wParam;
@@ -167,22 +184,52 @@ bool NXDockWidget::nativeEvent(const QByteArray& eventType, void *message, long 
     *result           = 0;
     if (!window()->isFullScreen() && !window()->isMaximized())
     {
-      if (left && top) { *result = HTTOPLEFT; }
-      else if (left && bottom) { *result = HTBOTTOMLEFT; }
-      else if (right && top) { *result = HTTOPRIGHT; }
-      else if (right && bottom) { *result = HTBOTTOMRIGHT; }
-      else if (left) { *result = HTLEFT; }
-      else if (right) { *result = HTRIGHT; }
-      else if (top) { *result = HTTOP; }
-      else if (bottom) { *result = HTBOTTOM; }
+      if (left && top)
+      {
+        *result = HTTOPLEFT;
+      }
+      else if (left && bottom)
+      {
+        *result = HTBOTTOMLEFT;
+      }
+      else if (right && top)
+      {
+        *result = HTTOPRIGHT;
+      }
+      else if (right && bottom)
+      {
+        *result = HTBOTTOMRIGHT;
+      }
+      else if (left)
+      {
+        *result = HTLEFT;
+      }
+      else if (right)
+      {
+        *result = HTRIGHT;
+      }
+      else if (top)
+      {
+        *result = HTTOP;
+      }
+      else if (bottom)
+      {
+        *result = HTBOTTOM;
+      }
     }
-    if (0 != *result) { return true; }
+    if (0 != *result)
+    {
+      return true;
+    }
     *result = HTCLIENT;
     return true;
   }
   case WM_NCCALCSIZE :
   {
-    if (wParam == FALSE) { return false; }
+    if (wParam == FALSE)
+    {
+      return false;
+    }
     *result = 0;
     return true;
   }

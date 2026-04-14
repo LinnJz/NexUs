@@ -33,7 +33,7 @@ public:
                        const QWidget *widget) const override;
   QSize sizeFromContents(ContentsType type,
                          const QStyleOption *option,
-                         const QSize& size,
+                         const QSize &size,
                          const QWidget *widget) const override;
 
 private:

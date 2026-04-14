@@ -6,14 +6,14 @@
 #include "NXTheme.h"
 #include "private/NXPushButtonPrivate.h"
 Q_PROPERTY_CREATE_CPP(NXPushButton, int, BorderRadius)
-Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor&, QColor, LightDefaultColor)
-Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor&, QColor, DarkDefaultColor)
-Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor&, QColor, LightHoverColor)
-Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor&, QColor, DarkHoverColor)
-Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor&, QColor, LightPressColor)
-Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor&, QColor, DarkPressColor)
-Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor&, QColor, LightTextColor)
-Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor&, QColor, DarkTextColor)
+Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor &, QColor, LightDefaultColor)
+Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor &, QColor, DarkDefaultColor)
+Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor &, QColor, LightHoverColor)
+Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor &, QColor, DarkHoverColor)
+Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor &, QColor, LightPressColor)
+Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor &, QColor, DarkPressColor)
+Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor &, QColor, LightTextColor)
+Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor &, QColor, DarkTextColor)
 
 NXPushButton::NXPushButton(QWidget *parent)
     : QPushButton(parent)
@@ -38,37 +38,52 @@ NXPushButton::NXPushButton(QWidget *parent)
   setFont(font);
   setObjectName("NXPushButton");
   setStyleSheet(QStringLiteral("#NXPushButton{background-color:transparent;border:none;outline:none;}"));
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
 }
 
-NXPushButton::NXPushButton(const QString& text, QWidget *parent)
+NXPushButton::NXPushButton(const QString &text, QWidget *parent)
     : NXPushButton(parent)
 {
   setText(text);
 }
 
-NXPushButton::~NXPushButton() { }
+NXPushButton::~NXPushButton()
+{
+}
 
-void NXPushButton::setTextPixelSize(int size) noexcept
+void
+NXPushButton::setTextPixelSize(int size) noexcept
 {
   QFont font = this->font();
   font.setPixelSize(size);
   setFont(font);
 }
 
-int NXPushButton::getTextPixelSize() const noexcept { return this->font().pixelSize(); }
+int
+NXPushButton::getTextPixelSize() const noexcept
+{
+  return this->font().pixelSize();
+}
 
-void NXPushButton::setTextPointSize(int size) noexcept
+void
+NXPushButton::setTextPointSize(int size) noexcept
 {
   QFont font = this->font();
   font.setPointSize(size);
   setFont(font);
 }
 
-int NXPushButton::getTextPointSize() const noexcept { return this->font().pointSize(); }
+int
+NXPushButton::getTextPointSize() const noexcept
+{
+  return this->font().pointSize();
+}
 
-void NXPushButton::setTextStyle(NXTextType::TextStyle textStyle) noexcept
+void
+NXPushButton::setTextStyle(NXTextType::TextStyle textStyle) noexcept
 {
   Q_D(NXPushButton);
   QFont textFont = font();
@@ -127,13 +142,15 @@ void NXPushButton::setTextStyle(NXTextType::TextStyle textStyle) noexcept
   setFont(textFont);
 }
 
-NXTextType::TextStyle NXPushButton::getTextStyle() const noexcept
+NXTextType::TextStyle
+NXPushButton::getTextStyle() const noexcept
 {
   Q_D(const NXPushButton);
   return d->_textStyle;
 }
 
-void NXPushButton::setNXIcon(NXIconType::IconName icon) noexcept
+void
+NXPushButton::setNXIcon(NXIconType::IconName icon) noexcept
 {
   Q_D(NXPushButton);
   d->_icon    = icon;
@@ -141,7 +158,8 @@ void NXPushButton::setNXIcon(NXIconType::IconName icon) noexcept
   update();
 }
 
-void NXPushButton::setNXIcon(NXIconType::IconName icon, int iconSize) noexcept
+void
+NXPushButton::setNXIcon(NXIconType::IconName icon, int iconSize) noexcept
 {
   Q_D(NXPushButton);
   d->_icon     = icon;
@@ -150,21 +168,24 @@ void NXPushButton::setNXIcon(NXIconType::IconName icon, int iconSize) noexcept
   update();
 }
 
-void NXPushButton::mousePressEvent(QMouseEvent *event)
+void
+NXPushButton::mousePressEvent(QMouseEvent *event)
 {
   Q_D(NXPushButton);
   d->_isPressed = true;
   QPushButton::mousePressEvent(event);
 }
 
-void NXPushButton::mouseReleaseEvent(QMouseEvent *event)
+void
+NXPushButton::mouseReleaseEvent(QMouseEvent *event)
 {
   Q_D(NXPushButton);
   d->_isPressed = false;
   QPushButton::mouseReleaseEvent(event);
 }
 
-void NXPushButton::paintEvent(QPaintEvent *event)
+void
+NXPushButton::paintEvent(QPaintEvent *event)
 {
   Q_D(NXPushButton);
   QPainter painter(this);

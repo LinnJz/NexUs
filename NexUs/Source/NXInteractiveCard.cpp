@@ -12,9 +12,9 @@ Q_PROPERTY_CREATE_CPP(NXInteractiveCard, int, TitleSpacing)
 Q_PROPERTY_CREATE_CPP(NXInteractiveCard, int, CardPixmapBorderRadius)
 Q_PROPERTY_CREATE_CPP(NXInteractiveCard, NXCardPixType::PixMode, CardPixMode)
 Q_PROPERTY_CREATE_CPP(NXInteractiveCard, QSize, CardPixmapSize)
-Q_PROPERTY_CREATE_2_CPP(NXInteractiveCard, const QPixmap&, QPixmap, CardPixmap)
-Q_PROPERTY_CREATE_2_CPP(NXInteractiveCard, const QString&, QString, Title)
-Q_PROPERTY_CREATE_2_CPP(NXInteractiveCard, const QString&, QString, SubTitle)
+Q_PROPERTY_CREATE_2_CPP(NXInteractiveCard, const QPixmap &, QPixmap, CardPixmap)
+Q_PROPERTY_CREATE_2_CPP(NXInteractiveCard, const QString &, QString, Title)
+Q_PROPERTY_CREATE_2_CPP(NXInteractiveCard, const QString &, QString, SubTitle)
 
 NXInteractiveCard::NXInteractiveCard(QWidget *parent)
     : QPushButton(parent)
@@ -32,20 +32,26 @@ NXInteractiveCard::NXInteractiveCard(QWidget *parent)
   d->_pCardPixMode            = NXCardPixType::PixMode::Ellipse;
   d->_themeMode               = nxTheme->getThemeMode();
   setMouseTracking(true);
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
 }
 
-NXInteractiveCard::~NXInteractiveCard() { }
+NXInteractiveCard::~NXInteractiveCard()
+{
+}
 
-void NXInteractiveCard::setCardPixmapSize(int width, int height) noexcept
+void
+NXInteractiveCard::setCardPixmapSize(int width, int height) noexcept
 {
   Q_D(NXInteractiveCard);
   d->_pCardPixmapSize = QSize(width, height);
   Q_EMIT pCardPixmapSizeChanged();
 }
 
-void NXInteractiveCard::paintEvent(QPaintEvent *event)
+void
+NXInteractiveCard::paintEvent(QPaintEvent *event)
 {
   Q_D(NXInteractiveCard);
   QPainter painter(this);

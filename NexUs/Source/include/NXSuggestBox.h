@@ -18,36 +18,36 @@ class NX_EXPORT NXSuggestBox : public QWidget
 public:
   explicit NXSuggestBox(QWidget *parent = nullptr);
   ~NXSuggestBox() override;
-  void setPlaceholderText(const QString& placeholderText) noexcept;
-  void setFixedSize(const QSize& size) noexcept;
+  void setPlaceholderText(const QString &placeholderText) noexcept;
+  void setFixedSize(const QSize &size) noexcept;
   void setFixedSize(int w, int h) noexcept;
   void setFixedHeight(int h) noexcept;
 
   struct NX_EXPORT SuggestData
   {
     Q_PRIVATE_CREATE(NXIconType::IconName, NXIcon)
-    Q_PRIVATE_CREATE_2(const QString&, QString, SuggestText)
-    Q_PRIVATE_CREATE_2(const QString&, QString, SuggestKey)
-    Q_PRIVATE_CREATE_2(const QVariantMap&, QVariantMap, SuggestData)
+    Q_PRIVATE_CREATE_2(const QString &, QString, SuggestText)
+    Q_PRIVATE_CREATE_2(const QString &, QString, SuggestKey)
+    Q_PRIVATE_CREATE_2(const QVariantMap &, QVariantMap, SuggestData)
 
   public:
     explicit SuggestData();
-    explicit SuggestData(NXIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData = {});
+    explicit SuggestData(NXIconType::IconName icon, const QString &suggestText, const QVariantMap &suggestData = {});
     ~SuggestData();
   };
 
-  QString addSuggestion(const QString& suggestText, const QVariantMap& suggestData = {}) noexcept;
+  QString addSuggestion(const QString &suggestText, const QVariantMap &suggestData = {}) noexcept;
   QString
-  addSuggestion(NXIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData = {}) noexcept;
-  QString addSuggestion(const NXSuggestBox::SuggestData& suggestData) noexcept;
-  QStringList addSuggestion(const QList<NXSuggestBox::SuggestData>& suggestDataList) noexcept;
+  addSuggestion(NXIconType::IconName icon, const QString &suggestText, const QVariantMap &suggestData = {}) noexcept;
+  QString addSuggestion(const NXSuggestBox::SuggestData &suggestData) noexcept;
+  QStringList addSuggestion(const QList<NXSuggestBox::SuggestData> &suggestDataList) noexcept;
 
-  void removeSuggestion(const QString& suggestKey) noexcept;
+  void removeSuggestion(const QString &suggestKey) noexcept;
   void removeSuggestion(int index) noexcept;
   void clearSuggestion() noexcept;
 
 Q_SIGNALS:
-  void suggestionClicked(const NXSuggestBox::SuggestData& suggestData);
+  void suggestionClicked(const NXSuggestBox::SuggestData &suggestData);
 };
 
 #endif // NXSUGGESTBOX_H

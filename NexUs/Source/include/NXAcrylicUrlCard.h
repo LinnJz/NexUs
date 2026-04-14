@@ -23,10 +23,10 @@ class NX_EXPORT NXAcrylicUrlCard : public QPushButton
   Q_PROPERTY_CREATE_H(qreal, MainOpacity)
   Q_PROPERTY_CREATE_H(qreal, NoiseOpacity)
   Q_PROPERTY_CREATE_H(QSize, CardPixmapSize)
-  Q_PROPERTY_CREATE_2_H(const QPixmap&, QPixmap, CardPixmap)
-  Q_PROPERTY_CREATE_2_H(const QString&, QString, Title)
-  Q_PROPERTY_CREATE_2_H(const QString&, QString, SubTitle)
-  Q_PROPERTY_CREATE_2_H(const QString&, QString, Url)
+  Q_PROPERTY_CREATE_2_H(const QPixmap &, QPixmap, CardPixmap)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, Title)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, SubTitle)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, Url)
 
 public:
   explicit NXAcrylicUrlCard(QWidget *parent = nullptr);

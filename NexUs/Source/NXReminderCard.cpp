@@ -13,9 +13,9 @@ Q_PROPERTY_CREATE_CPP(NXReminderCard, int, TitleSpacing)
 Q_PROPERTY_CREATE_CPP(NXReminderCard, int, CardPixmapBorderRadius)
 Q_PROPERTY_CREATE_CPP(NXReminderCard, NXCardPixType::PixMode, CardPixMode)
 Q_PROPERTY_CREATE_CPP(NXReminderCard, QSize, CardPixmapSize)
-Q_PROPERTY_CREATE_2_CPP(NXReminderCard, const QPixmap&, QPixmap, CardPixmap)
-Q_PROPERTY_CREATE_2_CPP(NXReminderCard, const QString&, QString, Title)
-Q_PROPERTY_CREATE_2_CPP(NXReminderCard, const QString&, QString, SubTitle)
+Q_PROPERTY_CREATE_2_CPP(NXReminderCard, const QPixmap &, QPixmap, CardPixmap)
+Q_PROPERTY_CREATE_2_CPP(NXReminderCard, const QString &, QString, Title)
+Q_PROPERTY_CREATE_2_CPP(NXReminderCard, const QString &, QString, SubTitle)
 
 NXReminderCard::NXReminderCard(QWidget *parent)
     : QPushButton { parent }
@@ -33,20 +33,26 @@ NXReminderCard::NXReminderCard(QWidget *parent)
   d->_pCardPixMode            = NXCardPixType::PixMode::Default;
   d->_themeMode               = nxTheme->getThemeMode();
   setMouseTracking(true);
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
 }
 
-NXReminderCard::~NXReminderCard() { }
+NXReminderCard::~NXReminderCard()
+{
+}
 
-void NXReminderCard::setCardPixmapSize(int width, int height) noexcept
+void
+NXReminderCard::setCardPixmapSize(int width, int height) noexcept
 {
   Q_D(NXReminderCard);
   d->_pCardPixmapSize = QSize(width, height);
   Q_EMIT pCardPixmapSizeChanged();
 }
 
-void NXReminderCard::paintEvent(QPaintEvent *event)
+void
+NXReminderCard::paintEvent(QPaintEvent *event)
 {
   Q_D(NXReminderCard);
   QPainter painter(this);

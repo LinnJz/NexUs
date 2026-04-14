@@ -12,15 +12,21 @@ NXLineEditStyle::NXLineEditStyle(QStyle *style)
   _pLineEditIconMargin   = 10;
   _pLineEditBorderRadius = 6;
   _themeMode             = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXLineEditStyle::~NXLineEditStyle() { }
+NXLineEditStyle::~NXLineEditStyle()
+{
+}
 
-void NXLineEditStyle::drawPrimitive(PrimitiveElement element,
-                                    const QStyleOption *option,
-                                    QPainter *painter,
-                                    const QWidget *widget) const
+void
+NXLineEditStyle::drawPrimitive(PrimitiveElement element,
+                               const QStyleOption *option,
+                               QPainter *painter,
+                               const QWidget *widget) const
 {
   switch (element)
   {
@@ -37,8 +43,14 @@ void NXLineEditStyle::drawPrimitive(PrimitiveElement element,
       painter->drawRoundedRect(lineEditRect, _pLineEditBorderRadius, _pLineEditBorderRadius);
       painter->setPen(Qt::NoPen);
       //  背景绘制
-      if (fopt->state & QStyle::State_HasFocus) { painter->setBrush(NXThemeColor(_themeMode, DialogBase)); }
-      else if (fopt->state & QStyle::State_MouseOver) { painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha)); }
+      if (fopt->state & QStyle::State_HasFocus)
+      {
+        painter->setBrush(NXThemeColor(_themeMode, DialogBase));
+      }
+      else if (fopt->state & QStyle::State_MouseOver)
+      {
+        painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
+      }
       else
       {
         painter->setBrush(NXThemeColor(_themeMode, BasicBaseAlpha));
@@ -69,9 +81,10 @@ void NXLineEditStyle::drawPrimitive(PrimitiveElement element,
   QProxyStyle::drawPrimitive(element, option, painter, widget);
 }
 
-int NXLineEditStyle::pixelMetric(PixelMetric metric,
-                                 const QStyleOption *option /*= nullptr*/,
-                                 const QWidget *widget /*= nullptr*/) const
+int
+NXLineEditStyle::pixelMetric(PixelMetric metric,
+                             const QStyleOption *option /*= nullptr*/,
+                             const QWidget *widget /*= nullptr*/) const
 {
   switch (metric)
   {

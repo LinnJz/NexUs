@@ -7,4 +7,6 @@ NXWidgetPrivate::NXWidgetPrivate(QObject *parent)
 {
 }
 
-NXWidgetPrivate::~NXWidgetPrivate() { }
+NXWidgetPrivate::~NXWidgetPrivate()
+{
+}

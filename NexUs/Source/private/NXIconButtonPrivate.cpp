@@ -5,4 +5,6 @@ NXIconButtonPrivate::NXIconButtonPrivate(QObject *parent)
 {
 }
 
-NXIconButtonPrivate::~NXIconButtonPrivate() { }
+NXIconButtonPrivate::~NXIconButtonPrivate()
+{
+}

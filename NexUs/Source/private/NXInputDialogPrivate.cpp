@@ -8,9 +8,12 @@ NXInputDialogPrivate::NXInputDialogPrivate(QObject *parent)
 {
 }
 
-NXInputDialogPrivate::~NXInputDialogPrivate() { }
+NXInputDialogPrivate::~NXInputDialogPrivate()
+{
+}
 
-void NXInputDialogPrivate::_doCloseAnimation(bool isAccept)
+void
+NXInputDialogPrivate::_doCloseAnimation(bool isAccept)
 {
   Q_Q(NXInputDialog);
   _maskWidget->doMaskAnimation(0);

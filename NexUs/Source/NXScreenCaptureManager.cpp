@@ -29,7 +29,10 @@ NXScreenCaptureManager::NXScreenCaptureManager(QObject *parent)
     for (int i = 1; i < d->_screenCapture->getDisplayList().count(); i++)
     {
       ret = d->_screenCapture->initialize(i);
-      if (ret) { break; }
+      if (ret)
+      {
+        break;
+      }
     }
   }
   if (!ret)
@@ -46,7 +49,10 @@ NXScreenCaptureManager::NXScreenCaptureManager(QObject *parent)
 NXScreenCaptureManager::~NXScreenCaptureManager()
 {
   Q_D(NXScreenCaptureManager);
-  if (d->_screenCapture) { d->_screenCapture->setIsGrabActive(false); }
+  if (d->_screenCapture)
+  {
+    d->_screenCapture->setIsGrabActive(false);
+  }
   if (d->_captureThread->isRunning())
   {
     d->_captureThread->quit();
@@ -55,20 +61,26 @@ NXScreenCaptureManager::~NXScreenCaptureManager()
   delete d->_screenCapture;
 }
 
-QStringList NXScreenCaptureManager::getDisplayList() const
+QStringList
+NXScreenCaptureManager::getDisplayList() const
 {
   Q_D(const NXScreenCaptureManager);
   return d->_screenCapture->getDisplayList();
 }
 
-QImage NXScreenCaptureManager::grabScreenToImage() const
+QImage
+NXScreenCaptureManager::grabScreenToImage() const
 {
   Q_D(const NXScreenCaptureManager);
-  if (!d->_screenCapture->getIsInitSuccess()) { return QImage(); }
+  if (!d->_screenCapture->getIsInitSuccess())
+  {
+    return QImage();
+  }
   return d->_screenCapture->getGrabImage();
 }
 
-void NXScreenCaptureManager::startGrabScreen()
+void
+NXScreenCaptureManager::startGrabScreen()
 {
   Q_D(NXScreenCaptureManager);
   d->_isAllowedGrabScreen = true;
@@ -79,25 +91,34 @@ void NXScreenCaptureManager::startGrabScreen()
   }
 }
 
-void NXScreenCaptureManager::stopGrabScreen()
+void
+NXScreenCaptureManager::stopGrabScreen()
 {
   Q_D(NXScreenCaptureManager);
   d->_isAllowedGrabScreen = false;
   d->_screenCapture->setIsGrabActive(false);
 }
 
-bool NXScreenCaptureManager::getIsGrabScreen() const
+bool
+NXScreenCaptureManager::getIsGrabScreen() const
 {
   Q_D(const NXScreenCaptureManager);
   return d->_screenCapture->getIsGrabActive();
 }
 
-bool NXScreenCaptureManager::setDisplayID(int displayID)
+bool
+NXScreenCaptureManager::setDisplayID(int displayID)
 {
   Q_D(NXScreenCaptureManager);
-  if (displayID < 0 || d->_screenCapture->getDisplayList().count() <= displayID) { return false; }
+  if (displayID < 0 || d->_screenCapture->getDisplayList().count() <= displayID)
+  {
+    return false;
+  }
   d->_screenCapture->setIsGrabActive(false);
-  while (!d->_screenCapture->getIsGrabStoped()) { QApplication::processEvents(); }
+  while (!d->_screenCapture->getIsGrabStoped())
+  {
+    QApplication::processEvents();
+  }
   if (d->_screenCapture->initialize(displayID))
   {
     if (d->_isAllowedGrabScreen)
@@ -110,49 +131,70 @@ bool NXScreenCaptureManager::setDisplayID(int displayID)
   return false;
 }
 
-int NXScreenCaptureManager::getDisplayID() const
+int
+NXScreenCaptureManager::getDisplayID() const
 {
   Q_D(const NXScreenCaptureManager);
   return d->_screenCapture->getDisplayID();
 }
 
-void NXScreenCaptureManager::setGrabArea(int width, int height)
+void
+NXScreenCaptureManager::setGrabArea(int width, int height)
 {
   Q_D(NXScreenCaptureManager);
   QScreen *screen = QGuiApplication::primaryScreen();
   int maxWidth    = screen ? screen->size().width() : 1920;
   int maxHeight   = screen ? screen->size().height() : 1080;
-  if (width <= 0 || width > maxWidth) { width = maxWidth; }
-  if (height <= 0 || height > maxHeight) { height = maxHeight; }
+  if (width <= 0 || width > maxWidth)
+  {
+    width = maxWidth;
+  }
+  if (height <= 0 || height > maxHeight)
+  {
+    height = maxHeight;
+  }
   d->_screenCapture->setIsGrabCenter(true);
   d->_screenCapture->setGrabArea(QRect(0, 0, width, height));
 }
 
-void NXScreenCaptureManager::setGrabArea(int x, int y, int width, int height)
+void
+NXScreenCaptureManager::setGrabArea(int x, int y, int width, int height)
 {
   Q_D(NXScreenCaptureManager);
   QScreen *screen = QGuiApplication::primaryScreen();
   int maxWidth    = screen ? screen->size().width() : 1920;
   int maxHeight   = screen ? screen->size().height() : 1080;
-  if (width <= 0 || width > maxWidth) { width = maxWidth; }
-  if (height <= 0 || height > maxHeight) { height = maxHeight; }
+  if (width <= 0 || width > maxWidth)
+  {
+    width = maxWidth;
+  }
+  if (height <= 0 || height > maxHeight)
+  {
+    height = maxHeight;
+  }
   d->_screenCapture->setIsGrabCenter(false);
   d->_screenCapture->setGrabArea(QRect(x, y, width, height));
 }
 
-QRect NXScreenCaptureManager::getGrabArea() const
+QRect
+NXScreenCaptureManager::getGrabArea() const
 {
   Q_D(const NXScreenCaptureManager);
   return d->_screenCapture->getGrabArea();
 }
 
-void NXScreenCaptureManager::setGrabFrameRate(int frameRateValue)
+void
+NXScreenCaptureManager::setGrabFrameRate(int frameRateValue)
 {
   Q_D(NXScreenCaptureManager);
-  if (frameRateValue > 0) { d->_screenCapture->setGrabFrameRate(frameRateValue); }
+  if (frameRateValue > 0)
+  {
+    d->_screenCapture->setGrabFrameRate(frameRateValue);
+  }
 }
 
-int NXScreenCaptureManager::getGrabFrameRate() const
+int
+NXScreenCaptureManager::getGrabFrameRate() const
 {
   Q_D(const NXScreenCaptureManager);
   return d->_screenCapture->getGrabFrameRate();
@@ -179,9 +221,12 @@ NXScreenCaptureScreen::NXScreenCaptureScreen(QWidget *parent)
   });
 }
 
-NXScreenCaptureScreen::~NXScreenCaptureScreen() { }
+NXScreenCaptureScreen::~NXScreenCaptureScreen()
+{
+}
 
-void NXScreenCaptureScreen::paintEvent(QPaintEvent *event)
+void
+NXScreenCaptureScreen::paintEvent(QPaintEvent *event)
 {
   Q_D(NXScreenCaptureScreen);
   if (d->_captureManager->getIsGrabScreen())
@@ -196,13 +241,18 @@ void NXScreenCaptureScreen::paintEvent(QPaintEvent *event)
   }
 }
 
-void NXScreenCaptureScreen::setIsSyncGrabSize(bool isSyncGrabSize)
+void
+NXScreenCaptureScreen::setIsSyncGrabSize(bool isSyncGrabSize)
 {
   Q_D(NXScreenCaptureScreen);
-  if (isSyncGrabSize) { setFixedSize(d->_captureManager->getGrabArea().size()); }
+  if (isSyncGrabSize)
+  {
+    setFixedSize(d->_captureManager->getGrabArea().size());
+  }
 }
 
-bool NXScreenCaptureScreen::getIsSyncGrabSize() const
+bool
+NXScreenCaptureScreen::getIsSyncGrabSize() const
 {
   Q_D(const NXScreenCaptureScreen);
   return d->_isSyncGrabSize;

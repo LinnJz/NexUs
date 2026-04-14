@@ -9,8 +9,8 @@ Q_PROPERTY_CREATE_CPP(NXShadowGraphicsEffect, qreal, Blur)
 Q_PROPERTY_CREATE_CPP(NXShadowGraphicsEffect, qreal, Spread)
 Q_PROPERTY_CREATE_CPP(NXShadowGraphicsEffect, QPointF, LightOffset)
 Q_PROPERTY_CREATE_CPP(NXShadowGraphicsEffect, QPointF, DarkOffset)
-Q_PROPERTY_CREATE_2_CPP(NXShadowGraphicsEffect, const QColor&, QColor, LightColor)
-Q_PROPERTY_CREATE_2_CPP(NXShadowGraphicsEffect, const QColor&, QColor, DarkColor)
+Q_PROPERTY_CREATE_2_CPP(NXShadowGraphicsEffect, const QColor &, QColor, LightColor)
+Q_PROPERTY_CREATE_2_CPP(NXShadowGraphicsEffect, const QColor &, QColor, DarkColor)
 
 NXShadowGraphicsEffect::NXShadowGraphicsEffect(QObject *parent /*= nullptr*/)
     : QGraphicsEffect { parent }
@@ -37,9 +37,12 @@ NXShadowGraphicsEffect::NXShadowGraphicsEffect(QObject *parent /*= nullptr*/)
   setGraphicsEffect(shadow);*/
 }
 
-NXShadowGraphicsEffect::~NXShadowGraphicsEffect() { }
+NXShadowGraphicsEffect::~NXShadowGraphicsEffect()
+{
+}
 
-QRectF NXShadowGraphicsEffect::boundingRectFor(const QRectF& rect) const
+QRectF
+NXShadowGraphicsEffect::boundingRectFor(const QRectF &rect) const
 {
   Q_D(const NXShadowGraphicsEffect);
 
@@ -56,13 +59,16 @@ QRectF NXShadowGraphicsEffect::boundingRectFor(const QRectF& rect) const
   return rect.united(rect.translated(0, 0).adjusted(-boundary, -boundary, boundary, boundary));
 }
 
-void NXShadowGraphicsEffect::draw(QPainter *painter)
+void
+NXShadowGraphicsEffect::draw(QPainter *painter)
 {
   Q_D(NXShadowGraphicsEffect);
   QPoint pos;
   const QPixmap pixmap = sourcePixmap(Qt::DeviceCoordinates, &pos, PadToEffectiveBoundingRect);
-  if (pixmap.isNull()) return;
-  if (d->_pBlur <= 0.0) return;
+  if (pixmap.isNull())
+    return;
+  if (d->_pBlur <= 0.0)
+    return;
   QTransform restoreTransform = painter->worldTransform();
   painter->setWorldTransform(QTransform());
   painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);

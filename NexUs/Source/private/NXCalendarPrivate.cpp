@@ -17,11 +17,17 @@ NXCalendarPrivate::NXCalendarPrivate(QObject *parent)
   _pPixOpacity = 1;
 }
 
-NXCalendarPrivate::~NXCalendarPrivate() { }
-
-void NXCalendarPrivate::onSwitchButtonClicked() noexcept
+NXCalendarPrivate::~NXCalendarPrivate()
 {
-  if (!_isSwitchAnimationFinished) { return; }
+}
+
+void
+NXCalendarPrivate::onSwitchButtonClicked() noexcept
+{
+  if (!_isSwitchAnimationFinished)
+  {
+    return;
+  }
   Q_Q(NXCalendar);
   NXCalendarType displayMode = _calendarModel->getDisplayMode();
   if (displayMode == NXCalendarType::DayMode)
@@ -49,10 +55,14 @@ void NXCalendarPrivate::onSwitchButtonClicked() noexcept
   }
 }
 
-void NXCalendarPrivate::onCalendarViewClicked(const QModelIndex& index) noexcept
+void
+NXCalendarPrivate::onCalendarViewClicked(const QModelIndex &index) noexcept
 {
   Q_Q(NXCalendar);
-  if (!_isSwitchAnimationFinished) { return; }
+  if (!_isSwitchAnimationFinished)
+  {
+    return;
+  }
   switch (_calendarModel->getDisplayMode())
   {
   case YearMode :
@@ -98,7 +108,8 @@ void NXCalendarPrivate::onCalendarViewClicked(const QModelIndex& index) noexcept
   }
 }
 
-void NXCalendarPrivate::onUpButtonClicked() noexcept
+void
+NXCalendarPrivate::onUpButtonClicked() noexcept
 {
   QScrollBar *vscrollBar              = _calendarView->verticalScrollBar();
   QPropertyAnimation *scrollAnimation = new QPropertyAnimation(vscrollBar, "value");
@@ -109,7 +120,8 @@ void NXCalendarPrivate::onUpButtonClicked() noexcept
   scrollAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXCalendarPrivate::onDownButtonClicked() noexcept
+void
+NXCalendarPrivate::onDownButtonClicked() noexcept
 {
   QScrollBar *vscrollBar              = _calendarView->verticalScrollBar();
   QPropertyAnimation *scrollAnimation = new QPropertyAnimation(vscrollBar, "value");
@@ -120,7 +132,8 @@ void NXCalendarPrivate::onDownButtonClicked() noexcept
   scrollAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXCalendarPrivate::_scrollToDate(QDate date) noexcept
+void
+NXCalendarPrivate::_scrollToDate(QDate date) noexcept
 {
   int index = _calendarModel->getIndexFromDate(date).row();
   switch (_calendarModel->getDisplayMode())
@@ -139,23 +152,36 @@ void NXCalendarPrivate::_scrollToDate(QDate date) noexcept
   }
 }
 
-void NXCalendarPrivate::_doSwitchAnimation(bool isZoomIn)
+void
+NXCalendarPrivate::_doSwitchAnimation(bool isZoomIn)
 {
   Q_Q(NXCalendar);
-  if (!_isSwitchAnimationFinished) { return; }
+  if (!_isSwitchAnimationFinished)
+  {
+    return;
+  }
   _isDrawNewPix              = false;
   _isSwitchAnimationFinished = false;
   _calendarDelegate->setIsTransparent(true);
   QPropertyAnimation *oldPixZoomAnimation = new QPropertyAnimation(this, "pZoomRatio");
-  connect(oldPixZoomAnimation, &QPropertyAnimation::valueChanged, this, [=]() { q->update(); });
+  connect(oldPixZoomAnimation, &QPropertyAnimation::valueChanged, this, [=]()
+  {
+    q->update();
+  });
   connect(oldPixZoomAnimation, &QPropertyAnimation::finished, this, [=]()
   {
     _isDrawNewPix                           = true;
     QPropertyAnimation *newPixZoomAnimation = new QPropertyAnimation(this, "pZoomRatio");
-    connect(newPixZoomAnimation, &QPropertyAnimation::valueChanged, this, [=]() { q->update(); });
+    connect(newPixZoomAnimation, &QPropertyAnimation::valueChanged, this, [=]()
+    {
+      q->update();
+    });
     connect(newPixZoomAnimation, &QPropertyAnimation::finished, this, [=]()
     {
-      if (_calendarModel->getDisplayMode() == NXCalendarType::DayMode) { _calendarTitleView->setVisible(true); }
+      if (_calendarModel->getDisplayMode() == NXCalendarType::DayMode)
+      {
+        _calendarTitleView->setVisible(true);
+      }
       _isSwitchAnimationFinished = true;
       _calendarDelegate->setIsTransparent(false);
     });
@@ -204,11 +230,15 @@ void NXCalendarPrivate::_doSwitchAnimation(bool isZoomIn)
   oldPixOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXCalendarPrivate::_updateSwitchButtonText() noexcept
+void
+NXCalendarPrivate::_updateSwitchButtonText() noexcept
 {
   QModelIndex modelIndex =
       _calendarView->indexAt(QPoint(_calendarView->rect().center().x() - 20, _calendarView->rect().center().y()));
-  if (!modelIndex.isValid()) { return; }
+  if (!modelIndex.isValid())
+  {
+    return;
+  }
   NXCalendarData data = _calendarModel->data(modelIndex, Qt::UserRole).value<NXCalendarData>();
   switch (_calendarModel->getDisplayMode())
   {

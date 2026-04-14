@@ -14,17 +14,17 @@ class NXFooterModel : public QAbstractListModel
 public:
   explicit NXFooterModel(QObject *parent = nullptr);
   ~NXFooterModel();
-  NXNodeOperateResult addFooterNode(const QString& footerTitle,
+  NXNodeOperateResult addFooterNode(const QString &footerTitle,
                                     bool isHasFooterPage,
                                     int keyPoints                = 0,
                                     NXIconType::IconName awesome = NXIconType::None) noexcept;
   int getFooterNodeCount() const noexcept;
-  NXNavigationNode *getNavigationNode(const QString& footerKey) const noexcept;
-  void removeNavigationNode(const QString& footerKey) noexcept;
+  NXNavigationNode *getNavigationNode(const QString &footerKey) const noexcept;
+  void removeNavigationNode(const QString &footerKey) noexcept;
 
 protected:
-  int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-  QVariant data(const QModelIndex& index, int role) const override;
+  int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+  QVariant data(const QModelIndex &index, int role) const override;
 
 private:
   QList<NXNavigationNode *> _footerNodeList;

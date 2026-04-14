@@ -41,7 +41,7 @@ public:
   void setTimeoutMsValue(int timeoutValue) noexcept;
   int getTimeoutMsValue() const noexcept;
 Q_SIGNALS:
-  void grabImageUpdate(const QImage& img);
+  void grabImageUpdate(const QImage &img);
 };
 
 #  pragma pop_macro("Q_DISABLE_COPY")

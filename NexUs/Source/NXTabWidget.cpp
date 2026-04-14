@@ -35,76 +35,114 @@ NXTabWidget::~NXTabWidget()
   d->_clearAllTabWidgetList();
 }
 
-void NXTabWidget::setTabSize(QSize tabSize) noexcept
+void
+NXTabWidget::setTabSize(QSize tabSize) noexcept
 {
   Q_D(NXTabWidget);
   d->_tabBar->setTabSize(tabSize);
 }
 
-QSize NXTabWidget::getTabSize() const noexcept
+QSize
+NXTabWidget::getTabSize() const noexcept
 {
   Q_D(const NXTabWidget);
   return d->_tabBar->getTabSize();
 }
 
-void NXTabWidget::setTabBarStyle(NXTabBarType::TabBarStyle style) noexcept
+void
+NXTabWidget::setTabBarStyle(NXTabBarType::TabBarStyle style) noexcept
 {
   Q_D(NXTabWidget);
-  if (d->_tabBar) { d->_tabBar->setTabBarStyle(style); }
-  if (d->_customTabBar) { d->_customTabBar->setTabBarStyle(style); }
+  if (d->_tabBar)
+  {
+    d->_tabBar->setTabBarStyle(style);
+  }
+  if (d->_customTabBar)
+  {
+    d->_customTabBar->setTabBarStyle(style);
+  }
 }
 
-NXTabBarType::TabBarStyle NXTabWidget::getTabBarStyle() const noexcept
+NXTabBarType::TabBarStyle
+NXTabWidget::getTabBarStyle() const noexcept
 {
   Q_D(const NXTabWidget);
   return d->_tabBar->getTabBarStyle();
 }
 
-void NXTabWidget::setTabCornerRadius(int radius) noexcept
+void
+NXTabWidget::setTabCornerRadius(int radius) noexcept
 {
   Q_D(NXTabWidget);
-  if (d->_tabBar) { d->_tabBar->setTabCornerRadius(radius); }
-  if (d->_customTabBar) { d->_customTabBar->setTabCornerRadius(radius); }
+  if (d->_tabBar)
+  {
+    d->_tabBar->setTabCornerRadius(radius);
+  }
+  if (d->_customTabBar)
+  {
+    d->_customTabBar->setTabCornerRadius(radius);
+  }
 }
 
-int NXTabWidget::getTabCornerRadius() const noexcept
+int
+NXTabWidget::getTabCornerRadius() const noexcept
 {
   Q_D(const NXTabWidget);
   return d->_tabBar->getTabCornerRadius();
 }
 
-void NXTabWidget::setIsSelectedIndicatorVisible(bool isVisible) noexcept
+void
+NXTabWidget::setIsSelectedIndicatorVisible(bool isVisible) noexcept
 {
   Q_D(NXTabWidget);
-  if (d->_tabBar) { d->_tabBar->setIsSelectedIndicatorVisible(isVisible); }
-  if (d->_customTabBar) { d->_customTabBar->setIsSelectedIndicatorVisible(isVisible); }
+  if (d->_tabBar)
+  {
+    d->_tabBar->setIsSelectedIndicatorVisible(isVisible);
+  }
+  if (d->_customTabBar)
+  {
+    d->_customTabBar->setIsSelectedIndicatorVisible(isVisible);
+  }
 }
 
-bool NXTabWidget::getIsSelectedIndicatorVisible() const noexcept
+bool
+NXTabWidget::getIsSelectedIndicatorVisible() const noexcept
 {
   Q_D(const NXTabWidget);
   return d->_tabBar->getIsSelectedIndicatorVisible();
 }
 
-void NXTabWidget::setTabPosition(TabPosition position) noexcept
+void
+NXTabWidget::setTabPosition(TabPosition position) noexcept
 {
-  if (position == QTabWidget::North || position == QTabWidget::South) { QTabWidget::setTabPosition(position); }
+  if (position == QTabWidget::North || position == QTabWidget::South)
+  {
+    QTabWidget::setTabPosition(position);
+  }
 }
 
-void NXTabWidget::paintEvent(QPaintEvent *event)
+void
+NXTabWidget::paintEvent(QPaintEvent *event)
 {
   Q_D(NXTabWidget);
-  if (!d->_pIsTabTransparent) { QTabWidget::paintEvent(event); }
+  if (!d->_pIsTabTransparent)
+  {
+    QTabWidget::paintEvent(event);
+  }
 }
 
-void NXTabWidget::dragEnterEvent(QDragEnterEvent *event)
+void
+NXTabWidget::dragEnterEvent(QDragEnterEvent *event)
 {
-  if (event->mimeData()->property("DragType").toString() == QStringLiteral("NXTabBarDrag")) {
-    event->acceptProposedAction(); }
+  if (event->mimeData()->property("DragType").toString() == QStringLiteral("NXTabBarDrag"))
+  {
+    event->acceptProposedAction();
+  }
   QTabWidget::dragEnterEvent(event);
 }
 
-void NXTabWidget::dropEvent(QDropEvent *event)
+void
+NXTabWidget::dropEvent(QDropEvent *event)
 {
   Q_D(NXTabWidget);
   if (d->_pIsContainerAcceptDrops && event->mimeData()->property("NXTabWidgetObject").value<NXTabWidget *>() != this)
@@ -117,7 +155,8 @@ void NXTabWidget::dropEvent(QDropEvent *event)
   QTabWidget::dropEvent(event);
 }
 
-void NXTabWidget::tabInserted(int index)
+void
+NXTabWidget::tabInserted(int index)
 {
   Q_D(NXTabWidget);
   QWidget *tabWidget = widget(index);

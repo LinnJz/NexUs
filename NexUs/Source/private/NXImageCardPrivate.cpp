@@ -5,4 +5,6 @@ NXImageCardPrivate::NXImageCardPrivate(QObject *parent)
 {
 }
 
-NXImageCardPrivate::~NXImageCardPrivate() { }
+NXImageCardPrivate::~NXImageCardPrivate()
+{
+}

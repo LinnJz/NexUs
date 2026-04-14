@@ -40,13 +40,19 @@ NXPopularCardFloater::NXPopularCardFloater(NXPopularCard *card, NXPopularCardPri
   connect(_overButton, &NXPushButton::clicked, _card, &NXPopularCard::popularCardButtonClicked);
 
   _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
   setVisible(false);
 }
 
-NXPopularCardFloater::~NXPopularCardFloater() { }
+NXPopularCardFloater::~NXPopularCardFloater()
+{
+}
 
-void NXPopularCardFloater::showFloater()
+void
+NXPopularCardFloater::showFloater()
 {
   _isHideAnimationFinished = true;
   _pHoverYOffset           = 6;
@@ -54,7 +60,10 @@ void NXPopularCardFloater::showFloater()
   _opacityEffect->setOpacity(1);
 
   QPropertyAnimation *geometryAnimation = new QPropertyAnimation(this, "geometry");
-  connect(geometryAnimation, &QPropertyAnimation::valueChanged, this, [=]() { update(); });
+  connect(geometryAnimation, &QPropertyAnimation::valueChanged, this, [=]()
+  {
+    update();
+  });
   geometryAnimation->setEasingCurve(QEasingCurve::OutQuad);
   geometryAnimation->setDuration(300);
   QRect cardGeometry  = QRect(_card->mapTo(_cardPrivate->_pCardFloatArea, QPoint(0, 0)), _card->size());
@@ -75,9 +84,13 @@ void NXPopularCardFloater::showFloater()
   setVisible(true);
 }
 
-void NXPopularCardFloater::hideFloater()
+void
+NXPopularCardFloater::hideFloater()
 {
-  if (!_isHideAnimationFinished) { return; }
+  if (!_isHideAnimationFinished)
+  {
+    return;
+  }
   _isHideAnimationFinished              = false;
   QPropertyAnimation *geometryAnimation = new QPropertyAnimation(this, "geometry");
   connect(geometryAnimation, &QPropertyAnimation::valueChanged, this, [=]()
@@ -106,7 +119,10 @@ void NXPopularCardFloater::hideFloater()
 
   // 内容调整动画
   QPropertyAnimation *hoverAnimation = new QPropertyAnimation(this, "pHoverYOffset");
-  connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]() { update(); });
+  connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]()
+  {
+    update();
+  });
   hoverAnimation->setDuration(300);
   hoverAnimation->setStartValue(_pHoverYOffset);
   hoverAnimation->setEndValue(0);
@@ -130,7 +146,8 @@ void NXPopularCardFloater::hideFloater()
   buttonOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-bool NXPopularCardFloater::event(QEvent *event)
+bool
+NXPopularCardFloater::event(QEvent *event)
 {
   switch (event->type())
   {
@@ -152,7 +169,8 @@ bool NXPopularCardFloater::event(QEvent *event)
   return QWidget::event(event);
 }
 
-void NXPopularCardFloater::paintEvent(QPaintEvent *event)
+void
+NXPopularCardFloater::paintEvent(QPaintEvent *event)
 {
   QPainter painter(this);
   painter.save();
@@ -243,7 +261,8 @@ void NXPopularCardFloater::paintEvent(QPaintEvent *event)
   painter.restore();
 }
 
-QRect NXPopularCardFloater::_calculateTargetGeometry(QRect cardGeometry)
+QRect
+NXPopularCardFloater::_calculateTargetGeometry(QRect cardGeometry)
 {
   QRect targetGeometry = cardGeometry;
   targetGeometry.adjust(-_floatGeometryOffset, -_floatGeometryOffset, _floatGeometryOffset, 90);

@@ -13,14 +13,14 @@ class NX_EXPORT NXToolBar : public QToolBar
 
 public:
   explicit NXToolBar(QWidget *parent = nullptr);
-  explicit NXToolBar(const QString& title, QWidget *parent = nullptr);
+  explicit NXToolBar(const QString &title, QWidget *parent = nullptr);
   ~NXToolBar();
 
   void setToolBarSpacing(int spacing) noexcept;
   int getToolBarSpacing() const noexcept;
 
-  QAction *addNXIconAction(NXIconType::IconName icon, const QString& text) noexcept;
-  QAction *addNXIconAction(NXIconType::IconName icon, const QString& text, const QKeySequence& shortcut) noexcept;
+  QAction *addNXIconAction(NXIconType::IconName icon, const QString &text) noexcept;
+  QAction *addNXIconAction(NXIconType::IconName icon, const QString &text, const QKeySequence &shortcut) noexcept;
 
 protected:
   void paintEvent(QPaintEvent *event) override;

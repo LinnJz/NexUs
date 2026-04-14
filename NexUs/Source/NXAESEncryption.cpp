@@ -10,44 +10,50 @@
 /*
  * Static Functions
  * */
-QByteArray NXAESEncryption::Crypt(NXAESEncryption::Aes level,
-                                  NXAESEncryption::Mode mode,
-                                  const QByteArray& rawText,
-                                  const QByteArray& key,
-                                  const QByteArray& iv,
-                                  NXAESEncryption::Padding padding)
+QByteArray
+NXAESEncryption::Crypt(NXAESEncryption::Aes level,
+                       NXAESEncryption::Mode mode,
+                       const QByteArray &rawText,
+                       const QByteArray &key,
+                       const QByteArray &iv,
+                       NXAESEncryption::Padding padding)
 {
   return NXAESEncryption(level, mode, padding).encode(rawText, key, iv);
 }
 
-QByteArray NXAESEncryption::Decrypt(NXAESEncryption::Aes level,
-                                    NXAESEncryption::Mode mode,
-                                    const QByteArray& rawText,
-                                    const QByteArray& key,
-                                    const QByteArray& iv,
-                                    NXAESEncryption::Padding padding)
+QByteArray
+NXAESEncryption::Decrypt(NXAESEncryption::Aes level,
+                         NXAESEncryption::Mode mode,
+                         const QByteArray &rawText,
+                         const QByteArray &key,
+                         const QByteArray &iv,
+                         NXAESEncryption::Padding padding)
 {
   return NXAESEncryption(level, mode, padding).decode(rawText, key, iv);
 }
 
-QByteArray NXAESEncryption::ExpandKey(NXAESEncryption::Aes level,
-                                      NXAESEncryption::Mode mode,
-                                      const QByteArray& key,
-                                      bool isEncryptionKey)
+QByteArray
+NXAESEncryption::ExpandKey(NXAESEncryption::Aes level,
+                           NXAESEncryption::Mode mode,
+                           const QByteArray &key,
+                           bool isEncryptionKey)
 {
   return NXAESEncryption(level, mode).expandKey(key, isEncryptionKey);
 }
 
-QByteArray NXAESEncryption::RemovePadding(const QByteArray& rawText, NXAESEncryption::Padding padding)
+QByteArray
+NXAESEncryption::RemovePadding(const QByteArray &rawText, NXAESEncryption::Padding padding)
 {
-  if (rawText.isEmpty()) return rawText;
+  if (rawText.isEmpty())
+    return rawText;
 
   QByteArray ret(rawText);
   switch (padding)
   {
   case Padding::ZERO :
     // Works only if the last byte of the decoded array is not zero
-    while (ret.at(ret.length() - 1) == 0x00) ret.remove(ret.length() - 1, 1);
+    while (ret.at(ret.length() - 1) == 0x00)
+      ret.remove(ret.length() - 1, 1);
     break;
   case Padding::PKCS7 :
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
@@ -62,11 +68,17 @@ QByteArray NXAESEncryption::RemovePadding(const QByteArray& rawText, NXAESEncryp
     int marker_index = ret.length() - 1;
     for (; marker_index >= 0; --marker_index)
     {
-      if (ret.at(marker_index) != 0x00) { break; }
+      if (ret.at(marker_index) != 0x00)
+      {
+        break;
+      }
     }
 
     // And check if it's the byte for marking padding
-    if (ret.at(marker_index) == '\x80') { ret.truncate(marker_index); }
+    if (ret.at(marker_index) == '\x80')
+    {
+      ret.truncate(marker_index);
+    }
     break;
   }
   default :
@@ -87,9 +99,14 @@ QByteArray NXAESEncryption::RemovePadding(const QByteArray& rawText, NXAESEncryp
 namespace
 {
 
-quint8 xTime(quint8 x) { return ((x << 1) ^ (((x >> 7) & 1) * 0x1b)); }
+quint8
+xTime(quint8 x)
+{
+  return ((x << 1) ^ (((x >> 7) & 1) * 0x1b));
+}
 
-quint8 multiply(quint8 x, quint8 y)
+quint8
+multiply(quint8 x, quint8 y)
 {
   return (((y & 1) * x) ^ ((y >> 1 & 1) * xTime(x)) ^ ((y >> 2 & 1) * xTime(xTime(x))) ^
           ((y >> 3 & 1) * xTime(xTime(xTime(x)))) ^ ((y >> 4 & 1) * xTime(xTime(xTime(xTime(x))))));
@@ -155,25 +172,29 @@ NXAESEncryption::NXAESEncryption(Aes level, Mode mode, Padding padding)
   }
 }
 
-QByteArray NXAESEncryption::getPadding(int currSize, int alignment)
+QByteArray
+NXAESEncryption::getPadding(int currSize, int alignment)
 {
   int size = (alignment - currSize % alignment) % alignment;
   switch (m_padding)
   {
   case Padding::ZERO : return QByteArray(size, 0x00); break;
   case Padding::PKCS7 :
-    if (size == 0) size = alignment;
+    if (size == 0)
+      size = alignment;
     return QByteArray(size, size);
     break;
   case Padding::ISO :
-    if (size > 0) return QByteArray(size - 1, 0x00).prepend('\x80');
+    if (size > 0)
+      return QByteArray(size - 1, 0x00).prepend('\x80');
     break;
   default : return QByteArray(size, 0x00); break;
   }
   return QByteArray();
 }
 
-QByteArray NXAESEncryption::expandKey(const QByteArray& key, bool isEncryptionKey)
+QByteArray
+NXAESEncryption::expandKey(const QByteArray &key, bool isEncryptionKey)
 {
 #ifdef USE_INTEL_AES_IF_AVAILABLE
   if (m_aesNIAvailable)
@@ -184,7 +205,10 @@ QByteArray NXAESEncryption::expandKey(const QByteArray& key, bool isEncryptionKe
     {
       AES128 aes128;
       AES_KEY aesKey;
-      if (isEncryptionKey) { AES_set_encrypt_key((unsigned char *) key.constData(), aes128.userKeySize, &aesKey); }
+      if (isEncryptionKey)
+      {
+        AES_set_encrypt_key((unsigned char *) key.constData(), aes128.userKeySize, &aesKey);
+      }
       else
       {
         AES_set_decrypt_key((unsigned char *) key.constData(), aes128.userKeySize, &aesKey);
@@ -201,7 +225,10 @@ QByteArray NXAESEncryption::expandKey(const QByteArray& key, bool isEncryptionKe
     {
       AES192 aes192;
       AES_KEY aesKey;
-      if (isEncryptionKey) { AES_set_encrypt_key((unsigned char *) key.constData(), aes192.userKeySize, &aesKey); }
+      if (isEncryptionKey)
+      {
+        AES_set_encrypt_key((unsigned char *) key.constData(), aes192.userKeySize, &aesKey);
+      }
       else
       {
         AES_set_decrypt_key((unsigned char *) key.constData(), aes192.userKeySize, &aesKey);
@@ -218,7 +245,10 @@ QByteArray NXAESEncryption::expandKey(const QByteArray& key, bool isEncryptionKe
     {
       AES256 aes256;
       AES_KEY aesKey;
-      if (isEncryptionKey) { AES_set_encrypt_key((unsigned char *) key.constData(), aes256.userKeySize, &aesKey); }
+      if (isEncryptionKey)
+      {
+        AES_set_encrypt_key((unsigned char *) key.constData(), aes256.userKeySize, &aesKey);
+      }
       else
       {
         AES_set_decrypt_key((unsigned char *) key.constData(), aes256.userKeySize, &aesKey);
@@ -290,24 +320,29 @@ QByteArray NXAESEncryption::expandKey(const QByteArray& key, bool isEncryptionKe
 
 // This function adds the round key to state.
 // The round key is added to the state by an XOR function.
-void NXAESEncryption::addRoundKey(const quint8 round, const QByteArray& expKey)
+void
+NXAESEncryption::addRoundKey(const quint8 round, const QByteArray &expKey)
 {
   QByteArray::iterator it = m_state->begin();
-  for (int i = 0; i < 16; ++i) it[i] = (quint8) it[i] ^ (quint8) expKey.at(round * m_nb * 4 + (i / 4) * m_nb + (i % 4));
+  for (int i = 0; i < 16; ++i)
+    it[i] = (quint8) it[i] ^ (quint8) expKey.at(round * m_nb * 4 + (i / 4) * m_nb + (i % 4));
 }
 
 // The SubBytes Function Substitutes the values in the
 // state matrix with values in an S-box.
-void NXAESEncryption::subBytes()
+void
+NXAESEncryption::subBytes()
 {
   QByteArray::iterator it = m_state->begin();
-  for (int i = 0; i < 16; i++) it[i] = getSBoxValue((quint8) it[i]);
+  for (int i = 0; i < 16; i++)
+    it[i] = getSBoxValue((quint8) it[i]);
 }
 
 // The ShiftRows() function shifts the rows in the state to the left.
 // Each row is shifted with different offset.
 // Offset = Row number. So the first row is not shifted.
-void NXAESEncryption::shiftRows()
+void
+NXAESEncryption::shiftRows()
 {
   QByteArray::iterator it = m_state->begin();
   quint8 temp;
@@ -338,7 +373,8 @@ void NXAESEncryption::shiftRows()
 
 // MixColumns function mixes the columns of the state matrix
 // optimized!!
-void NXAESEncryption::mixColumns()
+void
+NXAESEncryption::mixColumns()
 {
   QByteArray::iterator it = m_state->begin();
   quint8 tmp, tm, t;
@@ -365,7 +401,8 @@ void NXAESEncryption::mixColumns()
 // MixColumns function mixes the columns of the state matrix.
 // The method used to multiply may be difficult to understand for the inexperienced.
 // Please use the references to gain more information.
-void NXAESEncryption::invMixColumns()
+void
+NXAESEncryption::invMixColumns()
 {
   QByteArray::iterator it = m_state->begin();
   quint8 a, b, c, d;
@@ -385,13 +422,16 @@ void NXAESEncryption::invMixColumns()
 
 // The SubBytes Function Substitutes the values in the
 // state matrix with values in an S-box.
-void NXAESEncryption::invSubBytes()
+void
+NXAESEncryption::invSubBytes()
 {
   QByteArray::iterator it = m_state->begin();
-  for (int i = 0; i < 16; ++i) it[i] = getSBoxInvert((quint8) it[i]);
+  for (int i = 0; i < 16; ++i)
+    it[i] = getSBoxInvert((quint8) it[i]);
 }
 
-void NXAESEncryption::invShiftRows()
+void
+NXAESEncryption::invShiftRows()
 {
   QByteArray::iterator it = m_state->begin();
   uint8_t temp;
@@ -421,20 +461,23 @@ void NXAESEncryption::invShiftRows()
   it[3]  = (quint8) temp;
 }
 
-QByteArray NXAESEncryption::byteXor(const QByteArray& a, const QByteArray& b)
+QByteArray
+NXAESEncryption::byteXor(const QByteArray &a, const QByteArray &b)
 {
   QByteArray::const_iterator it_a = a.begin();
   QByteArray::const_iterator it_b = b.begin();
   QByteArray ret;
 
   // for(int i = 0; i < m_blocklen; i++)
-  for (int i = 0; i < std::min(a.size(), b.size()); i++) ret.insert(i, it_a[i] ^ it_b[i]);
+  for (int i = 0; i < std::min(a.size(), b.size()); i++)
+    ret.insert(i, it_a[i] ^ it_b[i]);
 
   return ret;
 }
 
 // Cipher is the main function that encrypts the PlainText.
-QByteArray NXAESEncryption::cipher(const QByteArray& expKey, const QByteArray& in)
+QByteArray
+NXAESEncryption::cipher(const QByteArray &expKey, const QByteArray &in)
 {
   // m_state is the input buffer...
   QByteArray output(in);
@@ -463,7 +506,8 @@ QByteArray NXAESEncryption::cipher(const QByteArray& expKey, const QByteArray& i
   return output;
 }
 
-QByteArray NXAESEncryption::invCipher(const QByteArray& expKey, const QByteArray& in)
+QByteArray
+NXAESEncryption::invCipher(const QByteArray &expKey, const QByteArray &in)
 {
   // m_state is the input buffer.... handle it!
   QByteArray output(in);
@@ -492,17 +536,21 @@ QByteArray NXAESEncryption::invCipher(const QByteArray& expKey, const QByteArray
   return output;
 }
 
-QByteArray NXAESEncryption::printArray(uchar *arr, int size)
+QByteArray
+NXAESEncryption::printArray(uchar *arr, int size)
 {
   QByteArray print("");
-  for (int i = 0; i < size; i++) print.append(arr[i]);
+  for (int i = 0; i < size; i++)
+    print.append(arr[i]);
 
   return print.toHex();
 }
 
-QByteArray NXAESEncryption::encode(const QByteArray& rawText, const QByteArray& key, const QByteArray& iv)
+QByteArray
+NXAESEncryption::encode(const QByteArray &rawText, const QByteArray &key, const QByteArray &iv)
 {
-  if ((m_mode >= CBC && (iv.isEmpty() || iv.size() != m_blocklen)) || key.size() != m_keyLen) return QByteArray();
+  if ((m_mode >= CBC && (iv.isEmpty() || iv.size() != m_blocklen)) || key.size() != m_keyLen)
+    return QByteArray();
 
   QByteArray expandedKey = expandKey(key, true);
   QByteArray alignedText(rawText);
@@ -591,7 +639,8 @@ QByteArray NXAESEncryption::encode(const QByteArray& rawText, const QByteArray& 
   return QByteArray();
 }
 
-QByteArray NXAESEncryption::decode(const QByteArray& rawText, const QByteArray& key, const QByteArray& iv)
+QByteArray
+NXAESEncryption::decode(const QByteArray &rawText, const QByteArray &key, const QByteArray &iv)
 {
   if ((m_mode >= CBC && (iv.isEmpty() || iv.size() != m_blocklen)) || key.size() != m_keyLen ||
       rawText.size() % m_blocklen != 0)
@@ -601,7 +650,10 @@ QByteArray NXAESEncryption::decode(const QByteArray& rawText, const QByteArray& 
   QByteArray expandedKey;
 
 #ifdef USE_INTEL_AES_IF_AVAILABLE
-  if (m_aesNIAvailable && m_mode <= CBC) { expandedKey = expandKey(key, false); }
+  if (m_aesNIAvailable && m_mode <= CBC)
+  {
+    expandedKey = expandKey(key, false);
+  }
   else
   {
     expandedKey = expandKey(key, true);
@@ -629,7 +681,8 @@ QByteArray NXAESEncryption::decode(const QByteArray& rawText, const QByteArray& 
       break;
     }
 #endif
-    for (int i = 0; i < rawText.size(); i += m_blocklen) ret.append(invCipher(expandedKey, rawText.mid(i, m_blocklen)));
+    for (int i = 0; i < rawText.size(); i += m_blocklen)
+      ret.append(invCipher(expandedKey, rawText.mid(i, m_blocklen)));
     break;
   case CBC :
 #ifdef USE_INTEL_AES_IF_AVAILABLE
@@ -686,7 +739,8 @@ QByteArray NXAESEncryption::decode(const QByteArray& rawText, const QByteArray& 
   return ret;
 }
 
-QByteArray NXAESEncryption::removePadding(const QByteArray& rawText)
+QByteArray
+NXAESEncryption::removePadding(const QByteArray &rawText)
 {
   return RemovePadding(rawText, (Padding) m_padding);
 }

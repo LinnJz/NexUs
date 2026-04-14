@@ -34,38 +34,71 @@ T_TreeViewModel::T_TreeViewModel(QObject *parent)
   }
 }
 
-T_TreeViewModel::~T_TreeViewModel() { delete _rootItem; }
-
-QModelIndex T_TreeViewModel::parent(const QModelIndex& child) const
+T_TreeViewModel::~T_TreeViewModel()
 {
-  if (!child.isValid()) { return QModelIndex(); }
+  delete _rootItem;
+}
+
+QModelIndex
+T_TreeViewModel::parent(const QModelIndex &child) const
+{
+  if (!child.isValid())
+  {
+    return QModelIndex();
+  }
   T_TreeItem *childItem  = static_cast<T_TreeItem *>(child.internalPointer());
   T_TreeItem *parentItem = childItem->getParentItem();
-  if (parentItem == _rootItem) { return QModelIndex(); }
-  else if (parentItem == nullptr) { return QModelIndex(); }
+  if (parentItem == _rootItem)
+  {
+    return QModelIndex();
+  }
+  else if (parentItem == nullptr)
+  {
+    return QModelIndex();
+  }
   return createIndex(parentItem->getRow(), 0, parentItem);
 }
 
-QModelIndex T_TreeViewModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex
+T_TreeViewModel::index(int row, int column, const QModelIndex &parent) const
 {
-  if (!hasIndex(row, column, parent)) { return QModelIndex(); }
+  if (!hasIndex(row, column, parent))
+  {
+    return QModelIndex();
+  }
   T_TreeItem *parentItem;
-  if (!parent.isValid()) { parentItem = _rootItem; }
+  if (!parent.isValid())
+  {
+    parentItem = _rootItem;
+  }
   else
   {
     parentItem = static_cast<T_TreeItem *>(parent.internalPointer());
   }
   T_TreeItem *childItem = nullptr;
-  if (parentItem->getChildrenItems().count() > row) { childItem = parentItem->getChildrenItems().at(row); }
-  if (childItem) { return createIndex(row, column, childItem); }
+  if (parentItem->getChildrenItems().count() > row)
+  {
+    childItem = parentItem->getChildrenItems().at(row);
+  }
+  if (childItem)
+  {
+    return createIndex(row, column, childItem);
+  }
   return QModelIndex();
 }
 
-int T_TreeViewModel::rowCount(const QModelIndex& parent) const
+int
+T_TreeViewModel::rowCount(const QModelIndex &parent) const
 {
   T_TreeItem *parentItem;
-  if (parent.column() > 0) { return 0; }
-  if (!parent.isValid()) { parentItem = _rootItem; }
+  if (parent.column() > 0)
+  {
+    return 0;
+  }
+  if (!parent.isValid())
+  {
+    parentItem = _rootItem;
+  }
   else
   {
     parentItem = static_cast<T_TreeItem *>(parent.internalPointer());
@@ -73,20 +106,31 @@ int T_TreeViewModel::rowCount(const QModelIndex& parent) const
   return parentItem->getChildrenItems().count();
 }
 
-int T_TreeViewModel::columnCount(const QModelIndex& parent) const
+int
+T_TreeViewModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent)
   return 1;
 }
 
-QVariant T_TreeViewModel::data(const QModelIndex& index, int role) const
+QVariant
+T_TreeViewModel::data(const QModelIndex &index, int role) const
 {
-  if (role == Qt::DisplayRole) { return static_cast<T_TreeItem *>(index.internalPointer())->getItemTitle(); }
-  else if (role == Qt::DecorationRole) { return QIcon(":/Resource/Image/Cirno.jpg"); }
+  if (role == Qt::DisplayRole)
+  {
+    return static_cast<T_TreeItem *>(index.internalPointer())->getItemTitle();
+  }
+  else if (role == Qt::DecorationRole)
+  {
+    return QIcon(":/Resource/Image/Cirno.jpg");
+  }
   else if (role == Qt::CheckStateRole)
   {
     T_TreeItem *item = static_cast<T_TreeItem *>(index.internalPointer());
-    if (item->getIsHasChild()) { return item->getChildCheckState(); }
+    if (item->getIsHasChild())
+    {
+      return item->getChildCheckState();
+    }
     else
     {
       return item->getIsChecked() ? Qt::Checked : Qt::Unchecked;
@@ -96,7 +140,8 @@ QVariant T_TreeViewModel::data(const QModelIndex& index, int role) const
   return QVariant();
 }
 
-bool T_TreeViewModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool
+T_TreeViewModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
   if (role == Qt::CheckStateRole)
   {
@@ -109,17 +154,26 @@ bool T_TreeViewModel::setData(const QModelIndex& index, const QVariant& value, i
   return QAbstractItemModel::setData(index, value, role);
 }
 
-Qt::ItemFlags T_TreeViewModel::flags(const QModelIndex& index) const
+Qt::ItemFlags
+T_TreeViewModel::flags(const QModelIndex &index) const
 {
   Qt::ItemFlags flags = QAbstractItemModel::flags(index);
   flags |= Qt::ItemIsUserCheckable;
   return flags;
 }
 
-QVariant T_TreeViewModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant
+T_TreeViewModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole) { return QString("NXTreeView-Example-4Level"); }
+  if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+  {
+    return QString("NXTreeView-Example-4Level");
+  }
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-int T_TreeViewModel::getItemCount() const { return this->_itemsMap.count(); }
+int
+T_TreeViewModel::getItemCount() const
+{
+  return this->_itemsMap.count();
+}

@@ -15,8 +15,8 @@ public:
   explicit NXIntValidator(int bottom, int top, QObject *parent = nullptr);
   ~NXIntValidator();
 
-  QValidator::State validate(QString& input, int& pos) const override;
-  void fixup(QString& input) const override;
+  QValidator::State validate(QString &input, int &pos) const override;
+  void fixup(QString &input) const override;
 
 private:
   QString _completeInput(QString input, int length) const;

@@ -5,12 +5,16 @@ NXDxgiManagerPrivate::NXDxgiManagerPrivate(QObject *parent)
 {
 }
 
-NXDxgiManagerPrivate::~NXDxgiManagerPrivate() { }
+NXDxgiManagerPrivate::~NXDxgiManagerPrivate()
+{
+}
 
 NXDxgiScreenPrivate::NXDxgiScreenPrivate(QObject *parent)
     : QObject { parent }
 {
 }
 
-NXDxgiScreenPrivate::~NXDxgiScreenPrivate() { }
+NXDxgiScreenPrivate::~NXDxgiScreenPrivate()
+{
+}
 #endif

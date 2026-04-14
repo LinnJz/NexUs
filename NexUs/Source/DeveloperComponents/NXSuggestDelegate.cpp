@@ -11,12 +11,18 @@ NXSuggestDelegate::NXSuggestDelegate(QObject *parent)
     : QStyledItemDelegate { parent }
 {
   _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXSuggestDelegate::~NXSuggestDelegate() { }
+NXSuggestDelegate::~NXSuggestDelegate()
+{
+}
 
-void NXSuggestDelegate::paint(QPainter *painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void
+NXSuggestDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
   int margin = 2;
   QStyleOptionViewItem viewOption(option);
@@ -24,7 +30,10 @@ void NXSuggestDelegate::paint(QPainter *painter, const QStyleOptionViewItem& opt
 
   NXSuggestModel *model = dynamic_cast<NXSuggestModel *>(const_cast<QAbstractItemModel *>(index.model()));
   NXSuggestion *suggest = model->getSearchSuggestion(index.row());
-  if (option.state.testFlag(QStyle::State_HasFocus)) { viewOption.state &= ~QStyle::State_HasFocus; }
+  if (option.state.testFlag(QStyle::State_HasFocus))
+  {
+    viewOption.state &= ~QStyle::State_HasFocus;
+  }
   painter->save();
   painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
   QPainterPath path;
@@ -62,12 +71,13 @@ void NXSuggestDelegate::paint(QPainter *painter, const QStyleOptionViewItem& opt
     QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     iconFont.setPixelSize(17);
     painter->setFont(iconFont);
-    painter->drawText(option.rect.x() + 11, option.rect.y() + 26, QChar((unsigned short) suggest->getNXIcon()));
+    painter->drawText(option.rect.x() + 11, option.rect.y() + 26, QChar(suggest->getNXIcon()));
   }
   painter->restore();
 }
 
-QSize NXSuggestDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+QSize
+NXSuggestDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
   QSize size = QStyledItemDelegate::sizeHint(option, index);
   size.setHeight(40);

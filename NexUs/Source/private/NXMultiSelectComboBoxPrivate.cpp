@@ -10,19 +10,28 @@ NXMultiSelectComboBoxPrivate::NXMultiSelectComboBoxPrivate(QObject *parent)
 {
 }
 
-NXMultiSelectComboBoxPrivate::~NXMultiSelectComboBoxPrivate() { }
+NXMultiSelectComboBoxPrivate::~NXMultiSelectComboBoxPrivate()
+{
+}
 
-void NXMultiSelectComboBoxPrivate::onItemPressed(const QModelIndex& index) noexcept
+void
+NXMultiSelectComboBoxPrivate::onItemPressed(const QModelIndex &index) noexcept
 {
   Q_Q(NXMultiSelectComboBox);
-  if (!_comboView->selectionModel()->isSelected(index)) { _itemSelection[index.row()] = true; }
+  if (!_comboView->selectionModel()->isSelected(index))
+  {
+    _itemSelection[index.row()] = true;
+  }
   else
   {
     _itemSelection[index.row()] = false;
   }
   _refreshCurrentIndexs();
   QPropertyAnimation *markAnimation = new QPropertyAnimation(this, "pExpandMarkWidth");
-  connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { q->update(); });
+  connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
+  {
+    q->update();
+  });
   markAnimation->setDuration(300);
   markAnimation->setEasingCurve(QEasingCurve::InOutSine);
   markAnimation->setStartValue(_pExpandMarkWidth);
@@ -31,7 +40,8 @@ void NXMultiSelectComboBoxPrivate::onItemPressed(const QModelIndex& index) noexc
   markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs() noexcept
+void
+NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs() noexcept
 {
   Q_Q(NXMultiSelectComboBox);
   QString str;
@@ -44,7 +54,10 @@ void NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs() noexcept
     if (_itemSelection[i])
     {
       _comboView->selectionModel()->select(index, QItemSelectionModel::Select | QItemSelectionModel::Rows);
-      if (!str.isEmpty()) {str.append(QStringLiteral(",")); }
+      if (!str.isEmpty())
+      {
+        str.append(QStringLiteral(","));
+      }
       str.append(q->itemText(i));
       selectedIndexVector.append(true);
     }
@@ -62,7 +75,10 @@ void NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs() noexcept
     _selectedTextList = _currentText.split(QStringLiteral(","), Qt::SkipEmptyParts);
 #else
     _selectedTextList = _currentText.split(QStringLiteral(","));
-    if (_selectedTextList.count() == 1 && _selectedTextList[0].isEmpty()) { _selectedTextList.clear(); }
+    if (_selectedTextList.count() == 1 && _selectedTextList[0].isEmpty())
+    {
+      _selectedTextList.clear();
+    }
 #endif
     q->setCurrentIndex(-1);
     Q_EMIT q->itemSelectionChanged(selectedIndexVector);
@@ -70,8 +86,12 @@ void NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs() noexcept
   }
 }
 
-void NXMultiSelectComboBoxPrivate::_adjustSelectedVector() noexcept
+void
+NXMultiSelectComboBoxPrivate::_adjustSelectedVector() noexcept
 {
   Q_Q(NXMultiSelectComboBox);
-  while (_itemSelection.count() < q->count()) { _itemSelection.append(false); }
+  while (_itemSelection.count() < q->count())
+  {
+    _itemSelection.append(false);
+  }
 }

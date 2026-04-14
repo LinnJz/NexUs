@@ -95,12 +95,18 @@ T_TreeView::T_TreeView(QWidget *parent)
   expandCollapseLayout->setContentsMargins(0, 0, 0, 0);
   NXPushButton *expandButton = new NXPushButton("展开全部", this);
   expandButton->setFixedWidth(80);
-  connect(expandButton, &NXPushButton::clicked, this, [=]() { _treeView->expandAll(); });
+  connect(expandButton, &NXPushButton::clicked, this, [=]()
+  {
+    _treeView->expandAll();
+  });
 
   // 收起全部
   NXPushButton *collapseButton = new NXPushButton("收起全部", this);
   collapseButton->setFixedWidth(80);
-  connect(collapseButton, &NXPushButton::clicked, this, [=]() { _treeView->collapseAll(); });
+  connect(collapseButton, &NXPushButton::clicked, this, [=]()
+  {
+    _treeView->collapseAll();
+  });
   expandCollapseLayout->addWidget(expandButton);
   expandCollapseLayout->addWidget(collapseButton);
   expandCollapseLayout->addStretch();
@@ -140,4 +146,6 @@ T_TreeView::T_TreeView(QWidget *parent)
   addCentralWidget(centralWidget, true, false, 0);
 }
 
-T_TreeView::~T_TreeView() { }
+T_TreeView::~T_TreeView()
+{
+}

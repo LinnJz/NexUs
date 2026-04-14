@@ -21,14 +21,23 @@ NXApplication::NXApplication(QObject *parent)
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXApplicationPrivate::onThemeModeChanged);
 }
 
-NXApplication::~NXApplication() { }
+NXApplication::~NXApplication()
+{
+}
 
-void NXApplication::setWindowDisplayMode(NXApplicationType::WindowDisplayMode windowDisplayType) noexcept
+void
+NXApplication::setWindowDisplayMode(NXApplicationType::WindowDisplayMode windowDisplayType) noexcept
 {
   Q_D(NXApplication);
   auto lastDisplayMode = d->_pWindowDisplayMode;
-  if (lastDisplayMode == windowDisplayType) { return; }
-  if (lastDisplayMode == NXApplicationType::NXMica) { d->_resetAllMicaWidget(); }
+  if (lastDisplayMode == windowDisplayType)
+  {
+    return;
+  }
+  if (lastDisplayMode == NXApplicationType::NXMica)
+  {
+    d->_resetAllMicaWidget();
+  }
   switch (windowDisplayType)
   {
   case NXApplicationType::Normal :
@@ -60,13 +69,15 @@ void NXApplication::setWindowDisplayMode(NXApplicationType::WindowDisplayMode wi
   }
 }
 
-NXApplicationType::WindowDisplayMode NXApplication::getWindowDisplayMode() const noexcept
+NXApplicationType::WindowDisplayMode
+NXApplication::getWindowDisplayMode() const noexcept
 {
   Q_D(const NXApplication);
   return d->_pWindowDisplayMode;
 }
 
-void NXApplication::setMicaImagePath(const QString& micaImagePath) noexcept
+void
+NXApplication::setMicaImagePath(const QString &micaImagePath) noexcept
 {
   Q_D(NXApplication);
   d->_pMicaImagePath = micaImagePath;
@@ -74,13 +85,15 @@ void NXApplication::setMicaImagePath(const QString& micaImagePath) noexcept
   Q_EMIT pMicaImagePathChanged();
 }
 
-QString NXApplication::getMicaImagePath() const noexcept
+QString
+NXApplication::getMicaImagePath() const noexcept
 {
   Q_D(const NXApplication);
   return d->_pMicaImagePath;
 }
 
-void NXApplication::init() noexcept
+void
+NXApplication::init() noexcept
 {
   Q_D(NXApplication);
   Q_INIT_RESOURCE(NexUs);
@@ -96,13 +109,16 @@ void NXApplication::init() noexcept
 #ifdef Q_OS_WIN
   nxWinHelper->initWinAPI();
 #endif
-  d->syncSystemTheme();
 }
 
-void NXApplication::syncWindowDisplayMode(QWidget *widget, bool isSync) noexcept
+void
+NXApplication::syncWindowDisplayMode(QWidget *widget, bool isSync) noexcept
 {
   Q_D(NXApplication);
-  if (!widget) { return; }
+  if (!widget)
+  {
+    return;
+  }
   if (isSync)
   {
     d->_micaWidgetList.append(widget);
@@ -120,7 +136,10 @@ void NXApplication::syncWindowDisplayMode(QWidget *widget, bool isSync) noexcept
   {
     if (isSync)
     {
-      if (d->_pWindowDisplayMode == NXApplicationType::WindowDisplayMode::NXMica) { d->_updateMica(widget, false); }
+      if (d->_pWindowDisplayMode == NXApplicationType::WindowDisplayMode::NXMica)
+      {
+        d->_updateMica(widget, false);
+      }
     }
     break;
   }
@@ -143,11 +162,17 @@ void NXApplication::syncWindowDisplayMode(QWidget *widget, bool isSync) noexcept
   }
 }
 
-bool NXApplication::containsCursorToItem(QWidget *item) noexcept
+bool
+NXApplication::containsCursorToItem(QWidget *item) noexcept
 {
-  if (!item || !item->isVisible()) { return false; }
-  auto point  = item->window()->mapFromGlobal(QCursor::pos());
-  QRectF rect = QRectF(item->mapTo(item->window(), QPoint(0, 0)), item->size());
-  if (rect.contains(point)) { return true; }
+  if (!item || !item->isVisible())
+  {
+    return false;
+  }
+  auto itemRect = QRect(item->mapToGlobal(QPoint(0, 0)), item->size());
+  if (itemRect.contains(QCursor::pos()))
+  {
+    return true;
+  }
   return false;
 }

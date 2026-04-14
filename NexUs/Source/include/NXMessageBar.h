@@ -15,23 +15,23 @@ class NX_EXPORT NXMessageBar : public QWidget
 
 public:
   static void success(NXMessageBarType::PositionPolicy policy,
-                      const QString& title,
-                      const QString& text,
+                      const QString &title,
+                      const QString &text,
                       int displayMsec,
                       QWidget *parent = nullptr) noexcept;
   static void warning(NXMessageBarType::PositionPolicy policy,
-                      const QString& title,
-                      const QString& text,
+                      const QString &title,
+                      const QString &text,
                       int displayMsec,
                       QWidget *parent = nullptr) noexcept;
   static void information(NXMessageBarType::PositionPolicy policy,
-                          const QString& title,
-                          const QString& text,
+                          const QString &title,
+                          const QString &text,
                           int displayMsec,
                           QWidget *parent = nullptr) noexcept;
   static void error(NXMessageBarType::PositionPolicy policy,
-                    const QString& title,
-                    const QString& text,
+                    const QString &title,
+                    const QString &text,
                     int displayMsec,
                     QWidget *parent = nullptr) noexcept;
 
@@ -43,8 +43,8 @@ private:
   friend class NXMessageBarManager;
   explicit NXMessageBar(NXMessageBarType::PositionPolicy policy,
                         NXMessageBarType::MessageMode messageMode,
-                        const QString& title,
-                        const QString& text,
+                        const QString &title,
+                        const QString &text,
                         int displayMsec,
                         QWidget *parent = nullptr);
   ~NXMessageBar();

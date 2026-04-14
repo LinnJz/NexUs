@@ -22,38 +22,60 @@ NXToggleSwitch::NXToggleSwitch(QWidget *parent)
   d->_themeMode     = nxTheme->getThemeMode();
   setProperty("circleCenterX", 0.01);
   setProperty("circleRadius", 0.01);
-  connect(nxTheme, &NXTheme::themeModeChanged, this,
-          [=](NXThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    d->_themeMode = themeMode;
+  });
 }
 
-NXToggleSwitch::~NXToggleSwitch() { }
+NXToggleSwitch::~NXToggleSwitch()
+{
+}
 
-void NXToggleSwitch::setIsToggled(bool isToggled) noexcept
+void
+NXToggleSwitch::setIsToggled(bool isToggled) noexcept
 {
   Q_D(NXToggleSwitch);
-  if (d->_isToggled == isToggled) { return; }
-  if (d->_isToggled) { d->_startPosAnimation(width() - height() / 2 - d->_margin * 2, height() / 2, isToggled); }
+  if (d->_isToggled == isToggled)
+  {
+    return;
+  }
+  if (d->_isToggled)
+  {
+    d->_startPosAnimation(width() - height() / 2 - d->_margin * 2, height() / 2, isToggled);
+  }
   else
   {
     d->_startPosAnimation(height() / 2, width() - height() / 2 - d->_margin * 2, isToggled);
   }
 }
 
-bool NXToggleSwitch::getIsToggled() const noexcept { return d_ptr->_isToggled; }
+bool
+NXToggleSwitch::getIsToggled() const noexcept
+{
+  return d_ptr->_isToggled;
+}
 
-bool NXToggleSwitch::event(QEvent *event)
+bool
+NXToggleSwitch::event(QEvent *event)
 {
   Q_D(NXToggleSwitch);
   switch (event->type())
   {
   case QEvent::Enter :
   {
-    if (isEnabled()) { d->_startRadiusAnimation(height() * 0.3, height() * 0.35); }
+    if (isEnabled())
+    {
+      d->_startRadiusAnimation(height() * 0.3, height() * 0.35);
+    }
     break;
   }
   case QEvent::Leave :
   {
-    if (isEnabled()) { d->_startRadiusAnimation(height() * 0.35, height() * 0.3); }
+    if (isEnabled())
+    {
+      d->_startRadiusAnimation(height() * 0.35, height() * 0.3);
+    }
     break;
   }
   case QEvent::MouseMove :
@@ -69,7 +91,8 @@ bool NXToggleSwitch::event(QEvent *event)
   return QWidget::event(event);
 }
 
-void NXToggleSwitch::mousePressEvent(QMouseEvent *event)
+void
+NXToggleSwitch::mousePressEvent(QMouseEvent *event)
 {
   Q_D(NXToggleSwitch);
   d->_adjustCircleCenterX();
@@ -79,7 +102,8 @@ void NXToggleSwitch::mousePressEvent(QMouseEvent *event)
   QWidget::mousePressEvent(event);
 }
 
-void NXToggleSwitch::mouseReleaseEvent(QMouseEvent *event)
+void
+NXToggleSwitch::mouseReleaseEvent(QMouseEvent *event)
 {
   Q_D(NXToggleSwitch);
   d->_isLeftButtonPress = false;
@@ -98,7 +122,10 @@ void NXToggleSwitch::mouseReleaseEvent(QMouseEvent *event)
   }
   else
   {
-    if (d->_isToggled) { d->_startPosAnimation(d->_circleCenterX, height() / 2, false); }
+    if (d->_isToggled)
+    {
+      d->_startPosAnimation(d->_circleCenterX, height() / 2, false);
+    }
     else
     {
       d->_startPosAnimation(d->_circleCenterX, width() - height() / 2 - d->_margin * 2, true);
@@ -107,7 +134,8 @@ void NXToggleSwitch::mouseReleaseEvent(QMouseEvent *event)
   d->_startRadiusAnimation(height() * 0.25, height() * 0.35);
 }
 
-void NXToggleSwitch::mouseMoveEvent(QMouseEvent *event)
+void
+NXToggleSwitch::mouseMoveEvent(QMouseEvent *event)
 {
   Q_D(NXToggleSwitch);
   if (d->_isLeftButtonPress)
@@ -121,7 +149,8 @@ void NXToggleSwitch::mouseMoveEvent(QMouseEvent *event)
   QWidget::mouseMoveEvent(event);
 }
 
-void NXToggleSwitch::paintEvent(QPaintEvent *event)
+void
+NXToggleSwitch::paintEvent(QPaintEvent *event)
 {
   Q_D(NXToggleSwitch);
   QPainter painter(this);

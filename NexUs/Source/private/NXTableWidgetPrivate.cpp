@@ -5,4 +5,6 @@ NXTableWidgetPrivate::NXTableWidgetPrivate(QObject *parent)
 {
 }
 
-NXTableWidgetPrivate::~NXTableWidgetPrivate() { }
+NXTableWidgetPrivate::~NXTableWidgetPrivate()
+{
+}

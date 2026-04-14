@@ -15,14 +15,20 @@ T_BasePage::T_BasePage(QWidget *parent)
 {
   connect(nxTheme, &NXTheme::themeModeChanged, this, [=]()
   {
-    if (!parent) { update(); }
+    if (!parent)
+    {
+      update();
+    }
   });
   setContentsMargins(20, 5, 0, 0);
 }
 
-T_BasePage::~T_BasePage() { }
+T_BasePage::~T_BasePage()
+{
+}
 
-void T_BasePage::createCustomWidget(QString desText)
+void
+T_BasePage::createCustomWidget(QString desText)
 {
   // 顶部元素
   QWidget *customWidget = new QWidget(this);
@@ -59,7 +65,9 @@ void T_BasePage::createCustomWidget(QString desText)
   themeButton->setIsTransparent(false);
   themeButton->setNXIcon(NXIconType::MoonStars);
   connect(themeButton, &NXToolButton::clicked, this, [=]()
-  { nxTheme->setThemeMode(nxTheme->getThemeMode() == NXThemeType::Light ? NXThemeType::Dark : NXThemeType::Light); });
+  {
+    nxTheme->setThemeMode(nxTheme->getThemeMode() == NXThemeType::Light ? NXThemeType::Dark : NXThemeType::Light);
+  });
 
   NXToolButton *backtrackButton = new NXToolButton(this);
   backtrackButton->setFixedSize(35, 35);
@@ -68,7 +76,10 @@ void T_BasePage::createCustomWidget(QString desText)
   connect(backtrackButton, &NXToolButton::clicked, this, [=]()
   {
     NXWindow *window = dynamic_cast<NXWindow *>(this->window());
-    if (window) { window->backtrackNavigationNode(property("NXPageKey").toString()); }
+    if (window)
+    {
+      window->backtrackNavigationNode(property("NXPageKey").toString());
+    }
   });
 
   NXPushButton *iconButton = new NXPushButton("带图标按钮", this);

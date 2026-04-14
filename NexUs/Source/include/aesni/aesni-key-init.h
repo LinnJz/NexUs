@@ -25,9 +25,11 @@ typedef struct KEY_SCHEDULE
  * @return -2 if bits didn't match 128 or 192 or 256 (allowed key sizes)
  *
  */
-int AES_set_encrypt_key(const unsigned char *userKey, const int bits, AES_KEY *key)
+int
+AES_set_encrypt_key(const unsigned char *userKey, const int bits, AES_KEY *key)
 {
-  if (!userKey || !key) return -1;
+  if (!userKey || !key)
+    return -1;
 
   if (bits == 128)
   {
@@ -60,15 +62,18 @@ int AES_set_encrypt_key(const unsigned char *userKey, const int bits, AES_KEY *k
  * @return -2 if bits didn't match 128 or 192 or 256 (allowed key sizes)
  *
  */
-int AES_set_decrypt_key(const unsigned char *userKey, const int bits, AES_KEY *key)
+int
+AES_set_decrypt_key(const unsigned char *userKey, const int bits, AES_KEY *key)
 {
   int nr;
   AES_KEY temp_key;
   __m128i *Key_Schedule      = (__m128i *) key->KEY;
   __m128i *Temp_Key_Schedule = (__m128i *) temp_key.KEY;
 
-  if (!userKey || !key) return -1;
-  if (AES_set_encrypt_key(userKey, bits, &temp_key) == -2) return -2;
+  if (!userKey || !key)
+    return -1;
+  if (AES_set_encrypt_key(userKey, bits, &temp_key) == -2)
+    return -2;
 
   nr      = temp_key.nr;
   key->nr = nr;

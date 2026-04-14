@@ -8,7 +8,7 @@ class NXKeyBinder;
 class NXKeyBinderContainer : public QWidget
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE_2(const QString&, QString, BinderKeyText)
+  Q_PRIVATE_CREATE_2(const QString &, QString, BinderKeyText)
   Q_PRIVATE_CREATE(quint32, NativeVirtualBinderKey)
 
 public:

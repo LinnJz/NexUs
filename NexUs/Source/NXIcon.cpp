@@ -3,11 +3,16 @@
 #include <QPainter>
 #include <QPixmap>
 
-NXIcon::NXIcon() { }
+NXIcon::NXIcon()
+{
+}
 
-NXIcon::~NXIcon() { }
+NXIcon::~NXIcon()
+{
+}
 
-QIcon NXIcon::getNXIcon(NXIconType::IconName awesome) noexcept
+QIcon
+NXIcon::getNXIcon(NXIconType::IconName awesome) noexcept
 {
   QFont iconFont = QFont(QStringLiteral("NXAwesome"));
   QPixmap pix(30, 30);
@@ -19,12 +24,13 @@ QIcon NXIcon::getNXIcon(NXIconType::IconName awesome) noexcept
   // painter.setBrush(QColor("#1570A5"));
   iconFont.setPixelSize(25);
   painter.setFont(iconFont);
-  painter.drawText(pix.rect(), Qt::AlignCenter, QChar((unsigned short) awesome));
+  painter.drawText(pix.rect(), Qt::AlignCenter, QChar(awesome));
   painter.end();
   return QIcon(pix);
 }
 
-QIcon NXIcon::getNXIcon(NXIconType::IconName awesome, const QColor& iconColor) noexcept
+QIcon
+NXIcon::getNXIcon(NXIconType::IconName awesome, const QColor &iconColor) noexcept
 {
   QFont iconFont = QFont(QStringLiteral("NXAwesome"));
   QPixmap pix(30, 30);
@@ -36,12 +42,13 @@ QIcon NXIcon::getNXIcon(NXIconType::IconName awesome, const QColor& iconColor) n
   // painter.setBrush(QColor("#1570A5"));
   iconFont.setPixelSize(25);
   painter.setFont(iconFont);
-  painter.drawText(pix.rect(), Qt::AlignCenter, QChar((unsigned short) awesome));
+  painter.drawText(pix.rect(), Qt::AlignCenter, QChar(awesome));
   painter.end();
   return QIcon(pix);
 }
 
-QIcon NXIcon::getNXIcon(NXIconType::IconName awesome, int pixelSize) noexcept
+QIcon
+NXIcon::getNXIcon(NXIconType::IconName awesome, int pixelSize) noexcept
 {
   QFont iconFont = QFont(QStringLiteral("NXAwesome"));
   QPixmap pix(pixelSize, pixelSize);
@@ -52,12 +59,13 @@ QIcon NXIcon::getNXIcon(NXIconType::IconName awesome, int pixelSize) noexcept
   iconFont.setPixelSize(pixelSize);
   painter.setFont(iconFont);
   // 画图形字体
-  painter.drawText(pix.rect(), Qt::AlignCenter, QChar((unsigned short) awesome));
+  painter.drawText(pix.rect(), Qt::AlignCenter, QChar(awesome));
   painter.end();
   return QIcon(pix);
 }
 
-QIcon NXIcon::getNXIcon(NXIconType::IconName awesome, int pixelSize, const QColor& iconColor) noexcept
+QIcon
+NXIcon::getNXIcon(NXIconType::IconName awesome, int pixelSize, const QColor &iconColor) noexcept
 {
   QFont iconFont = QFont(QStringLiteral("NXAwesome"));
   QPixmap pix(pixelSize, pixelSize);
@@ -69,12 +77,13 @@ QIcon NXIcon::getNXIcon(NXIconType::IconName awesome, int pixelSize, const QColo
   iconFont.setPixelSize(pixelSize);
   painter.setFont(iconFont);
   // 画图形字体
-  painter.drawText(pix.rect(), Qt::AlignCenter, QChar((unsigned short) awesome));
+  painter.drawText(pix.rect(), Qt::AlignCenter, QChar(awesome));
   painter.end();
   return QIcon(pix);
 }
 
-QIcon NXIcon::getNXIcon(NXIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight) noexcept
+QIcon
+NXIcon::getNXIcon(NXIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight) noexcept
 {
   QFont iconFont = QFont(QStringLiteral("NXAwesome"));
   QPixmap pix(fixedWidth, fixedHeight);
@@ -85,13 +94,14 @@ QIcon NXIcon::getNXIcon(NXIconType::IconName awesome, int pixelSize, int fixedWi
   iconFont.setPixelSize(pixelSize);
   painter.setFont(iconFont);
   // 画图形字体
-  painter.drawText(pix.rect(), Qt::AlignCenter, QChar((unsigned short) awesome));
+  painter.drawText(pix.rect(), Qt::AlignCenter, QChar(awesome));
   painter.end();
   return QIcon(pix);
 }
 
-QIcon NXIcon::getNXIcon(
-    NXIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight, const QColor& iconColor) noexcept
+QIcon
+NXIcon::getNXIcon(
+    NXIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight, const QColor &iconColor) noexcept
 {
   QFont iconFont = QFont(QStringLiteral("NXAwesome"));
   QPixmap pix(fixedWidth, fixedHeight);
@@ -103,7 +113,7 @@ QIcon NXIcon::getNXIcon(
   iconFont.setPixelSize(pixelSize);
   painter.setFont(iconFont);
   // 画图形字体
-  painter.drawText(pix.rect(), Qt::AlignCenter, QChar((unsigned short) awesome));
+  painter.drawText(pix.rect(), Qt::AlignCenter, QChar(awesome));
   painter.end();
   return QIcon(pix);
 }

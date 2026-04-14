@@ -17,12 +17,12 @@ class NX_EXPORT NXMessageButton : public QPushButton
   Q_PROPERTY_CREATE_H(NXMessageBarType::MessageMode, MessageMode)
   Q_PROPERTY_CREATE_H(NXMessageBarType::PositionPolicy, PositionPolicy)
   Q_PROPERTY_CREATE_H(QWidget *, MessageTargetWidget)
-  Q_PROPERTY_CREATE_2_H(const QString&, QString, BarTitle)
-  Q_PROPERTY_CREATE_2_H(const QString&, QString, BarText)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, BarTitle)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, BarText)
 
 public:
   explicit NXMessageButton(QWidget *parent = nullptr);
-  explicit NXMessageButton(const QString& text, QWidget *parent = nullptr);
+  explicit NXMessageButton(const QString &text, QWidget *parent = nullptr);
   ~NXMessageButton();
   void disconnectInternalSignalOfClicked() noexcept;
 Q_SIGNALS:

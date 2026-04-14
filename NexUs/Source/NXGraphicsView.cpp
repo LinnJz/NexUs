@@ -26,15 +26,21 @@ NXGraphicsView::NXGraphicsView(QGraphicsScene *scene, QWidget *parent)
   setScene(scene);
 }
 
-NXGraphicsView::~NXGraphicsView() { }
+NXGraphicsView::~NXGraphicsView()
+{
+}
 
-void NXGraphicsView::wheelEvent(QWheelEvent *event)
+void
+NXGraphicsView::wheelEvent(QWheelEvent *event)
 {
   Q_D(NXGraphicsView);
   if (event->modifiers() == Qt::CTRL)
   {
     // 放大
-    if ((event->angleDelta().y() > 0) && transform().m11() <= d->_pMaxTransform) { this->scale(1.1, 1.1); }
+    if ((event->angleDelta().y() > 0) && transform().m11() <= d->_pMaxTransform)
+    {
+      this->scale(1.1, 1.1);
+    }
     else if ((event->angleDelta().y() < 0) && transform().m11() >= d->_pMinTransform)
     {
       this->scale(1.0 / 1.1, 1.0 / 1.1);
@@ -45,14 +51,22 @@ void NXGraphicsView::wheelEvent(QWheelEvent *event)
   QGraphicsView::wheelEvent(event);
 }
 
-void NXGraphicsView::keyPressEvent(QKeyEvent *event)
+void
+NXGraphicsView::keyPressEvent(QKeyEvent *event)
 {
-  if (event->key() == Qt::Key_Alt) { setDragMode(QGraphicsView::ScrollHandDrag); }
+  if (event->key() == Qt::Key_Alt)
+  {
+    setDragMode(QGraphicsView::ScrollHandDrag);
+  }
   QGraphicsView::keyPressEvent(event);
 }
 
-void NXGraphicsView::keyReleaseEvent(QKeyEvent *event)
+void
+NXGraphicsView::keyReleaseEvent(QKeyEvent *event)
 {
-  if (event->key() == Qt::Key_Alt) { setDragMode(QGraphicsView::RubberBandDrag); }
+  if (event->key() == Qt::Key_Alt)
+  {
+    setDragMode(QGraphicsView::RubberBandDrag);
+  }
   QGraphicsView::keyReleaseEvent(event);
 }

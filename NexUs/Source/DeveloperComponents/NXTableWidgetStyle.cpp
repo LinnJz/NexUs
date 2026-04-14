@@ -9,20 +9,26 @@
 
 NXTableWidgetStyle::NXTableWidgetStyle(QStyle *style)
 {
-  _pItemHeight      = 35;
-  _pHeaderMargin    = 6;
+  _pItemHeight        = 35;
+  _pHeaderMargin      = 6;
   _pCurrentHoverIndex = QModelIndex {};
-  _pIsTransparent   = false;
-  _themeMode        = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  _pIsTransparent     = false;
+  _themeMode          = nxTheme->getThemeMode();
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXTableWidgetStyle::~NXTableWidgetStyle() { }
+NXTableWidgetStyle::~NXTableWidgetStyle()
+{
+}
 
-void NXTableWidgetStyle::drawPrimitive(PrimitiveElement element,
-                                       const QStyleOption *option,
-                                       QPainter *painter,
-                                       const QWidget *widget) const
+void
+NXTableWidgetStyle::drawPrimitive(PrimitiveElement element,
+                                  const QStyleOption *option,
+                                  QPainter *painter,
+                                  const QWidget *widget) const
 {
   switch (element)
   {
@@ -31,7 +37,10 @@ void NXTableWidgetStyle::drawPrimitive(PrimitiveElement element,
     if (const QStyleOptionViewItem *vopt = qstyleoption_cast<const QStyleOptionViewItem *>(option))
     {
       const NXTableWidget *tableWidget = dynamic_cast<const NXTableWidget *>(widget);
-      if (!tableWidget) { return; }
+      if (!tableWidget)
+      {
+        return;
+      }
 
       QVariant backgroundData  = vopt->index.data(Qt::BackgroundRole);
       bool hasCustomBackground = backgroundData.isValid();
@@ -76,7 +85,10 @@ void NXTableWidgetStyle::drawPrimitive(PrimitiveElement element,
       QVariant backgroundData  = vopt->index.data(Qt::BackgroundRole);
       bool hasCustomBackground = backgroundData.isValid();
 
-      if (hasCustomBackground) { return; }
+      if (hasCustomBackground)
+      {
+        return;
+      }
 
       painter->save();
       painter->setRenderHint(QPainter::Antialiasing);
@@ -112,10 +124,11 @@ void NXTableWidgetStyle::drawPrimitive(PrimitiveElement element,
   QProxyStyle::drawPrimitive(element, option, painter, widget);
 }
 
-void NXTableWidgetStyle::drawControl(ControlElement element,
-                                     const QStyleOption *option,
-                                     QPainter *painter,
-                                     const QWidget *widget) const
+void
+NXTableWidgetStyle::drawControl(ControlElement element,
+                                const QStyleOption *option,
+                                QPainter *painter,
+                                const QWidget *widget) const
 {
   switch (element)
   {
@@ -157,7 +170,10 @@ void NXTableWidgetStyle::drawControl(ControlElement element,
     painter->setPen(Qt::NoPen);
     painter->setBrush(NXThemeColor(_themeMode, BasicBaseDeepAlpha));
     painter->drawRect(option->rect);
-    if (option->state.testFlag(QStyle::State_Sunken)) { painter->setBrush(NXThemeColor(_themeMode, BasicPressAlpha)); }
+    if (option->state.testFlag(QStyle::State_Sunken))
+    {
+      painter->setBrush(NXThemeColor(_themeMode, BasicPressAlpha));
+    }
     else
     {
       if (option->state.testFlag(QStyle::State_MouseOver))
@@ -185,7 +201,10 @@ void NXTableWidgetStyle::drawControl(ControlElement element,
     if (const QStyleOptionViewItem *vopt = qstyleoption_cast<const QStyleOptionViewItem *>(option))
     {
       const NXTableWidget *tableWidget = dynamic_cast<const NXTableWidget *>(widget);
-      if (!tableWidget) { return; }
+      if (!tableWidget)
+      {
+        return;
+      }
       this->drawPrimitive(QStyle::PE_PanelItemViewItem, option, painter, widget);
       QAbstractItemView::SelectionBehavior selectionBehavior = tableWidget->selectionBehavior();
       QRect itemRect                                         = option->rect;
@@ -241,10 +260,11 @@ void NXTableWidgetStyle::drawControl(ControlElement element,
   QProxyStyle::drawControl(element, option, painter, widget);
 }
 
-QSize NXTableWidgetStyle::sizeFromContents(ContentsType type,
-                                           const QStyleOption *option,
-                                           const QSize& size,
-                                           const QWidget *widget) const
+QSize
+NXTableWidgetStyle::sizeFromContents(ContentsType type,
+                                     const QStyleOption *option,
+                                     const QSize &size,
+                                     const QWidget *widget) const
 {
   switch (type)
   {
@@ -262,7 +282,8 @@ QSize NXTableWidgetStyle::sizeFromContents(ContentsType type,
   return QProxyStyle::sizeFromContents(type, option, size, widget);
 }
 
-int NXTableWidgetStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
+int
+NXTableWidgetStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
   switch (metric)
   {

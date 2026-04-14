@@ -13,7 +13,7 @@ class NX_EXPORT NXLCDNumber : public QLCDNumber
   Q_Q_CREATE(NXLCDNumber)
   Q_PROPERTY_CREATE_H(bool, IsUseAutoClock)
   Q_PROPERTY_CREATE_H(bool, IsTransparent)
-  Q_PROPERTY_CREATE_2_H(const QString&, QString, AutoClockFormat)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, AutoClockFormat)
 
 public:
   explicit NXLCDNumber(QWidget *parent = nullptr);

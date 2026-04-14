@@ -29,7 +29,10 @@ NXToolTip::NXToolTip(QWidget *parent)
   d->_pHideDelayMsec = 0;
   d->_pCustomWidget  = nullptr;
   setObjectName("NXToolTip");
-  if (parent) { parent->installEventFilter(d); }
+  if (parent)
+  {
+    parent->installEventFilter(d);
+  }
   setAttribute(Qt::WA_TransparentForMouseEvents);
   setAttribute(Qt::WA_TranslucentBackground);
   setWindowFlags(Qt::Tool | Qt::FramelessWindowHint);
@@ -51,15 +54,19 @@ NXToolTip::NXToolTip(QWidget *parent)
   hide();
 }
 
-NXToolTip::~NXToolTip() { }
+NXToolTip::~NXToolTip()
+{
+}
 
-void NXToolTip::updatePos() noexcept
+void
+NXToolTip::updatePos() noexcept
 {
   Q_D(NXToolTip);
   d->_updatePos();
 }
 
-void NXToolTip::setToolTip(const QString& toolTip) noexcept
+void
+NXToolTip::setToolTip(const QString &toolTip) noexcept
 {
   Q_D(NXToolTip);
   d->_toolTipText->setText(toolTip);
@@ -71,16 +78,21 @@ void NXToolTip::setToolTip(const QString& toolTip) noexcept
   Q_EMIT pToolTipChanged();
 }
 
-QString NXToolTip::getToolTip() const noexcept
+QString
+NXToolTip::getToolTip() const noexcept
 {
   Q_D(const NXToolTip);
   return d->_toolTipText->text();
 }
 
-void NXToolTip::setCustomWidget(QWidget *customWidget) noexcept
+void
+NXToolTip::setCustomWidget(QWidget *customWidget) noexcept
 {
   Q_D(NXToolTip);
-  if (!customWidget || customWidget == this) { return; }
+  if (!customWidget || customWidget == this)
+  {
+    return;
+  }
   if (d->_pCustomWidget)
   {
     d->_mainLayout->removeWidget(d->_pCustomWidget);
@@ -92,13 +104,15 @@ void NXToolTip::setCustomWidget(QWidget *customWidget) noexcept
   Q_EMIT pCustomWidgetChanged();
 }
 
-QWidget *NXToolTip::getCustomWidget() const noexcept
+QWidget *
+NXToolTip::getCustomWidget() const noexcept
 {
   Q_D(const NXToolTip);
   return d->_pCustomWidget;
 }
 
-void NXToolTip::paintEvent(QPaintEvent *event)
+void
+NXToolTip::paintEvent(QPaintEvent *event)
 {
   Q_D(NXToolTip);
   QPainter painter(this);

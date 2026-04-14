@@ -7,23 +7,37 @@ NXEventPrivate::NXEventPrivate(QObject *parent)
 {
 }
 
-NXEventPrivate::~NXEventPrivate() { }
+NXEventPrivate::~NXEventPrivate()
+{
+}
 
 NXEventBusPrivate::NXEventBusPrivate(QObject *parent)
     : QObject { parent }
 {
 }
 
-NXEventBusPrivate::~NXEventBusPrivate() { }
-
-NXEventBusType::EventBusReturnType NXEventBusPrivate::registerEvent(NXEvent *event) noexcept
+NXEventBusPrivate::~NXEventBusPrivate()
 {
-  if (!event) { return NXEventBusType::EventBusReturnType::EventInvalid; }
-  if (event->getEventName().isEmpty()) { return NXEventBusType::EventBusReturnType::EventNameInvalid; }
+}
+
+NXEventBusType::EventBusReturnType
+NXEventBusPrivate::registerEvent(NXEvent *event) noexcept
+{
+  if (!event)
+  {
+    return NXEventBusType::EventBusReturnType::EventInvalid;
+  }
+  if (event->getEventName().isEmpty())
+  {
+    return NXEventBusType::EventBusReturnType::EventNameInvalid;
+  }
   if (_eventMap.contains(event->getEventName()))
   {
     QList<NXEvent *> eventList = _eventMap.value(event->getEventName());
-    if (eventList.contains(event)) { return NXEventBusType::EventBusReturnType::EventInvalid; }
+    if (eventList.contains(event))
+    {
+      return NXEventBusType::EventBusReturnType::EventInvalid;
+    }
     eventList.append(event);
     _eventMap[event->getEventName()] = eventList;
   }
@@ -36,13 +50,23 @@ NXEventBusType::EventBusReturnType NXEventBusPrivate::registerEvent(NXEvent *eve
   return NXEventBusType::EventBusReturnType::Success;
 }
 
-void NXEventBusPrivate::unRegisterEvent(NXEvent *event) noexcept
+void
+NXEventBusPrivate::unRegisterEvent(NXEvent *event) noexcept
 {
-  if (!event) { return; }
-  if (event->getEventName().isEmpty()) { return; }
+  if (!event)
+  {
+    return;
+  }
+  if (event->getEventName().isEmpty())
+  {
+    return;
+  }
   if (_eventMap.contains(event->getEventName()))
   {
-    if (_eventMap[event->getEventName()].count() == 1) { _eventMap.remove(event->getEventName()); }
+    if (_eventMap[event->getEventName()].count() == 1)
+    {
+      _eventMap.remove(event->getEventName());
+    }
     else
     {
       QList<NXEvent *> eventList = _eventMap.value(event->getEventName());

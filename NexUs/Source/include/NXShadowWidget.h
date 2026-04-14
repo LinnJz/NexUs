@@ -15,8 +15,8 @@ class NX_EXPORT NXShadowWidget : public QWidget
   Q_PROPERTY_CREATE_H(qreal, Spread)
   Q_PROPERTY_CREATE_H(QPointF, LightOffset)
   Q_PROPERTY_CREATE_H(QPointF, DarkOffset)
-  Q_PROPERTY_CREATE_2_H(const QColor&, QColor, LightColor)
-  Q_PROPERTY_CREATE_2_H(const QColor&, QColor, DarkColor)
+  Q_PROPERTY_CREATE_2_H(const QColor &, QColor, LightColor)
+  Q_PROPERTY_CREATE_2_H(const QColor &, QColor, DarkColor)
 
 public:
   explicit NXShadowWidget(QWidget *parent = nullptr);

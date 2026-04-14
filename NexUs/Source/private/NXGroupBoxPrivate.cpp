@@ -9,9 +9,12 @@ NXGroupBoxPrivate::NXGroupBoxPrivate(QObject *parent)
   _pBorderRadius = 6;
 }
 
-NXGroupBoxPrivate::~NXGroupBoxPrivate() { }
+NXGroupBoxPrivate::~NXGroupBoxPrivate()
+{
+}
 
-void NXGroupBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
+void
+NXGroupBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_Q(NXGroupBox);
   _themeMode       = themeMode;

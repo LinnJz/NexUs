@@ -10,14 +10,18 @@ NXCalendarTitleDelegate::NXCalendarTitleDelegate(QObject *parent)
     : QStyledItemDelegate { parent }
 {
   _themeMode = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXCalendarTitleDelegate::~NXCalendarTitleDelegate() { }
+NXCalendarTitleDelegate::~NXCalendarTitleDelegate()
+{
+}
 
-void NXCalendarTitleDelegate::paint(QPainter *painter,
-                                    const QStyleOptionViewItem& option,
-                                    const QModelIndex& index) const
+void
+NXCalendarTitleDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
   painter->save();
   painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
@@ -36,7 +40,8 @@ void NXCalendarTitleDelegate::paint(QPainter *painter,
   QStyledItemDelegate::paint(painter, option, index);
 }
 
-QSize NXCalendarTitleDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+QSize
+NXCalendarTitleDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
   return QSize(42, 30);
 }

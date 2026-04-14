@@ -19,7 +19,7 @@ public:
   ~NXFlowLayoutPrivate() override;
 
 private:
-  int _doLayout(const QRect& rect, bool testOnly) const;
+  int _doLayout(const QRect &rect, bool testOnly) const;
   int _smartSpacing(QStyle::PixelMetric pm) const noexcept;
   mutable QMap<QLayoutItem *, QPoint> _lastGeometryMap;
   QList<QLayoutItem *> _itemList;

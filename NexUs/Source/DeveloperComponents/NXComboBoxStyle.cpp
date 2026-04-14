@@ -12,15 +12,21 @@ NXComboBoxStyle::NXComboBoxStyle(QStyle *style)
   _pExpandIconRotate = 0;
   _pExpandMarkWidth  = 0;
   _themeMode         = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXComboBoxStyle::~NXComboBoxStyle() { }
+NXComboBoxStyle::~NXComboBoxStyle()
+{
+}
 
-void NXComboBoxStyle::drawPrimitive(PrimitiveElement element,
-                                    const QStyleOption *option,
-                                    QPainter *painter,
-                                    const QWidget *widget) const
+void
+NXComboBoxStyle::drawPrimitive(PrimitiveElement element,
+                               const QStyleOption *option,
+                               QPainter *painter,
+                               const QWidget *widget) const
 {
   switch (element)
   {
@@ -47,10 +53,11 @@ void NXComboBoxStyle::drawPrimitive(PrimitiveElement element,
   QProxyStyle::drawPrimitive(element, option, painter, widget);
 }
 
-void NXComboBoxStyle::drawControl(ControlElement element,
-                                  const QStyleOption *option,
-                                  QPainter *painter,
-                                  const QWidget *widget) const
+void
+NXComboBoxStyle::drawControl(ControlElement element,
+                             const QStyleOption *option,
+                             QPainter *painter,
+                             const QWidget *widget) const
 {
   switch (element)
   {
@@ -139,10 +146,11 @@ void NXComboBoxStyle::drawControl(ControlElement element,
   QProxyStyle::drawControl(element, option, painter, widget);
 }
 
-void NXComboBoxStyle::drawComplexControl(ComplexControl control,
-                                         const QStyleOptionComplex *option,
-                                         QPainter *painter,
-                                         const QWidget *widget) const
+void
+NXComboBoxStyle::drawComplexControl(ComplexControl control,
+                                    const QStyleOptionComplex *option,
+                                    QPainter *painter,
+                                    const QWidget *widget) const
 {
   switch (control)
   {
@@ -157,10 +165,9 @@ void NXComboBoxStyle::drawComplexControl(ComplexControl control,
       bool isEnabled = copt->state.testFlag(QStyle::State_Enabled);
       painter->setPen(NXThemeColor(_themeMode, BasicBorder));
       painter->setBrush(isEnabled ? (copt->state.testFlag(QStyle::State_HasFocus) && copt->editable)
-                                        ? NXThemeColor(_themeMode, DialogBase)
-                                    : copt->state.testFlag(QStyle::State_MouseOver)
-                                        ? NXThemeColor(_themeMode, BasicHover)
-                                        : NXThemeColor(_themeMode, BasicBase)
+                                      ? NXThemeColor(_themeMode, DialogBase)
+                                  : copt->state.testFlag(QStyle::State_MouseOver) ? NXThemeColor(_themeMode, BasicHover)
+                                                                                  : NXThemeColor(_themeMode, BasicBase)
                                   : NXThemeColor(_themeMode, BasicDisable));
       QRect comboBoxRect = copt->rect;
       comboBoxRect.adjust(_shadowBorderWidth, 1, -_shadowBorderWidth, -1);
@@ -196,7 +203,7 @@ void NXComboBoxStyle::drawComplexControl(ComplexControl control,
         painter->rotate(_pExpandIconRotate);
         painter->translate(-expandIconRect.x() - (qreal) expandIconRect.width() / 2,
                            -expandIconRect.y() - (qreal) expandIconRect.height() / 2);
-        painter->drawText(expandIconRect, Qt::AlignCenter, QChar((unsigned short) NXIconType::AngleDown));
+        painter->drawText(expandIconRect, Qt::AlignCenter, QChar(NXIconType::AngleDown));
       }
       painter->restore();
     }
@@ -210,10 +217,11 @@ void NXComboBoxStyle::drawComplexControl(ComplexControl control,
   QProxyStyle::drawComplexControl(control, option, painter, widget);
 }
 
-QRect NXComboBoxStyle::subControlRect(ComplexControl cc,
-                                      const QStyleOptionComplex *opt,
-                                      SubControl sc,
-                                      const QWidget *widget) const
+QRect
+NXComboBoxStyle::subControlRect(ComplexControl cc,
+                                const QStyleOptionComplex *opt,
+                                SubControl sc,
+                                const QWidget *widget) const
 {
   switch (cc)
   {
@@ -252,10 +260,11 @@ QRect NXComboBoxStyle::subControlRect(ComplexControl cc,
   return QProxyStyle::subControlRect(cc, opt, sc, widget);
 }
 
-QSize NXComboBoxStyle::sizeFromContents(ContentsType type,
-                                        const QStyleOption *option,
-                                        const QSize& size,
-                                        const QWidget *widget) const
+QSize
+NXComboBoxStyle::sizeFromContents(ContentsType type,
+                                  const QStyleOption *option,
+                                  const QSize &size,
+                                  const QWidget *widget) const
 {
   switch (type)
   {

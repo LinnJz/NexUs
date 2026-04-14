@@ -25,12 +25,18 @@ T_Navigation::T_Navigation(QWidget *parent)
   breadcrumbBarText->setTextPixelSize(18);
   _breadcrumbBar = new NXBreadcrumbBar(this);
   QStringList breadcrumbBarList;
-  for (int i = 0; i < 20; i++) { breadcrumbBarList << QString("Item%1").arg(i + 1); }
+  for (int i = 0; i < 20; i++)
+  {
+    breadcrumbBarList << QString("Item%1").arg(i + 1);
+  }
   _breadcrumbBar->setBreadcrumbList(breadcrumbBarList);
 
   NXPushButton *resetButton = new NXPushButton("还原", this);
   resetButton->setFixedSize(60, 32);
-  connect(resetButton, &NXPushButton::clicked, this, [=]() { _breadcrumbBar->setBreadcrumbList(breadcrumbBarList); });
+  connect(resetButton, &NXPushButton::clicked, this, [=]()
+  {
+    _breadcrumbBar->setBreadcrumbList(breadcrumbBarList);
+  });
 
   QHBoxLayout *breadcrumbBarTextLayout = new QHBoxLayout();
   breadcrumbBarTextLayout->addWidget(breadcrumbBarText);
@@ -46,8 +52,8 @@ T_Navigation::T_Navigation(QWidget *parent)
   NXText *pivotText = new NXText("NXPivot", this);
   pivotText->setTextPixelSize(18);
   _pivot = new NXPivot(this);
-  _pivot->setPivotSpacing(8);
-  _pivot->setMarkWidth(75);
+  _pivot->setPivotHorizontalSpacing(8);
+  _pivot->setMarkWidth(100);
   _pivot->appendPivot("本地歌曲");
   _pivot->appendPivot("下载歌曲");
   _pivot->appendPivot("下载视频");
@@ -102,4 +108,6 @@ T_Navigation::T_Navigation(QWidget *parent)
   addCentralWidget(centralWidget, true, false, 0);
 }
 
-T_Navigation::~T_Navigation() { }
+T_Navigation::~T_Navigation()
+{
+}

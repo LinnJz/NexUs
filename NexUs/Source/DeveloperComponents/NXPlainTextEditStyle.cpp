@@ -11,15 +11,21 @@ NXPlainTextEditStyle::NXPlainTextEditStyle(QStyle *style)
 {
   _pExpandMarkWidth = 0;
   _themeMode        = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXPlainTextEditStyle::~NXPlainTextEditStyle() { }
+NXPlainTextEditStyle::~NXPlainTextEditStyle()
+{
+}
 
-void NXPlainTextEditStyle::drawControl(ControlElement element,
-                                       const QStyleOption *option,
-                                       QPainter *painter,
-                                       const QWidget *widget) const
+void
+NXPlainTextEditStyle::drawControl(ControlElement element,
+                                  const QStyleOption *option,
+                                  QPainter *painter,
+                                  const QWidget *widget) const
 {
   switch (element)
   {

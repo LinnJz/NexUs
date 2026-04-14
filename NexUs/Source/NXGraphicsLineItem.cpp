@@ -40,30 +40,45 @@ NXGraphicsLineItem::NXGraphicsLineItem(QPointF startPoint, QPointF endPoint, QGr
   setFlags(QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsSelectable | ItemAcceptsInputMethod);
 }
 
-NXGraphicsLineItem::~NXGraphicsLineItem() { }
+NXGraphicsLineItem::~NXGraphicsLineItem()
+{
+}
 
-bool NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item) const noexcept
+bool
+NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item) const noexcept
 {
   Q_D(const NXGraphicsLineItem);
-  if (d->_linkItemMap.contains(item)) { return true; }
+  if (d->_linkItemMap.contains(item))
+  {
+    return true;
+  }
   return false;
 }
 
-bool NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item1, NXGraphicsItem *item2) const noexcept
+bool
+NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item1, NXGraphicsItem *item2) const noexcept
 {
   Q_D(const NXGraphicsLineItem);
-  if (d->_linkItemMap.contains(item1) && d->_linkItemMap.contains(item2)) { return true; }
+  if (d->_linkItemMap.contains(item1) && d->_linkItemMap.contains(item2))
+  {
+    return true;
+  }
   return false;
 }
 
-bool NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item1, NXGraphicsItem *item2, int port1, int port2) const noexcept
+bool
+NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item1, NXGraphicsItem *item2, int port1, int port2) const noexcept
 {
   Q_D(const NXGraphicsLineItem);
-  if (d->_linkItemMap.value(item1) == port1 && d->_linkItemMap.value(item2) == port2) { return true; }
+  if (d->_linkItemMap.value(item1) == port1 && d->_linkItemMap.value(item2) == port2)
+  {
+    return true;
+  }
   return false;
 }
 
-void NXGraphicsLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void
+NXGraphicsLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
   Q_D(NXGraphicsLineItem);
   painter->save();
@@ -95,8 +110,12 @@ void NXGraphicsLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
   painter->restore();
 }
 
-QRectF NXGraphicsLineItem::boundingRect() const
+QRectF
+NXGraphicsLineItem::boundingRect() const
 {
-  if (!QGraphicsPathItem::boundingRect().isValid()) { return scene()->sceneRect(); }
+  if (!QGraphicsPathItem::boundingRect().isValid())
+  {
+    return scene()->sceneRect();
+  }
   return QGraphicsPathItem::boundingRect();
 }

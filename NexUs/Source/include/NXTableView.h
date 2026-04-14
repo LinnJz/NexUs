@@ -32,7 +32,7 @@ public:
 Q_SIGNALS:
   void tableViewShow();
   void tableViewHide();
-  void hoverIndexChanged(const QModelIndex& index);
+  void hoverIndexChanged(const QModelIndex &index);
 
 protected:
   void showEvent(QShowEvent *event) override;

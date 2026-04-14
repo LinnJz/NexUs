@@ -10,9 +10,12 @@ NXFlowLayoutPrivate::NXFlowLayoutPrivate(QObject *parent)
 {
 }
 
-NXFlowLayoutPrivate::~NXFlowLayoutPrivate() { }
+NXFlowLayoutPrivate::~NXFlowLayoutPrivate()
+{
+}
 
-int NXFlowLayoutPrivate::_doLayout(const QRect& rect, bool testOnly) const
+int
+NXFlowLayoutPrivate::_doLayout(const QRect &rect, bool testOnly) const
 {
   Q_Q(const NXFlowLayout);
   int left, top, right, bottom;
@@ -44,7 +47,10 @@ int NXFlowLayoutPrivate::_doLayout(const QRect& rect, bool testOnly) const
       nextX      = x + item->sizeHint().width() + spaceX;
       lineHeight = 0;
     }
-    if (!_lastGeometryMap.contains(item)) { _lastGeometryMap.insert(item, QPoint(x, y)); }
+    if (!_lastGeometryMap.contains(item))
+    {
+      _lastGeometryMap.insert(item, QPoint(x, y));
+    }
     if (!testOnly)
     {
       if ((item->geometry().x() == 0 && item->geometry().y() == 0))
@@ -82,11 +88,15 @@ int NXFlowLayoutPrivate::_doLayout(const QRect& rect, bool testOnly) const
   return y + lineHeight - rect.y() + bottom;
 }
 
-int NXFlowLayoutPrivate::_smartSpacing(QStyle::PixelMetric pm) const noexcept
+int
+NXFlowLayoutPrivate::_smartSpacing(QStyle::PixelMetric pm) const noexcept
 {
   Q_Q(const NXFlowLayout);
   QObject *parent = q->parent();
-  if (!parent) { return -1; }
+  if (!parent)
+  {
+    return -1;
+  }
   else if (parent->isWidgetType())
   {
     QWidget *pw = static_cast<QWidget *>(parent);

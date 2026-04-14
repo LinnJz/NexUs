@@ -9,7 +9,7 @@ NXBaseListView::NXBaseListView(QWidget *parent)
 {
   setObjectName("NXBaseListView");
   setStyleSheet(QStringLiteral("NXBaseListView{background-color: transparent;border:0px;}"
-                "NXBaseListView::item{border:none;}"));
+                               "NXBaseListView::item{border:none;}"));
   setAutoScroll(false);
   setFocusPolicy(Qt::NoFocus);
   setVerticalScrollBar(new NXScrollBar(this));
@@ -22,27 +22,33 @@ NXBaseListView::NXBaseListView(QWidget *parent)
   setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 }
 
-NXBaseListView::~NXBaseListView() { }
+NXBaseListView::~NXBaseListView()
+{
+}
 
-void NXBaseListView::wheelEvent(QWheelEvent *event)
+void
+NXBaseListView::wheelEvent(QWheelEvent *event)
 {
   QListView::wheelEvent(event);
   event->accept();
 }
 
-void NXBaseListView::mousePressEvent(QMouseEvent *event)
+void
+NXBaseListView::mousePressEvent(QMouseEvent *event)
 {
   Q_EMIT mousePress(indexAt(event->pos()));
   QListView::mousePressEvent(event);
 }
 
-void NXBaseListView::mouseReleaseEvent(QMouseEvent *event)
+void
+NXBaseListView::mouseReleaseEvent(QMouseEvent *event)
 {
   Q_EMIT mouseRelease(indexAt(event->pos()));
   QListView::mouseReleaseEvent(event);
 }
 
-void NXBaseListView::mouseDoubleClickEvent(QMouseEvent *event)
+void
+NXBaseListView::mouseDoubleClickEvent(QMouseEvent *event)
 {
   Q_EMIT mouseDoubleClick(indexAt(event->pos()));
   QListView::mouseDoubleClickEvent(event);

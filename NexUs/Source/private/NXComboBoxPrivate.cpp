@@ -9,9 +9,12 @@ NXComboBoxPrivate::NXComboBoxPrivate(QObject *parent)
 {
 }
 
-NXComboBoxPrivate::~NXComboBoxPrivate() { }
+NXComboBoxPrivate::~NXComboBoxPrivate()
+{
+}
 
-void NXComboBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
+void
+NXComboBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_Q(NXComboBox);
   _themeMode    = themeMode;

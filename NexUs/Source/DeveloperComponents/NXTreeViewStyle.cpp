@@ -13,15 +13,21 @@ NXTreeViewStyle::NXTreeViewStyle(QStyle *style)
   _pHeaderMargin = 5;
   _pIconName     = NXIconType::None;
   _themeMode     = nxTheme->getThemeMode();
-  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+  connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
+  {
+    _themeMode = themeMode;
+  });
 }
 
-NXTreeViewStyle::~NXTreeViewStyle() { }
+NXTreeViewStyle::~NXTreeViewStyle()
+{
+}
 
-void NXTreeViewStyle::drawPrimitive(PrimitiveElement element,
-                                    const QStyleOption *option,
-                                    QPainter *painter,
-                                    const QWidget *widget) const
+void
+NXTreeViewStyle::drawPrimitive(PrimitiveElement element,
+                               const QStyleOption *option,
+                               QPainter *painter,
+                               const QWidget *widget) const
 {
   switch (element)
   {
@@ -76,8 +82,8 @@ void NXTreeViewStyle::drawPrimitive(PrimitiveElement element,
         painter->setFont(iconFont);
         painter->setPen(NXThemeColor(_themeMode, BasicText));
         painter->drawText(indicatorRect, Qt::AlignVCenter | Qt::AlignRight,
-                          vopt->state.testFlag(QStyle::State_Open) ? QChar((unsigned short) NXIconType::AngleDown)
-                                                                   : QChar((unsigned short) NXIconType::AngleRight));
+                          vopt->state.testFlag(QStyle::State_Open) ? QChar(NXIconType::AngleDown)
+                                                                   : QChar(NXIconType::AngleRight));
         painter->restore();
       }
     }
@@ -103,10 +109,11 @@ void NXTreeViewStyle::drawPrimitive(PrimitiveElement element,
   QProxyStyle::drawPrimitive(element, option, painter, widget);
 }
 
-void NXTreeViewStyle::drawControl(ControlElement element,
-                                  const QStyleOption *option,
-                                  QPainter *painter,
-                                  const QWidget *widget) const
+void
+NXTreeViewStyle::drawControl(ControlElement element,
+                             const QStyleOption *option,
+                             QPainter *painter,
+                             const QWidget *widget) const
 {
   switch (element)
   {
@@ -176,7 +183,7 @@ void NXTreeViewStyle::drawControl(ControlElement element,
           iconFont.setPixelSize(checkRect.width() * 0.85);
           painter->setFont(iconFont);
           painter->setPen(NXThemeColor(NXThemeType::Dark, BasicText));
-          painter->drawText(checkRect, Qt::AlignCenter, QChar((unsigned short) NXIconType::Check));
+          painter->drawText(checkRect, Qt::AlignCenter, QChar(NXIconType::Check));
         }
         else if (vopt->checkState == Qt::PartiallyChecked)
         {
@@ -228,7 +235,7 @@ void NXTreeViewStyle::drawControl(ControlElement element,
           QFont iconFont(QStringLiteral("NXAwesome"));
           iconFont.setPixelSize(iconSize * 0.8);
           painter->setFont(iconFont);
-          painter->drawText(iconRect, Qt::AlignCenter, QChar((unsigned short) _pIconName));
+          painter->drawText(iconRect, Qt::AlignCenter, QChar(_pIconName));
         }
         else
         {
@@ -258,10 +265,11 @@ void NXTreeViewStyle::drawControl(ControlElement element,
   QProxyStyle::drawControl(element, option, painter, widget);
 }
 
-QSize NXTreeViewStyle::sizeFromContents(ContentsType type,
-                                        const QStyleOption *option,
-                                        const QSize& size,
-                                        const QWidget *widget) const
+QSize
+NXTreeViewStyle::sizeFromContents(ContentsType type,
+                                  const QStyleOption *option,
+                                  const QSize &size,
+                                  const QWidget *widget) const
 {
   switch (type)
   {
@@ -279,7 +287,8 @@ QSize NXTreeViewStyle::sizeFromContents(ContentsType type,
   return QProxyStyle::sizeFromContents(type, option, size, widget);
 }
 
-int NXTreeViewStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
+int
+NXTreeViewStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
   switch (metric)
   {
@@ -295,7 +304,8 @@ int NXTreeViewStyle::pixelMetric(PixelMetric metric, const QStyleOption *option,
   return QProxyStyle::pixelMetric(metric, option, widget);
 }
 
-QRect NXTreeViewStyle::subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const
+QRect
+NXTreeViewStyle::subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const
 {
   switch (element)
   {

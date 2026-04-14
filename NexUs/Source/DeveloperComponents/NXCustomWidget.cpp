@@ -41,17 +41,25 @@ NXCustomWidget::NXCustomWidget(QWidget *parent)
   setAttribute(Qt::WA_DeleteOnClose);
 }
 
-NXCustomWidget::~NXCustomWidget() { nxApp->syncWindowDisplayMode(this, false); }
-
-void NXCustomWidget::setCentralWidget(QWidget *widget) noexcept
+NXCustomWidget::~NXCustomWidget()
 {
-  if (!widget) { return; }
+  nxApp->syncWindowDisplayMode(this, false);
+}
+
+void
+NXCustomWidget::setCentralWidget(QWidget *widget) noexcept
+{
+  if (!widget)
+  {
+    return;
+  }
   _centralWidget = widget;
   _mainLayout->addWidget(widget);
   widget->setVisible(true);
 }
 
-void NXCustomWidget::paintEvent(QPaintEvent *event)
+void
+NXCustomWidget::paintEvent(QPaintEvent *event)
 {
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
   if (_windowDisplayMode != NXApplicationType::WindowDisplayMode::NXMica)

@@ -14,20 +14,30 @@ NXDoubleSpinBoxPrivate::NXDoubleSpinBoxPrivate(QObject *parent)
 {
 }
 
-NXDoubleSpinBoxPrivate::~NXDoubleSpinBoxPrivate() { }
+NXDoubleSpinBoxPrivate::~NXDoubleSpinBoxPrivate()
+{
+}
 
-void NXDoubleSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
+void
+NXDoubleSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
 {
   Q_Q(NXDoubleSpinBox);
   _themeMode = themeMode;
-  if (q->isVisible()) { _changnxTheme(); }
+  if (q->isVisible())
+  {
+    _changnxTheme();
+  }
   else
   {
-    QTimer::singleShot(1, this, [=] { _changnxTheme(); });
+    QTimer::singleShot(1, this, [=]
+    {
+      _changnxTheme();
+    });
   }
 }
 
-NXMenu *NXDoubleSpinBoxPrivate::_createStandardContextMenu() noexcept
+NXMenu *
+NXDoubleSpinBoxPrivate::_createStandardContextMenu() noexcept
 {
   Q_Q(NXDoubleSpinBox);
   QLineEdit *lineEdit = q->lineEdit();
@@ -80,7 +90,10 @@ NXMenu *NXDoubleSpinBoxPrivate::_createStandardContextMenu() noexcept
       }
     });
   }
-  if (!menu->isEmpty()) { menu->addSeparator(); }
+  if (!menu->isEmpty())
+  {
+    menu->addSeparator();
+  }
   action = menu->addAction(tr("全选"));
   action->setShortcut(QKeySequence::SelectAll);
   action->setEnabled(!lineEdit->text().isEmpty() && !(lineEdit->selectedText() == lineEdit->text()));
@@ -88,7 +101,8 @@ NXMenu *NXDoubleSpinBoxPrivate::_createStandardContextMenu() noexcept
   return menu;
 }
 
-void NXDoubleSpinBoxPrivate::_changnxTheme() noexcept
+void
+NXDoubleSpinBoxPrivate::_changnxTheme() noexcept
 {
   Q_Q(NXDoubleSpinBox);
   QPalette palette;

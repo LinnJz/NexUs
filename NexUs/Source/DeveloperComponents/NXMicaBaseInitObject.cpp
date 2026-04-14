@@ -11,9 +11,12 @@ NXMicaBaseInitObject::NXMicaBaseInitObject(NXApplicationPrivate *appPrivate, QOb
   _appPrivate = appPrivate;
 }
 
-NXMicaBaseInitObject::~NXMicaBaseInitObject() { }
+NXMicaBaseInitObject::~NXMicaBaseInitObject()
+{
+}
 
-void NXMicaBaseInitObject::onInitMicaBase(const QImage& img) noexcept
+void
+NXMicaBaseInitObject::onInitMicaBase(const QImage &img) noexcept
 {
   // QColorDialog
   // 统一处理为1920*1080以节省空间
@@ -40,13 +43,19 @@ void NXMicaBaseInitObject::onInitMicaBase(const QImage& img) noexcept
       h           = originColor.hsvHue();
       s           = originColor.hsvSaturation();
       v           = originColor.value();
-      if (s / 20 > 11) { lightColor.setHsv(h, (s / 20 + 11) / 2, 250); }
+      if (s / 20 > 11)
+      {
+        lightColor.setHsv(h, (s / 20 + 11) / 2, 250);
+      }
       else
       {
         lightColor.setHsv(h, 11, 250);
       }
       lightColor = lightColor.toRgb();
-      if (v / 1.1 > 40) { darkColor.setHsv(h, s / 2, (v / 1.1 + 40) / 2); }
+      if (v / 1.1 > 40)
+      {
+        darkColor.setHsv(h, s / 2, (v / 1.1 + 40) / 2);
+      }
       else
       {
         darkColor.setHsv(h, s / 2, 40);

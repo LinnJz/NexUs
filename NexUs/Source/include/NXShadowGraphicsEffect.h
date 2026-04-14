@@ -15,15 +15,15 @@ class NX_EXPORT NXShadowGraphicsEffect : public QGraphicsEffect
   Q_PROPERTY_CREATE_H(qreal, Spread)
   Q_PROPERTY_CREATE_H(QPointF, LightOffset)
   Q_PROPERTY_CREATE_H(QPointF, DarkOffset)
-  Q_PROPERTY_CREATE_2_H(const QColor&, QColor, LightColor)
-  Q_PROPERTY_CREATE_2_H(const QColor&, QColor, DarkColor)
+  Q_PROPERTY_CREATE_2_H(const QColor &, QColor, LightColor)
+  Q_PROPERTY_CREATE_2_H(const QColor &, QColor, DarkColor)
 
 public:
   explicit NXShadowGraphicsEffect(QObject *parent = nullptr);
   ~NXShadowGraphicsEffect();
 
 protected:
-  QRectF boundingRectFor(const QRectF& rect) const override;
+  QRectF boundingRectFor(const QRectF &rect) const override;
   void draw(QPainter *painter) override;
 };
 

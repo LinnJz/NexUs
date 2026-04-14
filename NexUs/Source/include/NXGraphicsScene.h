@@ -19,7 +19,7 @@ class NX_EXPORT NXGraphicsScene : public QGraphicsScene
   Q_OBJECT
   Q_Q_CREATE(NXGraphicsScene)
   Q_PROPERTY_CREATE_H(bool, IsCheckLinkPort)
-  Q_PROPERTY_CREATE_2_H(const QString&, QString, SerializePath)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, SerializePath)
 
 public:
   explicit NXGraphicsScene(QObject *parent = nullptr);

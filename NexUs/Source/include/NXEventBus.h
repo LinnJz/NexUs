@@ -12,13 +12,13 @@ class NX_EXPORT NXEvent : public QObject
 {
   Q_OBJECT
   Q_Q_CREATE(NXEvent)
-  Q_PROPERTY_CREATE_2_H(const QString&, QString, EventName)
-  Q_PROPERTY_CREATE_2_H(const QString&, QString, FunctionName)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, EventName)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, FunctionName)
   Q_PROPERTY_CREATE_H(Qt::ConnectionType, ConnectionType)
 
 public:
   explicit NXEvent(QObject *parent = nullptr);
-  explicit NXEvent(const QString& eventName, const QString& functionName, QObject *parent = nullptr);
+  explicit NXEvent(const QString &eventName, const QString &functionName, QObject *parent = nullptr);
   ~NXEvent() override;
   NXEventBusType::EventBusReturnType registerAndInit() noexcept;
 };
@@ -40,7 +40,7 @@ private:
   ~NXEventBus() override;
 
 public:
-  NXEventBusType::EventBusReturnType post(const QString& eventName, const QVariantMap& data = {}) noexcept;
+  NXEventBusType::EventBusReturnType post(const QString &eventName, const QVariantMap &data = {}) noexcept;
   QStringList getRegisteredEventsName() const noexcept;
 
 private:

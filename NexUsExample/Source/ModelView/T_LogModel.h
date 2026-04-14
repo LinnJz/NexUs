@@ -15,8 +15,8 @@ public:
   QStringList getLogList() const;
 
 protected:
-  int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-  QVariant data(const QModelIndex& index, int role) const override;
+  int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+  QVariant data(const QModelIndex &index, int role) const override;
 
 private:
   QStringList _logList;

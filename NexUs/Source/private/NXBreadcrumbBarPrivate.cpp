@@ -5,4 +5,6 @@ NXBreadcrumbBarPrivate::NXBreadcrumbBarPrivate(QObject *parent)
 {
 }
 
-NXBreadcrumbBarPrivate::~NXBreadcrumbBarPrivate() { }
+NXBreadcrumbBarPrivate::~NXBreadcrumbBarPrivate()
+{
+}

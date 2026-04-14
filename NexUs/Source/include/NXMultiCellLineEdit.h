@@ -20,27 +20,27 @@ class NX_EXPORT NXMultiCellLineEdit : public QWidget
   Q_PROPERTY_CREATE_H(int, CellCount)
   Q_PROPERTY_CREATE_H(int, CellSpacing)
   Q_PROPERTY_CREATE_H(int, ContentsHorizontalMargin)
-  Q_PROPERTY_CREATE_2_H(const QString&, QString, CellSeparator)
-  Q_PROPERTY_CREATE_2_H(const QString&, QString, CellEmptyFillText)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, CellSeparator)
+  Q_PROPERTY_CREATE_2_H(const QString &, QString, CellEmptyFillText)
 
-  Q_PRIVATE_CREATE_2_H(const QString&, QString, CombinedText)
-  Q_PRIVATE_CREATE_2_H(const QStringList&, QStringList, CellTexts)
-  Q_PRIVATE_CREATE_2_H(const QStringList&, QStringList, CellRegularExpressionPatterns)
-  Q_PRIVATE_CREATE_2_H(const QList<bool>&, QList<bool>, IsCellClearButtonEnabledList)
-  Q_PRIVATE_CREATE_2_H(const QList<int>&, QList<int>, CellMaxLengths)
-  Q_PRIVATE_CREATE_2_H(const QList<QMargins>&, QList<QMargins>, CellContentsMarginsList)
-  Q_PRIVATE_CREATE_2_H(const QList<bool>&, QList<bool>, IsCellReadOnlyList)
-  Q_PRIVATE_CREATE_2_H(const QList<QString>&, QList<QString>, CellPlaceholderTexts)
-  Q_PRIVATE_CREATE_2_H(const QList<Qt::Alignment>&, QList<Qt::Alignment>, CellAlignments)
-  Q_PRIVATE_CREATE_2_H(const QList<QFont>&, QList<QFont>, CellFonts)
-  Q_PRIVATE_CREATE_2_H(const QList<QString>&, QList<QString>, CellInputMasks)
-  Q_PRIVATE_CREATE_2_H(const QList<bool>&, QList<bool>, IsCellEnabledList)
-  Q_PRIVATE_CREATE_2_H(const QList<Qt::InputMethodHints>&, QList<Qt::InputMethodHints>, CellInputMethodHintsList)
-  Q_PRIVATE_CREATE_2_H(const QList<QLineEdit::EchoMode>&, QList<QLineEdit::EchoMode>, CellEchoModes)
+  Q_PRIVATE_CREATE_2_H(const QString &, QString, CombinedText)
+  Q_PRIVATE_CREATE_2_H(const QStringList &, QStringList, CellTexts)
+  Q_PRIVATE_CREATE_2_H(const QStringList &, QStringList, CellRegularExpressionPatterns)
+  Q_PRIVATE_CREATE_2_H(const QList<bool> &, QList<bool>, IsCellClearButtonEnabledList)
+  Q_PRIVATE_CREATE_2_H(const QList<int> &, QList<int>, CellMaxLengths)
+  Q_PRIVATE_CREATE_2_H(const QList<QMargins> &, QList<QMargins>, CellContentsMarginsList)
+  Q_PRIVATE_CREATE_2_H(const QList<bool> &, QList<bool>, IsCellReadOnlyList)
+  Q_PRIVATE_CREATE_2_H(const QList<QString> &, QList<QString>, CellPlaceholderTexts)
+  Q_PRIVATE_CREATE_2_H(const QList<Qt::Alignment> &, QList<Qt::Alignment>, CellAlignments)
+  Q_PRIVATE_CREATE_2_H(const QList<QFont> &, QList<QFont>, CellFonts)
+  Q_PRIVATE_CREATE_2_H(const QList<QString> &, QList<QString>, CellInputMasks)
+  Q_PRIVATE_CREATE_2_H(const QList<bool> &, QList<bool>, IsCellEnabledList)
+  Q_PRIVATE_CREATE_2_H(const QList<Qt::InputMethodHints> &, QList<Qt::InputMethodHints>, CellInputMethodHintsList)
+  Q_PRIVATE_CREATE_2_H(const QList<QLineEdit::EchoMode> &, QList<QLineEdit::EchoMode>, CellEchoModes)
 
 public:
   explicit NXMultiCellLineEdit(QWidget *parent = nullptr);
-  explicit NXMultiCellLineEdit(int cellCount, const QString& separator, QWidget *parent = nullptr);
+  explicit NXMultiCellLineEdit(int cellCount, const QString &separator, QWidget *parent = nullptr);
   ~NXMultiCellLineEdit() override;
 
   void setCustomLineEdit(int cellIndex, QLineEdit *lineEdit) noexcept;
@@ -49,7 +49,7 @@ public:
   int getCellIndex(const QLineEdit *lineEdit) const noexcept;
   QList<QLineEdit *> getCellLineEdits() const noexcept;
 
-  void setCellRegularExpression(int cellIndex, const QRegularExpression& regularExpression) noexcept;
+  void setCellRegularExpression(int cellIndex, const QRegularExpression &regularExpression) noexcept;
   QRegularExpression getCellRegularExpression(int cellIndex) const noexcept;
 
   void setCellMaxLength(int cellIndex, int maxLength) noexcept;
@@ -58,25 +58,25 @@ public:
   void setIsClearButtonEnabled(int cellIndex, bool isEnabled) noexcept;
   bool getIsClearButtonEnabled(int cellIndex) const noexcept;
 
-  void setCellMargins(int cellIndex, const QMargins& margins) noexcept;
+  void setCellMargins(int cellIndex, const QMargins &margins) noexcept;
   QMargins getCellMargins(int cellIndex) const noexcept;
 
   void setIsCellReadOnly(int cellIndex, bool readOnly) noexcept;
   bool getIsCellReadOnly(int cellIndex) const noexcept;
 
-  void setCellText(int cellIndex, const QString& text) noexcept;
+  void setCellText(int cellIndex, const QString &text) noexcept;
   QString getCellText(int cellIndex) const noexcept;
 
-  void setCellPlaceholderText(int cellIndex, const QString& placeholder) noexcept;
+  void setCellPlaceholderText(int cellIndex, const QString &placeholder) noexcept;
   QString getCellPlaceholderText(int cellIndex) const noexcept;
 
   void setCellAlignment(int cellIndex, Qt::Alignment alignment) noexcept;
   Qt::Alignment getCellAlignment(int cellIndex) const noexcept;
 
-  void setCellFont(int cellIndex, const QFont& font) noexcept;
+  void setCellFont(int cellIndex, const QFont &font) noexcept;
   QFont getCellFont(int cellIndex) const noexcept;
 
-  void setCellInputMask(int cellIndex, const QString& inputMask) noexcept;
+  void setCellInputMask(int cellIndex, const QString &inputMask) noexcept;
   QString getCellInputMask(int cellIndex) const noexcept;
 
   void setIsCellEnabled(int cellIndex, bool enabled) noexcept;
@@ -101,14 +101,14 @@ public:
   void setFocusToCell(int cellIndex) noexcept;
   int currentFocusCellIndex() const noexcept;
 
-  void insertCell(int cellIndex, const QString& initialText = QString()) noexcept;
+  void insertCell(int cellIndex, const QString &initialText = QString()) noexcept;
   void removeCell(int cellIndex) noexcept;
 
 Q_SIGNALS:
   void cellFocusIn(int cellIndex);
   void cellFocusOut(int cellIndex);
-  void cellTextChanged(int cellIndex, const QString& text);
-  void cellTextEdited(int cellIndex, const QString& text);
+  void cellTextChanged(int cellIndex, const QString &text);
+  void cellTextEdited(int cellIndex, const QString &text);
   void cellEditingFinished(int cellIndex);
   void cellReturnPressed(int cellIndex);
   void cellValidatorStateChanged(int cellIndex, bool valid);

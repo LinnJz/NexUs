@@ -8,11 +8,11 @@
 #include <QVBoxLayout>
 
 #include "NXAcrylicUrlCard.h"
+#include "NXActionCommander.h"
 #include "NXFlowLayout.h"
 #include "NXImageCard.h"
 #include "NXMenu.h"
 #include "NXMessageBar.h"
-#include "NXNavigationRouter.h"
 #include "NXPopularCard.h"
 #include "NXScrollArea.h"
 #include "NXText.h"
@@ -98,8 +98,10 @@ T_Home::T_Home(QWidget *parent)
   flowTextLayout->addWidget(flowText);
   // NXFlowLayout
   NXPopularCard *homeCard = new NXPopularCard(this);
-  connect(homeCard, &NXPopularCard::popularCardButtonClicked, this,
-          [=]() { QDesktopServices::openUrl(QUrl("https://github.com/Liniyous/NXWidgetTools")); });
+  connect(homeCard, &NXPopularCard::popularCardButtonClicked, this, [=]()
+  {
+    QDesktopServices::openUrl(QUrl("https://github.com/Liniyous/NXWidgetTools"));
+  });
   homeCard->setCardPixmap(QPixmap(":/Resource/Image/Cirno.jpg"));
   homeCard->setTitle("NXWidgetTool");
   homeCard->setSubTitle("5.0⭐ 实用程序与工具");
@@ -109,7 +111,10 @@ T_Home::T_Home(QWidget *parent)
   homeCard->setCardFloatPixmap(QPixmap(":/Resource/Image/IARC/IARC_7+.svg.png"));
 
   NXPopularCard *homeCard1 = new NXPopularCard(this);
-  connect(homeCard1, &NXPopularCard::popularCardButtonClicked, this, [=]() { Q_EMIT elaScreenNavigation(); });
+  connect(homeCard1, &NXPopularCard::popularCardButtonClicked, this, [=]()
+  {
+    Q_EMIT elaScreenNavigation();
+  });
   homeCard1->setTitle("NXScreen");
   homeCard1->setSubTitle("5.0⭐ 实用程序与工具");
   homeCard1->setCardPixmap(QPixmap(":/Resource/Image/control/AutomationProperties.png"));
@@ -119,7 +124,10 @@ T_Home::T_Home(QWidget *parent)
   homeCard1->setCardFloatPixmap(QPixmap(":/Resource/Image/IARC/IARC_7+.svg.png"));
 
   NXPopularCard *homeCard2 = new NXPopularCard(this);
-  connect(homeCard2, &NXPopularCard::popularCardButtonClicked, this, [=]() { Q_EMIT elaSceneNavigation(); });
+  connect(homeCard2, &NXPopularCard::popularCardButtonClicked, this, [=]()
+  {
+    Q_EMIT elaSceneNavigation();
+  });
   homeCard2->setTitle("NXScene");
   homeCard2->setSubTitle("5.0⭐ 实用程序与工具");
   homeCard2->setCardPixmap(QPixmap(":/Resource/Image/control/Canvas.png"));
@@ -128,7 +136,10 @@ T_Home::T_Home(QWidget *parent)
   homeCard2->setCardFloatPixmap(QPixmap(":/Resource/Image/IARC/IARC_7+.svg.png"));
 
   NXPopularCard *homeCard3 = new NXPopularCard(this);
-  connect(homeCard3, &NXPopularCard::popularCardButtonClicked, this, [=]() { Q_EMIT elaBaseComponentNavigation(); });
+  connect(homeCard3, &NXPopularCard::popularCardButtonClicked, this, [=]()
+  {
+    Q_EMIT elaBaseComponentNavigation();
+  });
   homeCard3->setTitle("NXBaseComponent");
   homeCard3->setSubTitle("5.0⭐ 实用程序与工具");
   homeCard3->setCardPixmap(QPixmap(":/Resource/Image/control/StandardUICommand.png"));
@@ -138,7 +149,10 @@ T_Home::T_Home(QWidget *parent)
   homeCard3->setCardFloatPixmap(QPixmap(":/Resource/Image/IARC/IARC_7+.svg.png"));
 
   NXPopularCard *homeCard4 = new NXPopularCard(this);
-  connect(homeCard4, &NXPopularCard::popularCardButtonClicked, this, [=]() { Q_EMIT elaCardNavigation(); });
+  connect(homeCard4, &NXPopularCard::popularCardButtonClicked, this, [=]()
+  {
+    Q_EMIT elaCardNavigation();
+  });
   homeCard4->setTitle("NXCard");
   homeCard4->setSubTitle("5.0⭐ 实用程序与工具");
   homeCard4->setCardPixmap(QPixmap(":/Resource/Image/control/FlipView.png"));
@@ -147,7 +161,10 @@ T_Home::T_Home(QWidget *parent)
   homeCard4->setCardFloatPixmap(QPixmap(":/Resource/Image/IARC/IARC_7+.svg.png"));
 
   NXPopularCard *homeCard5 = new NXPopularCard(this);
-  connect(homeCard5, &NXPopularCard::popularCardButtonClicked, this, [=]() { Q_EMIT elaIconNavigation(); });
+  connect(homeCard5, &NXPopularCard::popularCardButtonClicked, this, [=]()
+  {
+    Q_EMIT elaIconNavigation();
+  });
   homeCard5->setTitle("NXIcon");
   homeCard5->setSubTitle("5.0⭐ 实用程序与工具");
   homeCard5->setCardPixmap(QPixmap(":/Resource/Image/control/CommandBarFlyout.png"));
@@ -191,7 +208,10 @@ T_Home::T_Home(QWidget *parent)
   _homeMenu->addNXIconAction(NXIconType::BoxCheck, "排序方式", QKeySequence::Save);
   _homeMenu->addNXIconAction(NXIconType::ArrowRotateRight, "刷新");
   QAction *action = _homeMenu->addNXIconAction(NXIconType::ArrowRotateLeft, "撤销");
-  connect(action, &QAction::triggered, this, [=]() { NXNavigationRouter::getInstance()->navigationRouteBack(); });
+  connect(action, &QAction::triggered, this, [=]()
+  {
+    NXActionCommander::getInstance()->undoCommand("NXWidgetToolsAction");
+  });
 
   _homeMenu->addNXIconAction(NXIconType::Copy, "复制");
   _homeMenu->addNXIconAction(NXIconType::MagnifyingGlassPlus, "显示设置");
@@ -214,9 +234,12 @@ T_Home::T_Home(QWidget *parent)
   qDebug() << "初始化成功";
 }
 
-T_Home::~T_Home() { }
+T_Home::~T_Home()
+{
+}
 
-void T_Home::mouseReleaseEvent(QMouseEvent *event)
+void
+T_Home::mouseReleaseEvent(QMouseEvent *event)
 {
   switch (event->button())
   {
