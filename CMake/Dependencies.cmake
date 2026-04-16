@@ -1,30 +1,36 @@
 ﻿# Detect compiler type
-if(COMPILER_MSVC)
-    # ...<version> /bin/Hostx64/x64/cl.exe
-    get_filename_component(CL_EXE_PATH "${CMAKE_CXX_COMPILER}" ABSOLUTE)
-    get_filename_component(CL_DIR "${CL_EXE_PATH}" DIRECTORY)
-    get_filename_component(HOST_DIR "${CL_DIR}" DIRECTORY)
-    get_filename_component(BIN_DIR "${HOST_DIR}" DIRECTORY)
-    get_filename_component(VC_TOOLS_INSTALL_DIR "${BIN_DIR}" DIRECTORY)
+if(COMPILER_MSVC_LIKE)
+    if(COMPILER_MSVC)
+        # ...<version> /bin/Hostx64/x64/cl.exe
+        get_filename_component(CL_EXE_PATH "${CMAKE_CXX_COMPILER}" ABSOLUTE)
+        get_filename_component(CL_DIR "${CL_EXE_PATH}" DIRECTORY)
+        get_filename_component(HOST_DIR "${CL_DIR}" DIRECTORY)
+        get_filename_component(BIN_DIR "${HOST_DIR}" DIRECTORY)
+        get_filename_component(VC_TOOLS_INSTALL_DIR "${BIN_DIR}" DIRECTORY)
 
-    set(VC_INCLUDE_DIR "${VC_TOOLS_INSTALL_DIR}/include" CACHE PATH "MSVC C++ standard include directory")
-    set(VC_MODULES_DIR "${VC_TOOLS_INSTALL_DIR}/modules" CACHE PATH "MSVC C++ modules directory")
-    message(STATUS "MSVC C++ include dir: ${VC_INCLUDE_DIR}")
-    message(STATUS "MSVC C++ modules dir: ${VC_MODULES_DIR}")
+        set(VC_INCLUDE_DIR "${VC_TOOLS_INSTALL_DIR}/include" CACHE PATH "MSVC C++ standard include directory")
+        set(VC_MODULES_DIR "${VC_TOOLS_INSTALL_DIR}/modules" CACHE PATH "MSVC C++ modules directory")
+        message(STATUS "MSVC C++ include dir: ${VC_INCLUDE_DIR}")
+        message(STATUS "MSVC C++ modules dir: ${VC_MODULES_DIR}")
 
-    if(NOT EXISTS "${VC_INCLUDE_DIR}")
-        message(WARNING "❌ MSVC C++ include directory NOT found: ${VC_INCLUDE_DIR}")
-        message(FATAL_ERROR "MSVC include directory is required, aborting...")
+        if(NOT EXISTS "${VC_INCLUDE_DIR}")
+            message(WARNING "❌ MSVC C++ include directory NOT found: ${VC_INCLUDE_DIR}")
+            message(FATAL_ERROR "MSVC include directory is required, aborting...")
+        else()
+            include_directories(${VC_INCLUDE_DIR})
+            message(STATUS "✔ MSVC C++ include dir: ${VC_INCLUDE_DIR}")
+        endif()
+
+        if(NOT EXISTS "${VC_MODULES_DIR}")
+            include_directories(${VC_MODULES_DIR})
+            message(WARNING "⚠️ MSVC C++ modules directory NOT found: ${VC_MODULES_DIR} (this may be normal for some MSVC versions)")
+        else()
+            message(STATUS "✔ MSVC C++ modules dir: ${VC_MODULES_DIR}")
+        endif()
     else()
-        include_directories(${VC_INCLUDE_DIR})
-        message(STATUS "✔ MSVC C++ include dir: ${VC_INCLUDE_DIR}")
-    endif()
-
-    if(NOT EXISTS "${VC_MODULES_DIR}")
-        include_directories(${VC_MODULES_DIR})
-        message(WARNING "⚠️ MSVC C++ modules directory NOT found: ${VC_MODULES_DIR} (this may be normal for some MSVC versions)")
-    else()
-        message(STATUS "✔ MSVC C++ modules dir: ${VC_MODULES_DIR}")
+        # Clang-cl compiler
+        message(STATUS "🔧 Using Clang-cl compiler: ${CMAKE_CXX_COMPILER}")
+        set(COMPILER_FAMILY "Clang-cl")
     endif()
 elseif(COMPILER_GCC)
     # GCC compiler
@@ -48,7 +54,7 @@ endif()
 
 # Configure MSVC runtime library mode
 # This keeps /MD, /MDd, /MT and /MTd selectable and stable.
-if(MSVC)
+if(COMPILER_MSVC_LIKE)
     set(MSVC_RUNTIME_MODE "MD" CACHE STRING "MSVC runtime mode: MD or MT")
     set_property(CACHE MSVC_RUNTIME_MODE PROPERTY STRINGS "MD" "MT")
 
