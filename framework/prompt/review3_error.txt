@@ -1,0 +1,142 @@
+算法缺陷
+SuggestData被删除，可以使用git diff了解原来内容，进行分析问题
+class ELA_EXPORT ElaSuggestBox : public QWidget
+{
+    Q_OBJECT
+    Q_Q_CREATE(ElaSuggestBox)
+    Q_PROPERTY_CREATE_H(int, BorderRadius)
+    Q_PROPERTY_CREATE_H(Qt::CaseSensitivity, CaseSensitivity)
+        Q_PRIVATE_CREATE(ElaIconType::IconName, ElaIcon)
+        Q_PRIVATE_CREATE(QS_SET_CREF(QString), SuggestText)
+        Q_PRIVATE_CREATE(QS_SET_CREF(QString), SuggestKey)
+        Q_PRIVATE_CREATE(QS_SET_CREF(QVariantMap), SuggestData)
+    public:
+        explicit SuggestData();
+        explicit SuggestData(ElaIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData = {});
+        ~SuggestData();
+    };
+    QString addSuggestion(const QString& suggestText, const QVariantMap& suggestData = {});
+    QString addSuggestion(ElaIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData = {});
+    QString addSuggestion(const ElaSuggestBox::SuggestData& suggestData);
+    QStringList addSuggestion(const QList<ElaSuggestBox::SuggestData>& suggestDataList);
+
+    void removeSuggestion(const QString& suggestKey);
+    void removeSuggestion(int index);
+    void clearSuggestion();
+Q_SIGNALS:
+    Q_SIGNAL void suggestionClicked(const ElaSuggestBox::SuggestData& suggestData);
+};
+
+算法没有正确处理，task.md说明了需要移除返回类型含const&的修饰，当前没有正确移除
+const QString &ElaChatBubble::getMessageText() const
+{
+	return d_ptr->_pMessageText;
+}
+
+const QString &ElaChatBubble::getSenderName() const
+{
+	return d_ptr->_pSenderName;
+}
+
+const QString &ElaChatBubble::getTimestamp() const
+{
+	return d_ptr->_pTimestamp;
+}
+const QString &ElaCodeEditor::getCode() const
+{
+	return d_ptr->_pCode;
+}
+期望为
+QString ElaChatBubble::getMessageText() const
+{
+	return d_ptr->_pMessageText;
+}
+
+QString ElaChatBubble::getSenderName() const
+{
+	return d_ptr->_pSenderName;
+}
+
+QString ElaChatBubble::getTimestamp() const
+{
+	return d_ptr->_pTimestamp;
+}
+QString ElaCodeEditor::getCode() const
+{
+	return d_ptr->_pCode;
+}
+
+没有按照规定字节大小对_H、_CPP的宏从小到大正确排序，没有同类型紧挨着
+//算法缺陷
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, int, MajorTickCount)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, int, MinorTickCount)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, int, StartAngle)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, int, SpanAngle)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, int, ArcWidth)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, int, ValuePixelSize)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, bool, IsAnimated)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, int, Decimals)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, QS_SET_CREF(QString), Title)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, QS_SET_CREF(QString), Unit)
+
+//以下问题带枚举的是我没有正确说明，现在向你说明凡是宏内有带::的视为枚举4字节，
+// 逗号之前带*视为指针 8字节（注意不算空格，示例Q_PROPERTY_CREATE_CPP(class, QList<int *>, ...)这个不是指针，因为,之前不是*，Q_PROPERTY_CREATE_CPP(class, QList<int *> * , ...) 这个是指针因为,之前是*）
+// 带&视为指针 8字节
+Q_PROPERTY_CREATE_CPP(ElaDivider, Qt::Orientation, Orientation)
+Q_PROPERTY_CREATE_CPP(ElaDivider, QS_SET_CREF(QString), Text)
+Q_PROPERTY_CREATE_CPP(ElaDivider, int, ContentPosition)
+
+Q_PROPERTY_CREATE_CPP(ElaDropDownButton, int, BorderRadius)
+Q_PROPERTY_CREATE_CPP(ElaDropDownButton, QS_SET_CREF(QString), Text)
+Q_PROPERTY_CREATE_CPP(ElaDropDownButton, ElaIconType::IconName, ElaIcon)
+
+Q_PROPERTY_CREATE_CPP(ElaExpander, int, BorderRadius)
+Q_PROPERTY_CREATE_CPP(ElaExpander, QS_SET_CREF(QString), Title)
+Q_PROPERTY_CREATE_CPP(ElaExpander, QS_SET_CREF(QString), SubTitle)
+Q_PROPERTY_CREATE_CPP(ElaExpander, ElaIconType::IconName, HeaderIcon)
+Q_PROPERTY_CREATE_CPP(ElaExpander, int, AnimationDuration)
+
+Q_PRIVATE_CREATE_CPP(ElaGraphicsLineItem, QPointF, StartPoint)
+Q_PRIVATE_CREATE_CPP(ElaGraphicsLineItem, QPointF, EndPoint)
+Q_PRIVATE_CREATE_CPP(ElaGraphicsLineItem, ElaGraphicsItem*, StartItem)
+Q_PRIVATE_CREATE_CPP(ElaGraphicsLineItem, ElaGraphicsItem*, EndItem)
+Q_PRIVATE_CREATE_CPP(ElaGraphicsLineItem, int, StartItemPort)
+Q_PRIVATE_CREATE_CPP(ElaGraphicsLineItem, int, EndItemPort)
+期望为
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, bool, IsAnimated)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, int, MajorTickCount)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, int, MinorTickCount)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, int, StartAngle)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, int, SpanAngle)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, int, ArcWidth)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, int, ValuePixelSize)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, int, Decimals)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, QS_SET_CREF(QString), Title)
+Q_PROPERTY_CREATE_CPP(ElaDashboardGauge, QS_SET_CREF(QString), Unit)
+
+
+
+Q_PROPERTY_CREATE_CPP(ElaDivider, Qt::Orientation, Orientation)
+Q_PROPERTY_CREATE_CPP(ElaDivider, int, ContentPosition)
+Q_PROPERTY_CREATE_CPP(ElaDivider, QS_SET_CREF(QString), Text)
+
+Q_PROPERTY_CREATE_CPP(ElaDropDownButton, int, BorderRadius)
+Q_PROPERTY_CREATE_CPP(ElaDropDownButton, ElaIconType::IconName, ElaIcon)
+Q_PROPERTY_CREATE_CPP(ElaDropDownButton, QS_SET_CREF(QString), Text)
+
+
+Q_PROPERTY_CREATE_CPP(ElaExpander, int, BorderRadius)
+Q_PROPERTY_CREATE_CPP(ElaExpander, int, AnimationDuration)
+Q_PROPERTY_CREATE_CPP(ElaExpander, ElaIconType::IconName, HeaderIcon)
+Q_PROPERTY_CREATE_CPP(ElaExpander, QS_SET_CREF(QString), Title)
+Q_PROPERTY_CREATE_CPP(ElaExpander, QS_SET_CREF(QString), SubTitle)
+
+Q_PRIVATE_CREATE_CPP(ElaGraphicsLineItem, int, StartItemPort)
+Q_PRIVATE_CREATE_CPP(ElaGraphicsLineItem, int, EndItemPort)
+Q_PRIVATE_CREATE_CPP(ElaGraphicsLineItem, QPointF, StartPoint)
+Q_PRIVATE_CREATE_CPP(ElaGraphicsLineItem, QPointF, EndPoint)
+Q_PRIVATE_CREATE_CPP(ElaGraphicsLineItem, ElaGraphicsItem*, StartItem)
+Q_PRIVATE_CREATE_CPP(ElaGraphicsLineItem, ElaGraphicsItem*, EndItem)
+
+
+存在上述问题的文件很多，我不一一列举了

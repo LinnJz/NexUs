@@ -1,0 +1,76 @@
+ElaCodeHighlighter
+ElaWinShadowHelper
+ElaCommandBar
+ElaNotificationCenter
+ElaSpotlight
+ElaSuggestBox
+ElaTimeline
+
+ElaActionCommanderPrivate
+ElaEmojiPickerPrivate
+ElaInfoBarPrivate
+ElaSelectorBarPrivate
+上述文件均是struct位置正确
+
+ElaNavigationRouterPrivate *
+ElaRouterPrivate *
+例如
+class ElaRouterPrivate : public QObject
+{
+	Q_OBJECT
+	Q_D_CREATE(ElaRouter)
+public:
+	explicit ElaRouterPrivate(QObject* parent = nullptr);
+	~ElaRouterPrivate() override;
+
+private:
+	friend class ElaRouter;
+
+	ElaWindow* _window = nullptr;
+
+	QVector<ElaRouteNode*> _rootNodes;
+	QMap<QString, ElaRouteNode*> _pathIndex;
+
+	QString _currentPath;
+	QVariantMap _currentParams;
+
+	struct HistoryEntry
+	{
+		QString path;
+		QVariantMap params;
+	};
+	QVector<HistoryEntry> _history;
+	int _historyIndex = -1;
+	bool _isNavigatingHistory = false;
+
+	QVector<ElaGuardEntry> _beforeGuards;
+	QVector<ElaAfterHookEntry> _afterHooks;
+	int _nextGuardId = 1;
+
+	static QString normalizePath(const QString& path);
+	static QString joinPath(const QString& parent, const QString& child);
+
+	bool _isOnRouterPage() const;
+	ElaRouterType::NavigationResult addRouteToTree(const ElaRouteConfig& config, const QString& parentPathPrefix = QString());
+	bool runBeforeGuards(const QString& to, const QString& from, const QVariantMap& params, ElaRouteNode* toNode);
+	void runAfterHooks(const QString& to, const QString& from, const QVariantMap& params);
+	QWidget* ensureWidget(ElaRouteNode* node);
+	bool registerNodeInWindow(ElaRouteNode* node);
+	void installNodeTree(ElaRouteNode* node, const QString& parentExpanderKey = QString());
+	ElaRouterType::NavigationResult doNavigation(const QString& path, const QVariantMap& params, bool pushToHistory);
+};
+
+应该将
+	struct HistoryEntry
+	{
+		QString path;
+		QVariantMap params;
+	};提到最前
+
+private:
+	struct HistoryEntry
+	{
+		QString path;
+		QVariantMap params;
+	};
+排序成员变量

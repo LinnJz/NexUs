@@ -1,0 +1,119 @@
+我进行验收发现问题
+ElaScrollPageRouteCommand 分号没有正确去除，而且重定义RedoBreadcrumbList
+其他文件同样存在这样的问题
+class ElaScrollPageRouteCommand : public ElaActionCommand
+{
+    Q_OBJECT
+    Q_PRIVATE_CREATE(QS_SET_CREF(QStringList), UndoBreadcrumbList);
+    Q_PRIVATE_CREATE(QS_SET_CREF(QStringList), RedoBreadcrumbList);
+    Q_PRIVATE_CREATE(ElaScrollPagePrivate*, ScrollPagePrivate)
+    Q_PRIVATE_CREATE(int, UndoPageIndex);
+    Q_PRIVATE_CREATE(int, RedoPageIndex);
+    Q_PRIVATE_CREATE(bool, IsBreadcrumbClicked)
+    Q_PRIVATE_CREATE(QS_SET_CREF(QStringList), RedoBreadcrumbList);
+
+public:
+    explicit ElaScrollPageRouteCommand(QObject* parent = nullptr);
+    ~ElaScrollPageRouteCommand() override;
+
+    void undo() override;
+    void redo() override;
+};
+
+ElaBreadcrumbBarModel你在头文件加了const &, 源文件没加const &； 声明和定义不匹配
+    void appendBreadcrumb(const QString &breadcrumb);
+void ElaBreadcrumbBarModel::appendBreadcrumb(QString breadcrumb)
+{
+    if (!breadcrumb.isEmpty())
+其他文件也存在同样的问题。
+
+ElaScrollBarStyle、ElaFlyoutPrivate等处理有问题，这点是我忘记想你说明的，
+源文件
+#ifdef Q_OS_MACOS
+    int _scrollBarExtent{8};
+    qreal _sliderMargin{2.0};
+#else
+    int _scrollBarExtent{10};
+    qreal _sliderMargin{2.5};
+#endif
+
+#if defined(Q_OS_WIN) && QT_VERSION == QT_VERSION_CHECK(6, 11, 0)
+    int _shadowBorderWidth{0};
+#else
+    int _shadowBorderWidth{8};
+#endif
+脚本执行后
+#ifdef Q_OS_MACOS
+    int _scrollBarExtent{8};
+    int _scrollBarExtent{10};
+    qreal _sliderMargin{2.0};
+    qreal _sliderMargin{2.5};
+#else
+#endif
+
+#if defined(Q_OS_WIN) && QT_VERSION == QT_VERSION_CHECK(6, 11, 0)
+    int _shadowBorderWidth{0};
+    int _shadowBorderWidth{8};
+#else
+#endif
+完全错误，只要是#if、#else、#endif包裹的区域就不应该这样写，你应该分离每个单独处理每一行然后单独使用#if、#else、#endif包裹
+期望的是
+private:
+    ElaThemeType::ThemeMode _themeMode;
+#ifdef Q_OS_MACOS
+    int _scrollBarExtent{8};
+#else
+    int _scrollBarExtent{10};
+#endif
+#ifdef Q_OS_MACOS
+    qreal _sliderMargin{2.0};
+#else
+    qreal _sliderMargin{2.5};
+#endif
+
+private:
+    ElaThemeType::ThemeMode _themeMode;
+#if defined(Q_OS_WIN) && QT_VERSION == QT_VERSION_CHECK(6, 11, 0)
+    int _shadowBorderWidth{0};
+#else
+    int _shadowBorderWidth{8};
+#endif
+    QVBoxLayout* _mainLayout{nullptr};
+    QWidget* _contentWidget{nullptr};
+    QGraphicsOpacityEffect* _opacityEffect{nullptr};
+
+ElaWinShadowHelper错误修改，你的修改是
+    using DwmExtendFrameIntoClientAreaFunc = HRESULT(WINAPI*)(HWND hWnd, const MARGINS* pMarInset);
+    using DwmSetWindowAttributeFunc = HRESULT(WINAPI*)(HWND hwnd, DWORD dwAttribute, LPCVOID pvAttribute, DWORD cbAttribute);
+    using DwmIsCompositionEnabledFunc = HRESULT(WINAPI*)(BOOL* pfEnabled);
+    using RtlGetVersionFunc = NTSTATUS(WINAPI*)(PRTL_OSVERSIONINFOW);
+    using DwmEnableBlurBehindWindowFunc = HRESULT(WINAPI*)(HWND hWnd, const DWM_BLURBEHIND* pBlurBehind);
+    using SetWindowCompositionAttributeFunc = BOOL(WINAPI*)(HWND hwnd, const _WINDOWCOMPOSITIONATTRIBDATA*); // 无法发现_WINDOWCOMPOSITIONATTRIBDATA ，而且我们的要求是始终将结构体放在其对应的access的开始位置你没有做到
+    using GetDpiForWindowFunc = UINT(WINAPI*)(HWND hwnd);
+    using GetDpiForMonitorFunc = HRESULT(WINAPI*)(HMONITOR hmonitor, _MONITOR_DPI_TYPE dpiType, UINT* dpiX, UINT* dpiY);
+    using GetSystemMetricsForDpiFunc = int(WINAPI*)(int index, UINT dpi);
+
+    struct _ACCENT_POLICY {
+        DWORD dwAccentState;
+        DWORD dwAccentFlags;
+        DWORD dwGradientColor;
+        DWORD dwAnimationId;
+    };
+    struct _WINDOWCOMPOSITIONATTRIBDATA {
+        _WINDOWCOMPOSITIONATTRIB Attrib;
+        PVOID pvData;
+        SIZE_T cbData;
+    };
+    DwmExtendFrameIntoClientAreaFunc _dwmExtendFrameIntoClientArea{nullptr};
+    DwmSetWindowAttributeFunc _dwmSetWindowAttribute{nullptr};
+    DwmIsCompositionEnabledFunc _dwmIsCompositionEnabled{nullptr};
+    DwmEnableBlurBehindWindowFunc _dwmEnableBlurBehindWindow{nullptr};
+    SetWindowCompositionAttributeFunc _setWindowCompositionAttribute{nullptr};
+    GetDpiForWindowFunc _getDpiForWindow{nullptr};
+    GetDpiForMonitorFunc _getDpiForMonitor{nullptr};
+    GetSystemMetricsForDpiFunc _getSystemMetricsForDpi{nullptr};
+    RTL_OSVERSIONINFOW _windowsVersion{};
+    void _externWindowMargins(HWND hwnd);
+};
+
+你应该将每个修改的文件进行git diff对比，看看成员变量是否多了少了，看看.h添加/移除了const&，.cpp有没有跟着修改，注意检查结构体的前向声明依赖问题

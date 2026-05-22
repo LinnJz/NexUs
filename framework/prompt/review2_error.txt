@@ -1,0 +1,176 @@
+.h
+    void navigationNodeStateChange(const QVariantMap &data);
+.cpp
+void ElaNavigationStyle::navigationNodeStateChange(QVariantMap data)
+{
+    if (data.contains("Expand"))
+算法没有正确应用const&
+
+
+// 算法缺陷
+bool ElaDxgi::initialize(int dxID, int outputID)
+{
+    _pIsInitSuccess = false;
+    _pDxDeviceID = dxID;
+    _pOutputDeviceID = outputID;
+    releaseInterface();
+    ID3D11Device* d3dDevice = nullptr;
+    ID3D11DeviceContext* d3dContext = nullptr;
+    D3D_FEATURE_LEVEL feat = D3D_FEATURE_LEVEL_11_0;
+//错误处理，使用git diff对比差异了解
+    HRESULT hr = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, nullptr, 0, D3D11_SDK_VERSION, &d3dDevice, &feat, &d3dContext);
+                                   D3D11_SDK_VERSION, &d3dDevice, &feat, &d3dContext);
+
+
+void ElaMultiSelectComboBoxDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
+                                           const QModelIndex &index) const
+{
+	painter->save();
+	painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
+
+	int margin = 2;
+	QRect bgRect = option.rect;
+	bgRect.adjust(margin, margin, -margin, -margin);
+#ifndef Q_OS_WIN
+	bgRect.adjust(6, 0, -6, 0);
+#endif
+
+	QPainterPath bgPath;
+	bgPath.addRoundedRect(bgRect, 5, 5);
+
+	bool isSelected = index.row() < _itemSelection.size() && _itemSelection[index.row()];
+
+	painter->setPen(Qt::NoPen);
+	if (isSelected)
+	{
+		if (option.state & QStyle::State_MouseOver)
+		{
+			painter->fillPath(bgPath, ElaThemeColor(_themeMode, BasicSelectedHoverAlpha));
+		}
+		else
+		{
+			painter->fillPath(bgPath, ElaThemeColor(_themeMode, BasicSelectedAlpha));
+		}
+	}
+	else
+	{
+		if (option.state & QStyle::State_MouseOver)
+		{
+			painter->fillPath(bgPath, ElaThemeColor(_themeMode, BasicHoverAlpha));
+		}
+	}
+
+	int checkBoxSize = 21;
+// 错误处理，使用git diff对比差异了解
+	QRect checkBoxRect(bgRect.x() + 8, bgRect.y() + (bgRect.height() - checkBoxSize) / 2, checkBoxSize, checkBoxSize);
+	                   bgRect.y() + (bgRect.height() - checkBoxSize) / 2,
+	                   checkBoxSize, checkBoxSize);
+	checkBoxRect.adjust(1, 1, -1, -1);
+
+	painter->setPen(Qt::NoPen);
+	if (isSelected)
+	{
+		if (option.state & QStyle::State_MouseOver)
+		{
+			painter->setBrush(ElaThemeColor(_themeMode, PrimaryHover));
+		}
+		else
+		{
+			painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
+		}
+	}
+	else
+	{
+		painter->setPen(ElaThemeColor(_themeMode, BasicBorderDeep));
+		if (option.state & QStyle::State_MouseOver)
+		{
+			painter->setBrush(ElaThemeColor(_themeMode, BasicHover));
+		}
+		else
+		{
+			painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
+		}
+	}
+	painter->drawRoundedRect(checkBoxRect, 2, 2);
+
+	if (isSelected)
+	{
+		painter->setPen(ElaThemeColor(ElaThemeType::Dark, BasicText));
+		QFont iconFont("ElaAwesome");
+		iconFont.setPixelSize(checkBoxSize * 0.75);
+		painter->setFont(iconFont);
+		painter->drawText(checkBoxRect, Qt::AlignCenter,
+		                  QChar((unsigned short) ElaIconType::Check));
+	}
+
+	painter->setFont(option.font);
+	painter->setPen(ElaThemeColor(_themeMode, BasicText));
+// 错误处理
+	QRect textRect(bgRect.x() + checkBoxSize + 18, bgRect.y(), bgRect.width() - checkBoxSize - 18, bgRect.height());
+	               bgRect.width() - checkBoxSize - 18, bgRect.height());
+	painter->drawText(textRect, Qt::AlignVCenter,
+	                  index.data(Qt::DisplayRole).toString());
+
+	painter->restore();
+}
+
+void ElaToolButtonStyle::_drawIcon(QPainter *painter, QRectF iconRect, const QStyleOptionToolButton *bopt, const QWidget *widget) const
+{
+	if (bopt->toolButtonStyle != Qt::ToolButtonTextOnly)
+	{
+		QSize iconSize = bopt->iconSize;
+		if (widget->property("ElaIconType").toString().isEmpty())
+		{
+			// 绘制QIcon
+			QIcon icon = bopt->icon;
+			if (!icon.isNull())
+			{
+// 错误处理
+				QPixmap iconPix = icon.pixmap(iconSize, (bopt->state & State_Enabled)
+					                              ? QIcon::Normal
+					                              : QIcon::Disabled,
+				                              (bopt->state & State_Selected)
+					                              ? QIcon::On
+					                              : QIcon::Off);
+					                              : QIcon::Off);
+
+void ElaToolBarStyle::_drawIcon(QPainter* painter, QRectF iconRect, const QStyleOptionToolButton* bopt, const QWidget* widget) const
+{
+    if (bopt->toolButtonStyle != Qt::ToolButtonTextOnly)
+    {
+        QSize iconSize = bopt->iconSize;
+        const QToolButton* toolButton = dynamic_cast<const QToolButton*>(widget);
+        QAction* action = toolButton->defaultAction();
+        if (!action)
+        {
+            return;
+        }
+        if (action->property("ElaIconType").toString().isEmpty())
+        {
+            //绘制QIcon
+            QIcon icon = bopt->icon;
+            if (!icon.isNull())
+            {
+// 错误处理
+                QPixmap iconPix = icon.pixmap(iconSize, (bopt->state & State_Enabled) ? QIcon::Normal
+                                                                            : QIcon::Disabled,
+                                              (bopt->state & State_Selected) ? QIcon::On
+                                                                             : QIcon::Off);
+                                                                             : QIcon::Off);
+
+
+void ElaAppBarPrivate::onStayTopButtonClicked()
+{
+...
+
+//错误处理
+		const int result = ::TrackPopupMenu(hMenu, (TPM_RETURNCMD | (QGuiApplication::isRightToLeft() ? TPM_RIGHTALIGN : TPM_LEFTALIGN)), nativePos.x(), nativePos.y(), 0, hwnd, nullptr);
+		                                    nativePos.y(), 0, hwnd, nullptr);
+		if (result != FALSE)
+		{
+			::PostMessageW(hwnd, WM_SYSCOMMAND, result, 0);
+		}
+#endif
+	}
+}
+这样误解析追加内容的，属于算法缺陷，仍旧存在很多的这种情况，我不一一举例了

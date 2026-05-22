@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Resource/Font/NXAwesome.ttf</file>
+        <file>Resource/Image/MicaBase.png</file>
+        <file>Resource/Image/Cirno.jpg</file>
+        <file>Resource/Image/Moon.jpg</file>
+        <file>Resource/Image/noise.png</file>
+    </qresource>
+</RCC>

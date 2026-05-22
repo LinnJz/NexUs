@@ -1,0 +1,123 @@
+tdd开发，测试文件 `\Sample` ，输出到 `\Output` 。
+使用py脚本编写一个算法，指定路径递归文件夹，扫描所有诸如.h、.cpp等C++头文件/源文件
+CPP_EXTENSIONS = {
+    ".h", ".hpp", ".hxx", ".hh", ".h++",
+    ".cpp", ".cxx", ".cc", ".c++", ".c",
+    ".m", ".mm",
+}
+
+HEADER_EXTENSIONS = {".h", ".hpp", ".hxx", ".hh", ".h++"}
+，找到这些宏
+Q_PROPERTY_CREATE
+Q_PROPERTY_REF_CREATE
+Q_PROPERTY_CREATE_Q_H
+Q_PROPERTY_REF_CREATE_Q_H
+Q_PRIVATE_CREATE_Q_H
+Q_PRIVATE_REF_CREATE_Q_H
+Q_PROPERTY_CREATE_Q_CPP
+Q_PROPERTY_REF_CREATE_Q_CPP
+Q_PRIVATE_CREATE_Q_CPP
+Q_PRIVATE_REF_CREATE_Q_CPP
+Q_PROPERTY_CREATE_D
+Q_PRIVATE_CREATE_D
+Q_PRIVATE_CREATE
+Q_PRIVATE_REF_CREATE
+
+将_Q_移除，将_REF_移除，将宏分号移除，对于_H、_CPP后缀的宏执行相同类型紧挨着，且按照字节小到大排序，
+同时给COW类型
+ADD_CONST_REF_TYPES: Set[str] = {
+    "QString", "QByteArray",
+
+    "QList", "QVector", "QMap", "QHash",
+    "QMultiMap", "QMultiHash", "QSet",
+    "QStack", "QQueue", "QLinkedList",
+    "QVarLengthArray", "QCache", "QContiguousCache",
+
+    "QImage", "QPixmap", "QBrush", "QPen", "QPalette",
+    "QFont", "QIcon", "QCursor", "QBitmap",
+    "QRegion", "QPolygon", "QPolygonF", "QPainterPath",
+    "QTransform", "QPicture",
+    "QTextDocument", "QTextBlock", "QTextFrame",
+    "QTextList", "QTextTable",
+    "QTextFormat", "QTextCharFormat", "QTextBlockFormat",
+    "QTextListFormat", "QTextFrameFormat", "QTextTableFormat",
+    "QTextImageFormat", "QTextLength",
+    "QPageSize", "QPageLayout",
+    "QStyleOption", "QStyleHintReturn",
+
+    "QVariant", "QUrl", "QBitArray",
+    "QJsonObject", "QJsonArray", "QJsonValue", "QJsonDocument",
+    "QRegularExpression", "QLocale", "QEasingCurve",
+    "QItemSelection", "QPersistentModelIndex",
+    "QCryptographicHash",
+    "QCollator", "QCollatorSortKey",
+    "QStaticText", "QTextBoundaryFinder",
+    "QGlyphRun", "QRawFont",
+    "QSurfaceFormat", "QOpenGLVersionProfile",
+}
+添加QS_SET_CREF包裹。
+示例：
+  Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
+  Q_PROPERTY_CREATE_Q_H(qreal, MainOpacity)
+  Q_PROPERTY_CREATE_Q_H(qreal, NoiseOpacity)
+  Q_PROPERTY_CREATE_Q_H(int, BrushAlpha)
+  Q_PROPERTY_CREATE_Q_H(QString, Title);
+  Q_PROPERTY_CREATE_Q_H(QString, SubTitle);
+  Q_PROPERTY_CREATE_Q_H(int, TitlePixelSize);
+  Q_PROPERTY_CREATE_Q_H(int, SubTitlePixelSize);
+  Q_PROPERTY_CREATE_Q_H(int, TitleSpacing);
+  Q_PROPERTY_CREATE_Q_H(int, SubTitleSpacing);
+  Q_PROPERTY_CREATE_Q_H(QPixmap, CardPixmap);
+  Q_PROPERTY_CREATE_Q_H(QSize, CardPixmapSize);
+  Q_PROPERTY_CREATE_Q_H(int, CardPixmapBorderRadius)
+  Q_PROPERTY_CREATE_Q_H(NXCardPixType::PixMode, CardPixMode);
+  Q_PROPERTY_CREATE_Q_H(QString, Url);
+执行转换得到
+  Q_PROPERTY_CREATE_H(int, BorderRadius)
+  Q_PROPERTY_CREATE_H(int, BrushAlpha)
+  Q_PROPERTY_CREATE_H(int, TitlePixelSize)
+  Q_PROPERTY_CREATE_H(int, SubTitlePixelSize)
+  Q_PROPERTY_CREATE_H(int, TitleSpacing)
+  Q_PROPERTY_CREATE_H(int, SubTitleSpacing)
+  Q_PROPERTY_CREATE_H(int, CardPixmapBorderRadius)
+  Q_PROPERTY_CREATE_H(NXCardPixType::PixMode, CardPixMode)
+  Q_PROPERTY_CREATE_H(qreal, MainOpacity)
+  Q_PROPERTY_CREATE_H(qreal, NoiseOpacity)
+  Q_PROPERTY_CREATE_H(QSize, CardPixmapSize)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QString), Title)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QString), SubTitle)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QString), Url)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QPixmap), CardPixmap)
+示例：
+Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, int, BorderRadius)
+Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, qreal, MainOpacity)
+Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, qreal, NoiseOpacity)
+Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, int, BrushAlpha)
+Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, QString, Title);
+Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, QString, SubTitle);
+Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, int, TitlePixelSize);
+Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, int, SubTitlePixelSize);
+Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, int, TitleSpacing);
+Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, int, SubTitleSpacing);
+Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, QPixmap, CardPixmap);
+Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, QSize, CardPixmapSize);
+Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, int, CardPixmapBorderRadius)
+Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, NXCardPixType::PixMode, CardPixMode);
+Q_PROPERTY_CREATE_Q_CPP(NXAcrylicUrlCard, QString, Url);
+转换得到
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, BorderRadius)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, BrushAlpha)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, TitlePixelSize)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, SubTitlePixelSize)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, TitleSpacing)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, SubTitleSpacing)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, CardPixmapBorderRadius)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, NXCardPixType::PixMode, CardPixMode)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, qreal, MainOpacity)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, qreal, NoiseOpacity)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, QSize, CardPixmapSize)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, QS_SET_CREF(QString), Title)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, QS_SET_CREF(QString), SubTitle)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, QS_SET_CREF(QPixmap), CardPixmap)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, QS_SET_CREF(QString), Url)
+可以看到相同类型紧贴着，类型字节大小从小到大排序，分号去除，_Q_去除，使用QS_SET_CREF包裹
