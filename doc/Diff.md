@@ -24,6 +24,7 @@
 - `ElaWidgetTools/private/ElaApplicationPrivate.cpp`
 - `ElaWidgetTools/private/ElaScrollPagePrivate.h`
 - `ElaWidgetTools/private/ElaWindowPrivate.h`
+- `ElaPacketIO/ElaPacketIO_Export.h`
 
 ### 新增文件 (5)
 - `ElaWidgetTools/ElaActionCommander.cpp`
@@ -251,6 +252,26 @@ find_package(Qt6 REQUIRED COMPONENTS WidgetsPrivate)
 ```
 
 **原因**: Qt6 中 `WidgetsPrivate` 模块不再需要显式查找，注释掉以减少不必要的依赖检查。
+
+### 5. ElaPacketIO新增静态库构建
+
+**文件**: `ElaPacketIO/ElaPacketIO_Export.h`、`ElaPacketIO/CMakeLists.txt`
+
+```
+#ifdef ELAPACKETIO_STATIC
+#define ELA_PACKETIO_EXPORT
+#elif defined(ELAPACKETIO_LIBRARY)
+...
+#endif
+```
+
+
+
+```
+if(ELAPACKETIO_LIB_TYPE STREQUAL "STATIC")
+  target_compile_definitions(${PROJECT_NAME} PUBLIC ELAPACKETIO_STATIC)
+endif()
+```
 
 ---
 

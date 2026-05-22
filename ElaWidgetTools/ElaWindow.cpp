@@ -1,4 +1,4 @@
-#include "ElaWindow.h"
+﻿#include "ElaWindow.h"
 #include "ElaApplication.h"
 #include "ElaCentralStackedWidget.h"
 #include "ElaEventBus.h"
@@ -135,7 +135,7 @@ ElaWindow::~ElaWindow()
 {
     Q_D(ElaWindow);
     eApp->syncWindowDisplayMode(this, false);
-    delete this->style();
+    //delete this->style();
     delete d->_lightWindowPix;
     delete d->_darkWindowPix;
 }

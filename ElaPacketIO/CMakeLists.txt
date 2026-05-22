@@ -32,6 +32,9 @@ else ()
     set(LIB_TYPE "SHARED")
 endif ()
 
+if(ELAPACKETIO_BUILD_STATIC_LIB STREQUAL "STATIC")
+  target_compile_definitions(${PROJECT_NAME} PUBLIC ELAPACKETIO_STATIC)
+endif()
 
 add_library(${PROJECT_NAME} ${LIB_TYPE}
     ${PROJECT_SOURCES}
