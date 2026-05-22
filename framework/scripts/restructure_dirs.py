@@ -1,7 +1,7 @@
 import os
 import shutil
 
-ROOT = r"D:\ElaWidgetTools"
+ROOT = r"E:\ElaWidgetTools"
 LIB_DIR = os.path.join(ROOT, "ElaWidgetTools")
 EXAMPLE_DIR = os.path.join(ROOT, "ElaWidgetToolsExample")
 

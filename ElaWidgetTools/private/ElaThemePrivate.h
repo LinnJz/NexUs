@@ -1,4 +1,4 @@
-#ifndef ELATHEMEPRIVATE_H
+﻿#ifndef ELATHEMEPRIVATE_H
 #define ELATHEMEPRIVATE_H
 
 #include <QColor>
@@ -21,8 +21,8 @@ protected:
 
 private:
     ElaThemeType::ThemeMode _themeMode{ElaThemeType::Light};
-    QColor _lightThemeColorList[43];
-    QColor _darkThemeColorList[43];
+    QColor _lightThemeColorList[48];
+    QColor _darkThemeColorList[48];
     void _initThemeColor();
 
     bool _isFollowSystemTheme{false};

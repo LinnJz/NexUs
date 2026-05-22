@@ -37,14 +37,14 @@ ElaMenuBar::~ElaMenuBar()
     delete this->style();
 }
 
-QAction* ElaMenuBar::addMenu(QMenu* menu)
+QAction* ElaMenuBar::addMenu(QMenu* qmenu)
 {
-    ElaMenu* elaMenu = dynamic_cast<ElaMenu*>(menu);
+    ElaMenu* elaMenu = dynamic_cast<ElaMenu*>(qmenu);
     if (elaMenu)
     {
         elaMenu->setMenuItemHeight(27);
     }
-    return QMenuBar::addMenu(menu);
+    return QMenuBar::addMenu(qmenu);
 }
 
 ElaMenu* ElaMenuBar::addMenu(const QString& title)

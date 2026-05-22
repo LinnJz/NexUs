@@ -66,13 +66,19 @@ def process_eladef_file(filepath):
 
     endif_idx = -1
     for i, line in enumerate(lines):
-        if '#endif' in line and 'ELADEF_H' in line:
+        stripped = line.strip()
+        if stripped.startswith('#endif') and ('ELADEF_H' in stripped.upper()):
             endif_idx = i
             break
 
     if endif_idx == -1:
-        print(f"  [WARN] #endif // ELADEF_H not found, appending at end.")
+        print(f"  [WARN] #endif for ElaDEF_H not found, appending at end.")
         endif_idx = len(lines)
+
+    # 检查新枚举块是否已存在（幂等性检查）
+    code_lines_text_raw = ''  # will be set after code_block_text is defined
+    # 先把 lines 中已有的内容合并成字符串用于检查
+    existing_text = ''.join(lines)
 
     code_block_text = '''\
 /*************************************************************************************
@@ -195,6 +201,14 @@ using ElaUnexpected = tl::unexpected<ElaNavigationType::NodeResult>;
 using ElaNodeOperateResult = ElaExpected<QString>;
 '''
 
+    # 幂等性检查：如果文件中已包含 ElaTabBarType，说明新枚举块已存在，跳过
+    if 'Q_BEGIN_ENUM_CREATE(ElaTabBarType' in existing_text:
+        if lines == original_lines:
+            print(f"  [INFO] No changes needed.")
+        else:
+            print(f"  [OK] Enum blocks already present.")
+        return
+
     code_block = code_block_text.splitlines(True)
 
     lines = lines[:endif_idx] + ['\n'] + code_block + ['\n'] + lines[endif_idx:]
@@ -209,19 +223,120 @@ using ElaNodeOperateResult = ElaExpected<QString>;
     print(f"  [OK] Processed successfully.")
 
 
+# ═══════════════════════════════════════════════════════════════════
+# ElaThemePrivate.h / .cpp 同步修复
+# ═══════════════════════════════════════════════════════════════════
+
+TABBAR_COLOR_BLOCK = '''\
+    // ElaTabBar
+    _lightThemeColorList[ElaThemeType::TabBarBase] = QColor(0xEA, 0xEA, 0xED);
+    _darkThemeColorList[ElaThemeType::TabBarBase] = QColor(0x1C, 0x20, 0x27);
+
+    _lightThemeColorList[ElaThemeType::TabBarSelected] = QColor(0xFF, 0xFF, 0xFF);
+    _darkThemeColorList[ElaThemeType::TabBarSelected] = QColor(0x38, 0x3B, 0x43);
+
+    _lightThemeColorList[ElaThemeType::TabBarHover] = QColor(0xD2, 0xD2, 0xD6);
+    _darkThemeColorList[ElaThemeType::TabBarHover] = QColor(0x3B, 0x47, 0x5E);
+
+    _lightThemeColorList[ElaThemeType::TabBarCloseButtonHover] = QColor(0xBF, 0xBF, 0xC3);
+    _darkThemeColorList[ElaThemeType::TabBarCloseButtonHover] = QColor(0x5A, 0x64, 0x77);
+
+    _lightThemeColorList[ElaThemeType::TabBarSelectedCloseButtonHover] = QColor(0xE7, 0xE7, 0xE8);
+    _darkThemeColorList[ElaThemeType::TabBarSelectedCloseButtonHover] = QColor(0x57, 0x5A, 0x60);
+
+'''
+
+def process_elatheme_private_header(filepath):
+    """将 ElaThemePrivate.h 中的数组大小 43→48"""
+    with open(filepath, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    original = content
+    content = content.replace('QColor _lightThemeColorList[43];', 'QColor _lightThemeColorList[48];')
+    content = content.replace('QColor _darkThemeColorList[43];', 'QColor _darkThemeColorList[48];')
+
+    if content != original:
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(content)
+        return True
+    return False
+
+
+def process_elatheme_private_source(filepath):
+    """在 ElaThemePrivate.cpp 的 _initThemeColor() 中插入 TabBar 颜色初始化代码"""
+    with open(filepath, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    original = content
+
+    # 如果 TabBar 块已存在，跳过
+    if 'ElaThemeType::TabBarBase' in content:
+        return False
+
+    # 找到 _initThemeColor 函数体
+    init_func_match = re.search(r'void\s+ElaThemePrivate::_initThemeColor\s*\(\s*\)', content)
+    if not init_func_match:
+        print("  [WARN] ElaThemePrivate::_initThemeColor() not found.")
+        return False
+
+    func_body_start = content.find('{', init_func_match.end())
+    if func_body_start < 0:
+        return False
+
+    # 在函数体内找到第一个赋值语句（ScrollBarHandle）
+    first_assign = content.find('_lightThemeColorList', func_body_start)
+    if first_assign < 0:
+        return False
+
+    # 回退到该行开头
+    insert_pos = content.rfind('\n', 0, first_assign) + 1
+
+    content = content[:insert_pos] + TABBAR_COLOR_BLOCK + content[insert_pos:]
+
+    if content != original:
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(content)
+        return True
+    return False
+
+
 def main():
     # 获取脚本所在目录的父目录的父目录
     script_dir = os.path.dirname(os.path.abspath(__file__))
     parent_dir = os.path.dirname(script_dir)        # 上层目录
     grandparent_dir = os.path.dirname(parent_dir)   # 上层目录的上层目录
-    target_file = os.path.join(grandparent_dir, "ElaWidgetTools", "ElaDef.h")
+    base_dir = os.path.join(grandparent_dir, "ElaWidgetTools")
 
+    # 1. 处理 ElaDef.h
+    target_file = os.path.join(base_dir, "ElaDef.h")
     if not os.path.exists(target_file):
         print(f"Error: Target file '{target_file}' does not exist.")
         sys.exit(1)
-
     print(f"Processing: {target_file}")
     process_eladef_file(target_file)
+
+    # 2. 处理 ElaThemePrivate.h (数组大小修正)
+    hdr_file = os.path.join(base_dir, "private", "ElaThemePrivate.h")
+    if os.path.exists(hdr_file):
+        print(f"Processing: {hdr_file}")
+        if process_elatheme_private_header(hdr_file):
+            print("  [OK] Array size fixed (43→48).")
+        else:
+            print("  [INFO] Already up to date.")
+    else:
+        print(f"  [WARN] '{hdr_file}' not found, skipping.")
+
+    # 3. 处理 ElaThemePrivate.cpp (TabBar 颜色初始化)
+    src_file = os.path.join(base_dir, "private", "ElaThemePrivate.cpp")
+    if os.path.exists(src_file):
+        print(f"Processing: {src_file}")
+        if process_elatheme_private_source(src_file):
+            print("  [OK] TabBar color init inserted.")
+        else:
+            print("  [INFO] Already up to date.")
+    else:
+        print(f"  [WARN] '{src_file}' not found, skipping.")
+
     print("\nDone.")
 
 

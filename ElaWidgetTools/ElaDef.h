@@ -1,4 +1,4 @@
-#ifndef ELADEF_H
+﻿#ifndef ELADEF_H
 #define ELADEF_H
 #include <QObject>
 
@@ -54,7 +54,12 @@ enum ThemeMode
 Q_ENUM_CREATE(ThemeMode)
 
 enum ThemeColor
-{
+{    
+    TabBarBase,
+    TabBarSelected,
+    TabBarHover,
+    TabBarCloseButtonHover,
+    TabBarSelectedCloseButtonHover,
     ScrollBarHandle,
     ToggleSwitchNoToggledCenter,
     WindowBase,

@@ -1,6 +1,6 @@
 import os
 
-ROOT = r"D:\ElaWidgetTools"
+ROOT = r"E:\ElaWidgetTools"
 
 EXCLUDE_DIRS = {
 ".git", ".github", ".vs", "out", "Bin", "doc",

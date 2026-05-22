@@ -1,4 +1,4 @@
-#include "ElaThemePrivate.h"
+﻿#include "ElaThemePrivate.h"
 
 #include <QApplication>
 #include <QEvent>
@@ -55,11 +55,27 @@ void ElaThemePrivate::_applySystemTheme()
 
 void ElaThemePrivate::_initThemeColor()
 {
-	//ElaScrollBar
+	// ElaTabBar
+	_lightThemeColorList[ElaThemeType::TabBarBase] = QColor(0xEA, 0xEA, 0xED);
+	_darkThemeColorList[ElaThemeType::TabBarBase] = QColor(0x1C, 0x20, 0x27);
+
+	_lightThemeColorList[ElaThemeType::TabBarSelected] = QColor(0xFF, 0xFF, 0xFF);
+	_darkThemeColorList[ElaThemeType::TabBarSelected] = QColor(0x38, 0x3B, 0x43);
+
+	_lightThemeColorList[ElaThemeType::TabBarHover] = QColor(0xD2, 0xD2, 0xD6);
+	_darkThemeColorList[ElaThemeType::TabBarHover] = QColor(0x3B, 0x47, 0x5E);
+
+	_lightThemeColorList[ElaThemeType::TabBarCloseButtonHover] = QColor(0xBF, 0xBF, 0xC3);
+	_darkThemeColorList[ElaThemeType::TabBarCloseButtonHover] = QColor(0x5A, 0x64, 0x77);
+
+	_lightThemeColorList[ElaThemeType::TabBarSelectedCloseButtonHover] = QColor(0xE7, 0xE7, 0xE8);
+	_darkThemeColorList[ElaThemeType::TabBarSelectedCloseButtonHover] = QColor(0x57, 0x5A, 0x60);
+
+	// ElaScrollBar
 	_lightThemeColorList[ElaThemeType::ScrollBarHandle] = QColor(0x8A, 0x8A, 0x8A);
 	_darkThemeColorList[ElaThemeType::ScrollBarHandle] = QColor(0x9F, 0x9F, 0x9F);
 
-	//ElaToggleSwitch
+	// ElaToggleSwitch
 	_lightThemeColorList[ElaThemeType::ToggleSwitchNoToggledCenter] = QColor(0x6A, 0x6A, 0x6A);
 	_darkThemeColorList[ElaThemeType::ToggleSwitchNoToggledCenter] = QColor(0xD0, 0xD0, 0xD0);
 

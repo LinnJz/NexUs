@@ -29,6 +29,7 @@ using ElaRouteAfterHook = std::function<void(const QString& to, const QString& f
 class ELA_EXPORT ElaRouter : public QObject
 {
 	Q_OBJECT
+	Q_Q_CREATE(NXRouter)
 	Q_SINGLETON_CREATE_H(ElaRouter)
 
 private:
@@ -70,11 +71,6 @@ Q_SIGNALS:
 	Q_SIGNAL void routeChanged(const QString& path, const QVariantMap& params);
 	Q_SIGNAL void navigationBlocked(const QString& path);
 	Q_SIGNAL void routeTableChanged();
-
-private:
-	QScopedPointer<ElaRouterPrivate> d_ptr;
-	Q_DISABLE_COPY(ElaRouter)
-	Q_DECLARE_PRIVATE(ElaRouter)
 };
 
 #define eRouter ElaRouter::getInstance()

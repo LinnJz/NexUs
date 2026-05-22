@@ -1,6 +1,6 @@
 # 变更文件清单
 
-### 修改文件 (24)
+### 修改文件 (27)
 - `.github/workflows/build-example.yml`
 - `CMakeLists.txt`
 - `ElaWidgetTools/CMakeLists.txt`
@@ -21,9 +21,14 @@
 - `ElaWidgetTools/ElaTabBar.cpp`
 - `ElaWidgetTools/ElaTeachingTip.cpp`
 - `ElaWidgetTools/ElaUploadArea.cpp`
+-  `ElaWidgetTools/ElaRouter.h`
+- `ElaWidgetTools/ElaMenuBar.cpp`
+- `ElaWidgetTools/ElaGraphicsScene.cpp`
 - `ElaWidgetTools/private/ElaApplicationPrivate.cpp`
 - `ElaWidgetTools/private/ElaScrollPagePrivate.h`
 - `ElaWidgetTools/private/ElaWindowPrivate.h`
+- `ElaWidgetTools/private/ElaThemePrivate.cpp`
+- `ElaWidgetTools/private/ElaThemePrivate.h`
 - `ElaPacketIO/ElaPacketIO_Export.h`
 
 ### 新增文件 (5)
@@ -47,12 +52,12 @@
 
 ## 总览
 
-| 指标 | 数值 |
-|------|------|
-| 变更文件数 | 24 (已追踪) + 7 (新增未追踪) |
-| 新增行数 | 106 行 |
-| 删除行数 | 33 行 |
-| 主要类型 | Qt 6 兼容性修复、新功能(Command 模式)、Bug 修复 |
+| 指标       | 数值                                            |
+| ---------- | ----------------------------------------------- |
+| 变更文件数 | 24 (已追踪) + 7 (新增未追踪)                    |
+| 新增行数   | 106 行                                          |
+| 删除行数   | 33 行                                           |
+| 主要类型   | Qt 6 兼容性修复、新功能(Command 模式)、Bug 修复 |
 
 ---
 
@@ -64,9 +69,9 @@
 
 **涉及文件**:
 
-| 文件 | 行号 | 说明 |
-|------|------|------|
-| `ElaWidgetTools/ElaChatBubble.cpp` | 699, 715 | 拖拽起始点和 delta 计算 |
+| 文件                                | 行号     | 说明                    |
+| ----------------------------------- | -------- | ----------------------- |
+| `ElaWidgetTools/ElaChatBubble.cpp`  | 699, 715 | 拖拽起始点和 delta 计算 |
 | `ElaWidgetTools/ElaTeachingTip.cpp` | 484      | 点击外部关闭判断        |
 
 **模式**: `#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)` 条件编译，Qt 6 使用 `event->globalPosition().toPoint()`，Qt 5 保持旧 API。
@@ -116,24 +121,24 @@ auto pRtlGetVersion = reinterpret_cast<RtlGetVersionFunc>(GetProcAddress(module,
 **文件**: `ElaWidgetTools/ElaDef.h` (行 187-196)
 
 新增 `CommanderState` 枚举:
-| 值 | 名称 | 说明 |
-|----|------|------|
-| `0x0000` | `UndoValid` | 撤销操作有效 |
+| 值       | 名称          | 说明         |
+| -------- | ------------- | ------------ |
+| `0x0000` | `UndoValid`   | 撤销操作有效 |
 | `0x0001` | `UndoInvalid` | 撤销操作无效 |
-| `0x0002` | `RedoValid` | 重做操作有效 |
+| `0x0002` | `RedoValid`   | 重做操作有效 |
 | `0x0003` | `RedoInvalid` | 重做操作无效 |
 
 通过宏 `Q_BEGIN_ENUM_CREATE` / `Q_ENUM_CREATE` / `Q_END_ENUM_CREATE` 注册到元系统。
 
 ### 2. 新增文件 (未追踪)
 
-| 文件 | 说明 |
-|------|------|
-| `ElaWidgetTools/ElaActionCommander.cpp` | Commander 实现 |
-| `ElaWidgetTools/ElaActionCommander.h` | Commander 头文件 |
-| `ElaWidgetTools/private/ElaActionCommanderPrivate.cpp` | Commander 私有实现 |
-| `ElaWidgetTools/private/ElaActionCommanderPrivate.h` | Commander 私有头文件 |
-| `ElaWidgetTools/DeveloperComponents/Command/` | Command 模式目录 (含具体命令实现) |
+| 文件                                                   | 说明                              |
+| ------------------------------------------------------ | --------------------------------- |
+| `ElaWidgetTools/ElaActionCommander.cpp`                | Commander 实现                    |
+| `ElaWidgetTools/ElaActionCommander.h`                  | Commander 头文件                  |
+| `ElaWidgetTools/private/ElaActionCommanderPrivate.cpp` | Commander 私有实现                |
+| `ElaWidgetTools/private/ElaActionCommanderPrivate.h`   | Commander 私有头文件              |
+| `ElaWidgetTools/DeveloperComponents/Command/`          | Command 模式目录 (含具体命令实现) |
 
 ### 3. 相关友元类声明
 
@@ -190,10 +195,10 @@ auto pRtlGetVersion = reinterpret_cast<RtlGetVersionFunc>(GetProcAddress(module,
 
 构造函数签名变更:
 
-| 参数 | 修改前 | 修改后 |
-|------|--------|--------|
+| 参数    | 修改前     | 修改后           |
+| ------- | ---------- | ---------------- |
 | `title` | `QString&` | `const QString&` |
-| `text` | `QString&` | `const QString&` |
+| `text`  | `QString&` | `const QString&` |
 
 **原因**: 非常量左值引用无法绑定临时对象，当调用方传入字面量或表达式时会导致编译失败。改为 `const` 引用后兼容左值和右值。
 
@@ -205,11 +210,11 @@ auto pRtlGetVersion = reinterpret_cast<RtlGetVersionFunc>(GetProcAddress(module,
 
 **文件**: `.github/workflows/build-example.yml`
 
-| 位置 | 旧值 | 新值 | 说明 |
-|------|------|------|------|
-| 注释 | `Qt 6.10.3` | `Qt 6.6.2` | 版本标注更新 |
-| 行 19 | `QT_VERSION: 6.10.3` | `QT_VERSION: 6.6.2` | 构建版本降级 |
-| 行 238 | `Qt 6.10.3` | `Qt 6.6.2` | Release body 更新 |
+| 位置   | 旧值                 | 新值                | 说明              |
+| ------ | -------------------- | ------------------- | ----------------- |
+| 注释   | `Qt 6.10.3`          | `Qt 6.6.2`          | 版本标注更新      |
+| 行 19  | `QT_VERSION: 6.10.3` | `QT_VERSION: 6.6.2` | 构建版本降级      |
+| 行 238 | `Qt 6.10.3`          | `Qt 6.6.2`          | Release body 更新 |
 
 **原因**: Qt 6.10.3 可能存在兼容性或可用性问题，降级到更稳定的 Qt 6.6.2 LTS 版本。
 
@@ -269,9 +274,139 @@ find_package(Qt6 REQUIRED COMPONENTS WidgetsPrivate)
 
 ```
 if(ELAPACKETIO_LIB_TYPE STREQUAL "STATIC")
-  target_compile_definitions(${PROJECT_NAME} PUBLIC ELAPACKETIO_STATIC)
+  target_compile_definitions(${PROJECT_NAME} PUBLIC
+		-DELAPACKETIO_STATIC
+	)
+else()
+	target_compile_definitions(${PROJECT_NAME} PRIVATE 
+		-DELAPACKETIO_LIBRARY
+	)
 endif()
 ```
+
+---
+
+### 6. ThemeColor 枚举扩展与 ElaThemePrivate 同步修复
+
+**涉及文件**:
+- `ElaWidgetTools/ElaDef.h`
+- `ElaWidgetTools/private/ElaThemePrivate.h`
+- `ElaWidgetTools/private/ElaThemePrivate.cpp`
+- `framework/scripts/process_eladef.py`
+
+**描述**: `ElaDef.h` 的 `ThemeColor` 枚举新增 5 个 TabBar 颜色条目 (`TabBarBase` ~ `TabBarSelectedCloseButtonHover`)，原有条目索引向后顺移 5 位。
+
+**同步修复**: 因枚举值范围扩大，`ElaThemePrivate.h` 中 `_lightThemeColorList[43]` 和 `_darkThemeColorList[43]` 数组容量不足（最大索引 47），需扩容至 `[48]`；`ElaThemePrivate.cpp` 的 `_initThemeColor()` 中补充 5 组 TabBar 颜色赋值。
+
+**脚本化**: `process_eladef.py` 已集成上述修改，运行时会自动同步更新三个文件，并具备幂等性检查。
+
+```diff
+// ElaDef.h
+-    ScrollBarHandle,
++    TabBarBase,
++    TabBarSelected,
++    TabBarHover,
++    TabBarCloseButtonHover,
++    TabBarSelectedCloseButtonHover,
++    ScrollBarHandle,   // 原索引 0 → 5
+
+// ElaThemePrivate.h
+-    QColor _lightThemeColorList[43];
++    QColor _lightThemeColorList[48];
+-    QColor _darkThemeColorList[43];
++    QColor _darkThemeColorList[48];
+
+// ElaThemePrivate.cpp 添加颜色
+
++ // ElaTabBar
++ _lightThemeColorList[ElaThemeType::TabBarBase] = QColor(0xEA, 0xEA, 0xED);
++ _darkThemeColorList[ElaThemeType::TabBarBase] = QColor(0x1C, 0x20, 0x27);
++ 
++ _lightThemeColorList[ElaThemeType::TabBarSelected] = QColor(0xFF, 0xFF, 0xFF);
++ _darkThemeColorList[ElaThemeType::TabBarSelected] = QColor(0x38, 0x3B, 0x43);
++ 
++ _lightThemeColorList[ElaThemeType::TabBarHover] = QColor(0xD2, 0xD2, 0xD6);
++ _darkThemeColorList[ElaThemeType::TabBarHover] = QColor(0x3B, 0x47, 0x5E);
++ 
++ _lightThemeColorList[ElaThemeType::TabBarCloseButtonHover] = QColor(0xBF, 0xBF, 0xC3);
++ _darkThemeColorList[ElaThemeType::TabBarCloseButtonHover] = QColor(0x5A, 0x64, 0x77);
++ 
++ _lightThemeColorList[ElaThemeType::TabBarSelectedCloseButtonHover] = QColor(0xE7, 0xE7, 0xE8);
++ _darkThemeColorList[ElaThemeType::TabBarSelectedCloseButtonHover] = QColor(0x57, 0x5A, 0x60);
+
+```
+
+------
+
+## 六、与源仓库对齐
+
+### 1、`ElaRouter.h` 使用`Q_Q_CREATE`
+
+```c++
+private:
+  QScopedPointer<NXRouterPrivate> d_ptr;
+  Q_DISABLE_COPY(NXRouter)
+  Q_DECLARE_PRIVATE(NXRouter)
+//替换为
+class NX_EXPORT NXRouter : public QObject
+{
+  Q_OBJECT
+  Q_Q_CREATE(NXRouter)
+```
+
+### 2、`ElaMenuBar`、`ElaGraphicsScene`规范代码
+
+```
+menu ->qmenu
+QAction* ElaMenuBar::addMenu(QMenu* qmenu)
+{
+    ElaMenu* elaMenu = dynamic_cast<ElaMenu*>(qmenu);
+    if (elaMenu)
+    {
+        elaMenu->setMenuItemHeight(27);
+    }
+    return QMenuBar::addMenu(qmenu);
+}
+```
+
+
+
+```
+间接调用规范
+QList<ElaGraphicsItem*> ElaGraphicsScene::getElaItems(QPoint pos)
+{
+  return getElaItems(pos.toPointF());
+}
+
+QList<ElaGraphicsItem*> ElaGraphicsScene::getElaItems(QPointF pos)
+{
+  QList<ElaGraphicsItem *> result;
+  for (QGraphicsItem *qitem : items(pos))
+  {
+    if (auto item = dynamic_cast<ElaGraphicsItem *>(qitem))
+      result.append(item);
+  }
+  return result;
+}
+
+QList<ElaGraphicsItem*> ElaGraphicsScene::getElaItems(QRect rect)
+{
+  return getElaItems(rect.toRectF());
+}
+
+QList<ElaGraphicsItem*> ElaGraphicsScene::getElaItems(QRectF rect)
+{
+  QList<ElaGraphicsItem *> result;
+  for (QGraphicsItem *qitem : items(rect))
+  {
+    if (auto item = dynamic_cast<ElaGraphicsItem *>(qitem))
+      result.append(item);
+  }
+  return result;
+}
+```
+
+
 
 ---
 

@@ -1,6 +1,9 @@
 ﻿#ifndef NXWIDGETTOOLS_NXPACKETIO_NXPACKETIO_EXPORT_H_
 #define NXWIDGETTOOLS_NXPACKETIO_NXPACKETIO_EXPORT_H_
 
+#ifdef NXPACKETIO_STATIC
+#define NX_PACKETIO_EXPORT
+#elif defined(NXPACKETIO_LIBRARY)
 #ifdef NXPACKETIO_LIBRARY
 #if defined(_WIN32)
 #if defined(_MSC_VER)
@@ -20,6 +23,7 @@
 #endif
 #else
 #define NX_PACKETIO_EXPORT __attribute__((visibility("default")))
+#endif
 #endif
 #endif
 

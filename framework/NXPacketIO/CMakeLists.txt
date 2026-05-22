@@ -38,10 +38,15 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/Util
     ${CMAKE_CURRENT_SOURCE_DIR}/XIO
 )
-
-target_compile_definitions(${PROJECT_NAME} PRIVATE 
-  -DNXPACKETIO_LIBRARY
-)
+if(NXPACKETIO_LIB_TYPE STREQUAL "STATIC")
+  target_compile_definitions(${PROJECT_NAME} PUBLIC
+		-DNXPACKETIO_STATIC
+	)
+else()
+	target_compile_definitions(${PROJECT_NAME} PRIVATE 
+		-DNXPACKETIO_LIBRARY
+	)
+endif()
 
 include(../CMake/TargetCompilerConfig.cmake)
 if (WIN32)

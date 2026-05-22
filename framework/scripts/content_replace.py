@@ -23,6 +23,7 @@ def replace_file_content(root_dir):
     # 新增：专属匹配":/include（精确子串匹配，无\b边界）
     special_rules = [
         ('":/include', '":/Resource'),
+        ('"Source/include/', '"include/'),
     ]
 
     partial_rules = [
@@ -90,7 +91,14 @@ def replace_file_content(root_dir):
                 is_modified = False
                 original_content = content
 
-                # 新增步骤：先执行专属规则（精确子串匹配，无\b，确保":/include生效）
+                # 第零步：移除 ela + 大写字母前缀，大写变小写
+                ela_pattern = re.compile(r'ela([A-Z])')
+                new_content = ela_pattern.sub(lambda m: m.group(1).lower(), content)
+                if new_content != content:
+                    is_modified = True
+                    content = new_content
+
+                # 第一步：先执行专属规则（精确子串匹配，无\b，确保":/include生效）
                 for old_str, new_str in special_rules:
                     new_content = content.replace(old_str, new_str)
                     if new_content != content:

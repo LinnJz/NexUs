@@ -118,6 +118,17 @@ FUNC_OVERRIDE_RE = re.compile(
     r'\s*override\b'
 )
 
+# ── Singleton Migration Regexes ──────────────────────────────────
+
+SINGLETON_INCLUDE_OLD = '#include "NXSingleton.h"'
+SINGLETON_INCLUDE_NEW = '#include "LinnSingleton.h"'
+
+SINGLETON_H_RE = re.compile(r'Q_SINGLETON_CREATE_H\s*\(\s*(\w+)\s*\)\s*;?')
+SINGLETON_CREATE_RE = re.compile(r'Q_SINGLETON_CREATE\s*\(\s*(\w+)\s*\)\s*;?')
+SINGLETON_CPP_RE = re.compile(r'Q_SINGLETON_CREATE_CPP\s*\(\s*(\w+)\s*\)\s*;?')
+QQ_CREATE_RE = re.compile(r'Q_Q_CREATE\s*\(\s*(\w+)\s*\)')
+Q_OBJECT_RE = re.compile(r'Q_OBJECT\b')
+
 
 # ═══════════════════════════════════════════════════════════════════
 # Core Utilities
@@ -905,7 +916,7 @@ def process_func6_file(lines: list, global_overrides: set, filepath: str) -> lis
 
     local_overrides = file_overrides | global_overrides
     new_text = _process_text_const_ref(text, local_overrides)
-    return list(new_text)
+    return new_text.splitlines(keepends=True)
 
 
 def _process_text_const_ref(text: str, override_set: set) -> str:
@@ -1155,6 +1166,171 @@ def _patch_func(lines: list, fn_start: int, fn_end: int,
 
 
 # ═══════════════════════════════════════════════════════════════════
+# Phase 3: Singleton Migration (NXSingleton.h → LinnSingleton.h)
+# ═══════════════════════════════════════════════════════════════════
+
+def _find_outermost_last_include(lines):
+    """Find the last #include at outermost preprocessing level."""
+    depth = 0
+    first_include_depth = -1
+    last = -1
+    for i, line in enumerate(lines):
+        s = line.strip()
+        s_clean = s.lstrip('\ufeff')
+        if re.match(r'#\s*if', s_clean):
+            depth += 1
+        elif re.match(r'#\s*endif', s_clean):
+            depth -= 1
+        elif re.match(r'#\s*include', s_clean):
+            if first_include_depth < 0:
+                first_include_depth = depth
+            if depth == first_include_depth:
+                last = i
+    return last
+
+
+def _find_guard_endif_line(lines):
+    """Find the header guard #endif (last outermost #endif)."""
+    depth = 0
+    guard = -1
+    for i, line in enumerate(lines):
+        s = line.strip()
+        s_clean = s.lstrip('\ufeff')
+        if re.match(r'#\s*if', s_clean):
+            depth += 1
+        elif re.match(r'#\s*endif', s_clean):
+            depth -= 1
+            if depth == 0:
+                guard = i
+    return guard
+
+
+def _class_has_qq_create(lines, cls_start, cls_end):
+    for i in range(cls_start, cls_end + 1):
+        if QQ_CREATE_RE.search(lines[i]):
+            return True
+    return False
+
+
+def _class_has_qobject(lines, cls_start, cls_end):
+    for i in range(cls_start, cls_end + 1):
+        if Q_OBJECT_RE.search(lines[i]):
+            return True
+    return False
+
+
+def _find_singleton_insertion_line(lines, cls_start, cls_end, class_name):
+    for i in range(cls_start, cls_end + 1):
+        if QQ_CREATE_RE.search(lines[i]):
+            return i
+    for i in range(cls_start, cls_end + 1):
+        if Q_OBJECT_RE.search(lines[i]):
+            return i
+    for i in range(cls_start, cls_end + 1):
+        if '{' in lines[i]:
+            return i
+    return cls_start
+
+
+def _add_push_pop_macros(lines):
+    push_idx = _find_outermost_last_include(lines)
+    pop_idx = _find_guard_endif_line(lines)
+
+    if push_idx >= 0:
+        to_insert = [
+            '#pragma push_macro("Q_DISABLE_COPY")\n',
+            '#undef Q_DISABLE_COPY\n',
+            '#define Q_DISABLE_COPY(CLASS)\n',
+        ]
+        for j, l in enumerate(to_insert):
+            lines.insert(push_idx + 1 + j, l)
+        if pop_idx > push_idx:
+            pop_idx += 3
+
+    if pop_idx >= 0:
+        lines.insert(pop_idx, '#pragma pop_macro("Q_DISABLE_COPY")\n')
+    return lines
+
+
+def _process_singleton_migration(lines, filepath):
+    result = list(lines)
+    fp = Path(filepath)
+    is_header = fp.suffix in HEADER_EXTS
+    is_source = fp.suffix in SOURCE_EXTS
+    if not is_header and not is_source:
+        return result
+
+    has_singleton_include = False
+    for i, line in enumerate(result):
+        if '"NXSingleton.h"' in line:
+            result[i] = line.replace('"NXSingleton.h"', '"LinnSingleton.h"')
+            has_singleton_include = True
+
+    if is_header:
+        macro_groups = {}
+        for i, line in enumerate(result):
+            m = SINGLETON_H_RE.search(line)
+            if m:
+                cn = m.group(1)
+                macro_groups.setdefault(cn, []).append((i, 'H'))
+                continue
+            m = SINGLETON_CREATE_RE.search(line)
+            if m:
+                cn = m.group(1)
+                macro_groups.setdefault(cn, []).append((i, 'CREATE'))
+
+        if not macro_groups:
+            return result
+
+        class_ranges = _find_class_ranges(result)
+        needs_push_pop = False
+
+        for class_name, entries in sorted(
+            macro_groups.items(),
+            key=lambda x: min(idx for idx, _ in x[1]),
+            reverse=True
+        ):
+            macro_indices = [idx for idx, _ in entries]
+            min_macro = min(macro_indices)
+            max_macro = max(macro_indices)
+
+            own_range = None
+            for cr in class_ranges:
+                if cr[0] <= min_macro <= cr[1] and cr[0] <= max_macro <= cr[1]:
+                    own_range = cr
+                    break
+            if not own_range:
+                continue
+
+            old_indent = result[macro_indices[0]][:len(result[macro_indices[0]]) - len(result[macro_indices[0]].lstrip())]
+
+            for idx in sorted(macro_indices, reverse=True):
+                result[idx] = ''
+
+            if _class_has_qq_create(result, own_range[0], own_range[1]):
+                needs_push_pop = True
+
+            ins = _find_singleton_insertion_line(result, own_range[0], own_range[1], class_name)
+
+            new_line = f'{old_indent}Q_SINGLETON_CREATE(QS_S_UNIQUE({class_name}))\n'
+            result.insert(ins + 1, new_line)
+
+            for j in range(len(class_ranges)):
+                if class_ranges[j][0] > ins:
+                    class_ranges[j] = (class_ranges[j][0] + 1, class_ranges[j][1] + 1)
+
+        if has_singleton_include and needs_push_pop:
+            _add_push_pop_macros(result)
+
+    if is_source:
+        for i in range(len(result) - 1, -1, -1):
+            if SINGLETON_CPP_RE.search(result[i]):
+                result[i] = ''
+
+    return result
+
+
+# ═══════════════════════════════════════════════════════════════════
 # Main
 # ═══════════════════════════════════════════════════════════════════
 
@@ -1194,6 +1370,9 @@ def process_file(fp: Path, override_set: set, dry_run: bool) -> int:
     # Phase 2
     lines = process_func6_file(lines, override_set, str(fp))
 
+    # Phase 3: Singleton migration
+    lines = _process_singleton_migration(lines, str(fp))
+
     new_text = ''.join(lines)
     if new_text == original:
         return 0
@@ -1232,7 +1411,7 @@ def main():
     print(f'  Found {len(override_set)} override names.')
 
     # Process
-    print('Processing files (Phase 1+2)...')
+    print('Processing files (Phase 1+2+3)...')
     mod = 0
     for fp in all_files:
         mod += process_file(fp, override_set, args.dry_run)

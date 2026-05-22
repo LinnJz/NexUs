@@ -132,62 +132,34 @@ QList<ElaGraphicsItem*> ElaGraphicsScene::getElaItems()
 
 QList<ElaGraphicsItem*> ElaGraphicsScene::getElaItems(QPoint pos)
 {
-    QList<QGraphicsItem*> itemList = items(pos);
-    QList<ElaGraphicsItem*> elaItemList;
-    for (auto item : itemList)
-    {
-        ElaGraphicsItem* elaItem = dynamic_cast<ElaGraphicsItem*>(item);
-        if (elaItem)
-        {
-            elaItemList.append(elaItem);
-        }
-    }
-    return elaItemList;
+  return getElaItems(pos.toPointF());
 }
 
 QList<ElaGraphicsItem*> ElaGraphicsScene::getElaItems(QPointF pos)
 {
-    QList<QGraphicsItem*> itemList = items(pos);
-    QList<ElaGraphicsItem*> elaItemList;
-    for (auto item : itemList)
-    {
-        ElaGraphicsItem* elaItem = dynamic_cast<ElaGraphicsItem*>(item);
-        if (elaItem)
-        {
-            elaItemList.append(elaItem);
-        }
-    }
-    return elaItemList;
+  QList<ElaGraphicsItem *> result;
+  for (QGraphicsItem *qitem : items(pos))
+  {
+    if (auto item = dynamic_cast<ElaGraphicsItem *>(qitem))
+      result.append(item);
+  }
+  return result;
 }
 
 QList<ElaGraphicsItem*> ElaGraphicsScene::getElaItems(QRect rect)
 {
-    QList<QGraphicsItem*> itemList = items(rect);
-    QList<ElaGraphicsItem*> elaItemList;
-    for (auto item : itemList)
-    {
-        ElaGraphicsItem* elaItem = dynamic_cast<ElaGraphicsItem*>(item);
-        if (elaItem)
-        {
-            elaItemList.append(elaItem);
-        }
-    }
-    return elaItemList;
+  return getElaItems(rect.toRectF());
 }
 
 QList<ElaGraphicsItem*> ElaGraphicsScene::getElaItems(QRectF rect)
 {
-    QList<QGraphicsItem*> itemList = items(rect);
-    QList<ElaGraphicsItem*> elaItemList;
-    for (auto item : itemList)
-    {
-        ElaGraphicsItem* elaItem = dynamic_cast<ElaGraphicsItem*>(item);
-        if (elaItem)
-        {
-            elaItemList.append(elaItem);
-        }
-    }
-    return elaItemList;
+  QList<ElaGraphicsItem *> result;
+  for (QGraphicsItem *qitem : items(rect))
+  {
+    if (auto item = dynamic_cast<ElaGraphicsItem *>(qitem))
+      result.append(item);
+  }
+  return result;
 }
 
 void ElaGraphicsScene::setSceneMode(ElaGraphicsSceneType::SceneMode mode)
