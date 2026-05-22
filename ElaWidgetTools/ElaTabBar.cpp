@@ -143,9 +143,26 @@ void ElaTabBar::dragEnterEvent(QDragEnterEvent *event)
 #endif
 		Q_EMIT tabDragEnter(mimeData);
 		qApp->processEvents();
-		QMouseEvent pressEvent(QEvent::MouseButtonPress, QPoint(tabRect(currentIndex()).x() + d->_style->getTabSize().width() / 2, 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+
+		QPoint localPressPos(tabRect(currentIndex()).x() + d->_style->getTabSize().width() / 2, 0);
+		QPoint globalPressPos = mapToGlobal(localPressPos);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
+		QMouseEvent pressEvent(QEvent::MouseButtonPress, QPointF(localPressPos), QPointF(globalPressPos), Qt::LeftButton,
+							   Qt::LeftButton, Qt::NoModifier);
+#else
+		QMouseEvent pressEvent(QEvent::MouseButtonPress, localPressPos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+#endif 
+
 		QApplication::sendEvent(this, &pressEvent);
-		QMouseEvent moveEvent(QEvent::MouseMove, QPoint(event->pos().x(), 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+
+		QPoint localMovePos(event->pos().x(), 0);
+		QPoint globalMovePos = mapToGlobal(localMovePos);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
+		QMouseEvent moveEvent(QEvent::MouseMove, QPointF(localMovePos), QPointF(globalMovePos), Qt::LeftButton,
+							  Qt::LeftButton, Qt::NoModifier);
+#else
+		QMouseEvent moveEvent(QEvent::MouseMove, localMovePos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+#endif
 		QApplication::sendEvent(this, &moveEvent);
 	}
 	QTabBar::dragEnterEvent(event);
@@ -156,7 +173,14 @@ void ElaTabBar::dragMoveEvent(QDragMoveEvent *event)
 	Q_D(ElaTabBar);
 	if (event->mimeData()->property("DragType").toString() == "ElaTabBarDrag")
 	{
-		QMouseEvent moveEvent(QEvent::MouseMove, QPoint(event->pos().x(), 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+		QPoint movePos(event->position().toPoint().x(), 0);
+		QMouseEvent moveEvent(QEvent::MouseMove, movePos, mapToGlobal(movePos), Qt::LeftButton, Qt::LeftButton,
+							  Qt::NoModifier);
+#else
+		QMouseEvent moveEvent(QEvent::MouseMove, QPoint(event->pos().x(), 0), Qt::LeftButton, Qt::LeftButton,
+							  Qt::NoModifier);
+#endif
 		QApplication::sendEvent(this, &moveEvent);
 	}
 	QWidget::dragMoveEvent(event);

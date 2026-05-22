@@ -20,6 +20,10 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>")
+if(MSVC)
+    add_compile_options(/wd5103)
+endif()
 
 # 配置 QT 路径，三种方式任选其一（优先级从高到低）：
 #   1) 命令行 -DQT_SDK_DIR=/path/to/Qt

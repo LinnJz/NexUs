@@ -1,4 +1,4 @@
-﻿#include <QApplication>
+#include <QApplication>
 #include <QScreen>
 
 #include "ElaApplication.h"

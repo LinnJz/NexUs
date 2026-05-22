@@ -23,7 +23,7 @@ protected:
     bool eventFilter(QObject* watched, QEvent* event) override;
 
 private:
-    explicit ElaMessageBar(ElaMessageBarType::PositionPolicy policy, ElaMessageBarType::MessageMode messageMode, QString& title, QString& text, int displayMsec, QWidget* parent = nullptr);
+    explicit ElaMessageBar(ElaMessageBarType::PositionPolicy policy, ElaMessageBarType::MessageMode messageMode, const QString& title, const QString& text, int displayMsec, QWidget* parent = nullptr);
     ~ElaMessageBar() override;
 };
 

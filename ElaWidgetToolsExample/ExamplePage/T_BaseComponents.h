@@ -1,4 +1,4 @@
-﻿#ifndef T_BASECOMPONENTS_H
+#ifndef T_BASECOMPONENTS_H
 #define T_BASECOMPONENTS_H
 
 #include "T_BasePage.h"

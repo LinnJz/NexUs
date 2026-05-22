@@ -1,4 +1,4 @@
-﻿#include "ElaContentDialog.h"
+#include "ElaContentDialog.h"
 
 #include <ElaPushButton.h>
 

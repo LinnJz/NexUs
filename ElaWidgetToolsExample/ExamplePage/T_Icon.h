@@ -1,4 +1,4 @@
-﻿#ifndef T_ICON_H
+#ifndef T_ICON_H
 #define T_ICON_H
 
 #include <QMetaEnum>

@@ -151,6 +151,7 @@ void ElaPromotionView::wheelEvent(QWheelEvent* event)
     {
         if (event->angleDelta().y() > 0)
         {
+			//右滑
             d->_isAllowSwitch = false;
             QTimer::singleShot(400, this, [=] {
                 d->_isAllowSwitch = true;
@@ -159,6 +160,7 @@ void ElaPromotionView::wheelEvent(QWheelEvent* event)
         }
         else
         {
+			//左滑
             d->_isAllowSwitch = false;
             QTimer::singleShot(400, this, [=] {
                 d->_isAllowSwitch = true;
@@ -225,6 +227,7 @@ void ElaPromotionView::paintEvent(QPaintEvent* event)
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(Qt::NoPen);
     painter.setBrush(ElaThemeColor(d->_themeMode, BasicIndicator));
+	//页标指示器绘制
     int promotionCardCount = d->_promotionCardList.count();
     bool isCountOdd = promotionCardCount % 2;
     QPoint startPoint = isCountOdd ? QPoint(width() / 2 - promotionCardCount / 2 * d->_indicatorSpacing, height() - d->_bottomMargin / 2) : QPoint(width() / 2 - promotionCardCount / 2 * d->_indicatorSpacing - d->_indicatorSpacing / 2, height() - d->_bottomMargin / 2);

@@ -16,7 +16,6 @@
 ElaApplicationPrivate::ElaApplicationPrivate(QObject* parent)
     : QObject{parent}
 {
-    connect(qApp, &QApplication::paletteChanged, this, &ElaApplicationPrivate::onSystemPaletteChanged);
 }
 
 ElaApplicationPrivate::~ElaApplicationPrivate()
@@ -97,6 +96,11 @@ bool ElaApplicationPrivate::eventFilter(QObject* watched, QEvent* event)
             _micaWidgetList.removeOne(widget);
         }
         break;
+    }
+    case QEvent::ApplicationPaletteChange :
+    {
+      onSystemPaletteChanged();
+      break;
     }
     default:
     {

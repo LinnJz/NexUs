@@ -481,7 +481,12 @@ bool ElaTeachingTip::eventFilter(QObject *watched, QEvent *event)
 	if (d->_pIsLightDismiss && event->type() == QEvent::MouseButtonPress)
 	{
 		QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-		if (watched != this && !this->geometry().contains(this->mapFromGlobal(mouseEvent->globalPos())))
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+		QPoint point = mouseEvent->globalPosition().toPoint();
+#else
+		QPoint point = mouseEvent->globalPos();
+#endif
+		if (watched != this && !this->geometry().contains(this->mapFromGlobal(point)))
 		{
 			closeTip();
 		}

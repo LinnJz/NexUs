@@ -33,7 +33,7 @@ public:
 protected:
     void highlightBlock(const QString& text) override
     {
-        for (const HighlightRule& rule : qAsConst(_rules))
+        for (const HighlightRule& rule : std::as_const(_rules))
         {
             QRegularExpressionMatchIterator matchIterator = rule.pattern.globalMatch(text);
             while (matchIterator.hasNext())

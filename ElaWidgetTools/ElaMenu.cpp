@@ -1,4 +1,4 @@
-﻿#include "ElaMenu.h"
+#include "ElaMenu.h"
 
 #include <QApplication>
 #include <QCloseEvent>

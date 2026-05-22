@@ -14,6 +14,7 @@ class QStackedWidget;
 class ElaBreadcrumbBar;
 class ElaScrollPagePrivate : public QObject
 {
+    friend class ElaScrollPageRouteCommand;
     Q_OBJECT
     Q_D_CREATE(ElaScrollPage)
     Q_PROPERTY_CREATE_D(QWidget*, CustomWidget)

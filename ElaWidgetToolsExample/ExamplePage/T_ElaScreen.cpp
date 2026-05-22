@@ -1,4 +1,4 @@
-﻿#include "T_ElaScreen.h"
+#include "T_ElaScreen.h"
 
 #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
 #include "ElaComboBox.h"

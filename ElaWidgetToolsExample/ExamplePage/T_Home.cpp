@@ -1,4 +1,4 @@
-﻿#include "T_Home.h"
+#include "T_Home.h"
 
 #include <QDebug>
 #include <QDesktopServices>

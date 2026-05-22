@@ -1,4 +1,4 @@
-﻿#include "T_IconModel.h"
+#include "T_IconModel.h"
 
 #include "ElaDef.h"
 T_IconModel::T_IconModel(QObject* parent)

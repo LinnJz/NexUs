@@ -1,5 +1,5 @@
 # 自动编译 ElaWidgetToolsExample
-# 在 Windows / Linux / macOS 最新系统镜像上使用 Qt 6.10.3 构建示例程序
+# 在 Windows / Linux / macOS 最新系统镜像上使用 Qt 6.6.2 构建示例程序
 
 name: Build Example
 
@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 env:
-  QT_VERSION: 6.10.3
+  QT_VERSION: 6.6.2
   BUILD_TYPE: Release
 
 # 按 ref 分组，让 tag run 与 branch run 落在不同组互不干扰；
@@ -235,7 +235,7 @@ jobs:
           name: ${{ steps.meta.outputs.tag }}
           target_commitish: ${{ github.sha }}
           body: |
-            自动构建 — 提交 `${{ github.sha }}`，由 GitHub Actions 在 Qt 6.10.3 上多平台产出。
+            自动构建 — 提交 `${{ github.sha }}`，由 GitHub Actions 在 Qt 6.6.2 上多平台产出。
 
             各 zip 包含 `ElaWidgetToolsExample` 及其平台对应运行时（Windows windeployqt / macOS macdeployqt / Linux linuxdeploy AppImage）。
           fail_on_unmatched_files: true

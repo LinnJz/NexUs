@@ -1,4 +1,4 @@
-﻿#include "ElaNavigationBarPrivate.h"
+#include "ElaNavigationBarPrivate.h"
 #include "ElaApplication.h"
 #include "ElaBaseListView.h"
 #include "ElaCustomTabWidget.h"

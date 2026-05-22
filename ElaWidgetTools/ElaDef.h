@@ -184,6 +184,17 @@ enum NavigationNodeType
 Q_ENUM_CREATE(NavigationNodeType)
 Q_END_ENUM_CREATE(ElaNavigationType)
 
+Q_BEGIN_ENUM_CREATE(ElaActionCommanderType)
+enum CommanderState
+{
+  UndoValid = 0x0000,
+  UndoInvalid = 0x0001,
+  RedoValid = 0x0002,
+  RedoInvalid = 0x0003,
+};
+Q_ENUM_CREATE(CommanderState)
+Q_END_ENUM_CREATE(ElaActionCommanderType)
+
 Q_BEGIN_ENUM_CREATE(ElaNavigationRouterType)
 enum NavigationRouteType
 {

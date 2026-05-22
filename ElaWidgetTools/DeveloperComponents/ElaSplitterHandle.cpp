@@ -1,4 +1,4 @@
-﻿#include "ElaSplitterHandle.h"
+#include "ElaSplitterHandle.h"
 
 #include <QPainter>
 #include <QPainterPath>

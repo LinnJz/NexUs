@@ -1,4 +1,4 @@
-﻿#include "T_BaseComponents.h"
+#include "T_BaseComponents.h"
 
 #include "ElaCheckBox.h"
 #include "ElaComboBox.h"

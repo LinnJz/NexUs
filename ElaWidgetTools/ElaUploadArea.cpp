@@ -1,5 +1,6 @@
 #include "ElaUploadArea.h"
 
+#include <QApplication>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QFileInfo>

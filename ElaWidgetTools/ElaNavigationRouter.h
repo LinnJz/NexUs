@@ -18,10 +18,6 @@ private:
     explicit ElaNavigationRouter(QObject* parent = nullptr);
     ~ElaNavigationRouter() override;
 
-Q_SIGNALS:
-    Q_SIGNAL void navigationRouterStateChanged(ElaNavigationRouterType::RouteMode routeMode);
-    Q_SIGNAL void windowRouterStateChanged(QObject* context, ElaNavigationRouterType::RouteMode routeMode);
-
 public:
     // 全局路由（向后兼容）
     ElaNavigationRouterType::NavigationRouteType navigationRoute(QObject* routeObject, QString routeFunctionName, const QVariantMap& routeData = {}, Qt::ConnectionType connectionType = Qt::AutoConnection);
@@ -34,6 +30,10 @@ public:
     void clearNavigationRoute(QObject* context);
     void navigationRouteBack(QObject* context);
     void navigationRouteForward(QObject* context);
+
+Q_SIGNALS:
+    Q_SIGNAL void navigationRouterStateChanged(ElaNavigationRouterType::RouteMode routeMode);
+    Q_SIGNAL void windowRouterStateChanged(QObject *context, ElaNavigationRouterType::RouteMode routeMode);
 };
 
 #endif // ELANAVIGATIONROUTER_H

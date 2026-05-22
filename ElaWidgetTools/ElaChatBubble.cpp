@@ -696,7 +696,11 @@ void ElaChatBubble::mouseDoubleClickEvent(QMouseEvent *event)
 					if (me->button() == Qt::LeftButton)
 					{
 						_dragging = true;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+						_dragStartPos = me->globalPosition().toPoint();
+#else
 						_dragStartPos = me->globalPos();
+#endif
 						_dragStartHBar = _scrollArea->horizontalScrollBar()->value();
 						_dragStartVBar = _scrollArea->verticalScrollBar()->value();
 						_scrollArea->viewport()->setCursor(Qt::ClosedHandCursor);
@@ -708,7 +712,12 @@ void ElaChatBubble::mouseDoubleClickEvent(QMouseEvent *event)
 					if (_dragging)
 					{
 						QMouseEvent *me = static_cast<QMouseEvent *>(ev);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+						QPoint delta = me->globalPosition().toPoint() - _dragStartPos;
+#else
 						QPoint delta = me->globalPos() - _dragStartPos;
+
+#endif
 						_scrollArea->horizontalScrollBar()->setValue(_dragStartHBar - delta.x());
 						_scrollArea->verticalScrollBar()->setValue(_dragStartVBar - delta.y());
 						return true;

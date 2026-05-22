@@ -1,4 +1,4 @@
-﻿#include "ElaApplication.h"
+#include "ElaApplication.h"
 
 #include "ElaTheme.h"
 #include "ElaWinShadowHelper.h"

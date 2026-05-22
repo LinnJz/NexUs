@@ -12,7 +12,7 @@ ElaWinShadowHelper::ElaWinShadowHelper(QObject* parent)
     HMODULE module = LoadLibraryW(L"ntdll.dll");
     if (module)
     {
-        auto pRtlGetVersion = reinterpret_cast<RtlGetVersionFunc>(::GetProcAddress(module, "RtlGetVersion"));
+        auto pRtlGetVersion = reinterpret_cast<RtlGetVersionFunc>(GetProcAddress(module, "RtlGetVersion"));
         Q_ASSERT(pRtlGetVersion);
         _windowsVersion.dwOSVersionInfoSize = sizeof(_windowsVersion);
         pRtlGetVersion(&_windowsVersion);

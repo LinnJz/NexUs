@@ -1,4 +1,4 @@
-﻿#ifndef T_HOME_H
+#ifndef T_HOME_H
 #define T_HOME_H
 
 #include "T_BasePage.h"

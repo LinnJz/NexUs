@@ -17,6 +17,7 @@ class QVBoxLayout;
 class ElaThemeAnimationWidget;
 class ElaWindowPrivate : public QObject
 {
+    friend class ElaWindowStackChangeCommand;
     Q_OBJECT
     Q_D_CREATE(ElaWindow)
     Q_PROPERTY_CREATE_D(int, ThemeChangeTime)

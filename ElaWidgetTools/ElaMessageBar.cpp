@@ -11,7 +11,7 @@
 #include "ElaTheme.h"
 #include "private/ElaMessageBarPrivate.h"
 
-ElaMessageBar::ElaMessageBar(ElaMessageBarType::PositionPolicy policy, ElaMessageBarType::MessageMode messageMode, QString& title, QString& text, int displayMsec, QWidget* parent)
+ElaMessageBar::ElaMessageBar(ElaMessageBarType::PositionPolicy policy, ElaMessageBarType::MessageMode messageMode, const QString& title, const QString& text, int displayMsec, QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaMessageBarPrivate())
 {
     Q_D(ElaMessageBar);

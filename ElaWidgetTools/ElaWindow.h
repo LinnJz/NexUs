@@ -1,4 +1,4 @@
-﻿#ifndef ELAWINDOW_H
+#ifndef ELAWINDOW_H
 #define ELAWINDOW_H
 
 #include <QMainWindow>

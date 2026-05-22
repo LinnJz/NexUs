@@ -1,4 +1,4 @@
-﻿#ifndef ELACONTENTDIALOG_H
+#ifndef ELACONTENTDIALOG_H
 #define ELACONTENTDIALOG_H
 #include <QAbstractNativeEventFilter>
 #include <QDialog>

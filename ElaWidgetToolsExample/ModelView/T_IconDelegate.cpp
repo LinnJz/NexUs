@@ -1,4 +1,4 @@
-﻿#include "T_IconDelegate.h"
+#include "T_IconDelegate.h"
 
 #include <QPainter>
 
