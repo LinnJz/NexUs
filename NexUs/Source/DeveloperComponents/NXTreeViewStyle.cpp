@@ -42,9 +42,10 @@ NXTreeViewStyle::drawPrimitive(PrimitiveElement element,
       itemRect.adjust(0, 2, 0, -2);
       QPainterPath path;
       path.addRoundedRect(itemRect, 4, 4);
+      bool isEnable = vopt->state.testFlag(QStyle::State_Enabled);
       if (vopt->state & QStyle::State_Selected)
       {
-        if (vopt->state & QStyle::State_MouseOver)
+        if (vopt->state & QStyle::State_MouseOver && isEnable)
         {
           // 选中时覆盖
           painter->fillPath(path, NXThemeColor(_themeMode, BasicSelectedHoverAlpha));
@@ -57,7 +58,7 @@ NXTreeViewStyle::drawPrimitive(PrimitiveElement element,
       }
       else
       {
-        if (vopt->state & QStyle::State_MouseOver)
+        if (vopt->state & QStyle::State_MouseOver && isEnable)
         {
           // 覆盖时颜色
           painter->fillPath(path, NXThemeColor(_themeMode, BasicHoverAlpha));
@@ -75,6 +76,7 @@ NXTreeViewStyle::drawPrimitive(PrimitiveElement element,
       if (vopt->state.testFlag(QStyle::State_Children))
       {
         painter->save();
+        painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
         QRect indicatorRect = option->rect;
         indicatorRect.adjust(0, 0, -2, 0);
         QFont iconFont = QFont(QStringLiteral("NXAwesome"));
@@ -87,6 +89,24 @@ NXTreeViewStyle::drawPrimitive(PrimitiveElement element,
         painter->restore();
       }
     }
+    return;
+  }
+  case QStyle::PE_IndicatorItemViewItemDrop :
+  {
+    painter->save();
+    painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+    painter->setPen(NXThemeColor(_themeMode, BasicText));
+    painter->setBrush(Qt::NoBrush);
+    QRect optionRect = option->rect;
+    if (optionRect.height() == 0)
+    {
+      painter->drawLine(optionRect.topLeft(), optionRect.topRight());
+    }
+    else
+    {
+      painter->drawRect(optionRect);
+    }
+    painter->restore();
     return;
   }
   case QStyle::PE_PanelItemViewRow :
@@ -227,7 +247,14 @@ NXTreeViewStyle::drawControl(ControlElement element,
                          iconSize, iconSize);
           QRect adjustedTextRect = vopt->icon.isNull() ? itemRect.adjusted(iconSize + 13, 0, 0, 0)
                                                        : textRect.adjusted(iconSize + 3, 0, 0, 0);
-          painter->setPen(isFirst ? NXThemeColor(_themeMode, PrimaryNormal) : NXThemeColor(_themeMode, BasicText));
+          if (vopt->state.testFlag(QStyle::State_Enabled))
+          {
+            painter->setPen(isFirst ? NXThemeColor(_themeMode, PrimaryNormal) : NXThemeColor(_themeMode, BasicText));
+          }
+          else
+          {
+            painter->setPen(NXThemeColor(_themeMode, BasicTextDisable));
+          }
           painter->setFont(vopt->font);
           painter->drawText(adjustedTextRect, vopt->displayAlignment | Qt::TextSingleLine,
                             vopt->text.mid(0, 50)); // 防止长文本溢出
@@ -239,7 +266,14 @@ NXTreeViewStyle::drawControl(ControlElement element,
         }
         else
         {
-          painter->setPen(isFirst ? NXThemeColor(_themeMode, PrimaryNormal) : NXThemeColor(_themeMode, BasicText));
+          if (vopt->state.testFlag(QStyle::State_Enabled))
+          {
+            painter->setPen(isFirst ? NXThemeColor(_themeMode, PrimaryNormal) : NXThemeColor(_themeMode, BasicText));
+          }
+          else
+          {
+            painter->setPen(NXThemeColor(_themeMode, BasicTextDisable));
+          }
           painter->drawText(vopt->icon.isNull() ? itemRect.adjusted(15, 0, 0, 0) : textRect,
                             vopt->displayAlignment | Qt::TextSingleLine, vopt->text.mid(0, 50));
         }

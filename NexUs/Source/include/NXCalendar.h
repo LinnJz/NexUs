@@ -17,7 +17,7 @@ class NX_EXPORT NXCalendar : public QWidget
 
 public:
   explicit NXCalendar(QWidget *parent = nullptr);
-  ~NXCalendar();
+  ~NXCalendar() override;
 Q_SIGNALS:
   void clicked(QDate date);
 

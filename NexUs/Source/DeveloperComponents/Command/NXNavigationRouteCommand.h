@@ -10,6 +10,7 @@ class NXNavigationRouteCommand : public NXActionCommand
   Q_PRIVATE_CREATE(NXNavigationBar *, NavigationBar);
   Q_PRIVATE_CREATE(const QString &, UndoPageKey);
   Q_PRIVATE_CREATE(const QString &, RedoPageKey);
+  Q_PROPERTY_CREATE(QStringList, RedoBreadcrumbList)
 
 public:
   explicit NXNavigationRouteCommand(QObject *parent = nullptr);

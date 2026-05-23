@@ -26,19 +26,16 @@ NXKeyBinder::NXKeyBinder(QWidget *parent)
   setText(QStringLiteral("  按键: 未绑定      "));
   d->_binderDialog = new NXContentDialog(window());
   d->_binderDialog->setCentralWidget(d->_binderContainer);
-  d->_binderDialog->setButtonText(NXContentDialog::LeftButton, QStringLiteral("取消"));
-  d->_binderDialog->setButtonText(NXContentDialog::MiddleButton, QStringLiteral("重置"));
-  d->_binderDialog->setButtonText(NXContentDialog::RightButton, QStringLiteral("确认"));
-  connect(d->_binderDialog, &NXContentDialog::buttonClicked, this, [=](NXContentDialog::ButtonType buttonType)
+  d->_binderDialog->setLeftButtonText(QStringLiteral("取消"));
+  d->_binderDialog->setMiddleButtonText(QStringLiteral("重置"));
+  d->_binderDialog->setRightButtonText(QStringLiteral("确认"));
+  connect(d->_binderDialog, &NXContentDialog::middleButtonClicked, this, [=]()
   {
-    if (buttonType == NXContentDialog::MiddleButton)
-    {
-      d->_binderContainer->logOrResetHistoryData(false);
-    }
-    else if (buttonType == NXContentDialog::RightButton)
-    {
-      d->_binderContainer->saveBinderChanged();
-    }
+    d->_binderContainer->logOrResetHistoryData(false);
+  });
+  connect(d->_binderDialog, &NXContentDialog::rightButtonClicked, this, [=]()
+  {
+    d->_binderContainer->saveBinderChanged();
   });
   d->onThemeChanged(nxTheme->getThemeMode());
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXKeyBinderPrivate::onThemeChanged);

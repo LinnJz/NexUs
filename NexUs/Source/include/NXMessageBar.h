@@ -40,14 +40,13 @@ protected:
   bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
-  friend class NXMessageBarManager;
   explicit NXMessageBar(NXMessageBarType::PositionPolicy policy,
                         NXMessageBarType::MessageMode messageMode,
                         const QString &title,
                         const QString &text,
                         int displayMsec,
                         QWidget *parent = nullptr);
-  ~NXMessageBar();
+  ~NXMessageBar() override;
 };
 
 #endif // NXMESSAGEBAR_H

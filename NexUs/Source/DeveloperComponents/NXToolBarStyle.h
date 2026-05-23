@@ -9,6 +9,7 @@ class QStyleOptionToolButton;
 class NXToolBarStyle : public QProxyStyle
 {
   Q_OBJECT
+  Q_PRIVATE_CREATE(QSize, ToolButtonSize)
 
 public:
   explicit NXToolBarStyle(QStyle *style = nullptr);
@@ -23,6 +24,11 @@ public:
                    const QWidget *widget = nullptr) const override;
   int
   pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr, const QWidget *widget = nullptr) const override;
+  
+  QSize sizeFromContents(ContentsType type,
+                         const QStyleOption *option,
+                         const QSize &size,
+                         const QWidget *widget) const override;
 
 private:
   NXThemeType::ThemeMode _themeMode;

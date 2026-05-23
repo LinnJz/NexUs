@@ -40,7 +40,7 @@ class NXSuggestBoxPrivate : public QObject
 
 public:
   explicit NXSuggestBoxPrivate(QObject *parent = nullptr);
-  ~NXSuggestBoxPrivate();
+  ~NXSuggestBoxPrivate() override;
   Q_SLOT void onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept;
   Q_SLOT void onSearchEditTextEdit(const QString &searchText) noexcept;
   Q_SLOT void onSearchViewClicked(const QModelIndex &index) noexcept;

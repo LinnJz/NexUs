@@ -10,7 +10,8 @@
 #include "NXIconButton.h"
 #include "NXMessageBar.h"
 
-QMap<NXMessageBarType::PositionPolicy, QList<NXMessageBar *> *> _messageBarActiveMap;
+QMap<QObject *, QMap<NXMessageBarType::PositionPolicy, QList<NXMessageBar *> *>>
+    NXMessageBarPrivate::_messageBarActiveMap;
 
 NXMessageBarPrivate::NXMessageBarPrivate(QObject *parent)
     : QObject { parent }
@@ -23,6 +24,7 @@ NXMessageBarPrivate::NXMessageBarPrivate(QObject *parent)
 
 NXMessageBarPrivate::~NXMessageBarPrivate()
 {
+  _updateActiveMap(false);
 }
 
 void
@@ -63,8 +65,10 @@ NXMessageBarPrivate::messageBarEnd()
   barFinishedOpacityAnimation->setStartValue(1);
   barFinishedOpacityAnimation->setEndValue(0);
   barFinishedOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-  // 通知同类型的其他MessageBar
-  for (const auto messageBar : *_messageBarActiveMap[_policy])
+  // 通知同类型的其他 MessageBar 
+  QObject *parentWidget = q->parent();
+  auto const &messageBarMap = _messageBarActiveMap[parentWidget];
+  for (auto const *messageBar : *messageBarMap[_policy])
   {
     if (messageBar->d_ptr->_isNormalDisplay)
     {
@@ -231,7 +235,9 @@ NXMessageBarPrivate::_calculateInitialPos(int &startX, int &startY, int &endX, i
   if (endY < _messageBarVerticalTopMargin ||
       endY > q->parentWidget()->height() - _messageBarVerticalBottomMargin - q->minimumHeight())
   {
-    (*_messageBarActiveMap[_policy])[0]->d_ptr->messageBarEnd();
+    QObject *parentWidget   = q->parent();
+    auto const &messageBarMap = _messageBarActiveMap[parentWidget];
+    (*messageBarMap[_policy])[0]->d_ptr->messageBarEnd();
     _calculateInitialPos(startX, startY, endX, endY);
   }
 }
@@ -243,8 +249,9 @@ NXMessageBarPrivate::_getOtherMessageBarTotalData()
   QList<int> resultList;
   int minimumHeightTotal                = 0;
   int indexLessCount                    = 0;
-  QList<NXMessageBar *> *messageBarList = _messageBarActiveMap[_policy];
-  for (const auto messageBar : *messageBarList)
+  QObject *parentWidget                 = q->parent();
+  QList<NXMessageBar *> messageBarList = *_messageBarActiveMap[parentWidget][_policy];
+  for (const auto messageBar : messageBarList)
   {
     if (messageBar == q)
     {
@@ -311,27 +318,26 @@ NXMessageBarPrivate::_updateActiveMap(bool isActive)
 {
   Q_Q(NXMessageBar);
   NXMessageBarType::PositionPolicy policy = _policy;
-  if (isActive)
+  QObject *parentWidget                   = q->parent();
+  auto &messageBarMap                     = _messageBarActiveMap[parentWidget];
+  if (auto it = messageBarMap.find(policy); isActive)
   {
-    if (_messageBarActiveMap.contains(policy))
+    if (it != messageBarMap.end())
     {
-      _messageBarActiveMap[policy]->append(q);
+      it.value()->append(q);
     }
     else
     {
       QList<NXMessageBar *> *messageBarList = new QList<NXMessageBar *>();
       messageBarList->append(q);
-      _messageBarActiveMap.insert(policy, messageBarList);
+      messageBarMap.insert(policy, messageBarList);
     }
   }
   else
   {
-    if (_messageBarActiveMap.contains(policy))
+    if (it != messageBarMap.end() && it.value()->count() > 0)
     {
-      if (_messageBarActiveMap[policy]->count() > 0)
-      {
-        _messageBarActiveMap[policy]->removeOne(q);
-      }
+      it.value()->removeOne(q);
     }
   }
 }

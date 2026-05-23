@@ -17,38 +17,25 @@ class NX_EXPORT NXContentDialog : public QDialog
   Q_TAKEOVER_NATIVEEVENT_H
 
 public:
-  enum ButtonType
-  {
-    LeftButton,
-    MiddleButton,
-    RightButton
-  };
-  Q_ENUM(ButtonType)
-
   explicit NXContentDialog(QWidget *parent);
   ~NXContentDialog() override;
 
-  void setCentralWidget(QWidget *centralWidget) noexcept;
+  void setLeftButtonText(const QString &text) noexcept;
+  void setMiddleButtonText(const QString &text) noexcept;
+  void setRightButtonText(const QString &text) noexcept;
 
-  NXPushButton *leftButton() const noexcept;
-  NXPushButton *middleButton() const noexcept;
-  NXPushButton *rightButton() const noexcept;
-  NXPushButton *button(ButtonType button) const noexcept;
+  void setLeftButtonVisible(bool visible) noexcept;
+  void setMiddleButtonVisible(bool visible) noexcept;
+  void setRightButtonVisible(bool visible) noexcept;
 
-  void setButtonText(ButtonType button, const QString &text) noexcept;
-  QString getButtonText(ButtonType button) const noexcept;
-
-  void setIsButtonVisible(ButtonType button, bool visible) noexcept;
-  bool getIsButtonVisible(ButtonType button) const noexcept;
-
-  void setButtonDoneCode(ButtonType button, int doneCode) noexcept;
-  int getButtonDoneCode(ButtonType button) const noexcept;
-
-  void doneWithAnimation(int code) noexcept;
+  void setCentralWidget(QWidget *centralWidget);
 
   NXAppBar *appBar() const noexcept;
+
 Q_SIGNALS:
-  void buttonClicked(ButtonType buttonType);
+  void leftButtonClicked();
+  void middleButtonClicked();
+  void rightButtonClicked();
 
 protected:
   void showEvent(QShowEvent *event) override;

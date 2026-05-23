@@ -44,7 +44,6 @@ public:
 
 private:
   bool _isNavigationBarFloat { false };
-  bool _isWindowClosing { false };
   bool _isNavigationDisplayModeChanged { false };
   bool _isNavigationEnable { true };
   bool _isNavigationBarExpanded { false };

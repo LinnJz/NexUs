@@ -132,12 +132,9 @@
 
 #### 弹窗、菜单与提示类控件
 
-**NXContentDialog.cpp / NXContentDialog.h / Private/NXContentDialogPrivate.cpp / Private/NXContentDialogPrivate.h / NXKeyBinder.cpp**
+**NXContentDialog.cpp / NXContentDialog.h**
 
-- `NXContentDialog` 的三按钮模型由“左/中/右三个独立槽函数 + 三个独立点击信号”重构为 `ButtonType` 枚举、统一的 `buttonClicked(ButtonType)` 信号，以及 `leftButton()` / `middleButton()` / `rightButton()` / `button(ButtonType)` 按钮访问接口。
-- 三个按钮现在都支持分别设置文本、可见性和完成码，关闭动画最终通过 `Private/NXContentDialogPrivate::_doCloseAnimation(int result)` 调用 `done(result)` 收口，不再强制只能走 accept/reject 两种返回值。
-- `setCentralWidget` 改为安全替换中央内容：先移出并销毁旧部件，再把新部件插回布局首位，避免旧实现中直接 `takeAt` 带来的布局顺序不稳定。
-- `NXKeyBinder` 同步切换到新的对话框按钮接口，原先依赖 `middleButtonClicked`、`rightButtonClicked` 的重置/保存逻辑，改为通过 `NXContentDialog::buttonClicked` 判断 `MiddleButton`、`RightButton` 分支执行。
+- 添加按钮可见、appBar接口
 
 **NXMenu.cpp / NXMenu.h / Private/NXMenuPrivate.cpp / Private/NXMenuPrivate.h / DeveloperComponents/NXMenuStyle.h**
 
@@ -462,7 +459,6 @@ NXWidgetTools/private/NXLineEditPrivate.h
 NXWidgetTools/private/NXTableViewPrivate.cpp
 NXWidgetTools/private/NXToolTipPrivate.h
 NXWidgetTools/private/NXColorDialogPrivate.h
-NXWidgetTools/private/NXContentDialogPrivate.h
 NXWidgetTools/private/NXMultiSelectComboBoxPrivate.h
 NXWidgetTools/private/NXTableViewPrivate.h
 NXWidgetTools/private/NXMessageButtonPrivate.cpp
@@ -540,8 +536,6 @@ NXComboBox.cpp
 
 NXContentDialog.cpp
 NXContentDialog.h
-NXContentDialogPrivate.cpp
-NXContentDialogPrivate.h
 
 NXDockWidget.cpp
 NXDockWidget.h
@@ -550,8 +544,6 @@ NXDoubleSpinBox.cpp
 
 NXFooterModel.cpp
 NXFooterModel.h
-
-NXKeyBinder.cpp
 
 NXLineEdit.cpp
 NXLineEdit.h
@@ -918,7 +910,7 @@ NXWidgetToolsExample/ExamplePage/T_TableWidget.h
 
 13. **问题修复**：同步修复若干已知问题，提升整体稳定性。
 
-### Track Record 6：2026年04月09日提交
+### Track Record 6：2026年04月30日提交
 
 #### Modify Optize1
 
@@ -956,3 +948,5 @@ NXWidgetToolsExample/ExamplePage/T_TableWidget.h
 * NXLazyStackedLayout、NXLazyStackedWidget引入，应用于NXCentralWidget懒加载
 
 * NXPivot大改，指示器绘制，代码逻辑调整，模式绘制
+
+* NXContentDialog逻辑回退

@@ -4,6 +4,7 @@
 #ifdef Q_OS_WIN
 #  include <Windows.h>
 #endif
+#include <QApplication>
 #include <QDebug>
 #include <QGuiApplication>
 #include <QLabel>
@@ -51,7 +52,13 @@ NXAppBarPrivate::onCloseButtonClicked() noexcept
   Q_Q(NXAppBar);
   if (_pIsDefaultClosed)
   {
-    q->window()->close();
+    auto *window = q->window();
+    window->close();
+    QApplication::processEvents();
+    if (auto *windowHandle = window->windowHandle())
+    {
+      windowHandle->close();
+    }
   }
   else
   {

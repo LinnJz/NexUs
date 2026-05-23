@@ -13,11 +13,11 @@ void
 NXThemePrivate::_initThemeColor()
 {
   // NXScrollBar
-  _lightThemeColorList[NXThemeType::ScrollBarHandle] = QColor(0xA0, 0xA0, 0xA0);
+  _lightThemeColorList[NXThemeType::ScrollBarHandle] = QColor(0x8A, 0x8A, 0x8A);
   _darkThemeColorList[NXThemeType::ScrollBarHandle]  = QColor(0x9F, 0x9F, 0x9F);
 
   // NXToggleSwitch
-  _lightThemeColorList[NXThemeType::ToggleSwitchNoToggledCenter] = QColor(0x5A, 0x5A, 0x5A);
+  _lightThemeColorList[NXThemeType::ToggleSwitchNoToggledCenter] = QColor(0x6A, 0x6A, 0x6A);
   _darkThemeColorList[NXThemeType::ToggleSwitchNoToggledCenter]  = QColor(0xD0, 0xD0, 0xD0);
 
   // NXTabBar
@@ -60,11 +60,11 @@ NXThemePrivate::_initThemeColor()
   _darkThemeColorList[NXThemeType::BasicTextPress]      = QColor(0xBB, 0xBB, 0xBF);
   _lightThemeColorList[NXThemeType::BasicTextCategory]  = QColor(0x5C, 0x5C, 0x5F);
   _darkThemeColorList[NXThemeType::BasicTextCategory]   = QColor(0xCC, 0xCC, 0xCE);
-  _lightThemeColorList[NXThemeType::BasicBorder]        = QColor(0xE5, 0xE5, 0xE5);
+  _lightThemeColorList[NXThemeType::BasicBorder]        = QColor(0xD6, 0xD6, 0xD6);
   _darkThemeColorList[NXThemeType::BasicBorder]         = QColor(0x4B, 0x4B, 0x4B);
-  _lightThemeColorList[NXThemeType::BasicBorderDeep]    = QColor(0xA8, 0xA8, 0xA8);
+  _lightThemeColorList[NXThemeType::BasicBorderDeep]    = QColor(0x9A, 0x9A, 0x9A);
   _darkThemeColorList[NXThemeType::BasicBorderDeep]     = QColor(0x5C, 0x5C, 0x5C);
-  _lightThemeColorList[NXThemeType::BasicBorderHover]   = QColor(0xDA, 0xDA, 0xDA);
+  _lightThemeColorList[NXThemeType::BasicBorderHover]   = QColor(0xC8, 0xC8, 0xC8);
   _darkThemeColorList[NXThemeType::BasicBorderHover]    = QColor(0x57, 0x57, 0x57);
   _lightThemeColorList[NXThemeType::BasicBase]          = QColor(0xFD, 0xFD, 0xFD);
   _darkThemeColorList[NXThemeType::BasicBase]           = QColor(0x34, 0x34, 0x34);
@@ -90,17 +90,17 @@ NXThemePrivate::_initThemeColor()
   // 基础透明
   _lightThemeColorList[NXThemeType::BasicAlternating]        = QColor(0xEF, 0xEF, 0xEF, 160);
   _darkThemeColorList[NXThemeType::BasicAlternating]         = QColor(0x45, 0x45, 0x45, 125);
-  _lightThemeColorList[NXThemeType::BasicBaseAlpha]          = QColor(0xFF, 0xFF, 0xFF, 160);
+  _lightThemeColorList[NXThemeType::BasicBaseAlpha]          = QColor(0xFA, 0xFA, 0xFA, 160);
   _darkThemeColorList[NXThemeType::BasicBaseAlpha]           = QColor(0x2D, 0x2D, 0x2D, 95);
-  _lightThemeColorList[NXThemeType::BasicBaseDeepAlpha]      = QColor(0xCC, 0xCC, 0xCC, 160);
+  _lightThemeColorList[NXThemeType::BasicBaseDeepAlpha]      = QColor(0xC8, 0xC8, 0xC8, 160);
   _darkThemeColorList[NXThemeType::BasicBaseDeepAlpha]       = QColor(0x72, 0x72, 0x72, 95);
-  _lightThemeColorList[NXThemeType::BasicHoverAlpha]         = QColor(0xCC, 0xCC, 0xCC, 70);
+  _lightThemeColorList[NXThemeType::BasicHoverAlpha]         = QColor(0xCE, 0xCE, 0xCE, 110);
   _darkThemeColorList[NXThemeType::BasicHoverAlpha]          = QColor(0x4B, 0x4B, 0x4B, 75);
-  _lightThemeColorList[NXThemeType::BasicPressAlpha]         = QColor(0xCC, 0xCC, 0xCC, 40);
+  _lightThemeColorList[NXThemeType::BasicPressAlpha]         = QColor(0xD0, 0xD0, 0xD0, 80);
   _darkThemeColorList[NXThemeType::BasicPressAlpha]          = QColor(0x4B, 0x4B, 0x4B, 55);
-  _lightThemeColorList[NXThemeType::BasicSelectedAlpha]      = QColor(0xCC, 0xCC, 0xCC, 70);
+  _lightThemeColorList[NXThemeType::BasicSelectedAlpha]      = QColor(0xCE, 0xCE, 0xCE, 110);
   _darkThemeColorList[NXThemeType::BasicSelectedAlpha]       = QColor(0x4B, 0x4B, 0x4B, 75);
-  _lightThemeColorList[NXThemeType::BasicSelectedHoverAlpha] = QColor(0xCC, 0xCC, 0xCC, 40);
+  _lightThemeColorList[NXThemeType::BasicSelectedHoverAlpha] = QColor(0xD0, 0xD0, 0xD0, 80);
   _darkThemeColorList[NXThemeType::BasicSelectedHoverAlpha]  = QColor(0x4B, 0x4B, 0x4B, 55);
 
   // 状态颜色
@@ -108,25 +108,25 @@ NXThemePrivate::_initThemeColor()
   _darkThemeColorList[NXThemeType::StatusDanger]  = QColor(0xE8, 0x11, 0x23);
 
   // 浮动窗体
-  _lightThemeColorList[NXThemeType::PopupBorder]      = QColor(0xD6, 0xD6, 0xD6);
+  _lightThemeColorList[NXThemeType::PopupBorder]      = QColor(0xC8, 0xC8, 0xC8);
   _darkThemeColorList[NXThemeType::PopupBorder]       = QColor(0x47, 0x47, 0x47);
-  _lightThemeColorList[NXThemeType::PopupBorderHover] = QColor(0xCC, 0xCC, 0xCC);
+  _lightThemeColorList[NXThemeType::PopupBorderHover] = QColor(0xBC, 0xBC, 0xBC);
   _darkThemeColorList[NXThemeType::PopupBorderHover]  = QColor(0x54, 0x54, 0x54);
-  _lightThemeColorList[NXThemeType::PopupBase]        = QColor(0xFA, 0xFA, 0xFA);
+  _lightThemeColorList[NXThemeType::PopupBase]        = QColor(0xF6, 0xF6, 0xF6);
   _darkThemeColorList[NXThemeType::PopupBase]         = QColor(0x2C, 0x2C, 0x2C);
-  _lightThemeColorList[NXThemeType::PopupHover]       = QColor(0xF0, 0xF0, 0xF0);
+  _lightThemeColorList[NXThemeType::PopupHover]       = QColor(0xEE, 0xEE, 0xEE);
   _darkThemeColorList[NXThemeType::PopupHover]        = QColor(0x38, 0x38, 0x38);
 
   // Dialog窗体
-  _lightThemeColorList[NXThemeType::DialogBase]       = Qt::white;
+  _lightThemeColorList[NXThemeType::DialogBase]       = QColor(0xF7, 0xF7, 0xF7);
   _darkThemeColorList[NXThemeType::DialogBase]        = QColor(0x1F, 0x1F, 0x1F);
-  _lightThemeColorList[NXThemeType::DialogLayoutArea] = QColor(0xF3, 0xF3, 0xF3);
+  _lightThemeColorList[NXThemeType::DialogLayoutArea] = QColor(0xED, 0xED, 0xED);
   _darkThemeColorList[NXThemeType::DialogLayoutArea]  = QColor(0x20, 0x20, 0x20);
 
   // 普通窗体
-  _lightThemeColorList[NXThemeType::WindowBase]             = QColor(0xF3, 0xF3, 0xF3);
+  _lightThemeColorList[NXThemeType::WindowBase]             = QColor(0xEC, 0xEC, 0xEC);
   _darkThemeColorList[NXThemeType::WindowBase]              = QColor(0x20, 0x20, 0x20);
-  _lightThemeColorList[NXThemeType::WindowCentralStackBase] = QColor(0xFF, 0xFF, 0xFF, 80);
+  _lightThemeColorList[NXThemeType::WindowCentralStackBase] = QColor(0xF8, 0xF8, 0xF8, 90);
   _darkThemeColorList[NXThemeType::WindowCentralStackBase]  = QColor(0x3E, 0x3E, 0x3E, 60);
 
   // Win10顶部边框颜色

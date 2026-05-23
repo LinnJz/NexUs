@@ -10,11 +10,12 @@ class NX_EXPORT NXToolBar : public QToolBar
 {
   Q_OBJECT
   Q_Q_CREATE(NXToolBar)
+  Q_PRIVATE_CREATE_H(QSize, ToolButtonSize)
 
 public:
   explicit NXToolBar(QWidget *parent = nullptr);
   explicit NXToolBar(const QString &title, QWidget *parent = nullptr);
-  ~NXToolBar();
+  ~NXToolBar() override;
 
   void setToolBarSpacing(int spacing) noexcept;
   int getToolBarSpacing() const noexcept;

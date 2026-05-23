@@ -30,7 +30,7 @@ NXNavigationModel::NXNavigationModel(QObject *parent)
 
 NXNavigationModel::~NXNavigationModel()
 {
-  delete _rootNode;
+  _rootNode->deleteLater();
 }
 
 QModelIndex

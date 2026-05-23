@@ -92,6 +92,15 @@ NXToolButtonStyle::drawComplexControl(ComplexControl control,
           }
         }
       }
+      else
+      {
+        if (!_pIsTransparent)
+        {
+          painter->setBrush(NXThemeColor(_themeMode, BasicDisable));
+          painter->drawRoundedRect(toolButtonRect, _pBorderRadius, _pBorderRadius);
+        }
+      }
+
       // 指示器绘制
       _drawIndicator(painter, bopt, widget);
 

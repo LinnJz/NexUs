@@ -97,13 +97,13 @@ void
 NXSuggestBoxPrivate::onSearchViewClicked(const QModelIndex &index) noexcept
 {
   Q_Q(NXSuggestBox);
-  _searchEdit->clear();
   _searchView->clearSelection();
   if (!index.isValid())
   {
     return;
   }
   NXSuggestion *suggest = _searchModel->getSearchSuggestion(index.row());
+  _searchEdit->setText(suggest->getSuggestText());
   NXSuggestBox::SuggestData data(suggest->getNXIcon(), suggest->getSuggestText(), suggest->getSuggestData());
   data.setSuggestKey(suggest->getSuggestKey());
   Q_EMIT q->suggestionClicked(data);

@@ -16,7 +16,8 @@ NXToolBar::NXToolBar(QWidget *parent)
   Q_D(NXToolBar);
   d->q_ptr = this;
   setObjectName("NXToolBar");
-  setStyle(new NXToolBarStyle(style()));
+  d->_toolBarStyle = new NXToolBarStyle(style());
+  setStyle(d->_toolBarStyle);
   layout()->setSpacing(10);
   layout()->setContentsMargins(3, 3, 3, 3);
 
@@ -53,7 +54,8 @@ NXToolBar::NXToolBar(const QString &title, QWidget *parent)
 
 NXToolBar::~NXToolBar()
 {
-  delete this->style();
+  Q_D(NXToolBar);
+  delete d->_toolBarStyle;
 }
 
 void
@@ -66,6 +68,20 @@ int
 NXToolBar::getToolBarSpacing() const noexcept
 {
   return layout()->spacing();
+}
+
+void
+NXToolBar::setToolButtonSize(QSize size) noexcept
+{
+  Q_D(NXToolBar);
+  d->_toolBarStyle->setToolButtonSize(size);
+}
+
+QSize
+NXToolBar::getToolButtonSize() const noexcept
+{
+  Q_D(const NXToolBar);
+  return d->_toolBarStyle->getToolButtonSize();
 }
 
 QAction *

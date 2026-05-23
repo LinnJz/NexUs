@@ -17,6 +17,7 @@ NXKeyBinderPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
   Q_Q(NXKeyBinder);
   _themeMode       = themeMode;
   QPalette palette = q->palette();
+  palette.setColor(QPalette::Text, NXThemeColor(_themeMode, BasicText));
   palette.setColor(QPalette::WindowText, NXThemeColor(_themeMode, BasicText));
   q->setPalette(palette);
 }

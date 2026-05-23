@@ -117,15 +117,9 @@ NXFooterDelegate::navigationNodeStateChange(const QVariantMap &data) noexcept
 void
 NXFooterDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-  QStyleOptionViewItem viewOption(option);
-  initStyleOption(&viewOption, index);
   NXFooterModel *model   = dynamic_cast<NXFooterModel *>(const_cast<QAbstractItemModel *>(index.model()));
   NXNavigationNode *node = index.data(Qt::UserRole).value<NXNavigationNode *>();
-  if (option.state.testFlag(QStyle::State_HasFocus))
-  {
-    viewOption.state &= ~QStyle::State_HasFocus;
-  }
-  QStyledItemDelegate::paint(painter, viewOption, index);
+
   // 背景绘制
   QRect itemRect = option.rect;
   painter->save();
@@ -160,7 +154,7 @@ NXFooterDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, c
     if (index == _pPressIndex)
     {
       // 点击时颜色
-      painter->fillPath(path, NXThemeColor(_themeMode, BasicSelectedHoverAlpha));
+      painter->fillPath(path, NXThemeColor(_themeMode, BasicPressAlpha));
     }
     else
     {
@@ -197,8 +191,7 @@ NXFooterDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, c
     painter->restore();
   }
 
-  int keyPoints = node->getKeyPoints();
-  if (keyPoints)
+  if (int keyPoints = node->getKeyPoints())
   {
     // KeyPoints
     painter->save();
@@ -287,8 +280,5 @@ NXFooterDelegate::_compareItemY(NXNavigationNode *node1, NXNavigationNode *node2
   {
     return true;
   }
-  else
-  {
-    return false;
-  }
+  return false;
 }

@@ -26,7 +26,8 @@ public:
   Q_SLOT void messageBarEnd();
 
 private:
-  friend class NXMessageBarManager;
+  static QMap<QObject *, QMap<NXMessageBarType::PositionPolicy, QList<NXMessageBar *> *>> _messageBarActiveMap;
+
   NXThemeType::ThemeMode _themeMode;
   int _borderRadius { 6 };
   QString _title { "" };
@@ -43,7 +44,7 @@ private:
   int _closeButtonWidth { 30 };
   int _messageBarHorizontalMargin { 20 };
   int _messageBarVerticalBottomMargin { 20 };
-  int _messageBarVerticalTopMargin { 20 };
+  int _messageBarVerticalTopMargin { 25 };
   int _messageBarSpacing { 15 };
   int _shadowBorderWidth { 6 };
   qreal _timePercentHeight { 2 };

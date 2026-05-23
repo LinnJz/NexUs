@@ -24,9 +24,6 @@ private:
   NXThemeType::ThemeMode _themeMode;
   qint64 _currentWinID { 0 };
 
-  int _leftButtonDoneCode { 0 /*Rejected*/ };
-  int _middleButtonDoneCode { 0 /*Rejected*/ };
-  int _rightButtonDoneCode { 1 /*Accepted*/ };
   NXAppBar *_appBar { nullptr };
   NXMaskWidget *_maskWidget { nullptr };
   QWidget *_centralWidget { nullptr };
@@ -36,7 +33,8 @@ private:
   NXPushButton *_leftButton { nullptr };
   NXPushButton *_middleButton { nullptr };
   NXPushButton *_rightButton { nullptr };
-  void _doCloseAnimation(int result) noexcept;
+  void _doCloseAnimation(bool isAccept);
+  void _moveToCenter() noexcept;
 };
 
 #endif // NXCONTENTDIALOGPRIVATE_H

@@ -15,7 +15,7 @@ class NX_EXPORT NXCalendarPicker : public QPushButton
 
 public:
   explicit NXCalendarPicker(QWidget *parent = nullptr);
-  ~NXCalendarPicker();
+  ~NXCalendarPicker() override;
 
 Q_SIGNALS:
   void selectedDateChanged(QDate date);

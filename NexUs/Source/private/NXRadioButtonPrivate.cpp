@@ -18,6 +18,7 @@ NXRadioButtonPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
   Q_Q(NXRadioButton);
   _themeMode       = themeMode;
   QPalette palette = q->palette();
+  palette.setColor(QPalette::Text, NXThemeColor(_themeMode, BasicText));
   palette.setColor(QPalette::WindowText, NXThemeColor(themeMode, BasicText));
   q->setPalette(palette);
 }

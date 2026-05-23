@@ -8,6 +8,7 @@
 #include <QKeyEvent>
 #include <QPainter>
 #include <QScreen>
+#include <QTimer>
 #include <QVBoxLayout>
 #include "DeveloperComponents/NXMaskWidget.h"
 #include "DeveloperComponents/NXWinShadowHelper.h"
@@ -31,6 +32,7 @@ NXContentDialog::NXContentDialog(QWidget *parent)
 
   resize(400, height());
   setWindowModality(Qt::ApplicationModal);
+
   d->_appBar = new NXAppBar(this);
   d->_appBar->setWindowButtonFlags(NXAppBarType::NoneButtonHint);
   d->_appBar->setIsFixedSize(true);
@@ -42,8 +44,8 @@ NXContentDialog::NXContentDialog(QWidget *parent)
   d->_leftButton = new NXPushButton(QStringLiteral("cancel"), this);
   connect(d->_leftButton, &NXPushButton::clicked, this, [=]()
   {
-    Q_EMIT buttonClicked(ButtonType::LeftButton);
-    doneWithAnimation(getButtonDoneCode(ButtonType::LeftButton));
+    d->_doCloseAnimation(false);
+    Q_EMIT leftButtonClicked();
   });
   d->_leftButton->setMinimumSize(0, 0);
   d->_leftButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
@@ -52,8 +54,7 @@ NXContentDialog::NXContentDialog(QWidget *parent)
   d->_middleButton = new NXPushButton(QStringLiteral("minimum"), this);
   connect(d->_middleButton, &NXPushButton::clicked, this, [=]()
   {
-    Q_EMIT buttonClicked(ButtonType::MiddleButton);
-    doneWithAnimation(getButtonDoneCode(ButtonType::MiddleButton));
+    Q_EMIT middleButtonClicked();
   });
   d->_middleButton->setMinimumSize(0, 0);
   d->_middleButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
@@ -62,8 +63,8 @@ NXContentDialog::NXContentDialog(QWidget *parent)
   d->_rightButton = new NXPushButton(QStringLiteral("exit"), this);
   connect(d->_rightButton, &NXPushButton::clicked, this, [=]()
   {
-    Q_EMIT buttonClicked(ButtonType::RightButton);
-    doneWithAnimation(getButtonDoneCode(ButtonType::RightButton));
+    d->_doCloseAnimation(true);
+    Q_EMIT rightButtonClicked();
   });
   d->_rightButton->setLightDefaultColor(NXThemeColor(NXThemeType::Light, PrimaryNormal));
   d->_rightButton->setLightHoverColor(NXThemeColor(NXThemeType::Light, PrimaryHover));
@@ -94,10 +95,10 @@ NXContentDialog::NXContentDialog(QWidget *parent)
   d->_mainLayout->setContentsMargins(0, 0, 0, 0);
   d->_buttonWidget = new QWidget(this);
   d->_buttonWidget->setFixedHeight(60);
-  d->_buttonLayout = new QHBoxLayout(d->_buttonWidget);
-  d->_buttonLayout->addWidget(d->_leftButton);
-  d->_buttonLayout->addWidget(d->_middleButton);
-  d->_buttonLayout->addWidget(d->_rightButton);
+  QHBoxLayout *buttonLayout = new QHBoxLayout(d->_buttonWidget);
+  buttonLayout->addWidget(d->_leftButton);
+  buttonLayout->addWidget(d->_middleButton);
+  buttonLayout->addWidget(d->_rightButton);
   d->_mainLayout->addWidget(d->_centralWidget);
   d->_mainLayout->addWidget(d->_buttonWidget);
 
@@ -115,139 +116,63 @@ NXContentDialog::~NXContentDialog()
 }
 
 void
-NXContentDialog::setCentralWidget(QWidget *centralWidget) noexcept
+NXContentDialog::setCentralWidget(QWidget *centralWidget)
 {
   Q_D(NXContentDialog);
-  if (!centralWidget || centralWidget == d->_centralWidget)
-  {
-    return;
-  }
-
-  centralWidget->setParent(this);
-
-  if (d->_centralWidget)
-  {
-    d->_mainLayout->removeWidget(d->_centralWidget);
-    delete d->_centralWidget;
-    d->_centralWidget = nullptr;
-  }
-
+  d->_mainLayout->takeAt(0);
+  d->_mainLayout->takeAt(0);
+  delete d->_centralWidget;
   d->_centralWidget = centralWidget;
-  d->_mainLayout->insertWidget(0, d->_centralWidget);
-}
-
-NXPushButton *
-NXContentDialog::leftButton() const noexcept
-{
-  return button(ButtonType::LeftButton);
-}
-
-NXPushButton *
-NXContentDialog::middleButton() const noexcept
-{
-  return button(ButtonType::MiddleButton);
-}
-
-NXPushButton *
-NXContentDialog::rightButton() const noexcept
-{
-  return button(ButtonType::RightButton);
-}
-
-NXPushButton *
-NXContentDialog::button(ButtonType button) const noexcept
-{
-  Q_D(const NXContentDialog);
-  switch (button)
-  {
-  case ButtonType::LeftButton   : return d->_leftButton;
-  case ButtonType::MiddleButton : return d->_middleButton;
-  case ButtonType::RightButton  : return d->_rightButton;
-  }
-  return nullptr;
-}
-
-void
-NXContentDialog::setButtonText(ButtonType buttonType, const QString &text) noexcept
-{
-  auto *buttonWidget = button(buttonType);
-  if (!buttonWidget)
-  {
-    return;
-  }
-  buttonWidget->setText(text);
-}
-
-QString
-NXContentDialog::getButtonText(ButtonType buttonType) const noexcept
-{
-  auto *buttonWidget = button(buttonType);
-  return buttonWidget ? buttonWidget->text() : QString {};
-}
-
-void
-NXContentDialog::setIsButtonVisible(ButtonType buttonType, bool visible) noexcept
-{
-  auto *buttonWidget = button(buttonType);
-  if (!buttonWidget)
-  {
-    return;
-  }
-  buttonWidget->setVisible(visible);
-}
-
-bool
-NXContentDialog::getIsButtonVisible(ButtonType buttonType) const noexcept
-{
-  auto *buttonWidget = button(buttonType);
-  return buttonWidget ? buttonWidget->isVisible() : false;
-}
-
-void
-NXContentDialog::setButtonDoneCode(ButtonType buttonType, int doneCode) noexcept
-{
-  Q_D(NXContentDialog);
-  switch (buttonType)
-  {
-  case ButtonType::LeftButton   : d->_leftButtonDoneCode = doneCode; break;
-  case ButtonType::MiddleButton : d->_middleButtonDoneCode = doneCode; break;
-  case ButtonType::RightButton  : d->_rightButtonDoneCode = doneCode; break;
-  default :
-#if _WIN32
-    __assume(false);
-#elif __linux__ || __unix__ || __APPLE__
-    __builtin_unreachable();
-#else
-    break
-#endif
-  }
-}
-
-int
-NXContentDialog::getButtonDoneCode(ButtonType buttonType) const noexcept
-{
-  Q_D(const NXContentDialog);
-  switch (buttonType)
-  {
-  case ButtonType::LeftButton   : return d->_leftButtonDoneCode;
-  case ButtonType::MiddleButton : return d->_middleButtonDoneCode;
-  case ButtonType::RightButton  : return d->_rightButtonDoneCode;
-  default                       : return DialogCode::Rejected;
-  }
-}
-
-void
-NXContentDialog::doneWithAnimation(int code) noexcept
-{
-  Q_D(NXContentDialog);
-  d->_doCloseAnimation(code);
+  d->_mainLayout->addWidget(centralWidget);
+  d->_mainLayout->addWidget(d->_buttonWidget);
 }
 
 NXAppBar *
 NXContentDialog::appBar() const noexcept
 {
-  Q_D(const NXContentDialog);
-  return d->_appBar;
+  return d_func()->_appBar;
+}
+
+void
+NXContentDialog::setLeftButtonText(const QString &text) noexcept
+{
+  Q_D(NXContentDialog);
+  d->_leftButton->setText(text);
+}
+
+void
+NXContentDialog::setMiddleButtonText(const QString &text) noexcept
+{
+  Q_D(NXContentDialog);
+  d->_middleButton->setText(text);
+}
+
+void
+NXContentDialog::setRightButtonText(const QString &text) noexcept
+{
+  Q_D(NXContentDialog);
+  d->_rightButton->setText(text);
+}
+
+void
+NXContentDialog::setLeftButtonVisible(bool visible) noexcept
+{
+  Q_D(NXContentDialog);
+  d->_leftButton->setVisible(visible);
+}
+
+void
+NXContentDialog::setMiddleButtonVisible(bool visible) noexcept
+{
+  Q_D(NXContentDialog);
+  d->_middleButton->setVisible(visible);
+}
+
+void
+NXContentDialog::setRightButtonVisible(bool visible) noexcept
+{
+  Q_D(NXContentDialog);
+  d->_rightButton->setVisible(visible);
 }
 
 void
@@ -258,6 +183,7 @@ NXContentDialog::showEvent(QShowEvent *event)
   d->_maskWidget->raise();
   d->_maskWidget->setFixedSize(parentWidget()->size());
   d->_maskWidget->doMaskAnimation(90);
+  d->_moveToCenter();
   QDialog::showEvent(event);
 }
 
@@ -281,5 +207,18 @@ NXContentDialog::paintEvent(QPaintEvent *event)
 void
 NXContentDialog::keyPressEvent(QKeyEvent *event)
 {
+  Q_D(NXContentDialog);
+  switch (event->key())
+  {
+  case Qt::Key_Escape :
+  {
+    d->_doCloseAnimation(false);
+    break;
+  }
+  default :
+  {
+    break;
+  }
+  }
   event->accept();
 }

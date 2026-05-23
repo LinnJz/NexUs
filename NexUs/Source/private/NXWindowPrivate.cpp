@@ -340,7 +340,7 @@ void
 NXWindowPrivate::_doNavigationDisplayModeChange() noexcept
 {
   Q_Q(NXWindow);
-  if (_isWindowClosing || !_isNavigationEnable || !_isInitFinished)
+  if (!_isNavigationEnable || !_isInitFinished)
   {
     return;
   }

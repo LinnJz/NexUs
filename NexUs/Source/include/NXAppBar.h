@@ -80,7 +80,6 @@ public:
   void setRouteBackButtonEnable(bool isEnable) noexcept;
   void setRouteForwardButtonEnable(bool isEnable) noexcept;
 
-  void closeWindow() noexcept;
 #ifdef Q_OS_WIN
 #  if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
   int takeOverNativeEvent(const QByteArray &eventType, void *message, qintptr *result);

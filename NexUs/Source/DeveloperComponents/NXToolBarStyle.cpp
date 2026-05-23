@@ -199,6 +199,29 @@ NXToolBarStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
   return QProxyStyle::pixelMetric(metric, option, widget);
 }
 
+QSize
+NXToolBarStyle::sizeFromContents(ContentsType type,
+                                  const QStyleOption *option,
+                                  const QSize &size,
+                                  const QWidget *widget) const
+{
+  if (_pToolButtonSize.isValid())
+  {
+    switch (type)
+    {
+    case QStyle::CT_ToolButton :
+    {
+      return _pToolButtonSize;
+    }
+    default :
+    {
+      break;
+    }
+    }
+  }
+  return QProxyStyle::sizeFromContents(type, option, size, widget);
+}
+
 void
 NXToolBarStyle::_drawIndicator(QPainter *painter,
                                const QStyleOptionToolButton *bopt,

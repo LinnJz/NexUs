@@ -163,7 +163,7 @@ NXDialog::paintEvent(QPaintEvent *event)
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(NXThemeColor(d->_themeMode, WindowBase));
+    painter.setBrush(NXThemeColor(d->_themeMode, DialogBase));
     painter.drawRect(rect());
     painter.restore();
   }

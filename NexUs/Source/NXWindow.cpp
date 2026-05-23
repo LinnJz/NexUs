@@ -773,6 +773,36 @@ NXWindow::getWindowMovieRate() const noexcept
 }
 
 void
+NXWindow::tabifyDockWidget(QDockWidget *targetDockWidget, QDockWidget *dockWidget)
+{
+  QMainWindow::tabifyDockWidget(targetDockWidget, dockWidget);
+}
+
+void
+NXWindow::tabifyDockWidget(Qt::DockWidgetArea area, const QString &targetDockTitle, QDockWidget *dockWidget)
+{
+  if (!dockWidget)
+  {
+    return;
+  }
+  auto dockWidgetList = findChildren<QDockWidget *>();
+  for (const auto otherDock : dockWidgetList)
+  {
+    if (otherDock == dockWidget)
+    {
+      continue;
+    }
+    if (dockWidgetArea(otherDock) == area && otherDock->windowTitle() == targetDockTitle)
+    {
+      tabifyDockWidget(otherDock, dockWidget);
+      return;
+    }
+  }
+  // 未找到 按Area添加
+  addDockWidget(area, dockWidget);
+}
+
+void
 NXWindow::setWindowPixmap(NXThemeType::ThemeMode themeMode, const QPixmap &pixmap) noexcept
 {
   Q_D(NXWindow);
@@ -792,14 +822,6 @@ NXWindow::getWindowPixmap(NXThemeType::ThemeMode themeMode) const noexcept
 {
   Q_D(const NXWindow);
   return themeMode == NXThemeType::Light ? *d->_lightWindowPix : *d->_darkWindowPix;
-}
-
-void
-NXWindow::closeWindow() noexcept
-{
-  Q_D(NXWindow);
-  d->_isWindowClosing = true;
-  d->_appBar->closeWindow();
 }
 
 bool
@@ -937,4 +959,16 @@ NXWindow::paintEvent(QPaintEvent *event)
   }
   }
   painter.restore();
+}
+
+QWidget *
+NXWindow::centralWidget() const
+{
+  return QMainWindow::centralWidget();
+}
+
+void
+NXWindow::setCentralWidget(QWidget *widget)
+{
+  QMainWindow::setCentralWidget(widget);
 }

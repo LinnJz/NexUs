@@ -135,7 +135,7 @@ NXNavigationStyle::drawPrimitive(PrimitiveElement element,
         if (index == _pPressIndex)
         {
           // 点击时颜色
-          painter->fillPath(path, NXThemeColor(_themeMode, BasicSelectedHoverAlpha));
+          painter->fillPath(path, NXThemeColor(_themeMode, BasicPressAlpha));
         }
         else
         {

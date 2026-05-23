@@ -3,6 +3,7 @@
 #include <QObject>
 
 #include "NXDef.h"
+class NXToolBarStyle;
 class NXToolBar;
 
 class NXToolBarPrivate : public QObject
@@ -12,9 +13,10 @@ class NXToolBarPrivate : public QObject
 
 public:
   explicit NXToolBarPrivate(QObject *parent = nullptr);
-  ~NXToolBarPrivate();
+  ~NXToolBarPrivate() override;
 
 private:
+  NXToolBarStyle *_toolBarStyle { nullptr };
   NXThemeType::ThemeMode _themeMode;
   int _shadowBorderWidth { 6 };
 };

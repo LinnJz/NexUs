@@ -137,7 +137,7 @@ NXScrollPage::navigation(int widgetIndex, bool isLogRoute) noexcept
   int currentIndex = d->_navigationTargetIndex;
   d->_switchCentralStackIndex(widgetIndex, d->_navigationTargetIndex);
   d->_navigationTargetIndex = widgetIndex;
-  QString pagetTitle        = d->_centralWidgetMap.key(widgetIndex);
+  QString pageTitle         = d->_centralWidgetMap.key(widgetIndex);
   if (isLogRoute)
   {
     auto command = new NXScrollPageRouteCommand(this);
@@ -147,7 +147,7 @@ NXScrollPage::navigation(int widgetIndex, bool isLogRoute) noexcept
     command->setRedoPageIndex(widgetIndex);
     NXActionCommander::getInstance()->recordCommand(QStringLiteral("NXWidgetToolsAction"), command, false);
   }
-  d->_breadcrumbBar->appendBreadcrumb(pagetTitle);
+  d->_breadcrumbBar->appendBreadcrumb(pageTitle);
 }
 
 void

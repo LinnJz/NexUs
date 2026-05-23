@@ -3,7 +3,7 @@
 #include <QUuid>
 
 NXNavigationNode::NXNavigationNode(const QString &nodeTitle, NXNavigationNode *parent)
-    : QObject(parent)
+    : QObject(nullptr)
     , _pNodeKey(QString {})
 {
   _pDepth     = 0;
@@ -27,10 +27,10 @@ NXNavigationNode::NXNavigationNode(const QString &nodeTitle, NXNavigationNode *p
 
 NXNavigationNode::~NXNavigationNode()
 {
-  // qDebug() << std::format("Title: {} Key: {}\n", _pNodeTitle.toStdString(), _pNodeKey.toStdString());
-  // qDebug() << _pNodeTitle + " Prepare to delete " __FUNCTION__ "\n";
-  // qDeleteAll(_pChildrenNodes);
-  // qDebug() << _pNodeTitle + " Already delete " __FUNCTION__ "\n";
+  for (const auto childNode : _pChildrenNodes)
+  {
+    childNode->deleteLater();
+  }
 }
 
 QString

@@ -118,7 +118,9 @@ public:
   void setWindowMovieRate(qreal rate) noexcept;
   qreal getWindowMovieRate() const noexcept;
 
-  void closeWindow() noexcept;
+void tabifyDockWidget(QDockWidget *targetDockWidget, QDockWidget *dockWidget);
+  void tabifyDockWidget(Qt::DockWidgetArea area, const QString &targetDockTitle, QDockWidget *dockWidget);
+
   Q_SLOT NXNavigationType::NodeOperateError navigationPageNodeSwitch(const QString &targetPageKey) noexcept;
   void setNavigationPageOpenPolicy(std::function<void(const QString & /*nodeKey*/)> &&openNavigationPageFunc) noexcept;
 
@@ -140,6 +142,10 @@ protected:
   bool eventFilter(QObject *watched, QEvent *event) override;
   QMenu *createPopupMenu() override;
   void paintEvent(QPaintEvent *event) override;
+
+private:
+  QWidget *centralWidget() const;
+  void setCentralWidget(QWidget *widget);
 };
 
 #endif // NXWINDOW_H
