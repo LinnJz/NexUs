@@ -185,6 +185,7 @@ ElaNavigationType::NodeResult ElaNavigationBar::addExpanderNode(const QString& e
     {
         d->_initNodeModelIndex(QModelIndex());
         d->_resetNodeSelected();
+		Q_EMIT navigationNodeAdded(NXNavigationType::ExpanderNode, expanderKey, nullptr);
     }
     return result;
 }
@@ -197,6 +198,7 @@ ElaNavigationType::NodeResult ElaNavigationBar::addExpanderNode(const QString& e
     {
         d->_initNodeModelIndex(QModelIndex());
         d->_resetNodeSelected();
+		Q_EMIT navigationNodeAdded(NXNavigationType::ExpanderNode, expanderKey, nullptr);
     }
     return result;
 }
@@ -363,6 +365,7 @@ ElaNavigationType::NodeResult ElaNavigationBar::addCategoryNode(const QString& c
     {
         d->_initNodeModelIndex(QModelIndex());
         d->_resetNodeSelected();
+		Q_EMIT navigationNodeAdded(NXNavigationType::CategoryNode, categoryKey, nullptr);
     }
     return result;
 }

@@ -184,7 +184,8 @@ enum NavigationNodeType
 {
     PageNode = 0x0000,
     FooterNode = 0x0001,
-    CategoryNode = 0x0002
+    ExpanderNode = 0x00'02,
+	CategoryNode = 0x00'03
 };
 Q_ENUM_CREATE(NavigationNodeType)
 Q_END_ENUM_CREATE(ElaNavigationType)

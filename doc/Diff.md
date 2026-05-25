@@ -114,9 +114,11 @@ auto pRtlGetVersion = reinterpret_cast<RtlGetVersionFunc>(GetProcAddress(module,
 
 ---
 
-## 二、新增功能: Command 模式 (撤销/重做框架)
+## 二、新增功能
 
-### 1. 枚举定义 `ElaActionCommanderType`
+### 1、Command 模式 (撤销/重做框架)
+
+#### 1. 枚举定义 `ElaActionCommanderType`
 
 **文件**: `ElaWidgetTools/ElaDef.h` (行 187-196)
 
@@ -130,7 +132,7 @@ auto pRtlGetVersion = reinterpret_cast<RtlGetVersionFunc>(GetProcAddress(module,
 
 通过宏 `Q_BEGIN_ENUM_CREATE` / `Q_ENUM_CREATE` / `Q_END_ENUM_CREATE` 注册到元系统。
 
-### 2. 新增文件 (未追踪)
+#### 2. 新增文件 (未追踪)
 
 | 文件                                                   | 说明                              |
 | ------------------------------------------------------ | --------------------------------- |
@@ -140,10 +142,55 @@ auto pRtlGetVersion = reinterpret_cast<RtlGetVersionFunc>(GetProcAddress(module,
 | `ElaWidgetTools/private/ElaActionCommanderPrivate.h`   | Commander 私有头文件              |
 | `ElaWidgetTools/DeveloperComponents/Command/`          | Command 模式目录 (含具体命令实现) |
 
-### 3. 相关友元类声明
+#### 3. 相关友元类声明
 
 - `ElaScrollPagePrivate.h` (行 17): `friend class ElaScrollPageRouteCommand;` — 页面路由命令
 - `ElaWindowPrivate.h` (行 20): `friend class ElaWindowStackChangeCommand;` — 窗口堆栈切换命令
+
+### 2、`NavigationNodeType`枚举新增，`NXNavigationBar`信号添加
+
+#### 1、`NavigationNodeType`枚举添加`ExpanderNode`
+
+```diff
+enum NavigationNodeType
+{
+  PageNode     = 0x00'00,
+  FooterNode   = 0x00'01,
++  ExpanderNode = 0x00'02,
+  CategoryNode = 0x00'03
+};
+```
+
+#### 2、`NXNavigationBar`的`navigationNodeAdded`补全
+
+```diff
+QString
+NXNavigationBar::addExpanderNode(const QString &expanderTitle, NXIconType::IconName awesome)
+{
+-  @
++  Q_EMIT navigationNodeAdded(NXNavigationType::ExpanderNode, key, nullptr);
+  return key;
+}
+
+NXNodeResultExpected
+NXNavigationBar::addExpanderNode(const QString &expanderTitle,
+                                 const QString &targetExpanderKey,
+                                 NXIconType::IconName awesome)
+{
+-  @
++  Q_EMIT navigationNodeAdded(NXNavigationType::ExpanderNode, *returnType, nullptr);
+  }
+NXNodeResultExpected
+NXNavigationBar::addCategoryNode(const QString &categoryTitle, const QString &targetExpanderKey)
+{
+-    @
++    Q_EMIT navigationNodeAdded(NXNavigationType::CategoryNode, *result, nullptr);
+  }
+  return result;
+}
+```
+
+
 
 ---
 

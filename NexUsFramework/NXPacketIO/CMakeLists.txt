@@ -38,8 +38,9 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/Util
     ${CMAKE_CURRENT_SOURCE_DIR}/XIO
 )
+
 if(NXPACKETIO_LIB_TYPE STREQUAL "STATIC")
-  target_compile_definitions(${PROJECT_NAME} PUBLIC
+    target_compile_definitions(${PROJECT_NAME} PUBLIC
 		-DNXPACKETIO_STATIC
 	)
 else()

@@ -1,25 +1,75 @@
-build/
-*.user
+# ========== Qt 编译输出与临时文件 ==========
+*.qmlc
+*.jsc
+*.qm
+*.prl
+*_qmlcache.qrc
+Makefile*
+*build-*
+
+# ========== Qt Creator 特定文件 ==========
 *.autosave
+*.qmlproject.user
+*.qmlproject.user.*
+*.creator.user*
+target_wrapper.*
+CMakeLists.txt.user*
+compile_commands.json
+
+# ========== CLion / CMake 相关 ==========
+.idea/
+cmake-build-*/
+CMakeLists.txt.user*
+CMakeSettings.json
+
+# ========== 通用 C++ 构建产物与库 ==========
 *.o
 *.obj
+*.a
+*.la
+*.lai
 *.so
-*.dylib
+*.so.*
 *.dll
+*.dylib
+*.slo
+*.lo
+*.dylib
+
+# ========== 可执行文件和应用程序 ==========
 *.exe
 *.app
-.DS_Store
-.qtc_clangd/
-CMakeLists.txt.user*
-cmake-build-*/
-.idea/
+
+# ========== IDE 与编辑器配置 ==========
+*.user
+*.autosave
 .vscode/
-*.qm
-/.vs
-/Install/
-/CMakeSettings.json
+
+# ========== Python 缓存 ==========
 __pycache__/
 *.pyc
 
-ElaWidgetTools/Image
-ElaWidgetToolsExample/Resource/Image
+# ========== 操作系统特定 ==========
+.DS_Store
+
+# ========== 项目自定义目录与文件 ==========
+# 编译中间目录
+/Install
+/install
+/Bin
+/GeneratedFiles
+/out
+/Image
+/Resource/Image
+
+# 第三方库
+/ThirdParty
+
+# Windows 特定
+/.vs
+
+# CLion 本地配置
+.clang-format
+
+# 项目特定二进制/中间文件（如果 WindowBase 是生成的可执行或库）
+**/WindowBase
