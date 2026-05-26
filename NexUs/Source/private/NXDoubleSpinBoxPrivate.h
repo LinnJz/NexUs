@@ -17,14 +17,14 @@ class NXDoubleSpinBoxPrivate : public QObject
 
 public:
   explicit NXDoubleSpinBoxPrivate(QObject *parent = nullptr);
-  ~NXDoubleSpinBoxPrivate() override;
-  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept;
+  ~NXDoubleSpinBoxPrivate();
+  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
 
 private:
-  NXSpinBoxStyle *_style { nullptr };
   NXThemeType::ThemeMode _themeMode;
-  NXMenu *_createStandardContextMenu() noexcept;
-  void _changnxTheme() noexcept;
+  NXSpinBoxStyle *_style { nullptr };
+  NXMenu *_createStandardContextMenu();
+  void _changeTheme();
 };
 
 #endif // NXDOUBLESPINBOXPRIVATE_H

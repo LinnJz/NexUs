@@ -1,4 +1,4 @@
-﻿#ifndef T_ABOUT_H
+#ifndef T_ABOUT_H
 #define T_ABOUT_H
 
 #include <NXDialog.h>

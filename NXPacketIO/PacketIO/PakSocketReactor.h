@@ -1,4 +1,4 @@
-﻿#ifndef PAKSOCKETREACTOR_H
+#ifndef PAKSOCKETREACTOR_H
 #define PAKSOCKETREACTOR_H
 
 #include "NXPacketIO_Export.h"
@@ -6,8 +6,8 @@
 #include <map>
 #include <vector>
 
-#include "Util/UtBinder.h"
-#include "Util/UtCallback.h"
+#include "UtBinder.h"
+#include "UtCallback.h"
 
 namespace GenSockets
 {

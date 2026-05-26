@@ -1,11 +1,11 @@
-﻿#include "GenIO/GenBufXferI.h"
+#include "GenBufXferI.h"
 
 #include <algorithm>
 #include <cstring>
 
-#include "GenIO/GenIConvertBigEndian.h"
-#include "GenIO/GenIConvertLitEndian.h"
-#include "GenIO/GenIConvertLitEndianVax.h"
+#include "GenIConvertBigEndian.h"
+#include "GenIConvertLitEndian.h"
+#include "GenIConvertLitEndianVax.h"
 
 // This class inherits from GenBuf
 

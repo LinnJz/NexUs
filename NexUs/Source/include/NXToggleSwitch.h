@@ -1,4 +1,4 @@
-﻿#ifndef NXTOGGLESWITCH_H
+#ifndef NXTOGGLESWITCH_H
 #define NXTOGGLESWITCH_H
 
 #include <QWidget>
@@ -13,12 +13,10 @@ class NX_EXPORT NXToggleSwitch : public QWidget
 
 public:
   explicit NXToggleSwitch(QWidget *parent = nullptr);
-  ~NXToggleSwitch() override;
-  void setIsToggled(bool isToggled) noexcept;
-  bool getIsToggled() const noexcept;
-
-Q_SIGNALS:
-  void toggled(bool checked);
+  ~NXToggleSwitch();
+  void setIsToggled(bool isToggled);
+  bool getIsToggled() const;
+  Q_SIGNAL void toggled(bool checked);
 
 protected:
   bool event(QEvent *event) override;

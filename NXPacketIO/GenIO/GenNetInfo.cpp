@@ -1,4 +1,4 @@
-﻿#include "GenIO/GenNetInfo.h"
+#include "GenNetInfo.h"
 
 #include <cerrno>
 #include <cstring>

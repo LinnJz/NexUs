@@ -1,9 +1,10 @@
 ﻿#ifndef NXFRAMEWORK_NXROLLERPICKERPRIVATE_H
 #define NXFRAMEWORK_NXROLLERPICKERPRIVATE_H
 #include <QObject>
+
+#include "DeveloperComponents/NXRollerPickerContainer.h"
 #include "NXDef.h"
 #include "NXRoller.h"
-#include "NXRollerPickerContainer.h"
 class QHBoxLayout;
 class NXRollerPicker;
 
@@ -15,17 +16,17 @@ class NXRollerPickerPrivate : public QObject
 
 public:
   explicit NXRollerPickerPrivate(QObject *parent = nullptr);
-  ~NXRollerPickerPrivate() override;
-  Q_SLOT void onRollerPickerClicked() noexcept;
-  Q_SLOT void onOverButtonClicked() noexcept;
-  Q_SLOT void onCancelButtonClicked() noexcept;
+  ~NXRollerPickerPrivate();
+  Q_SLOT void onRollerPickerClicked();
+  Q_SLOT void onOverButtonClicked();
+  Q_SLOT void onCancelButtonClicked();
 
 private:
   int _pickerRollerHeight { 245 };
   NXThemeType::ThemeMode _themeMode;
   QHBoxLayout *_containerLayout { nullptr };
   NXRollerPickerContainer *_rollerPickerContainer { nullptr };
-  int _getRollerTotalWidth() const noexcept;
+  int _getRollerTotalWidth() const;
 };
 
-#endif // NXFRAMEWORK_NXROLLERPICKERPRIVATE_H
+#endif //NXFRAMEWORK_NXROLLERPICKERPRIVATE_H

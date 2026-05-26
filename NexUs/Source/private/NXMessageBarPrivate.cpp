@@ -7,6 +7,7 @@
 #include <QPainterPath>
 #include <QPropertyAnimation>
 #include <QTimer>
+
 #include "NXIconButton.h"
 #include "NXMessageBar.h"
 
@@ -47,6 +48,11 @@ NXMessageBarPrivate::onOtherMessageBarEnd()
 void
 NXMessageBarPrivate::messageBarEnd()
 {
+  if (_isClosing)
+  {
+    return;
+  }
+  _isClosing = true;
   Q_Q(NXMessageBar);
   _closeButton->setEnabled(false);
   _updateActiveMap(false);
@@ -65,10 +71,14 @@ NXMessageBarPrivate::messageBarEnd()
   barFinishedOpacityAnimation->setStartValue(1);
   barFinishedOpacityAnimation->setEndValue(0);
   barFinishedOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-  // 通知同类型的其他 MessageBar 
-  QObject *parentWidget = q->parent();
-  auto const &messageBarMap = _messageBarActiveMap[parentWidget];
-  for (auto const *messageBar : *messageBarMap[_policy])
+  // 通知同类型的其他MessageBar
+  auto parentWidget = q->parent();
+  if (!_messageBarActiveMap.contains(parentWidget) || !_messageBarActiveMap[parentWidget].contains(_policy))
+  {
+    return;
+  }
+  auto &messageBarMap = _messageBarActiveMap[parentWidget];
+  for (const auto messageBar : *messageBarMap[_policy])
   {
     if (messageBar->d_ptr->_isNormalDisplay)
     {
@@ -79,6 +89,14 @@ NXMessageBarPrivate::messageBarEnd()
       messageBar->d_ptr->_isOtherMessageBarEnd = true;
     }
   }
+}
+
+void
+NXMessageBarPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
+{
+  Q_Q(NXMessageBar);
+  _themeMode = themeMode;
+  q->update();
 }
 
 void
@@ -235,8 +253,8 @@ NXMessageBarPrivate::_calculateInitialPos(int &startX, int &startY, int &endX, i
   if (endY < _messageBarVerticalTopMargin ||
       endY > q->parentWidget()->height() - _messageBarVerticalBottomMargin - q->minimumHeight())
   {
-    QObject *parentWidget   = q->parent();
-    auto const &messageBarMap = _messageBarActiveMap[parentWidget];
+    auto parentWidget   = q->parent();
+    auto &messageBarMap = _messageBarActiveMap[parentWidget];
     (*messageBarMap[_policy])[0]->d_ptr->messageBarEnd();
     _calculateInitialPos(startX, startY, endX, endY);
   }
@@ -249,9 +267,19 @@ NXMessageBarPrivate::_getOtherMessageBarTotalData()
   QList<int> resultList;
   int minimumHeightTotal                = 0;
   int indexLessCount                    = 0;
-  QObject *parentWidget                 = q->parent();
-  QList<NXMessageBar *> messageBarList = *_messageBarActiveMap[parentWidget][_policy];
-  for (const auto messageBar : messageBarList)
+  auto parentWidget                     = q->parent();
+  QList<NXMessageBar *> *messageBarList = nullptr;
+  if (_messageBarActiveMap.contains(parentWidget))
+  {
+    messageBarList = _messageBarActiveMap[parentWidget].value(_policy, nullptr);
+  }
+  if (!messageBarList)
+  {
+    resultList.append(0);
+    resultList.append(0);
+    return resultList;
+  }
+  for (const auto messageBar : *messageBarList)
   {
     if (messageBar == q)
     {
@@ -318,7 +346,7 @@ NXMessageBarPrivate::_updateActiveMap(bool isActive)
 {
   Q_Q(NXMessageBar);
   NXMessageBarType::PositionPolicy policy = _policy;
-  QObject *parentWidget                   = q->parent();
+  auto parentWidget                       = q->parent();
   auto &messageBarMap                     = _messageBarActiveMap[parentWidget];
   if (auto it = messageBarMap.find(policy); isActive)
   {
@@ -335,9 +363,20 @@ NXMessageBarPrivate::_updateActiveMap(bool isActive)
   }
   else
   {
-    if (it != messageBarMap.end() && it.value()->count() > 0)
+    if (it != messageBarMap.end())
     {
-      it.value()->removeOne(q);
+      if (!it.value()->isEmpty())
+      {
+        it.value()->removeOne(q);
+      }
+      else
+      {
+        delete messageBarMap.take(policy);
+      }
+    }
+    if (messageBarMap.isEmpty())
+    {
+      _messageBarActiveMap.remove(parentWidget);
     }
   }
 }
@@ -347,7 +386,7 @@ NXMessageBarPrivate::_drawSuccess(QPainter *painter)
 {
   Q_Q(NXMessageBar);
   painter->save();
-  painter->setBrush(QColor(0xE0, 0xF6, 0xDD));
+  painter->setBrush(_themeMode == NXThemeType::Light ? QColor(0xE0, 0xF6, 0xDD) : QColor(0x39, 0x4D, 0x37));
   QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth,
                        q->height() - 2 * _shadowBorderWidth);
   painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
@@ -356,11 +395,12 @@ NXMessageBarPrivate::_drawSuccess(QPainter *painter)
   QPainterPath textPath;
   textPath.addEllipse(QPoint(_leftPadding + 6, q->height() / 2), 9, 9);
   painter->setClipPath(textPath);
-  painter->fillPath(textPath, QColor(0x11, 0x77, 0x10));
-  QFont iconFont = QFont("NXAwesome");
+  painter->fillPath(textPath, _themeMode == NXThemeType::Light ? QColor(0x11, 0x77, 0x10) : QColor(0x4C, 0xAF, 0x50));
+  QFont iconFont = QFont(QStringLiteral("NXAwesome"));
   iconFont.setPixelSize(12);
   painter->setFont(iconFont);
-  painter->drawText(_leftPadding, 0, q->width(), q->height(), Qt::AlignVCenter, QChar(NXIconType::Check));
+  painter->drawText(QRect(_leftPadding + 6 - 9, q->height() / 2 - 9, 18, 18), Qt::AlignCenter,
+                    QChar((unsigned short) NXIconType::Check));
   // 时间进度条绘制
   QPainterPath clipPath;
   clipPath.addRoundedRect(foregroundRect, _borderRadius, _borderRadius);
@@ -372,7 +412,7 @@ NXMessageBarPrivate::_drawSuccess(QPainter *painter)
                            2, 2);
   painter->restore();
   // 文字颜色
-  painter->setPen(QPen(Qt::black));
+  painter->setPen(_themeMode == NXThemeType::Light ? QPen(Qt::black) : QPen(QColor(0xE0, 0xF6, 0xDD)));
 }
 
 void
@@ -380,7 +420,7 @@ NXMessageBarPrivate::_drawWarning(QPainter *painter)
 {
   Q_Q(NXMessageBar);
   painter->save();
-  painter->setBrush(QColor(0xFF, 0xF4, 0xCE));
+  painter->setBrush(_themeMode == NXThemeType::Light ? QColor(0x6B, 0x56, 0x27) : QColor(0x5A, 0x4A, 0x1F));
   QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth,
                        q->height() - 2 * _shadowBorderWidth);
   painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
@@ -390,8 +430,8 @@ NXMessageBarPrivate::_drawWarning(QPainter *painter)
   QPainterPath textPath;
   textPath.addEllipse(QPoint(_leftPadding + 6, q->height() / 2), 9, 9);
   painter->setClipPath(textPath);
-  painter->fillPath(textPath, QColor(0xF8, 0xE2, 0x23));
-  painter->drawText(_leftPadding + 4, 0, q->width(), q->height(), Qt::AlignVCenter, "!");
+  painter->fillPath(textPath, _themeMode == NXThemeType::Light ? QColor(0xF8, 0xE2, 0x23) : QColor(0xFF, 0xEB, 0x3B));
+  painter->drawText(QRect(_leftPadding + 6 - 9, q->height() / 2 - 9, 18, 18), Qt::AlignCenter, QStringLiteral("!"));
   // 时间进度条绘制
   QPainterPath clipPath;
   clipPath.addRoundedRect(foregroundRect, _borderRadius, _borderRadius);
@@ -403,7 +443,7 @@ NXMessageBarPrivate::_drawWarning(QPainter *painter)
                            2, 2);
   painter->restore();
   // 文字颜色
-  painter->setPen(Qt::black);
+  painter->setPen(_themeMode == NXThemeType::Light ? QColor(0xFA, 0xFA, 0xFA) : QColor(0xFF, 0xF3, 0xCD));
 }
 
 void
@@ -411,7 +451,7 @@ NXMessageBarPrivate::_drawInformation(QPainter *painter)
 {
   Q_Q(NXMessageBar);
   painter->save();
-  painter->setBrush(QColor(0xF4, 0xF4, 0xF4));
+  painter->setBrush(_themeMode == NXThemeType::Light ? QColor(0xF4, 0xF4, 0xF4) : QColor(0x37, 0x47, 0x4F));
   QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth,
                        q->height() - 2 * _shadowBorderWidth);
   painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
@@ -420,8 +460,8 @@ NXMessageBarPrivate::_drawInformation(QPainter *painter)
   QPainterPath textPath;
   textPath.addEllipse(QPoint(_leftPadding + 6, q->height() / 2), 9, 9);
   painter->setClipPath(textPath);
-  painter->fillPath(textPath, QColor(0x00, 0x66, 0xB4));
-  painter->drawText(_leftPadding + 4, 0, q->width(), q->height(), Qt::AlignVCenter, "i");
+  painter->fillPath(textPath, _themeMode == NXThemeType::Light ? QColor(0x00, 0x66, 0xB4) : QColor(0x42, 0xA5, 0xF5));
+  painter->drawText(QRect(_leftPadding + 6 - 9, q->height() / 2 - 9, 18, 18), Qt::AlignCenter, QStringLiteral("i"));
   // 时间进度条绘制
   QPainterPath clipPath;
   clipPath.addRoundedRect(foregroundRect, _borderRadius, _borderRadius);
@@ -433,7 +473,7 @@ NXMessageBarPrivate::_drawInformation(QPainter *painter)
                            2, 2);
   painter->restore();
   // 文字颜色
-  painter->setPen(Qt::black);
+  painter->setPen(_themeMode == NXThemeType::Light ? Qt::black : QColor(0xE1, 0xF5, 0xFE));
 }
 
 void
@@ -441,7 +481,7 @@ NXMessageBarPrivate::_drawError(QPainter *painter)
 {
   Q_Q(NXMessageBar);
   painter->save();
-  painter->setBrush(QColor(0xFD, 0xE7, 0xE9));
+  painter->setBrush(_themeMode == NXThemeType::Light ? QColor(0xFE, 0xE7, 0xEA) : QColor(0x4E, 0x34, 0x2E));
   QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth,
                        q->height() - 2 * _shadowBorderWidth);
   painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
@@ -450,11 +490,12 @@ NXMessageBarPrivate::_drawError(QPainter *painter)
   QPainterPath textPath;
   textPath.addEllipse(QPoint(_leftPadding + 6, q->height() / 2), 9, 9);
   painter->setClipPath(textPath);
-  painter->fillPath(textPath, QColor(0xBA, 0x2D, 0x20));
-  QFont iconFont = QFont("NXAwesome");
+  painter->fillPath(textPath, _themeMode == NXThemeType::Light ? QColor(0xBA, 0x2D, 0x20) : QColor(0xEF, 0x53, 0x50));
+  QFont iconFont = QFont(QStringLiteral("NXAwesome"));
   iconFont.setPixelSize(13);
   painter->setFont(iconFont);
-  painter->drawText(_leftPadding + 1, 0, q->width(), q->height(), Qt::AlignVCenter, QChar(NXIconType::Xmark));
+  painter->drawText(QRect(_leftPadding + 6 - 9, q->height() / 2 - 9, 18, 18), Qt::AlignCenter,
+                    QChar((unsigned short) NXIconType::Xmark));
   // 时间进度条绘制
   QPainterPath clipPath;
   clipPath.addRoundedRect(foregroundRect, _borderRadius, _borderRadius);
@@ -466,5 +507,5 @@ NXMessageBarPrivate::_drawError(QPainter *painter)
                            2, 2);
   painter->restore();
   // 文字颜色
-  painter->setPen(Qt::black);
+  painter->setPen(_themeMode == NXThemeType::Light ? Qt::black : QColor(0xFF, 0xCD, 0xD2));
 }

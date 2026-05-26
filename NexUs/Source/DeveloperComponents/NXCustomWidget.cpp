@@ -47,7 +47,7 @@ NXCustomWidget::~NXCustomWidget()
 }
 
 void
-NXCustomWidget::setCentralWidget(QWidget *widget) noexcept
+NXCustomWidget::setCentralWidget(QWidget *widget)
 {
   if (!widget)
   {

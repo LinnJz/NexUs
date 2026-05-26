@@ -3,9 +3,8 @@
 #include <QVariant>
 
 #include "private/NXEventBusPrivate.h"
-
-Q_PROPERTY_CREATE_2_CPP(NXEvent, const QString &, QString, EventName)
-Q_PROPERTY_CREATE_2_CPP(NXEvent, const QString &, QString, FunctionName)
+Q_PROPERTY_CREATE_CPP(NXEvent, QS_SET_CREF(QString), EventName)
+Q_PROPERTY_CREATE_CPP(NXEvent, QS_SET_CREF(QString), FunctionName)
 Q_PROPERTY_CREATE_CPP(NXEvent, Qt::ConnectionType, ConnectionType)
 
 NXEvent::NXEvent(QObject *parent)
@@ -15,11 +14,11 @@ NXEvent::NXEvent(QObject *parent)
   Q_D(NXEvent);
   d->q_ptr            = this;
   d->_pConnectionType = Qt::AutoConnection;
-  d->_pFunctionName   = {};
-  d->_pEventName      = {};
+  d->_pFunctionName   = QStringLiteral("");
+  d->_pEventName      = QStringLiteral("");
 }
 
-NXEvent::NXEvent(const QString &eventName, const QString &functionName, QObject *parent)
+NXEvent::NXEvent(QString eventName, QString functionName, QObject *parent)
     : QObject { parent }
     , d_ptr(new NXEventPrivate())
 {
@@ -31,7 +30,7 @@ NXEvent::NXEvent(const QString &eventName, const QString &functionName, QObject 
 }
 
 NXEventBusType::EventBusReturnType
-NXEvent::registerAndInit() noexcept
+NXEvent::registerAndInit()
 {
   return NXEventBus::getInstance()->d_ptr->registerEvent(this);
 }
@@ -54,7 +53,7 @@ NXEventBus::~NXEventBus()
 }
 
 NXEventBusType::EventBusReturnType
-NXEventBus::post(const QString &eventName, const QVariantMap &data) noexcept
+NXEventBus::post(const QString &eventName, const QVariantMap &data)
 {
   Q_D(NXEventBus);
   if (eventName.isEmpty())
@@ -77,7 +76,7 @@ NXEventBus::post(const QString &eventName, const QVariantMap &data) noexcept
 }
 
 QStringList
-NXEventBus::getRegisteredEventsName() const noexcept
+NXEventBus::getRegisteredEventsName() const
 {
   Q_D(const NXEventBus);
   if (d->_eventMap.count() == 0)

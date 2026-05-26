@@ -344,7 +344,7 @@ NXColorDialog::~NXColorDialog()
 }
 
 void
-NXColorDialog::setCurrentColor(const QColor &currentColor) noexcept
+NXColorDialog::setCurrentColor(const QColor &currentColor)
 {
   Q_D(NXColorDialog);
   d->_pCurrentColor = currentColor;
@@ -358,14 +358,14 @@ NXColorDialog::setCurrentColor(const QColor &currentColor) noexcept
 }
 
 QColor
-NXColorDialog::getCurrentColor() const noexcept
+NXColorDialog::getCurrentColor() const
 {
   Q_D(const NXColorDialog);
   return d->_pCurrentColor;
 }
 
 void
-NXColorDialog::setColorSchemeType(NXColorSchemeType::ColorSchemeType schemeType) noexcept
+NXColorDialog::setColorSchemeType(NXColorSchemeType::ColorSchemeType schemeType)
 {
   Q_D(NXColorDialog);
   d->_pColorSchemeType = schemeType;
@@ -373,31 +373,31 @@ NXColorDialog::setColorSchemeType(NXColorSchemeType::ColorSchemeType schemeType)
 }
 
 NXColorSchemeType::ColorSchemeType
-NXColorDialog::getColorSchemeType() const noexcept
+NXColorDialog::getColorSchemeType() const
 {
   Q_D(const NXColorDialog);
   return d->_pColorSchemeType;
 }
 
 QList<QColor>
-NXColorDialog::getCustomColorList() const noexcept
+NXColorDialog::getCustomColorList() const
 {
   Q_D(const NXColorDialog);
   return d->_customColorModel->getDisplayColorList();
 }
 
 QColor
-NXColorDialog::getCustomColor(int index) const noexcept
+NXColorDialog::getCustomColor(int index) const
 {
   Q_D(const NXColorDialog);
   return d->_customColorModel->getDisplayColor(index);
 }
 
 QString
-NXColorDialog::getCurrent4ChannelColor() const noexcept
+NXColorDialog::getCurrent4ChannelColor() const
 {
   Q_D(const NXColorDialog);
-  return d->_getHex4ChanelValue();
+  return d->_getHex4ChannelValue();
 }
 
 void

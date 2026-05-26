@@ -1,14 +1,14 @@
-﻿#include "PacketIO/PakTCP_IO.h"
+#include "PakTCP_IO.h"
 
 #include <cassert>
 #include <iostream>
 
-#include "GenIO/GenTCP_Connection.h"
-#include "PacketIO/PakI.h"
-#include "PacketIO/PakO.h"
-#include "PacketIO/PakPacket.h"
-#include "PacketIO/PakProcessor.h"
-#include "PacketIO/PakSerialize.h"
+#include "GenTCP_Connection.h"
+#include "PakI.h"
+#include "PakO.h"
+#include "PakPacket.h"
+#include "PakProcessor.h"
+#include "PakSerialize.h"
 
 static std::mutex sendMutex;
 static std::mutex receiveMutex;

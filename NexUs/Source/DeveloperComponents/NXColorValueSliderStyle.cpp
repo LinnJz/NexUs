@@ -40,14 +40,8 @@ NXColorValueSliderStyle::drawComplexControl(ComplexControl control,
     }
     _baseGradient->setFinalStop(widget->rect().bottomRight());
     QColor highValueColor = _pBaseColor.toHsv();
-    if (_pIsUseAlpha)
-    {
-      highValueColor.setHsv(highValueColor.hue(), highValueColor.saturation(), highValueColor.value(), 255);
-    }
-    else
-    {
-      highValueColor.setHsv(highValueColor.hue(), highValueColor.saturation(), 255);
-    }
+    highValueColor.setHsv(highValueColor.hue(), highValueColor.saturation(),
+                          _pIsUseAlpha ? highValueColor.value() : 255);
     QColor lowValueColor = _pBaseColor.toHsv();
     if (_pIsUseAlpha)
     {

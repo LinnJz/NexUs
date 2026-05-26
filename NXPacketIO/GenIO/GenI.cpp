@@ -1,6 +1,6 @@
-﻿#include "GenIO/GenI.h"
-#include "GenIO/GenError.h"
-#include "Util/UtWallClock.h"
+#include "GenI.h"
+#include "GenError.h"
+#include "UtWallClock.h"
 #include <algorithm>
 #include <iostream>
 #include <string>

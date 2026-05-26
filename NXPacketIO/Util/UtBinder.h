@@ -1,4 +1,4 @@
-﻿#ifndef UTBINDER_H
+#ifndef UTBINDER_H
 #define UTBINDER_H
 
 #include <cstddef>

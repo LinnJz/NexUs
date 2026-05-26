@@ -20,18 +20,18 @@ public:
   explicit NXPivotModel(QObject *parent = nullptr);
   ~NXPivotModel() override;
 
-  void appendPivot(const QPixmap &pixmap) noexcept;
-  void appendPivot(const QString &text, const QPixmap &pixmap = {}) noexcept;
+  void appendPivot(const QPixmap &pixmap);
+  void appendPivot(const QString &text, const QPixmap &pixmap = {});
 
-  void insertPivot(int index, const QPixmap &pixmap) noexcept;
-  void insertPivot(int index, const QString &text, const QPixmap &pixmap = {}) noexcept;
+  void insertPivot(int index, const QPixmap &pixmap);
+  void insertPivot(int index, const QString &text, const QPixmap &pixmap = {});
 
-  void removePivot(int index) noexcept;
+  void removePivot(int index);
 
-  void setPivot(int index, const QPixmap &pixmap) noexcept;
-  void setPivot(int index, const QString &text, const QPixmap &pixmap = {}) noexcept;
+  void setPivot(int index, const QPixmap &pixmap);
+  void setPivot(int index, const QString &text, const QPixmap &pixmap = {});
 
-  int getPivotListCount() const noexcept;
+  int getPivotListCount() const;
 
   int rowCount(const QModelIndex &parent = QModelIndex()) const override;
   QVariant data(const QModelIndex &index, int role) const override;

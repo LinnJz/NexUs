@@ -1,11 +1,11 @@
-﻿#ifndef PakDefaultHeader_H
+#ifndef PakDefaultHeader_H
 #define PakDefaultHeader_H
 
 #include "NXPacketIO_Export.h"
 
-#include "GenIO/GenBuffer.h"
-#include "PacketIO/PakHeader.h"
-#include "PacketIO/PakIntTypes.h"
+#include "GenBuffer.h"
+#include "PakHeader.h"
+#include "PakIntTypes.h"
 class GenO;
 class GenI;
 

@@ -1,10 +1,10 @@
-﻿#ifndef PAKTCP_IO_H
+#ifndef PAKTCP_IO_H
 #define PAKTCP_IO_H
 
 #include "NXPacketIO_Export.h"
 
-#include "PacketIO/PakDefaultHeader.h"
-#include "PacketIO/PakSocketIO.h"
+#include "PakDefaultHeader.h"
+#include "PakSocketIO.h"
 
 class GenTCP_Connection;
 class PakPacket;

@@ -36,9 +36,9 @@ public:
   ~NXScreenCaptureScreenPrivate();
 
 private:
-  NXScreenCaptureManager *_captureManager { nullptr };
   bool _isSyncGrabSize { false };
   QImage _img;
+  NXScreenCaptureManager *_captureManager { nullptr };
 };
 #endif
 #endif // NXSCREENCAPTUREMANAGERPRIVATE_H

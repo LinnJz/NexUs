@@ -1,4 +1,4 @@
-﻿#ifndef UTSEMAPHORE_H
+#ifndef UTSEMAPHORE_H
 #define UTSEMAPHORE_H
 
 #include "NXPacketIO_Export.h"

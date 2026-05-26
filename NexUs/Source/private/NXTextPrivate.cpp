@@ -13,7 +13,7 @@ NXTextPrivate::~NXTextPrivate()
 }
 
 void
-NXTextPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
+NXTextPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
 {
   Q_Q(NXText);
   _themeMode       = themeMode;

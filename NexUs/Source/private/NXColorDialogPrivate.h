@@ -19,7 +19,6 @@ class NXText;
 class NXPushButton;
 class NXToolButton;
 class QSlider;
-class QColor;
 class NXColorValueSliderStyle;
 
 class NXColorDialogPrivate : public QObject
@@ -33,20 +32,20 @@ public:
   explicit NXColorDialogPrivate(QObject *parent = nullptr);
   ~NXColorDialogPrivate();
 
-  Q_SLOT void onColorPickerColorChanged(const QColor &selectedColor) noexcept;
-  Q_SLOT void onColorValueSliderChanged(int value) noexcept;
-  Q_SLOT void onTransparencyValueSliderChanged(int value) noexcept;
+  Q_SLOT void onColorPickerColorChanged(const QColor &selectedColor);
+  Q_SLOT void onColorValueSliderChanged(int value);
+  Q_SLOT void onTransparencyValueSliderChanged(int value);
 
-  Q_SLOT void onColorModeChanged(int index) noexcept;
-  Q_SLOT void onHtmlEditFocusOut(const QString &text) noexcept;
-  Q_SLOT void onHtmlEditChanged(const QString &text) noexcept;
-  Q_SLOT void onColorEditChanged(const QString &text) noexcept;
+  Q_SLOT void onColorModeChanged(int index);
+  Q_SLOT void onHtmlEditFocusOut(const QString &text);
+  Q_SLOT void onHtmlEditChanged(const QString &text);
+  Q_SLOT void onColorEditChanged(const QString &text);
 
-  Q_SLOT void onBasicColorViewClicked(const QModelIndex &index) noexcept;
-  Q_SLOT void onCustomColorViewClicked(const QModelIndex &index) noexcept;
+  Q_SLOT void onBasicColorViewClicked(const QModelIndex &index);
+  Q_SLOT void onCustomColorViewClicked(const QModelIndex &index);
 
-  Q_SLOT void onAddCustomColorButtonClicked() noexcept;
-  Q_SLOT void onRemoveCustomColorButtonClicked() noexcept;
+  Q_SLOT void onAddCustomColorButtonClicked();
+  Q_SLOT void onRemoveCustomColorButtonClicked();
 
 private:
   NXThemeType::ThemeMode _themeMode;
@@ -62,35 +61,33 @@ private:
   NXLineEdit *_firstEdit { nullptr };
   NXLineEdit *_secondEdit { nullptr };
   NXLineEdit *_thridEdit { nullptr };
-  NXLineEdit *_fourthEdit { nullptr };
   NXText *_firstText { nullptr };
   NXText *_secondText { nullptr };
   NXText *_thridText { nullptr };
   NXText *_fourthText { nullptr };
-
+  NXLineEdit *_fourthEdit { nullptr };
   NXBaseListView *_basicColorView { nullptr };
   NXColorDisplayModel *_basicColorModel { nullptr };
   NXColorDisplayDelegate *_basicColorDelegate { nullptr };
-
   NXToolButton *_addCustomColorButton { nullptr };
   NXToolButton *_removeCustomColorButton { nullptr };
   NXBaseListView *_customColorView { nullptr };
   NXColorDisplayModel *_customColorModel { nullptr };
   NXColorDisplayDelegate *_customColorDelegate { nullptr };
-
   NXPushButton *_overButton { nullptr };
   NXPushButton *_cancelButton { nullptr };
 
-  void _initBasicColor() noexcept;
-  void _initCustomColor() noexcept;
-  void _updateHtmlEditValue() noexcept;
-  void _updateEditValue() noexcept;
-  void _updateColorPreview() noexcept;
-  void _updateColorValueSlider() noexcept;
-  void _updateTransparencyValueSlider() noexcept;
-  QString _completeColorText(QString text) const noexcept;
-  QString _getHex4ChanelValue() const noexcept;
-  QColor _getColorFromEdit() const noexcept;
+
+  void _initBasicColor();
+  void _initCustomColor();
+  void _updateHtmlEditValue();
+  void _updateEditValue();
+  void _updateColorPreview();
+  void _updateColorValueSlider();
+  void _updateTransparencyValueSlider();
+  QString _completeColorText(const QString &text) const;
+  QString _getHex4ChannelValue() const;
+  QColor _getColorFromEdit() const;
 };
 
 #endif // NXCOLORDIALOGPRIVATE_H

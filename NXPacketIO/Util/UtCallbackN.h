@@ -1,10 +1,10 @@
-﻿#ifndef UT_CALLBACK_N_H
+#ifndef UT_CALLBACK_N_H
 #define UT_CALLBACK_N_H
 
 #include <memory>
 #include <vector>
 
-#include "Util/UtCallback.h"
+#include "UtCallback.h"
 
 template <typename Signature>
 class UtCallbackN;

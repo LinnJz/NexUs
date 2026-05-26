@@ -14,7 +14,7 @@ class NX_EXPORT NXDockWidget : public QDockWidget
 public:
   explicit NXDockWidget(QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
   explicit NXDockWidget(const QString &title, QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
-  ~NXDockWidget() override;
+  ~NXDockWidget();
   Q_SIGNAL void dockClosed();
   Q_SIGNAL void dockResized(QSize size);
 

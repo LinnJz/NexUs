@@ -1,7 +1,6 @@
 ﻿#ifndef NXTABLEVIEWPRIVATE_H
 #define NXTABLEVIEWPRIVATE_H
 
-#include <QMetaObject>
 #include <QObject>
 
 #include "NXProperty.h"
@@ -20,10 +19,6 @@ public:
 
 private:
   NXTableViewStyle *_tableViewStyle { nullptr };
-  QMetaObject::Connection _modelResetConnection;
-  QMetaObject::Connection _columnsInsertedConnection;
-  QMetaObject::Connection _columnsRemovedConnection;
-  QMetaObject::Connection _layoutChangedConnection;
 };
 
 #endif // NXTABLEVIEWPRIVATE_H

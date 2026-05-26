@@ -1,4 +1,4 @@
-﻿#include "NXLogPrivate.h"
+#include "NXLogPrivate.h"
 
 #include <QDateTime>
 #include <QDebug>
@@ -27,36 +27,36 @@ void
 NXLogPrivate::_messageLogHander(QtMsgType type, const QMessageLogContext &ctx, const QString &msg)
 {
   QString logInfo;
-  QString logTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+  QString logTime = QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd hh:mm:ss"));
   switch (type)
   {
   case QtDebugMsg :
   {
-    logInfo = QStringLiteral("[信息-%1](函数: %2 , 行数: %3) -> %4")
+    logInfo = QString(QStringLiteral("[信息-%1](函数: %2 , 行数: %3) -> %4"))
                   .arg(logTime, ctx.function, QString::number(ctx.line), msg);
     break;
   }
   case QtWarningMsg :
   {
-    logInfo = QStringLiteral("[警告-%1](函数: %2 , 行数: %3) -> %4")
+    logInfo = QString(QStringLiteral("[警告-%1](函数: %2 , 行数: %3) -> %4"))
                   .arg(logTime, ctx.function, QString::number(ctx.line), msg);
     break;
   }
   case QtCriticalMsg :
   {
-    logInfo = QStringLiteral("[错误-%1](函数: %2 , 行数: %3) -> %4")
+    logInfo = QString(QStringLiteral("[错误-%1](函数: %2 , 行数: %3) -> %4"))
                   .arg(logTime, ctx.function, QString::number(ctx.line), msg);
     break;
   }
   case QtInfoMsg :
   {
-    logInfo = QStringLiteral("[提示-%1](函数: %2 , 行数: %3) -> %4")
+    logInfo = QString(QStringLiteral("[提示-%1](函数: %2 , 行数: %3) -> %4"))
                   .arg(logTime, ctx.function, QString::number(ctx.line), msg);
     break;
   }
   case QtFatalMsg :
   {
-    logInfo = QStringLiteral("[致命-%1](函数: %2 , 行数: %3) -> %4")
+    logInfo = QString(QStringLiteral("[致命-%1](函数: %2 , 行数: %3) -> %4"))
                   .arg(logTime, ctx.function, QString::number(ctx.line), msg);
     break;
   }
@@ -93,7 +93,7 @@ NXLogPrivate::_messageLogHander(QtMsgType type, const QMessageLogContext &ctx, c
 }
 
 void
-NXLogPrivate::_clearLogFile() noexcept
+NXLogPrivate::_clearLogFile()
 {
   if (_pIsLogFileNameWithTime)
   {

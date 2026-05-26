@@ -1,5 +1,6 @@
 ﻿#ifndef NXTABLEVIEWSTYLE_H
 #define NXTABLEVIEWSTYLE_H
+#include <QHash>
 #include <QModelIndex>
 #include <QProxyStyle>
 
@@ -9,16 +10,21 @@ class QStyleOptionViewItem;
 class NXTableViewStyle : public QProxyStyle
 {
   Q_OBJECT
-  Q_PROPERTY_CREATE_2(const QModelIndex &, QModelIndex, CurrentHoverIndex)
+  Q_PROPERTY_CREATE(QS_SET_CREF(QModelIndex), CurrentHoverIndex)
   Q_PROPERTY_CREATE(int, HeaderMargin)
   Q_PROPERTY_CREATE(int, BorderRadius)
   Q_PROPERTY_CREATE(int, CheckIndicatorWidth)
-  Q_PROPERTY_CREATE(bool, IsHoverEffectsEnabled)
-  Q_PROPERTY_CREATE(bool, IsSelectionEffectsEnabled)
+  Q_PROPERTY_CREATE(int, DefaultPadding)
+  Q_PROPERTY_CREATE(bool, IsHoverRowEffectEnable)
+  Q_PROPERTY_CREATE(bool, IsSelectedRowEffectEnable)
 
 public:
   explicit NXTableViewStyle(QStyle *style = nullptr);
-  ~NXTableViewStyle() override;
+  ~NXTableViewStyle();
+  void setColumnPadding(int column, int padding);
+  int columnPadding(int column) const;
+  void clearColumnPadding(int column);
+
   void drawPrimitive(PrimitiveElement element,
                      const QStyleOption *option,
                      QPainter *painter,
@@ -30,16 +36,11 @@ public:
   int
   pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr, const QWidget *widget = nullptr) const override;
 
-  void setHorizontalPadding(int column, int padding) noexcept;
-  int getHorizontalPadding(int column) const noexcept;
-  void syncHorizontalPaddings(int columnCount) noexcept;
-
 private:
   NXThemeType::ThemeMode _themeMode;
-  QList<int> _horizontalPaddings;
+  QHash<int, int> _columnPaddingMap;
 
-  int _horizontalPaddingForColumn(int column) const noexcept;
-  void _drawCheckIndicator(QPainter *painter, const QRect &rect, Qt::CheckState state) const noexcept;
+  void _drawCheckIndicator(QPainter *painter, QRect rect, Qt::CheckState state) const;
 };
 
 #endif // NXTABLEVIEWSTYLE_H

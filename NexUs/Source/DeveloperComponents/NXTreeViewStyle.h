@@ -14,7 +14,7 @@ class NXTreeViewStyle : public QProxyStyle
 
 public:
   explicit NXTreeViewStyle(QStyle *style = nullptr);
-  ~NXTreeViewStyle() override;
+  ~NXTreeViewStyle();
   void drawPrimitive(PrimitiveElement element,
                      const QStyleOption *option,
                      QPainter *painter,

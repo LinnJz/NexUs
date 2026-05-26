@@ -1,4 +1,4 @@
-﻿#ifndef UTIMMUTABLELIST_H
+#ifndef UTIMMUTABLELIST_H
 #define UTIMMUTABLELIST_H
 
 #include <cassert>

@@ -1,4 +1,4 @@
-﻿#include "GenIO/GenSocketManager.h"
+#include "GenSocketManager.h"
 
 #include <cstdio>
 #include <iostream>
@@ -7,8 +7,8 @@
 #include <net/if.h>
 #endif
 
-#include "GenIO/GenHostName.h"
-#include "GenIO/GenSocketIncludes.h"
+#include "GenHostName.h"
+#include "GenSocketIncludes.h"
 namespace GenSockets
 {
 

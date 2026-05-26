@@ -1,7 +1,7 @@
-﻿#include "GenIO/GenHostName.h"
+#include "GenHostName.h"
 
-#include "GenIO/GenSocketIncludes.h"
-#include "GenIO/GenSocketManager.h"
+#include "GenSocketIncludes.h"
+#include "GenSocketManager.h"
 
 namespace GenSockets
 {

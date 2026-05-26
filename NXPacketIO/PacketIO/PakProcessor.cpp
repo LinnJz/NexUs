@@ -1,14 +1,14 @@
-﻿#include "PacketIO/PakProcessor.h"
+#include "PakProcessor.h"
 
 #include <cassert>
 #include <iostream>
 
-#include "GenIO/GenIConvertBigEndian.h"
-#include "PacketIO/PakHeader.h"
-#include "PacketIO/PakI.h"
-#include "PacketIO/PakPacket.h"
-#include "PacketIO/PakSocketIO.h"
-#include "PacketIO/PakUndefinedPacket.h"
+#include "GenIConvertBigEndian.h"
+#include "PakHeader.h"
+#include "PakI.h"
+#include "PakPacket.h"
+#include "PakSocketIO.h"
+#include "PakUndefinedPacket.h"
 PakProcessor::PakProcessor()
 {
     mPacketData.assign(1024, (PacketInfo*)nullptr);

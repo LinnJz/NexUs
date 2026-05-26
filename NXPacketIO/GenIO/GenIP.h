@@ -1,4 +1,4 @@
-﻿#ifndef GENIP_H
+#ifndef GENIP_H
 #define GENIP_H
 
 #include <string>

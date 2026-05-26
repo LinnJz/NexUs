@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QStatusBar>
 #include <QStyleOption>
+
 #include "NXTheme.h"
 
 NXStatusBarStyle::NXStatusBarStyle(QStyle *style)
@@ -29,7 +30,7 @@ NXStatusBarStyle::drawPrimitive(PrimitiveElement element,
   {
   case QStyle::PE_PanelStatusBar :
   {
-    // 背景绘制
+    //背景绘制
     QRect statusBarRect = option->rect;
     painter->save();
     painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
@@ -41,7 +42,7 @@ NXStatusBarStyle::drawPrimitive(PrimitiveElement element,
   }
   case QStyle::PE_FrameStatusBarItem :
   {
-    // 间隔符绘制
+    //间隔符绘制
     const QStatusBar *statusBar = dynamic_cast<const QStatusBar *>(widget->parentWidget());
     if (statusBar && statusBar->isSizeGripEnabled())
     {
@@ -93,7 +94,7 @@ NXStatusBarStyle::sizeFromContents(ContentsType type,
                                    const QSize &size,
                                    const QWidget *widget) const
 {
-  // qDebug() << type << QProxyStyle::sizeFromContents(type, option, size, widget);
+  //qDebug() << type << QProxyStyle::sizeFromContents(type, option, size, widget);
   return QProxyStyle::sizeFromContents(type, option, size, widget);
 }
 

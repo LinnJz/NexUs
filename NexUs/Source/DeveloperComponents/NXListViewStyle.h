@@ -8,12 +8,12 @@
 class NXListViewStyle : public QProxyStyle
 {
   Q_OBJECT
-  Q_PROPERTY_CREATE(bool, IsTransparent)
   Q_PROPERTY_CREATE(int, ItemHeight)
+  Q_PROPERTY_CREATE(bool, IsTransparent)
 
 public:
   explicit NXListViewStyle(QStyle *style = nullptr);
-  ~NXListViewStyle() override;
+  ~NXListViewStyle();
   void drawPrimitive(PrimitiveElement element,
                      const QStyleOption *option,
                      QPainter *painter,

@@ -14,8 +14,9 @@ NXTableViewStyle::NXTableViewStyle(QStyle *style)
   _pHeaderMargin              = 6;
   _pBorderRadius              = 3;
   _pCheckIndicatorWidth       = 18;
-  _pIsSelectionEffectsEnabled = true;
-  _pIsHoverEffectsEnabled     = true;
+  _pDefaultPadding            = 11;
+  _pIsHoverRowEffectEnable    = true;
+  _pIsSelectedRowEffectEnable = true;
   _themeMode                  = nxTheme->getThemeMode();
   connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
@@ -28,63 +29,12 @@ NXTableViewStyle::~NXTableViewStyle()
 }
 
 void
-NXTableViewStyle::setHorizontalPadding(int column, int padding) noexcept
-{
-  if (column < 0)
-  {
-    return;
-  }
-  if (column >= _horizontalPaddings.size())
-  {
-    syncHorizontalPaddings(column + 1);
-  }
-  _horizontalPaddings[column] = padding;
-}
-
-int
-NXTableViewStyle::getHorizontalPadding(int column) const noexcept
-{
-  return _horizontalPaddingForColumn(column);
-}
-
-void
-NXTableViewStyle::syncHorizontalPaddings(int columnCount) noexcept
-{
-  if (columnCount <= 0) [[unlikely]]
-  {
-    _horizontalPaddings.clear();
-    return;
-  }
-
-  int oldSize = _horizontalPaddings.size();
-  _horizontalPaddings.resize(columnCount);
-  if (oldSize == 0 && !_horizontalPaddings.isEmpty())
-  {
-    _horizontalPaddings[0] = 11;
-  }
-}
-
-int
-NXTableViewStyle::_horizontalPaddingForColumn(int column) const noexcept
-{
-  if (column >= 0 && column < _horizontalPaddings.size())
-  {
-    return _horizontalPaddings[column];
-  }
-  if (column == 0)
-  {
-    return 11;
-  }
-  return 0;
-}
-
-void
 NXTableViewStyle::drawPrimitive(PrimitiveElement element,
                                 const QStyleOption *option,
                                 QPainter *painter,
                                 const QWidget *widget) const
 {
-  // qDebug() << element << option->rect << widget->objectName();
+  //qDebug() << element << option->rect << widget->objectName();
   switch (element)
   {
   case QStyle::PE_IndicatorItemViewItemDrop :
@@ -120,7 +70,7 @@ NXTableViewStyle::drawPrimitive(PrimitiveElement element,
       QAbstractItemView::SelectionBehavior selectionBehavior = tabView->selectionBehavior();
       if (selectionBehavior == QAbstractItemView::SelectRows)
       {
-        if (_pIsHoverEffectsEnabled && vopt->index.row() == _pCurrentHoverIndex.row())
+        if (_pIsHoverRowEffectEnable && vopt->index.row() == _pCurrentHoverIndex.row())
         {
           painter->setPen(Qt::NoPen);
           painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
@@ -129,7 +79,7 @@ NXTableViewStyle::drawPrimitive(PrimitiveElement element,
       }
       else
       {
-        if (_pIsHoverEffectsEnabled &&
+        if (_pIsHoverRowEffectEnable &&
             (vopt->state.testFlag(QStyle::State_Selected) || vopt->state.testFlag(QStyle::State_MouseOver)))
         {
           painter->setPen(Qt::NoPen);
@@ -192,8 +142,7 @@ NXTableViewStyle::drawControl(ControlElement element,
                               QPainter *painter,
                               const QWidget *widget) const
 {
-  // qDebug() << element << option->rect;
-
+  //qDebug() << element << option->rect;
   switch (element)
   {
   case QStyle::CE_ShapedFrame :
@@ -264,7 +213,7 @@ NXTableViewStyle::drawControl(ControlElement element,
           Qt::CheckState checkState = value.value<Qt::CheckState>();
           QRect checkRect           = option->rect;
           checkRect.setSize(QSize(_pCheckIndicatorWidth, _pCheckIndicatorWidth));
-          int padding = _horizontalPaddingForColumn(hopt->section);
+          int padding = columnPadding(hopt->section);
           checkRect.moveLeft(option->rect.left() + padding + 3);
           checkRect.moveTop(option->rect.center().y() - _pCheckIndicatorWidth / 2 + 1);
           _drawCheckIndicator(painter, checkRect, checkState);
@@ -305,7 +254,7 @@ NXTableViewStyle::drawControl(ControlElement element,
       if (vopt->features & QStyleOptionViewItem::HasCheckIndicator)
       {
         QRect checkRect = proxy()->subElementRect(SE_ItemViewItemCheckIndicator, vopt, widget);
-        int padding     = _horizontalPaddingForColumn(vopt->index.column());
+        int padding     = columnPadding(vopt->index.column());
         checkRect.adjust(padding, 0, padding, 0);
         _drawCheckIndicator(painter, checkRect, vopt->checkState);
       }
@@ -313,7 +262,7 @@ NXTableViewStyle::drawControl(ControlElement element,
       if (!vopt->icon.isNull())
       {
         QRect iconRect = proxy()->subElementRect(SE_ItemViewItemDecoration, vopt, widget);
-        int padding    = _horizontalPaddingForColumn(vopt->index.column());
+        int padding    = columnPadding(vopt->index.column());
         iconRect.adjust(padding, 0, padding, 0);
         QIcon::Mode mode = QIcon::Normal;
         // if (!(vopt->state.testFlag(QStyle::State_Enabled)))
@@ -331,14 +280,14 @@ NXTableViewStyle::drawControl(ControlElement element,
       if (!vopt->text.isEmpty())
       {
         QRect textRect = proxy()->subElementRect(SE_ItemViewItemText, vopt, widget);
-        int padding    = _horizontalPaddingForColumn(vopt->index.column());
+        int padding    = columnPadding(vopt->index.column());
         textRect.adjust(padding, 0, 0, 0);
         painter->setPen(NXThemeColor(_themeMode, BasicText));
         painter->drawText(textRect, vopt->displayAlignment, vopt->text);
       }
-      // 选中特效
-      if (_pIsSelectionEffectsEnabled)
+      if (_pIsSelectedRowEffectEnable)
       {
+        // 选中特效
         QRect itemRect   = option->rect;
         int heightOffset = itemRect.height() / 4;
         painter->setPen(Qt::NoPen);
@@ -373,7 +322,7 @@ NXTableViewStyle::drawControl(ControlElement element,
 int
 NXTableViewStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
-  // qDebug() << metric << QProxyStyle::pixelMetric(metric, option, widget);
+  //qDebug() << metric << QProxyStyle::pixelMetric(metric, option, widget);
   switch (metric)
   {
   case QStyle::PM_IndicatorWidth :
@@ -391,7 +340,25 @@ NXTableViewStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, co
 }
 
 void
-NXTableViewStyle::_drawCheckIndicator(QPainter *painter, const QRect &rect, Qt::CheckState state) const noexcept
+NXTableViewStyle::setColumnPadding(int column, int padding)
+{
+  _columnPaddingMap[column] = padding;
+}
+
+int
+NXTableViewStyle::columnPadding(int column) const
+{
+  return _columnPaddingMap.value(column, _pDefaultPadding);
+}
+
+void
+NXTableViewStyle::clearColumnPadding(int column)
+{
+  _columnPaddingMap.remove(column);
+}
+
+void
+NXTableViewStyle::_drawCheckIndicator(QPainter *painter, QRect rect, Qt::CheckState state) const
 {
   painter->save();
 

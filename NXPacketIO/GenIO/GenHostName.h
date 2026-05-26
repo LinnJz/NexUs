@@ -1,4 +1,4 @@
-﻿#ifndef GENHOSTNAME_H
+#ifndef GENHOSTNAME_H
 #define GENHOSTNAME_H
 
 #include "NXPacketIO_Export.h"
@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "GenIO/GenIP.h"
+#include "GenIP.h"
 
 namespace GenSockets
 {

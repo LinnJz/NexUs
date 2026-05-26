@@ -1,4 +1,4 @@
-#ifndef NXGROUPBOXSTYLE_H
+﻿#ifndef NXGROUPBOXSTYLE_H
 #define NXGROUPBOXSTYLE_H
 
 #include <QProxyStyle>

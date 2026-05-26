@@ -1,4 +1,4 @@
-﻿#include "GenIO/GenBuf.h"
+#include "GenBuf.h"
 
 #include <cstring>
 

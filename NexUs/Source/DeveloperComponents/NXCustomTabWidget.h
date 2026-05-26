@@ -1,4 +1,4 @@
-﻿#ifndef NXCUSTOMTABWIDGET_H
+#ifndef NXCUSTOMTABWIDGET_H
 #define NXCUSTOMTABWIDGET_H
 
 #include "NXCustomWidget.h"
@@ -13,10 +13,10 @@ class NXCustomTabWidget : public NXCustomWidget
 
 public:
   explicit NXCustomTabWidget(QWidget *parent = nullptr);
-  ~NXCustomTabWidget() override;
-  void addTab(QWidget *widget, QIcon tabIcon, const QString &tabTitle) noexcept;
-  NXTabBar *getCustomTabBar() const noexcept;
-  NXTabWidget *getCustomTabWidget() const noexcept;
+  ~NXCustomTabWidget();
+  void addTab(QWidget *widget, const QIcon &tabIcon, const QString &tabTitle);
+  NXTabBar *getCustomTabBar() const;
+  NXTabWidget *getCustomTabWidget() const;
 
   Q_INVOKABLE bool processHitTest();
 

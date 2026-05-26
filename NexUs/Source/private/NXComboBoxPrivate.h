@@ -17,13 +17,17 @@ class NXComboBoxPrivate : public QObject
 
 public:
   explicit NXComboBoxPrivate(QObject *parent = nullptr);
-  ~NXComboBoxPrivate() override;
+  ~NXComboBoxPrivate();
 
-  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept;
+  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
+
+protected:
+  bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
-  NXThemeType::ThemeMode _themeMode;
   bool _isAllowHidePopup { false };
+  bool _isKeyEvent { false };
+  NXThemeType::ThemeMode _themeMode;
   NXComboBoxStyle *_comboBoxStyle { nullptr };
 };
 

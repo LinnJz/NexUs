@@ -1,4 +1,4 @@
-﻿#include "NXThemeAnimationWidget.h"
+#include "NXThemeAnimationWidget.h"
 
 #include <QPainter>
 #include <QPainterPath>
@@ -15,7 +15,7 @@ NXThemeAnimationWidget::~NXThemeAnimationWidget()
 }
 
 void
-NXThemeAnimationWidget::startAnimation(int msec) noexcept
+NXThemeAnimationWidget::startAnimation(int msec)
 {
   QPropertyAnimation *themeChangeAnimation = new QPropertyAnimation(this, "pRadius");
   themeChangeAnimation->setDuration(msec);
@@ -42,6 +42,7 @@ NXThemeAnimationWidget::paintEvent(QPaintEvent *event)
   painter.save();
   painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
   painter.setPen(Qt::NoPen);
+
   // 合成图片
   QImage animationImage(_pOldWindowBackground.size(), QImage::Format_ARGB32);
   animationImage.fill(Qt::transparent);
@@ -57,6 +58,7 @@ NXThemeAnimationWidget::paintEvent(QPaintEvent *event)
   animationImagePainter.setClipPath(clipPath);
   animationImagePainter.drawImage(animationImage.rect(), animationImage);
   animationImagePainter.end();
+
   painter.drawImage(rect(), animationImage);
   painter.restore();
 }

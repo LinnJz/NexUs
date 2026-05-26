@@ -1,4 +1,4 @@
-﻿#include "NXDxgi.h"
+#include "NXDxgi.h"
 #ifdef Q_OS_WIN
 #  include <QDateTime>
 #  include <QDebug>
@@ -49,7 +49,7 @@ NXDxgi::initialize(int dxID, int outputID)
   IDXGIFactory *dxgiFactory = nullptr;
   CreateDXGIFactory(__uuidof(dxgiFactory), reinterpret_cast<void **>(&dxgiFactory));
   IDXGIAdapter *dxgiAdapter = nullptr;
-  QList<IDXGIAdapter *> dxgiAdapterVector;
+  QVector<IDXGIAdapter *> dxgiAdapterVector;
   for (uint i = 0; dxgiFactory->EnumAdapters(i, &dxgiAdapter) != DXGI_ERROR_NOT_FOUND; ++i)
   {
     dxgiAdapterVector.append(dxgiAdapter);
@@ -83,7 +83,7 @@ NXDxgi::initialize(int dxID, int outputID)
   }
 
   IDXGIOutput *dxgiOutput = nullptr;
-  QList<IDXGIOutput *> dxgiOutputVector;
+  QVector<IDXGIOutput *> dxgiOutputVector;
   for (uint i = 0; dxgiAdapter->EnumOutputs(i, &dxgiOutput) != DXGI_ERROR_NOT_FOUND; ++i)
   {
     dxgiOutputVector.append(dxgiOutput);
@@ -157,7 +157,7 @@ NXDxgi::initialize(int dxID, int outputID)
 }
 
 QImage
-NXDxgi::getGrabImage() const noexcept
+NXDxgi::getGrabImage() const
 {
   QImage grabImage(_imageBits, _descWidth, _descHeight, QImage::Format_ARGB32);
   if (_pIsGrabCenter)
@@ -229,7 +229,7 @@ NXDxgi::onGrabScreen()
     desktopRes->Release();
     if (FAILED(hr))
     {
-      qDebug() << QStringLiteral("Failed to ID3D11Texture2D result =") << QString::number(uint(hr), 16);
+      qDebug() << "Failed to ID3D11Texture2D result =" << QString::number(uint(hr), 16);
       continue;
     }
     textrueRes->GetDesc(&desc);
@@ -252,7 +252,7 @@ NXDxgi::onGrabScreen()
     hr                     = _texture->QueryInterface(__uuidof(IDXGISurface1), reinterpret_cast<void **>(&surface));
     if (FAILED(hr))
     {
-      qDebug() << QStringLiteral("Failed to QueryInterface IDXGISurface1 ErrorCode =") << QString::number(uint(hr), 16);
+      qDebug() << "Failed to QueryInterface IDXGISurface1 ErrorCode =" << QString::number(uint(hr), 16);
       continue;
     }
     DXGI_MAPPED_RECT map;

@@ -46,6 +46,9 @@
 
 #  define QS_TAG_UPDATE 60
 
+#  define QS_TAG_SET_VAL  100
+#  define QS_TAG_SET_CREF 101
+
 #  define QS_DEFAULT_VALUE(val)   LINN_PAIR(QS_TAG_DEFAULT_VALUE, val)
 #  define QS_ASSIGN_MOVE(name)    LINN_PAIR(QS_TAG_ASSIGN_MOVE, name)
 #  define QS_CONTRACT_ALWAYS(...) LINN_PAIR(QS_TAG_CONTRACT_ALWAYS, (__VA_ARGS__))
@@ -54,6 +57,8 @@
 #  define QS_SIGNAL_PARAMS(...)   LINN_PAIR(QS_TAG_SIGNAL_PARAMS, (__VA_ARGS__))
 #  define QS_NO_EMIT_SIGNAL       QS_TAG_NO_EMIT_SIGNAL
 #  define QS_UPDATE               QS_TAG_UPDATE
+#  define QS_SET_VAL(T)           LINN_PAIR(QS_TAG_SET_VAL, T)
+#  define QS_SET_CREF(T)          LINN_PAIR(QS_TAG_SET_CREF, T)
 
 #  pragma endregion PROPERTY_STRATEGY
 
@@ -61,22 +66,57 @@
 #  pragma region PROPERTY_DEFINITIONS
 
 /*
+ * Generic strategy dispatch — shared by all six entry points.
+ * Two patterns: (TYPE, NAME, ...) and (CLASS, TYPE, NAME, ...) for CPP variants.
+ */
+#  define Q_CREATE_DISPATCH(PREFIX, TYPE, NAME, ...)                                                                   \
+    LINN_CAT(Q_CREATE_DISPATCH_, LINN_IS_PAREN(LINN_EXPAND(TYPE)))(PREFIX, TYPE, NAME, ##__VA_ARGS__)
+
+#  define Q_CREATE_DISPATCH_0(PREFIX, TYPE, NAME, ...) PREFIX(TYPE, TYPE, NAME, ##__VA_ARGS__)
+
+#  define Q_CREATE_DISPATCH_1(PREFIX, TYPE, NAME, ...)                                                                 \
+    Q_CREATE_STRATEGY(PREFIX, LINN_PAIR_FIRST(TYPE), LINN_PAIR_SECOND(TYPE), NAME, ##__VA_ARGS__)
+
+#  define Q_CREATE_STRATEGY(PREFIX, tag, T, NAME, ...) LINN_CAT(Q_CREATE_STRATEGY_, tag)(PREFIX, T, NAME, ##__VA_ARGS__)
+
+#  define Q_CREATE_STRATEGY_100(PREFIX, T, NAME, ...) PREFIX(T, T, NAME, ##__VA_ARGS__)
+
+#  define Q_CREATE_STRATEGY_101(PREFIX, T, NAME, ...) PREFIX(const T &, T, NAME, ##__VA_ARGS__)
+
+#  define Q_CREATE_CPP_DISPATCH(PREFIX, CLASS, TYPE, NAME, ...)                                                        \
+    LINN_CAT(Q_CREATE_CPP_DISPATCH_, LINN_IS_PAREN(LINN_EXPAND(TYPE)))(PREFIX, CLASS, TYPE, NAME, ##__VA_ARGS__)
+
+#  define Q_CREATE_CPP_DISPATCH_0(PREFIX, CLASS, TYPE, NAME, ...) PREFIX(CLASS, TYPE, TYPE, NAME, ##__VA_ARGS__)
+
+#  define Q_CREATE_CPP_DISPATCH_1(PREFIX, CLASS, TYPE, NAME, ...)                                                      \
+    Q_CREATE_CPP_STRATEGY(PREFIX, CLASS, LINN_PAIR_FIRST(TYPE), LINN_PAIR_SECOND(TYPE), NAME, ##__VA_ARGS__)
+
+#  define Q_CREATE_CPP_STRATEGY(PREFIX, CLASS, tag, T, NAME, ...)                                                      \
+    LINN_CAT(Q_CREATE_CPP_STRATEGY_, tag)(PREFIX, CLASS, T, NAME, ##__VA_ARGS__)
+
+#  define Q_CREATE_CPP_STRATEGY_100(PREFIX, CLASS, T, NAME, ...) PREFIX(CLASS, T, T, NAME, ##__VA_ARGS__)
+
+#  define Q_CREATE_CPP_STRATEGY_101(PREFIX, CLASS, T, NAME, ...) PREFIX(CLASS, const T &, T, NAME, ##__VA_ARGS__)
+
+/*
  * DEFINITION
  */
-#  define Q_PROPERTY_CREATE(TYPE, NAME, ...) Q_PROPERTY_CREATE_2(TYPE, TYPE, NAME, ##__VA_ARGS__)
+#  define Q_PROPERTY_CREATE(TYPE, NAME, ...) Q_CREATE_DISPATCH(Q_PROPERTY_CREATE_2, TYPE, NAME, ##__VA_ARGS__)
 
-#  define Q_PRIVATE_CREATE(TYPE, NAME, ...) Q_PRIVATE_CREATE_2(TYPE, TYPE, NAME, ##__VA_ARGS__)
+#  define Q_PRIVATE_CREATE(TYPE, NAME, ...) Q_CREATE_DISPATCH(Q_PRIVATE_CREATE_2, TYPE, NAME, ##__VA_ARGS__)
 
 /*
  * DEFINITION-SEPARATION
  */
-#  define Q_PROPERTY_CREATE_H(TYPE, NAME, ...) Q_PROPERTY_CREATE_2_H(TYPE, TYPE, NAME, ##__VA_ARGS__)
+#  define Q_PROPERTY_CREATE_H(TYPE, NAME, ...) Q_CREATE_DISPATCH(Q_PROPERTY_CREATE_2_H, TYPE, NAME, ##__VA_ARGS__)
 
-#  define Q_PROPERTY_CREATE_CPP(CLASS, TYPE, NAME, ...) Q_PROPERTY_CREATE_2_CPP(CLASS, TYPE, TYPE, NAME, ##__VA_ARGS__)
+#  define Q_PRIVATE_CREATE_H(TYPE, NAME, ...) Q_CREATE_DISPATCH(Q_PRIVATE_CREATE_2_H, TYPE, NAME, ##__VA_ARGS__)
 
-#  define Q_PRIVATE_CREATE_H(TYPE, NAME, ...) Q_PRIVATE_CREATE_2_H(TYPE, TYPE, NAME, ##__VA_ARGS__)
+#  define Q_PROPERTY_CREATE_CPP(CLASS, TYPE, NAME, ...)                                                                \
+    Q_CREATE_CPP_DISPATCH(Q_PROPERTY_CREATE_2_CPP, CLASS, TYPE, NAME, ##__VA_ARGS__)
 
-#  define Q_PRIVATE_CREATE_CPP(CLASS, TYPE, NAME, ...) Q_PRIVATE_CREATE_2_CPP(CLASS, TYPE, TYPE, NAME, ##__VA_ARGS__)
+#  define Q_PRIVATE_CREATE_CPP(CLASS, TYPE, NAME, ...)                                                                 \
+    Q_CREATE_CPP_DISPATCH(Q_PRIVATE_CREATE_2_CPP, CLASS, TYPE, NAME, ##__VA_ARGS__)
 
 /*
  * CUSTOM-SETTER-GETTER-TYPE
@@ -269,15 +309,15 @@
 /*
  * MEMBER
  */
-#  define Q_PROPERTY_CREATE_D(TYPE, NAME)                                                                              \
+#  define Q_PROPERTY_CREATE_D(TYPE, NAME, ...)                                                                         \
                                                                                                                        \
   private:                                                                                                             \
-    TYPE _p##NAME;
+    TYPE _p##NAME __VA_OPT__(=) __VA_ARGS__;
 
-#  define Q_PRIVATE_CREATE_D(TYPE, NAME)                                                                               \
+#  define Q_PRIVATE_CREATE_D(TYPE, NAME, ...)                                                                          \
                                                                                                                        \
   private:                                                                                                             \
-    TYPE _p##NAME;
+    TYPE _p##NAME __VA_OPT__(=) __VA_ARGS__;
 
 
 /*
@@ -501,6 +541,8 @@ qEnumNameFromValue(EnumT value) noexcept
 #  define Q_TAG_IS_SIGNAL_PARAMS_50   LINN_PROBE(~)
 #  define Q_TAG_IS_NO_EMIT_SIGNAL_51  LINN_PROBE(~)
 #  define Q_TAG_IS_UPDATE_60          LINN_PROBE(~)
+#  define Q_TAG_IS_SET_VAL_100        LINN_PROBE(~)
+#  define Q_TAG_IS_SET_CREF_101       LINN_PROBE(~)
 
 #  define Q_IS_TAG_DEFAULT(tag)         LINN_CHECK(LINN_CAT(Q_TAG_IS_DEFAULT_, tag))
 #  define Q_IS_TAG_ASSIGN_MOVE(tag)     LINN_CHECK(LINN_CAT(Q_TAG_IS_ASSIGN_MOVE_, tag))
@@ -551,8 +593,8 @@ qEnumNameFromValue(EnumT value) noexcept
 #  define Q_ARG_DEFAULT_VALUE_1(arg) LINN_IF(Q_IS_TAG_DEFAULT(LINN_PAIR_FIRST(arg)))(LINN_PAIR_SECOND(arg), )
 
 #  define Q_ARG_NOEXCEPT_VALUE(arg)   LINN_CAT(Q_ARG_NOEXCEPT_VALUE_, LINN_IS_PAREN(LINN_EXPAND(arg)))(arg)
-#  define Q_ARG_NOEXCEPT_VALUE_0(arg) true
-#  define Q_ARG_NOEXCEPT_VALUE_1(arg) LINN_IF(Q_IS_TAG_NOEXCEPT(LINN_PAIR_FIRST(arg)))(LINN_PAIR_SECOND(arg), true)
+#  define Q_ARG_NOEXCEPT_VALUE_0(arg) false
+#  define Q_ARG_NOEXCEPT_VALUE_1(arg) LINN_IF(Q_IS_TAG_NOEXCEPT(LINN_PAIR_FIRST(arg)))(LINN_PAIR_SECOND(arg), false)
 
 #  define Q_ARG_SIGNAL_PARAMS_CONTENT(arg) LINN_CAT(Q_ARG_SIGNAL_PARAMS_CONTENT_, LINN_IS_PAREN(LINN_EXPAND(arg)))(arg)
 #  define Q_ARG_SIGNAL_PARAMS_CONTENT_0(arg)
@@ -567,7 +609,7 @@ qEnumNameFromValue(EnumT value) noexcept
 
 #  define Q_DEFAULT_VALUE_FROM_ARGS(...)                                                                               \
     Q_SCAN_FIRST(Q_ARG_IS_DEFAULT, Q_ARG_DEFAULT_VALUE, Q_EMPTY_TOKEN, ##__VA_ARGS__)
-#  define Q_NOEXCEPT_VALUE_FROM_ARGS(...) Q_SCAN_FIRST(Q_ARG_IS_NOEXCEPT, Q_ARG_NOEXCEPT_VALUE, true, ##__VA_ARGS__)
+#  define Q_NOEXCEPT_VALUE_FROM_ARGS(...) Q_SCAN_FIRST(Q_ARG_IS_NOEXCEPT, Q_ARG_NOEXCEPT_VALUE, false, ##__VA_ARGS__)
 #  define Q_SIGNAL_PARAMS_CONTENT_FROM_ARGS(...)                                                                       \
     Q_SCAN_FIRST(Q_ARG_IS_SIGNAL_PARAMS, Q_ARG_SIGNAL_PARAMS_CONTENT, Q_EMPTY_TOKEN, ##__VA_ARGS__)
 

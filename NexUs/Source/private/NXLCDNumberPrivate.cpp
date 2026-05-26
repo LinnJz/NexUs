@@ -1,5 +1,6 @@
-﻿#include "NXLCDNumber.h"
-#include "NXLCDNumberPrivate.h"
+﻿#include "NXLCDNumberPrivate.h"
+
+#include "NXLCDNumber.h"
 #include "NXTheme.h"
 
 NXLCDNumberPrivate::NXLCDNumberPrivate(QObject *parent)
@@ -12,7 +13,7 @@ NXLCDNumberPrivate::~NXLCDNumberPrivate()
 }
 
 void
-NXLCDNumberPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept
+NXLCDNumberPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode)
 {
   Q_Q(NXLCDNumber);
   _themeMode       = themeMode;

@@ -1,8 +1,10 @@
-﻿#include <QDateTime>
+﻿#include "NXLCDNumber.h"
+
+#include <QDateTime>
 #include <QDebug>
 #include <QTimer>
+
 #include "DeveloperComponents/NXLCDNumberStyle.h"
-#include "NXLCDNumber.h"
 #include "NXTheme.h"
 #include "private/NXLCDNumberPrivate.h"
 
@@ -43,7 +45,7 @@ NXLCDNumber::~NXLCDNumber()
 }
 
 void
-NXLCDNumber::setIsUseAutoClock(bool isUseAutoClock) noexcept
+NXLCDNumber::setIsUseAutoClock(bool isUseAutoClock)
 {
   Q_D(NXLCDNumber);
   d->_pIsUseAutoClock = isUseAutoClock;
@@ -56,20 +58,20 @@ NXLCDNumber::setIsUseAutoClock(bool isUseAutoClock) noexcept
   else
   {
     d->_clockTimer->stop();
-    display(QString {});
+    display(QStringLiteral(""));
   }
   Q_EMIT pIsUseAutoClockChanged();
 }
 
 bool
-NXLCDNumber::getIsUseAutoClock() const noexcept
+NXLCDNumber::getIsUseAutoClock() const
 {
   Q_D(const NXLCDNumber);
   return d->_pIsUseAutoClock;
 }
 
 void
-NXLCDNumber::setAutoClockFormat(const QString &autoClockFormat) noexcept
+NXLCDNumber::setAutoClockFormat(const QString &autoClockFormat)
 {
   Q_D(NXLCDNumber);
   d->_pAutoClockFormat = autoClockFormat;
@@ -78,14 +80,14 @@ NXLCDNumber::setAutoClockFormat(const QString &autoClockFormat) noexcept
 }
 
 QString
-NXLCDNumber::getAutoClockFormat() const noexcept
+NXLCDNumber::getAutoClockFormat() const
 {
   Q_D(const NXLCDNumber);
   return d->_pAutoClockFormat;
 }
 
 void
-NXLCDNumber::setIsTransparent(bool isTransparent) noexcept
+NXLCDNumber::setIsTransparent(bool isTransparent)
 {
   Q_D(NXLCDNumber);
   d->_lcdNumberStyle->setIsTransparent(isTransparent);
@@ -94,7 +96,7 @@ NXLCDNumber::setIsTransparent(bool isTransparent) noexcept
 }
 
 bool
-NXLCDNumber::getIsTransparent() const noexcept
+NXLCDNumber::getIsTransparent() const
 {
   Q_D(const NXLCDNumber);
   return d->_lcdNumberStyle->getIsTransparent();

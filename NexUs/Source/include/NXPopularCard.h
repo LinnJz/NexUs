@@ -1,4 +1,4 @@
-﻿#ifndef NXPOPULARCARD_H
+#ifndef NXPOPULARCARD_H
 #define NXPOPULARCARD_H
 
 #include <QPixmap>
@@ -11,22 +11,21 @@ class NX_EXPORT NXPopularCard : public QWidget
 {
   Q_OBJECT
   Q_Q_CREATE(NXPopularCard)
-  Q_PROPERTY_CREATE_H(int, BorderRadius)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QPixmap), CardPixmap)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QPixmap), CardFloatPixmap)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QString), Title)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QString), SubTitle)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QString), InteractiveTips)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QString), DetailedText)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QString), CardButtonText)
   Q_PROPERTY_CREATE_H(QWidget *, CardFloatArea)
-  Q_PROPERTY_CREATE_2_H(const QPixmap &, QPixmap, CardPixmap)
-  Q_PROPERTY_CREATE_2_H(const QPixmap &, QPixmap, CardFloatPixmap)
-  Q_PROPERTY_CREATE_2_H(const QString &, QString, Title)
-  Q_PROPERTY_CREATE_2_H(const QString &, QString, SubTitle)
-  Q_PROPERTY_CREATE_2_H(const QString &, QString, InteractiveTips)
-  Q_PROPERTY_CREATE_2_H(const QString &, QString, DetailedText)
-  Q_PROPERTY_CREATE_2_H(const QString &, QString, CardButtonText)
+  Q_PROPERTY_CREATE_H(int, BorderRadius)
 
 public:
   explicit NXPopularCard(QWidget *parent = nullptr);
-  ~NXPopularCard() override;
-Q_SIGNALS:
-  void popularCardClicked();
-  void popularCardButtonClicked();
+  ~NXPopularCard();
+  Q_SIGNAL void popularCardClicked();
+  Q_SIGNAL void popularCardButtonClicked();
 
 protected:
   bool event(QEvent *event) override;

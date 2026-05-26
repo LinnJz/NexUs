@@ -17,6 +17,9 @@ NXToolButton::NXToolButton(QWidget *parent)
 {
   Q_D(NXToolButton);
   d->q_ptr = this;
+#ifdef Q_OS_MACOS
+  setAttribute(Qt::WA_Hover);
+#endif
   setIconSize(QSize(22, 22));
   setPopupMode(QToolButton::InstantPopup);
   d->_toolButtonStyle = new NXToolButtonStyle(style());
@@ -30,7 +33,7 @@ NXToolButton::~NXToolButton()
 }
 
 void
-NXToolButton::setBorderRadius(int borderRadius) noexcept
+NXToolButton::setBorderRadius(int borderRadius)
 {
   Q_D(NXToolButton);
   d->_toolButtonStyle->setBorderRadius(borderRadius);
@@ -38,14 +41,14 @@ NXToolButton::setBorderRadius(int borderRadius) noexcept
 }
 
 int
-NXToolButton::getBorderRadius() const noexcept
+NXToolButton::getBorderRadius() const
 {
   Q_D(const NXToolButton);
   return d->_toolButtonStyle->getBorderRadius();
 }
 
 void
-NXToolButton::setIsSelected(bool isSelected) noexcept
+NXToolButton::setIsSelected(bool isSelected)
 {
   Q_D(NXToolButton);
   d->_toolButtonStyle->setIsSelected(isSelected);
@@ -53,14 +56,14 @@ NXToolButton::setIsSelected(bool isSelected) noexcept
 }
 
 bool
-NXToolButton::getIsSelected() const noexcept
+NXToolButton::getIsSelected() const
 {
   Q_D(const NXToolButton);
   return d->_toolButtonStyle->getIsSelected();
 }
 
 void
-NXToolButton::setIsTransparent(bool isTransparent) noexcept
+NXToolButton::setIsTransparent(bool isTransparent)
 {
   Q_D(NXToolButton);
   d->_toolButtonStyle->setIsTransparent(isTransparent);
@@ -68,14 +71,14 @@ NXToolButton::setIsTransparent(bool isTransparent) noexcept
 }
 
 bool
-NXToolButton::getIsTransparent() const noexcept
+NXToolButton::getIsTransparent() const
 {
   Q_D(const NXToolButton);
   return d->_toolButtonStyle->getIsTransparent();
 }
 
 void
-NXToolButton::setMenu(NXMenu *menu) noexcept
+NXToolButton::setMenu(NXMenu *menu)
 {
   if (!menu || menu == this->menu())
   {
@@ -87,14 +90,14 @@ NXToolButton::setMenu(NXMenu *menu) noexcept
 }
 
 void
-NXToolButton::setNXIcon(NXIconType::IconName icon) noexcept
+NXToolButton::setNXIcon(NXIconType::IconName icon)
 {
-  setProperty("NXIconType", QChar(icon));
+  setProperty("NXIconType", QChar((unsigned short) icon));
   setIcon(NXIcon::getInstance()->getNXIcon(NXIconType::Broom, 1));
 }
 
 void
-NXToolButton::setNXIcon(NXIconType::IconName icon, int rotate) noexcept
+NXToolButton::setNXIcon(NXIconType::IconName icon, int rotate)
 {
   setNXIcon(icon);
   setProperty("NXIconRotate", rotate);
@@ -110,7 +113,7 @@ NXToolButton::eventFilter(QObject *watched, QEvent *event)
     {
     case QEvent::Show :
     {
-      // 指示器动画
+      //指示器动画
       QPropertyAnimation *rotateAnimation = new QPropertyAnimation(d->_toolButtonStyle, "pExpandIconRotate");
       connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
       {
@@ -125,7 +128,7 @@ NXToolButton::eventFilter(QObject *watched, QEvent *event)
     }
     case QEvent::Hide :
     {
-      // 指示器动画
+      //指示器动画
       QPropertyAnimation *rotateAnimation = new QPropertyAnimation(d->_toolButtonStyle, "pExpandIconRotate");
       connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
       {

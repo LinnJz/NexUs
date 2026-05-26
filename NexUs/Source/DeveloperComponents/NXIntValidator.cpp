@@ -70,7 +70,7 @@ NXIntValidator::fixup(QString &input) const
   if (_pIsHexMode)
   {
     QString inputComplete = _completeInput(input, QString::number(top(), 16).length());
-    input                 = QStringLiteral("#") + inputComplete;
+    input                 = QString(QStringLiteral("#")) + inputComplete;
   }
   else
   {
@@ -79,11 +79,11 @@ NXIntValidator::fixup(QString &input) const
 }
 
 QString
-NXIntValidator::_completeInput(QString input, int length) const
+NXIntValidator::_completeInput(const QString &input, int length) const
 {
-  while (input.length() < length)
+  if (input.length() < length)
   {
-    input.prepend(QStringLiteral("0"));
+    return QString(length - input.length(), '0') + input;
   }
   return input;
 }

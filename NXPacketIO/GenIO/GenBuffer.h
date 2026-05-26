@@ -1,4 +1,4 @@
-﻿#ifndef GENBUFFER_H
+#ifndef GENBUFFER_H
 #define GENBUFFER_H
 
 #include "NXPacketIO_Export.h"

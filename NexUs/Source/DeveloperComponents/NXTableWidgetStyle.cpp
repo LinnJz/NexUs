@@ -9,11 +9,11 @@
 
 NXTableWidgetStyle::NXTableWidgetStyle(QStyle *style)
 {
-  _pItemHeight        = 35;
-  _pHeaderMargin      = 6;
-  _pCurrentHoverIndex = QModelIndex {};
-  _pIsTransparent     = false;
-  _themeMode          = nxTheme->getThemeMode();
+  _pItemHeight      = 35;
+  _pHeaderMargin    = 6;
+  _pCurrentHoverRow = -1;
+  _pIsTransparent   = false;
+  _themeMode        = nxTheme->getThemeMode();
   connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
     _themeMode = themeMode;
@@ -59,7 +59,7 @@ NXTableWidgetStyle::drawPrimitive(PrimitiveElement element,
       QAbstractItemView::SelectionBehavior selectionBehavior = tableWidget->selectionBehavior();
       if (selectionBehavior == QAbstractItemView::SelectRows)
       {
-        if (vopt->index.row() == _pCurrentHoverIndex.row() && !hasCustomBackground)
+        if (vopt->index.row() == _pCurrentHoverRow && !hasCustomBackground)
         {
           painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
           painter->drawRect(vopt->rect);

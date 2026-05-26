@@ -107,7 +107,7 @@ NXCalendar::~NXCalendar()
 }
 
 void
-NXCalendar::setSelectedDate(QDate selectedDate) noexcept
+NXCalendar::setSelectedDate(QDate selectedDate)
 {
   Q_D(NXCalendar);
   if (!selectedDate.isValid() || selectedDate.daysTo(d->_calendarModel->getMaximumDate()) < 0 ||
@@ -122,15 +122,15 @@ NXCalendar::setSelectedDate(QDate selectedDate) noexcept
 }
 
 QDate
-NXCalendar::getSelectedDate() const noexcept
+NXCalendar::getSelectedDate() const
 {
   Q_D(const NXCalendar);
   return d->_pSelectedDate;
-  // return d->_calendarModel->getDateFromIndex(d->_calendarView->selectionModel()->currentIndex());
+  //return d->_calendarModel->getDateFromIndex(d->_calendarView->selectionModel()->currentIndex());
 }
 
 void
-NXCalendar::setMinimumDate(QDate minimudate) noexcept
+NXCalendar::setMinimumDate(QDate minimudate)
 {
   Q_D(NXCalendar);
   if (!minimudate.isValid() || minimudate.daysTo(d->_calendarModel->getMaximumDate()) < 0)
@@ -142,14 +142,14 @@ NXCalendar::setMinimumDate(QDate minimudate) noexcept
 }
 
 QDate
-NXCalendar::getMinimumDate() const noexcept
+NXCalendar::getMinimumDate() const
 {
   Q_D(const NXCalendar);
   return d->_calendarModel->getMinimumDate();
 }
 
 void
-NXCalendar::setMaximumDate(QDate maximumDate) noexcept
+NXCalendar::setMaximumDate(QDate maximumDate)
 {
   Q_D(NXCalendar);
   if (!maximumDate.isValid() || maximumDate.daysTo(d->_calendarModel->getMinimumDate()) > 0)
@@ -161,7 +161,7 @@ NXCalendar::setMaximumDate(QDate maximumDate) noexcept
 }
 
 QDate
-NXCalendar::getMaximumDate() const noexcept
+NXCalendar::getMaximumDate() const
 {
   Q_D(const NXCalendar);
   return d->_calendarModel->getMaximumDate();

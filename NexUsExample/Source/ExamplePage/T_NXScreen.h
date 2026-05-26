@@ -1,4 +1,4 @@
-﻿#ifndef T_NXSCREEN_H
+#ifndef T_NXSCREEN_H
 #define T_NXSCREEN_H
 #include <QWidget>
 
@@ -23,7 +23,7 @@ class T_NXScreen : public T_BasePage
 
 public:
   Q_INVOKABLE explicit T_NXScreen(QWidget *parent = nullptr);
-  ~T_NXScreen() override;
+  ~T_NXScreen();
 
 private:
 #  ifdef Q_OS_WIN
@@ -41,8 +41,8 @@ private:
   T_RecvScreen *_recvScreen { nullptr };
   QThread *_packetIOSendThread { nullptr };
   QThread *_packetIORecvThread { nullptr };
-  void _initSendThread(QString interfaceIP);
-  void _initRecvThread(QString interfaceIP);
+  void _initSendThread(const QString &interfaceIP);
+  void _initRecvThread(const QString &interfaceIP);
   void _unInitThread(bool isSend);
 #  endif
 };

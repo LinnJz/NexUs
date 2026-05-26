@@ -1,5 +1,6 @@
 ﻿#include "NXCalendarPicker.h"
 
+#include <QDate>
 #include <QHBoxLayout>
 #include <QPainter>
 #include <QVBoxLayout>
@@ -21,10 +22,18 @@ NXCalendarPicker::NXCalendarPicker(QWidget *parent)
   setObjectName("NXCalendarPicker");
   setMouseTracking(true);
   d->_calendarPickerContainer = new NXCalendarPickerContainer(this);
+#if defined(Q_OS_WIN) && QT_VERSION == QT_VERSION_CHECK(6, 11, 0)
+  d->_calendarPickerContainer->resize(305, 340);
+#else
   d->_calendarPickerContainer->resize(317, 352);
+#endif
   d->_calendar                 = new NXCalendar(d->_calendarPickerContainer);
   QVBoxLayout *containerLayout = new QVBoxLayout(d->_calendarPickerContainer);
+#if defined(Q_OS_WIN) && QT_VERSION == QT_VERSION_CHECK(6, 11, 0)
+  containerLayout->setContentsMargins(0, 0, 0, 0);
+#else
   containerLayout->setContentsMargins(6, 6, 6, 6);
+#endif
   containerLayout->addWidget(d->_calendar);
   d->_calendarPickerContainer->hide();
   connect(this, &QPushButton::clicked, d, &NXCalendarPickerPrivate::onCalendarPickerClicked);
@@ -44,7 +53,7 @@ NXCalendarPicker::~NXCalendarPicker()
 }
 
 void
-NXCalendarPicker::setSelectedDate(QDate selectedDate) noexcept
+NXCalendarPicker::setSelectedDate(QDate selectedDate)
 {
   Q_D(NXCalendarPicker);
   d->_calendar->setSelectedDate(selectedDate);
@@ -52,7 +61,7 @@ NXCalendarPicker::setSelectedDate(QDate selectedDate) noexcept
 }
 
 QDate
-NXCalendarPicker::getSelectedDate() const noexcept
+NXCalendarPicker::getSelectedDate() const
 {
   Q_D(const NXCalendarPicker);
   return d->_calendar->getSelectedDate();
@@ -74,7 +83,8 @@ NXCalendarPicker::paintEvent(QPaintEvent *event)
 
   // 日期绘制
   QDate selectedDate = getSelectedDate();
-  QString date = QStringLiteral("%1/%2/%3").arg(selectedDate.year()).arg(selectedDate.month()).arg(selectedDate.day());
+  QString date =
+      QString(QStringLiteral("%1/%2/%3")).arg(selectedDate.year()).arg(selectedDate.month()).arg(selectedDate.day());
   painter.setPen(NXThemeColor(d->_themeMode, BasicText));
   QRect textRect = baseRect;
   textRect.adjust(10, 0, 0, 0);
@@ -85,6 +95,6 @@ NXCalendarPicker::paintEvent(QPaintEvent *event)
   iconFont.setPixelSize(17);
   painter.setFont(iconFont);
   painter.drawText(QRect(baseRect.right() - 25, 0, 15, height()), Qt::AlignVCenter | Qt::AlignRight,
-                   QChar(NXIconType::CalendarRange));
+                   QChar((unsigned short) NXIconType::CalendarRange));
   painter.restore();
 }

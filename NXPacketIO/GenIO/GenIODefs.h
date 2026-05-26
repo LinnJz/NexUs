@@ -1,4 +1,4 @@
-﻿// Define the following GENIO flags based on processor we are running on
+// Define the following GENIO flags based on processor we are running on
 
 // GENIO_LIT_ENDIAN
 // GENIO_BIG_ENDIAN

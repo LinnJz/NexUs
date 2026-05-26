@@ -1,4 +1,4 @@
-﻿#ifndef PAKTHREADEDIO_H
+#ifndef PAKTHREADEDIO_H
 #define PAKTHREADEDIO_H
 
 #include "NXPacketIO_Export.h"
@@ -6,11 +6,11 @@
 #include <mutex>
 #include <vector>
 
-#include "PacketIO/PakPacket.h"
-#include "PacketIO/PakSocketReactor.h"
-#include "Util/UtCallback.h"
-#include "Util/UtSemaphore.h"
-#include "Util/UtThread.h"
+#include "PakPacket.h"
+#include "PakSocketReactor.h"
+#include "UtCallback.h"
+#include "UtSemaphore.h"
+#include "UtThread.h"
 class PakTCP_IO;
 class PakUDP_IO;
 class PakSocketIO;

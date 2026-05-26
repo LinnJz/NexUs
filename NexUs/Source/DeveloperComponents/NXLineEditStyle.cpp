@@ -9,9 +9,9 @@
 
 NXLineEditStyle::NXLineEditStyle(QStyle *style)
 {
-  _pLineEditIconMargin   = 10;
-  _pLineEditBorderRadius = 6;
-  _themeMode             = nxTheme->getThemeMode();
+  _pIconMargin   = 10;
+  _pBorderRadius = 6;
+  _themeMode     = nxTheme->getThemeMode();
   connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
     _themeMode = themeMode;
@@ -40,7 +40,7 @@ NXLineEditStyle::drawPrimitive(PrimitiveElement element,
       // 边框绘制
       painter->setPen(NXThemeColor(_themeMode, BasicBorder));
       painter->setBrush(Qt::NoBrush);
-      painter->drawRoundedRect(lineEditRect, _pLineEditBorderRadius, _pLineEditBorderRadius);
+      painter->drawRoundedRect(lineEditRect, _pBorderRadius, _pBorderRadius);
       painter->setPen(Qt::NoPen);
       //  背景绘制
       if (fopt->state & QStyle::State_HasFocus)
@@ -57,7 +57,7 @@ NXLineEditStyle::drawPrimitive(PrimitiveElement element,
       }
       painter->drawRoundedRect(
           QRectF(lineEditRect.x() + 1.5, lineEditRect.y() + 1.5, lineEditRect.width() - 3, lineEditRect.height() - 3),
-          _pLineEditBorderRadius, _pLineEditBorderRadius);
+          _pBorderRadius, _pBorderRadius);
 
       // 底边线绘制
       painter->setBrush(NXThemeColor(_themeMode, BasicHemline));
@@ -88,7 +88,7 @@ NXLineEditStyle::pixelMetric(PixelMetric metric,
 {
   switch (metric)
   {
-  case PM_LineEditIconMargin : return _pLineEditIconMargin;
+  case PM_LineEditIconMargin : return _pIconMargin;
   default                    : return QProxyStyle::pixelMetric(metric, option, widget);
   }
 }

@@ -60,12 +60,12 @@ NXMenuBarStyle::drawControl(ControlElement element,
         painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
         painter->drawRect(topt->rect);
       }
-      // 展开图标
+      //展开图标
       painter->setPen(!topt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : NXThemeColor(_themeMode, BasicText));
       QFont iconFont = QFont(QStringLiteral("NXAwesome"));
       iconFont.setPixelSize(18);
       painter->setFont(iconFont);
-      painter->drawText(topt->rect, Qt::AlignCenter, QChar(NXIconType::AngleRight));
+      painter->drawText(topt->rect, Qt::AlignCenter, QChar((unsigned short) NXIconType::AngleRight));
       painter->restore();
     }
     return;
@@ -86,7 +86,7 @@ NXMenuBarStyle::drawControl(ControlElement element,
       QRect menuItemRect = mopt->rect;
       painter->save();
       painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-      // 背景绘制
+      //背景绘制
       painter->setPen(Qt::NoPen);
       if (mopt->state.testFlag(QStyle::State_Enabled))
       {
@@ -100,7 +100,7 @@ NXMenuBarStyle::drawControl(ControlElement element,
         }
         painter->drawRoundedRect(menuItemRect, 3, 3);
       }
-      // 图标和文字绘制
+      //图标和文字绘制
       QIcon icon       = mopt->icon;
       QString menuText = mopt->text;
       QString iconText;
@@ -116,7 +116,7 @@ NXMenuBarStyle::drawControl(ControlElement element,
       }
       if (menuText.isEmpty())
       {
-        // 图标
+        //图标
         if (!iconText.isEmpty())
         {
           painter->save();
@@ -137,7 +137,7 @@ NXMenuBarStyle::drawControl(ControlElement element,
       }
       else
       {
-        // 图标 + 文字
+        //图标 + 文字
         painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? NXThemeColor(_themeMode, BasicTextDisable)
                                                                      : NXThemeColor(_themeMode, BasicText));
         if (icon.isNull() && iconText.isEmpty())

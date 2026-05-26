@@ -1,6 +1,6 @@
-﻿#include "GenIO/GenSocketConnection.h"
+#include "GenSocketConnection.h"
 
-#include "GenIO/GenSocket.h"
+#include "GenSocket.h"
 
 GenSocketConnection::GenSocketConnection(GenSockets::GenSocket* aSocket)
     : mSocket(aSocket)

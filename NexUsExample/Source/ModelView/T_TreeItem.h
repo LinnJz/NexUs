@@ -1,4 +1,4 @@
-﻿#ifndef T_TREEITEM_H
+#ifndef T_TREEITEM_H
 #define T_TREEITEM_H
 
 #include <QModelIndex>
@@ -9,12 +9,12 @@
 class T_TreeItem : public QObject
 {
   Q_OBJECT
-  Q_PROPERTY_CREATE(QList<T_TreeItem *>, ChildrenItems)
-  Q_PROPERTY_CREATE(bool, IsChecked)
+  Q_PROPERTY_CREATE(QS_SET_CREF(QList<T_TreeItem *>), ChildrenItems)
   Q_PRIVATE_CREATE(T_TreeItem *, ParentItem)
+  Q_PROPERTY_CREATE(bool, IsChecked)
 
 public:
-  explicit T_TreeItem(QString itemTitle, T_TreeItem *parent = nullptr);
+  explicit T_TreeItem(const QString &itemTitle, T_TreeItem *parent = nullptr);
   ~T_TreeItem();
   QString getItemKey() const;
   QString getItemTitle() const;
@@ -27,9 +27,9 @@ public:
   int getRow() const;
 
 private:
-  QString _itemKey   = "";
-  QString _itemTitle = "";
   bool _isExpanded { false };
+  QString _itemKey   = QStringLiteral("");
+  QString _itemTitle = QStringLiteral("");
 };
 
 #endif // T_TREEITEM_H

@@ -18,16 +18,15 @@ public:
   explicit NXCalendarDelegate(NXCalendarModel *calendarModel, QObject *parent = nullptr);
   ~NXCalendarDelegate();
 
-  Q_SLOT void onCalendarModelDisplayModeChanged() noexcept;
+  Q_SLOT void onCalendarModelDisplayModeChanged();
 
   void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
   QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
 private:
   NXThemeType::ThemeMode _themeMode;
-  NXCalendarModel *_calendarModel { nullptr };
   QDate _nowDate;
-
+  NXCalendarModel *_calendarModel { nullptr };
   void _drawYearOrMonth(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
   void _drawDays(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };

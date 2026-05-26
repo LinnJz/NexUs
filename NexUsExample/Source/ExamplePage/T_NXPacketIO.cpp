@@ -13,7 +13,7 @@ T_NXPacketIO::T_NXPacketIO(QObject *parent)
     : QObject(parent)
 {
   _pIsActive    = true;
-  _pInterfaceIP = "192.168.1";
+  _pInterfaceIP = QStringLiteral("192.168.1");
 }
 
 T_NXPacketIO::~T_NXPacketIO()
@@ -59,7 +59,7 @@ T_NXPacketIO::handleGrabImage()
   QElapsedTimer sendTimer;
   while (_pIsActive)
   {
-    // sendTimer.start();
+    //sendTimer.start();
     if (!NXDxgiManager::getInstance()->getIsGrabScreen())
     {
       std::this_thread::sleep_for(std::chrono::microseconds(2));
@@ -84,16 +84,7 @@ T_NXPacketIO::handleGrabImage()
       std::this_thread::sleep_for(std::chrono::microseconds(2));
       continue;
     }
-    int targetIndex = 0;
-    if (dataTotalLen % 1024 == 0)
-    {
-      targetIndex = dataTotalLen / 1024;
-    }
-    else
-    {
-      targetIndex = dataTotalLen / 1024 + 1;
-    }
-    for (int i = 0; i < targetIndex; i++)
+    for (int i = 0; i < dataTotalLen / 1024; i++)
     {
       NXXIO_ScreenPkt screenPkt;
       screenPkt._imageWidth   = imageWidth;
@@ -114,7 +105,7 @@ T_NXPacketIO::handleGrabImage()
       //  和下面这句等效 但下方写法效率较低
       //  _interface->send(screenPkt, _interface->GetConnections()[0]);
     }
-    // qDebug() << sendTimer.elapsed();
+    //qDebug() << sendTimer.elapsed();
   }
 }
 
@@ -154,7 +145,7 @@ T_NXPacketIO::_handleScreenPkt(NXXIO_ScreenPkt &screenPkt)
   if (screenPkt._dataOffset == 0)
   {
     // 新的一帧开始
-    // recvTimer.start();
+    //recvTimer.start();
     _imageArray.clear();
     _imageArray.append(screenPkt._data, screenPkt._currentDataLen);
   }
@@ -170,7 +161,7 @@ T_NXPacketIO::_handleScreenPkt(NXXIO_ScreenPkt &screenPkt)
       // 尾包 开始生成图片
       if (_imageArray.size() == screenPkt._dataTotalLen)
       {
-        // qDebug() << recvTimer.elapsed();
+        //qDebug() << recvTimer.elapsed();
         uchar *imageData = (uchar *) (_imageArray.data());
         QImage recvImage = QImage(imageData, screenPkt._imageWidth, screenPkt._imageHeight, QImage::Format_ARGB32);
         Q_EMIT sendHandleResult(std::move(QPixmap::fromImage(recvImage)));

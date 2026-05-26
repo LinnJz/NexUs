@@ -1,12 +1,12 @@
-﻿#include "GenIO/GenIP.h"
+#include "GenIP.h"
 
 #include <array>
 #include <cstdio>
 #include <sstream>
 
-#include "GenIO/GenHostName.h"
-#include "GenIO/GenSocketIncludes.h"
-#include "GenIO/GenSocketManager.h"
+#include "GenHostName.h"
+#include "GenSocketIncludes.h"
+#include "GenSocketManager.h"
 
 namespace GenSockets
 {

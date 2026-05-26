@@ -6,8 +6,6 @@
 #include "NXTheme.h"
 #include "private/NXGroupBoxPrivate.h"
 
-Q_PROPERTY_CREATE_CPP(NXGroupBox, int, BorderRadius)
-
 NXGroupBox::NXGroupBox(QWidget *parent)
     : QGroupBox(parent)
     , d_ptr(new NXGroupBoxPrivate())
@@ -48,3 +46,5 @@ NXGroupBox::paintEvent(QPaintEvent *event)
   }
   QGroupBox::paintEvent(event);
 }
+
+Q_PROPERTY_CREATE_CPP(NXGroupBox, int, BorderRadius)

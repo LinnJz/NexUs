@@ -48,7 +48,7 @@ public:
   R Invoke(std::string_view key, CallArgs &&...args) const
   {
     auto fn = Find(key);
-    LINN_CONTRACT_ASSERT_ALWAYS((bool) fn, "Unregistered function key");
+    LINN_CONTRACT_ASSERT_ALWAYS((bool) fn, QStringLiteral("Unregistered function key"));
     if constexpr (std::is_void_v<R>)
     {
       std::invoke(fn, std::forward<CallArgs>(args)...);
@@ -101,7 +101,7 @@ private:                                                                        
   [[maybe_unused]] const bool LINN_CAT(_linn_fnreg_, __COUNTER__) = []()                                               \
   {                                                                                                                    \
     const bool ok = (CLASS::LINN_CAT(Register, NAME)(KEY, (FN_EXPR)));                                                 \
-    LINN_CONTRACT_ASSERT_ALWAYS(ok, "Duplicate function registration");                                                \
+    LINN_CONTRACT_ASSERT_ALWAYS(ok, QStringLiteral("Duplicate function registration"));                                \
     return ok;                                                                                                         \
   }();                                                                                                                 \
   }

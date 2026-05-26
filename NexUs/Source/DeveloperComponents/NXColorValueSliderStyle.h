@@ -9,12 +9,12 @@
 class NXColorValueSliderStyle : public QProxyStyle
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE_2(const QColor &, QColor, BaseColor)
+  Q_PRIVATE_CREATE(QS_SET_CREF(QColor), BaseColor)
   Q_PRIVATE_CREATE(bool, IsUseAlpha)
 
 public:
   explicit NXColorValueSliderStyle(QStyle *style = nullptr);
-  ~NXColorValueSliderStyle() override;
+  ~NXColorValueSliderStyle();
   void drawComplexControl(ComplexControl control,
                           const QStyleOptionComplex *option,
                           QPainter *painter,
@@ -28,9 +28,9 @@ public:
 
 private:
   NXThemeType::ThemeMode _themeMode;
-  QLinearGradient *_baseGradient { nullptr };
   mutable QStyle::State _lastState { QStyle::State_None };
   mutable qreal _circleRadius { 0 };
+  QLinearGradient *_baseGradient { nullptr };
   void _startRadiusAnimation(qreal startRadius, qreal endRadius, QWidget *widget) const;
 };
 

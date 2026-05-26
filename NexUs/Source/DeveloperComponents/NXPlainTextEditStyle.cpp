@@ -33,7 +33,7 @@ NXPlainTextEditStyle::drawControl(ControlElement element,
   {
     if (const QStyleOptionFrame *fopt = qstyleoption_cast<const QStyleOptionFrame *>(option))
     {
-      // 背景绘制
+      //背景绘制
       QRect editRect = option->rect;
       painter->save();
       painter->setRenderHints(QPainter::Antialiasing);
@@ -59,7 +59,7 @@ NXPlainTextEditStyle::drawControl(ControlElement element,
       path.closeSubpath();
       painter->drawPath(path);
 
-      // 焦点指示器
+      //焦点指示器
       painter->setPen(Qt::NoPen);
       painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
       painter->drawRoundedRect(

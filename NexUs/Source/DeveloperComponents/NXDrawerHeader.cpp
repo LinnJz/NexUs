@@ -1,8 +1,10 @@
-﻿#include <QEvent>
+﻿#include "NXDrawerHeader.h"
+
+#include <QEvent>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPropertyAnimation>
-#include "NXDrawerHeader.h"
+
 #include "NXTheme.h"
 
 NXDrawerHeader::NXDrawerHeader(QWidget *parent)
@@ -32,7 +34,7 @@ NXDrawerHeader::~NXDrawerHeader()
 }
 
 void
-NXDrawerHeader::setHeaderWidget(QWidget *widget) noexcept
+NXDrawerHeader::setHeaderWidget(QWidget *widget)
 {
   if (!widget)
   {
@@ -101,7 +103,7 @@ NXDrawerHeader::mouseReleaseEvent(QMouseEvent *event)
   {
     _isPressed = false;
     _pIsExpand = !_pIsExpand;
-    // 指示器动画
+    //指示器动画
     doExpandOrCollapseAnimation();
     Q_EMIT drawerHeaderClicked(_pIsExpand);
   }
@@ -158,7 +160,7 @@ NXDrawerHeader::paintEvent(QPaintEvent *event)
   painter.rotate(_pExpandIconRotate);
   painter.translate(-expandIconRect.x() - (qreal) expandIconRect.width() / 2 + 2,
                     -expandIconRect.y() - (qreal) expandIconRect.height() / 2);
-  painter.drawText(expandIconRect, Qt::AlignVCenter, QChar(NXIconType::AngleDown));
+  painter.drawText(expandIconRect, Qt::AlignVCenter, QChar((unsigned short) NXIconType::AngleDown));
 
   painter.restore();
 }

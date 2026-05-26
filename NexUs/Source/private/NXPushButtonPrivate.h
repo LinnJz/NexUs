@@ -20,19 +20,20 @@ class NXPushButtonPrivate : public QObject
   Q_PROPERTY_CREATE_D(QColor, LightTextColor)
   Q_PROPERTY_CREATE_D(QColor, DarkTextColor)
   Q_PROPERTY_CREATE_D(int, BorderRadius)
+  Q_PROPERTY_CREATE_D(bool, IsHoverEnable)
 
 public:
   explicit NXPushButtonPrivate(QObject *parent = nullptr);
   ~NXPushButtonPrivate();
 
 private:
-  int _iconSize { 18 };
+  bool _isPressed { false };
+  bool _hasIcon { false };
   int _shadowBorderWidth { 3 };
+  int _iconSize { 18 };
+  NXThemeType::ThemeMode _themeMode;
   NXIconType::IconName _icon { NXIconType::None };
   NXTextType::TextStyle _textStyle { NXTextType::NoStyle };
-  NXThemeType::ThemeMode _themeMode;
-  bool _hasIcon { false };
-  bool _isPressed { false };
 };
 
 #endif // NXPUSHBUTTONPRIVATE_H

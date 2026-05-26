@@ -43,7 +43,6 @@ NXProgressBarStyle::drawControl(ControlElement element,
   }
   case QStyle::CE_ProgressBarGroove :
   {
-    // 背景轨道
     painter->save();
     painter->setRenderHints(QPainter::Antialiasing);
     painter->setPen(Qt::NoPen);
@@ -54,7 +53,6 @@ NXProgressBarStyle::drawControl(ControlElement element,
   }
   case QStyle::CE_ProgressBarContents :
   {
-    // 滑块
     const QStyleOptionProgressBar *popt = qstyleoption_cast<const QStyleOptionProgressBar *>(option);
     if (!popt)
     {
@@ -73,7 +71,6 @@ NXProgressBarStyle::drawControl(ControlElement element,
     }
     if (popt->minimum == 0 && popt->maximum == 0)
     {
-      // 忙碌动画
       int startValue = this->property("busyStartValue").toInt();
       if (startValue < 0)
       {
@@ -145,6 +142,25 @@ NXProgressBarStyle::subElementRect(SubElement element, const QStyleOption *optio
 {
   switch (element)
   {
+  case QStyle::SE_ProgressBarLabel :
+  {
+    const QStyleOptionProgressBar *popt = qstyleoption_cast<const QStyleOptionProgressBar *>(option);
+    if (!popt)
+    {
+      break;
+    }
+    if (popt->minimum == 0 && popt->maximum == 0)
+    {
+      return QRect();
+    }
+    QRect contentRect = popt->rect;
+    if (popt->state & QStyle::State_Horizontal)
+    {
+      int textWidth = popt->fontMetrics.horizontalAdvance(QStringLiteral(" 100% "));
+      return QRect(contentRect.right() - textWidth + 1, contentRect.top(), textWidth, contentRect.height());
+    }
+    return contentRect;
+  }
   case QStyle::SE_ProgressBarGroove :
   case QStyle::SE_ProgressBarContents :
   {

@@ -1,5 +1,5 @@
-﻿#include "PacketIO/PakPacket.h"
-#include "PacketIO/PakSerialize.h"
+#include "PakPacket.h"
+#include "PakSerialize.h"
 //! Constructor
 //! @param aPacketID ID of the packet
 PakPacket::PakPacket(int aPacketID)

@@ -10,13 +10,13 @@
 #include "NXPushButton.h"
 #include "NXTheme.h"
 #include "private/NXPopularCardPrivate.h"
+Q_PROPERTY_CREATE_CPP(NXPopularCard, QS_SET_CREF(QPixmap), CardPixmap)
+Q_PROPERTY_CREATE_CPP(NXPopularCard, QS_SET_CREF(QPixmap), CardFloatPixmap)
+Q_PROPERTY_CREATE_CPP(NXPopularCard, QS_SET_CREF(QString), Title)
+Q_PROPERTY_CREATE_CPP(NXPopularCard, QS_SET_CREF(QString), SubTitle)
+Q_PROPERTY_CREATE_CPP(NXPopularCard, QS_SET_CREF(QString), InteractiveTips)
+Q_PROPERTY_CREATE_CPP(NXPopularCard, QS_SET_CREF(QString), DetailedText)
 Q_PROPERTY_CREATE_CPP(NXPopularCard, int, BorderRadius)
-Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QPixmap &, QPixmap, CardPixmap)
-Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QString &, QString, Title)
-Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QString &, QString, SubTitle)
-Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QString &, QString, InteractiveTips)
-Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QString &, QString, DetailedText)
-Q_PROPERTY_CREATE_2_CPP(NXPopularCard, const QPixmap &, QPixmap, CardFloatPixmap)
 
 NXPopularCard::NXPopularCard(QWidget *parent)
     : QWidget { parent }
@@ -49,7 +49,7 @@ NXPopularCard::~NXPopularCard()
 }
 
 void
-NXPopularCard::setCardButtonText(const QString &cardButtonText) noexcept
+NXPopularCard::setCardButtonText(const QString &cardButtonText)
 {
   Q_D(NXPopularCard);
   if (cardButtonText.isEmpty())
@@ -62,14 +62,14 @@ NXPopularCard::setCardButtonText(const QString &cardButtonText) noexcept
 }
 
 QString
-NXPopularCard::getCardButtonText() const noexcept
+NXPopularCard::getCardButtonText() const
 {
   Q_D(const NXPopularCard);
   return d->_pCardButtonText;
 }
 
 void
-NXPopularCard::setCardFloatArea(QWidget *floatArea) noexcept
+NXPopularCard::setCardFloatArea(QWidget *floatArea)
 {
   Q_D(NXPopularCard);
   if (!floatArea || floatArea == this)
@@ -82,7 +82,7 @@ NXPopularCard::setCardFloatArea(QWidget *floatArea) noexcept
 }
 
 QWidget *
-NXPopularCard::getCardFloatArea() const noexcept
+NXPopularCard::getCardFloatArea() const
 {
   Q_D(const NXPopularCard);
   return d->_pCardFloatArea;
@@ -165,13 +165,13 @@ NXPopularCard::paintEvent(QPaintEvent *event)
   }
   QRectF foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth - d->_pHoverYOffset + 1,
                         width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);
-  // 背景绘制
+  //背景绘制
   painter.setOpacity(1);
   painter.setPen(underMouse() ? NXThemeColor(d->_themeMode, PopupBorderHover)
                               : NXThemeColor(d->_themeMode, BasicBorder));
   painter.setBrush(NXThemeColor(d->_themeMode, BasicBaseAlpha));
   painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
-  // 图片绘制
+  //图片绘制
   painter.save();
   QRectF pixRect(foregroundRect.x() + foregroundRect.height() * 0.15,
                  foregroundRect.y() + foregroundRect.height() * 0.15, foregroundRect.height() * 0.7,
@@ -182,15 +182,15 @@ NXPopularCard::paintEvent(QPaintEvent *event)
   painter.drawPixmap(pixRect, d->_pCardPixmap, d->_pCardPixmap.rect());
   painter.restore();
 
-  // 文字绘制
-  // 计算按钮最终矩形
+  //文字绘制
+  //计算按钮最终矩形
   int buttonTargetWidth =
       d->_floater->_overButton->fontMetrics().horizontalAdvance(d->_floater->_overButton->text()) + 40;
   if (buttonTargetWidth > width() * 0.25)
   {
     buttonTargetWidth = width() * 0.25;
   }
-  // 处理NXPushButton的阴影偏移
+  //处理NXPushButton的阴影偏移
   d->_buttonTargetRect = QRect(QPoint(width() + 2 * d->_floater->_floatGeometryOffset - d->_shadowBorderWidth + 3 -
                                           foregroundRect.height() * 0.15 - buttonTargetWidth,
                                       foregroundRect.height() * 0.15 - 3),
@@ -230,7 +230,7 @@ NXPopularCard::paintEvent(QPaintEvent *event)
     font.setWeight(QFont::DemiBold);
     font.setPixelSize(12);
     painter.setFont(font);
-    // 覆盖背景绘制
+    //覆盖背景绘制
     QRectF tipRect(foregroundRect.right() - d->_textHSpacing - tipWidth,
                    foregroundRect.bottom() - d->_textHSpacing - tipHeight,
                    foregroundRect.width() / 2 - d->_textHSpacing, tipHeight);
@@ -241,7 +241,7 @@ NXPopularCard::paintEvent(QPaintEvent *event)
     baseRect.adjust(-7, -3, 4, 3);
     d->_interactiveTipsBaseRect = baseRect;
     painter.drawRoundedRect(baseRect, 6, 6);
-    // 文字绘制
+    //文字绘制
     painter.setPen(NXThemeColor(d->_themeMode, BasicText));
     painter.drawText(tipRect, Qt::AlignLeft | Qt::AlignVCenter | Qt::TextSingleLine, d->_pInteractiveTips);
   }

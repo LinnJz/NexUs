@@ -1,11 +1,11 @@
-﻿#ifndef GENO_H
+#ifndef GENO_H
 #define GENO_H
 
 #include "NXPacketIO_Export.h"
 
 #include <string>
 
-#include "GenIO/GenBufXferO.h"
+#include "GenBufXferO.h"
 
 class NX_PACKETIO_EXPORT GenO
 {

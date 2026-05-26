@@ -67,15 +67,19 @@ NXComboBoxStyle::drawControl(ControlElement element,
   }
   case QStyle::CE_ShapedFrame :
   {
-    // container区域
+    //container区域
     if (widget->objectName() == QStringLiteral("NXComboBoxContainer"))
     {
       QRect viewRect = option->rect;
       painter->save();
       painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+#if defined(Q_OS_WIN) && QT_VERSION == QT_VERSION_CHECK(6, 11, 0)
+      QRect foregroundRect = viewRect;
+#else
       nxTheme->drawEffectShadow(painter, viewRect, _shadowBorderWidth, 6);
       QRect foregroundRect(viewRect.x() + _shadowBorderWidth, viewRect.y(), viewRect.width() - 2 * _shadowBorderWidth,
                            viewRect.height() - _shadowBorderWidth);
+#endif
       painter->setPen(NXThemeColor(_themeMode, PopupBorder));
       painter->setBrush(NXThemeColor(_themeMode, PopupBase));
       painter->drawRoundedRect(foregroundRect, 3, 3);
@@ -85,7 +89,7 @@ NXComboBoxStyle::drawControl(ControlElement element,
   }
   case QStyle::CE_ItemViewItem :
   {
-    // 覆盖高亮
+    //覆盖高亮
     if (const QStyleOptionViewItem *vopt = qstyleoption_cast<const QStyleOptionViewItem *>(option))
     {
       int margin = 2;
@@ -113,7 +117,7 @@ NXComboBoxStyle::drawControl(ControlElement element,
           painter->setBrush(NXThemeColor(_themeMode, BasicSelectedAlpha));
           painter->drawPath(path);
         }
-        // 选中Mark
+        //选中Mark
         painter->setPen(Qt::NoPen);
         painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
         painter->drawRoundedRect(QRectF(optionRect.x() + 3, optionRect.y() + optionRect.height() * 0.2, 3,
@@ -156,12 +160,12 @@ NXComboBoxStyle::drawComplexControl(ComplexControl control,
   {
   case QStyle::CC_ComboBox :
   {
-    // 主体显示绘制
+    //主体显示绘制
     if (const QStyleOptionComboBox *copt = qstyleoption_cast<const QStyleOptionComboBox *>(option))
     {
       painter->save();
       painter->setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-      // 背景绘制
+      //背景绘制
       bool isEnabled = copt->state.testFlag(QStyle::State_Enabled);
       painter->setPen(NXThemeColor(_themeMode, BasicBorder));
       painter->setBrush(isEnabled ? (copt->state.testFlag(QStyle::State_HasFocus) && copt->editable)
@@ -177,14 +181,14 @@ NXComboBoxStyle::drawComplexControl(ComplexControl control,
       painter->drawLine(comboBoxRect.x() + 3, comboBoxRect.y() + comboBoxRect.height(),
                         comboBoxRect.x() + comboBoxRect.width() - 3, comboBoxRect.y() + comboBoxRect.height());
 
-      // 文字绘制
+      //文字绘制
       if (!copt->editable)
       {
         QRect textRect = subControlRect(QStyle::CC_ComboBox, copt, QStyle::SC_ScrollBarSubLine, widget);
         painter->setPen(isEnabled ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));
         painter->drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, copt->currentText);
       }
-      // 展开指示器绘制
+      //展开指示器绘制
       painter->setPen(Qt::NoPen);
       painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
       painter->drawRoundedRect(QRectF(comboBoxRect.center().x() - _pExpandMarkWidth,
@@ -203,7 +207,7 @@ NXComboBoxStyle::drawComplexControl(ComplexControl control,
         painter->rotate(_pExpandIconRotate);
         painter->translate(-expandIconRect.x() - (qreal) expandIconRect.width() / 2,
                            -expandIconRect.y() - (qreal) expandIconRect.height() / 2);
-        painter->drawText(expandIconRect, Qt::AlignCenter, QChar(NXIconType::AngleDown));
+        painter->drawText(expandIconRect, Qt::AlignCenter, QChar((unsigned short) NXIconType::AngleDown));
       }
       painter->restore();
     }
@@ -231,7 +235,7 @@ NXComboBoxStyle::subControlRect(ComplexControl cc,
     {
     case QStyle::SC_ScrollBarSubLine :
     {
-      // 文字区域
+      //文字区域
       QRect textRect = QProxyStyle::subControlRect(cc, opt, sc, widget);
       textRect.setLeft(16);
       textRect.setRight(textRect.right() - 15);
@@ -239,7 +243,7 @@ NXComboBoxStyle::subControlRect(ComplexControl cc,
     }
     case QStyle::SC_ScrollBarAddPage :
     {
-      // 展开图标区域
+      //展开图标区域
       QRect expandIconRect = QProxyStyle::subControlRect(cc, opt, sc, widget);
       expandIconRect.setLeft(expandIconRect.left() - 25);
       return expandIconRect;

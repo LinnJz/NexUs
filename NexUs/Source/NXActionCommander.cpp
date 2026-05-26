@@ -1,6 +1,6 @@
 ﻿#include "NXActionCommander.h"
 
-#include "NXActionCommanderPrivate.h"
+#include "private/NXActionCommanderPrivate.h"
 
 NXActionCommand::NXActionCommand(QObject *parent)
     : QObject(parent)
@@ -27,7 +27,7 @@ NXActionCommander::~NXActionCommander()
 }
 
 void
-NXActionCommander::recordCommand(const QString &domainName, NXActionCommand *command, bool isRedo) noexcept
+NXActionCommander::recordCommand(const QString &domainName, NXActionCommand *command, bool isRedo)
 {
   Q_D(NXActionCommander);
   if (!command)
@@ -81,7 +81,7 @@ NXActionCommander::recordCommand(const QString &domainName, NXActionCommand *com
 }
 
 void
-NXActionCommander::clearCommand(const QString &domainName) noexcept
+NXActionCommander::clearCommand(const QString &domainName)
 {
   Q_D(NXActionCommander);
   if (!d->_commandDomainMap.contains(domainName))
@@ -103,7 +103,7 @@ NXActionCommander::clearCommand(const QString &domainName) noexcept
 }
 
 void
-NXActionCommander::undoCommand(const QString &domainName) noexcept
+NXActionCommander::undoCommand(const QString &domainName)
 {
   Q_D(NXActionCommander);
   if (!d->_commandDomainMap.contains(domainName))
@@ -136,7 +136,7 @@ NXActionCommander::undoCommand(const QString &domainName) noexcept
 }
 
 void
-NXActionCommander::redoCommand(const QString &domainName) noexcept
+NXActionCommander::redoCommand(const QString &domainName)
 {
   Q_D(NXActionCommander);
   if (!d->_commandDomainMap.contains(domainName))
@@ -172,7 +172,7 @@ NXActionCommander::redoCommand(const QString &domainName) noexcept
 }
 
 NXActionCommanderType::CommanderState
-NXActionCommander::getCommanderUndoState(const QString &domainName) const noexcept
+NXActionCommander::getCommanderUndoState(const QString &domainName) const
 {
   Q_D(const NXActionCommander);
   if (!d->_commandDomainMap.contains(domainName))
@@ -183,7 +183,7 @@ NXActionCommander::getCommanderUndoState(const QString &domainName) const noexce
 }
 
 NXActionCommanderType::CommanderState
-NXActionCommander::getCommanderRedoState(const QString &domainName) const noexcept
+NXActionCommander::getCommanderRedoState(const QString &domainName) const
 {
   Q_D(const NXActionCommander);
   if (!d->_commandDomainMap.contains(domainName))

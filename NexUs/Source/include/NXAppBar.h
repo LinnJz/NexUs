@@ -1,4 +1,4 @@
-﻿#ifndef NXAPPBAR_H
+#ifndef NXAPPBAR_H
 #define NXAPPBAR_H
 
 #include <QWidget>
@@ -48,6 +48,7 @@
 #else
 #  define Q_TAKEOVER_NATIVEEVENT_CPP(CLASS, NXAppBar)
 #endif
+
 class QMenu;
 class NXAppBarPrivate;
 
@@ -55,30 +56,31 @@ class NX_EXPORT NXAppBar : public QWidget
 {
   Q_OBJECT
   Q_Q_CREATE(NXAppBar)
+  Q_PROPERTY_CREATE_H(int, AppBarHeight)
   Q_PROPERTY_CREATE_H(bool, IsStayTop)
   Q_PROPERTY_CREATE_H(bool, IsFixedSize)
   Q_PROPERTY_CREATE_H(bool, IsDefaultClosed)
   Q_PROPERTY_CREATE_H(bool, IsOnlyAllowMinAndClose)
-  Q_PROPERTY_CREATE_H(int, AppBarHeight)
 
 public:
   explicit NXAppBar(QWidget *parent = nullptr);
-  ~NXAppBar() override;
+  ~NXAppBar();
 
   void setCustomWidget(NXAppBarType::CustomArea customArea,
                        QWidget *customWidget,
                        QObject *hitTestObject             = nullptr,
-                       const QString &hitTestFunctionName = {}) noexcept;
-  QWidget *getCustomWidget(NXAppBarType::CustomArea customArea) const noexcept;
-  void setCustomMenu(QMenu *customMenu) noexcept;
-  QMenu *getCustomMenu() const noexcept;
+                       const QString &hitTestFunctionName = QStringLiteral(""));
+  QWidget *getCustomWidget(NXAppBarType::CustomArea customArea) const;
 
-  void setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable = true) noexcept;
-  void setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags) noexcept;
-  NXAppBarType::ButtonFlags getWindowButtonFlags() const noexcept;
+  void setCustomMenu(QMenu *customMenu);
+  QMenu *getCustomMenu() const;
 
-  void setRouteBackButtonEnable(bool isEnable) noexcept;
-  void setRouteForwardButtonEnable(bool isEnable) noexcept;
+  void setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable = true);
+  void setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags);
+  NXAppBarType::ButtonFlags getWindowButtonFlags() const;
+
+  void setRouteBackButtonEnable(bool isEnable);
+  void setRouteForwardButtonEnable(bool isEnable);
 
 #ifdef Q_OS_WIN
 #  if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
@@ -87,19 +89,24 @@ public:
   int takeOverNativeEvent(const QByteArray &eventType, void *message, long *result);
 #  endif
 #endif
-Q_SIGNALS:
-  void routeBackButtonClicked();
-  void routeForwardButtonClicked();
-  void navigationButtonClicked();
-  void themeChangeButtonClicked();
-  void closeButtonClicked();
-  void customWidgetChanged();
-  void customMenuChanged();
+  Q_SIGNAL void routeBackButtonClicked();
+  Q_SIGNAL void routeForwardButtonClicked();
+  Q_SIGNAL void navigationButtonClicked();
+  Q_SIGNAL void themeChangeButtonClicked();
+  Q_SIGNAL void closeButtonClicked();
+  Q_SIGNAL void customWidgetChanged();
+  Q_SIGNAL void customMenuChanged();
 
 protected:
   bool eventFilter(QObject *obj, QEvent *event) override;
 #ifdef Q_OS_WIN
   void paintEvent(QPaintEvent *event) override;
+#endif
+#ifdef Q_OS_MACOS
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
+  void mouseDoubleClickEvent(QMouseEvent *event) override;
 #endif
 };
 

@@ -1,15 +1,15 @@
-﻿#include "PacketIO/PakUDP_IO.h"
+#include "PakUDP_IO.h"
 
 #include <cassert>
 
-#include "GenIO/GenBufOManaged.h"
-#include "GenIO/GenUDP_Connection.h"
-#include "GenIO/GenUDP_IO.h"
-#include "PacketIO/PakI.h"
-#include "PacketIO/PakO.h"
-#include "PacketIO/PakPacket.h"
-#include "PacketIO/PakProcessor.h"
-#include "PacketIO/PakSerialize.h"
+#include "GenBufOManaged.h"
+#include "GenUDP_Connection.h"
+#include "GenUDP_IO.h"
+#include "PakI.h"
+#include "PakO.h"
+#include "PakPacket.h"
+#include "PakProcessor.h"
+#include "PakSerialize.h"
 
 PakUDP_IO::PakUDP_IO(GenUDP_Connection* aConnection, PakProcessor* aProcessorPtr, PakHeader* aHeaderType)
     : PakSocketIO(aHeaderType), mConnectionPtr(aConnection), mProcessorPtr(aProcessorPtr), mSerializeWriter(new PakO(&mBufO)), mSerializeReader(new PakI(&mBufI)), mHasReadHeader(false)

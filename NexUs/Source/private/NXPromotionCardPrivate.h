@@ -28,22 +28,21 @@ class NXPromotionCardPrivate : public QObject
   Q_PROPERTY_CREATE(qreal, PressRadius)
   Q_PROPERTY_CREATE(qreal, HoverOpacity)
   Q_PROPERTY_CREATE(qreal, PressOpacity)
+  Q_PROPERTY_CREATE_D(int, BorderRadius)
   Q_PROPERTY_CREATE_D(int, CardTitlePixelSize)
   Q_PROPERTY_CREATE_D(int, PromotionTitlePixelSize)
   Q_PROPERTY_CREATE_D(int, TitlePixelSize)
   Q_PROPERTY_CREATE_D(int, SubTitlePixelSize)
-  Q_PROPERTY_CREATE_D(int, BorderRadius)
 
 public:
   explicit NXPromotionCardPrivate(QObject *parent = nullptr);
   ~NXPromotionCardPrivate();
 
 private:
-  int _shadowBorderWidth { 6 };
   bool _isPressAnimationFinished { true };
+  int _shadowBorderWidth { 6 };
   QRadialGradient *_hoverGradient { nullptr };
   QRadialGradient *_pressGradient { nullptr };
-
   qreal _getLongestDistance(QPoint point);
   qreal _distance(QPoint point1, QPoint point2);
   void _startHoverOpacityAnimation(bool isVisible);

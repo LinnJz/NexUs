@@ -1,4 +1,4 @@
-﻿#include "NXComboBoxView.h"
+#include "NXComboBoxView.h"
 
 #include <QMouseEvent>
 

@@ -1,4 +1,4 @@
-﻿#ifndef NXXIO_CONNECTION_H
+#ifndef NXXIO_CONNECTION_H
 #define NXXIO_CONNECTION_H
 
 #include "NXPacketIO_Export.h"
@@ -6,8 +6,8 @@
 #include <memory>
 #include <string>
 
-#include "GenIO/GenUniqueId.h"
-#include "PacketIO/PakConnection.h"
+#include "GenUniqueId.h"
+#include "PakConnection.h"
 class PakSocketIO;
 class PakTCP_IO;
 class PakUDP_IO;

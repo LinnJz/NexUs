@@ -2,24 +2,24 @@
 #define NXSUGGESTBOXPRIVATE_H
 
 #include <QAction>
-#include <QList>
 #include <QObject>
 #include <QSize>
 #include <QVariantMap>
+#include <QVector>
 
 #include "NXDef.h"
 
 class NXSuggestion : public QObject
 {
   Q_OBJECT
+  Q_PROPERTY_CREATE(QS_SET_CREF(QString), SuggestText)
+  Q_PROPERTY_CREATE(QS_SET_CREF(QString), SuggestKey)
+  Q_PROPERTY_CREATE(QS_SET_CREF(QVariantMap), SuggestData)
   Q_PROPERTY_CREATE(NXIconType::IconName, NXIcon)
-  Q_PROPERTY_CREATE_2(const QString &, QString, SuggestText)
-  Q_PROPERTY_CREATE_2(const QString &, QString, SuggestKey)
-  Q_PROPERTY_CREATE_2(const QVariantMap &, QVariantMap, SuggestData)
 
 public:
   explicit NXSuggestion(QObject *parent = nullptr);
-  ~NXSuggestion() override;
+  ~NXSuggestion();
 };
 
 class QVBoxLayout;
@@ -40,17 +40,17 @@ class NXSuggestBoxPrivate : public QObject
 
 public:
   explicit NXSuggestBoxPrivate(QObject *parent = nullptr);
-  ~NXSuggestBoxPrivate() override;
-  Q_SLOT void onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept;
-  Q_SLOT void onSearchEditTextEdit(const QString &searchText) noexcept;
-  Q_SLOT void onSearchViewClicked(const QModelIndex &index) noexcept;
+  ~NXSuggestBoxPrivate();
+  Q_SLOT void onThemeModeChanged(NXThemeType::ThemeMode themeMode);
+  Q_SLOT void onSearchEditTextEdit(const QString &searchText);
+  Q_SLOT void onSearchViewClicked(const QModelIndex &index);
 
 private:
   bool _isExpandAnimationFinished { true };
   bool _isCloseAnimationFinished { true };
   NXThemeType::ThemeMode _themeMode;
   QSize _lastSize;
-  QList<NXSuggestion *> _suggestionVector;
+  QVector<NXSuggestion *> _suggestionVector;
   QAction *_lightSearchAction { nullptr };
   QAction *_darkSearchAction { nullptr };
   NXSuggestBoxSearchViewContainer *_searchViewBaseWidget { nullptr };
@@ -59,10 +59,9 @@ private:
   NXBaseListView *_searchView { nullptr };
   NXSuggestDelegate *_searchDelegate { nullptr };
   QVBoxLayout *_shadowLayout { nullptr };
-
-  void _startSizeAnimation(QSize oldSize, QSize newSize) noexcept;
-  void _startExpandAnimation() noexcept;
-  void _startCloseAnimation() noexcept;
+  void _startSizeAnimation(QSize oldSize, QSize newSize);
+  void _startExpandAnimation();
+  void _startCloseAnimation();
 };
 
 #endif // NXSUGGESTBOXPRIVATE_H

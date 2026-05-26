@@ -1,10 +1,9 @@
 ﻿#ifndef NXMULTISELECTCOMBOBOXPRIVATE_H
 #define NXMULTISELECTCOMBOBOXPRIVATE_H
-#include <QList>
 #include <QObject>
+#include <QVector>
 
 #include "NXDef.h"
-#include "NXProperty.h"
 class NXComboBoxStyle;
 class NXComboBoxView;
 class NXMultiSelectComboBox;
@@ -21,21 +20,24 @@ class NXMultiSelectComboBoxPrivate : public QObject
 
 public:
   explicit NXMultiSelectComboBoxPrivate(QObject *parent = nullptr);
-  ~NXMultiSelectComboBoxPrivate() override;
-  Q_SLOT void onItemPressed(const QModelIndex &index) noexcept;
+  ~NXMultiSelectComboBoxPrivate();
+  Q_SLOT void onItemPressed(const QModelIndex &index);
+
+protected:
+  bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
   bool _isFirstPopup { false };
   bool _isAllowHidePopup { false };
+  NXThemeType::ThemeMode _themeMode;
+  QVector<bool> _itemSelection;
+  QString _currentText;
+  QStringList _selectedTextList;
   NXComboBoxStyle *_comboBoxStyle { nullptr };
   NXComboBoxView *_comboView { nullptr };
   NXMultiSelectComboBoxDelegate *_delegate { nullptr };
-  QList<bool> _itemSelection;
-  QString _currentText;
-  QStringList _selectedTextList;
-  void _refreshCurrentIndexs() noexcept;
-  void _adjustSelectedVector() noexcept;
-  NXThemeType::ThemeMode _themeMode;
+  void _refreshCurrentIndexs();
+  void _adjustSelectedVector();
 };
 
 #endif // NXMULTISELECTCOMBOBOXPRIVATE_H

@@ -14,7 +14,7 @@ NXToggleSwitchPrivate::~NXToggleSwitchPrivate()
 }
 
 void
-NXToggleSwitchPrivate::_startPosAnimation(qreal startX, qreal endX, bool isToggle) noexcept
+NXToggleSwitchPrivate::_startPosAnimation(qreal startX, qreal endX, bool isToggle)
 {
   Q_Q(NXToggleSwitch);
   QPropertyAnimation *circleAnimation = new QPropertyAnimation(q, "circleCenterX");
@@ -32,7 +32,7 @@ NXToggleSwitchPrivate::_startPosAnimation(qreal startX, qreal endX, bool isToggl
 }
 
 void
-NXToggleSwitchPrivate::_startRadiusAnimation(qreal startRadius, qreal endRadius) noexcept
+NXToggleSwitchPrivate::_startRadiusAnimation(qreal startRadius, qreal endRadius)
 {
   Q_Q(NXToggleSwitch);
   QPropertyAnimation *circleRadiusAnimation = new QPropertyAnimation(q, "circleRadius");
@@ -48,7 +48,7 @@ NXToggleSwitchPrivate::_startRadiusAnimation(qreal startRadius, qreal endRadius)
 }
 
 void
-NXToggleSwitchPrivate::_adjustCircleCenterX() noexcept
+NXToggleSwitchPrivate::_adjustCircleCenterX()
 {
   Q_Q(NXToggleSwitch);
   if (_circleCenterX > q->width() - q->height() / 2 - _margin * 2)

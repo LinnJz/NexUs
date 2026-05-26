@@ -1,10 +1,14 @@
 ﻿#include "NXApplication.h"
 
+#include <utility>
+
 #include <QApplication>
 #include <QCursor>
+#include <QDebug>
 #include <QFontDatabase>
+#include <QFontInfo>
 #include <QWidget>
-#include <utility>
+
 #include "DeveloperComponents/NXWinShadowHelper.h"
 #include "NXTheme.h"
 #include "private/NXApplicationPrivate.h"
@@ -15,7 +19,7 @@ NXApplication::NXApplication(QObject *parent)
 {
   Q_D(NXApplication);
   d->q_ptr               = this;
-  d->_pMicaImagePath     = QStringLiteral(":/Resource/Image/MicaBase.png");
+  d->_pNXMicaImagePath   = QStringLiteral(":/Resource/Image/MicaBase.png");
   d->_pWindowDisplayMode = NXApplicationType::Normal;
   d->_themeMode          = nxTheme->getThemeMode();
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXApplicationPrivate::onThemeModeChanged);
@@ -26,7 +30,7 @@ NXApplication::~NXApplication()
 }
 
 void
-NXApplication::setWindowDisplayMode(NXApplicationType::WindowDisplayMode windowDisplayType) noexcept
+NXApplication::setWindowDisplayMode(NXApplicationType::WindowDisplayMode windowDisplayType)
 {
   Q_D(NXApplication);
   auto lastDisplayMode = d->_pWindowDisplayMode;
@@ -47,7 +51,7 @@ NXApplication::setWindowDisplayMode(NXApplicationType::WindowDisplayMode windowD
   case NXApplicationType::NXMica :
   {
     d->_pWindowDisplayMode = windowDisplayType;
-    d->_initMicaBaseImage(QImage(d->_pMicaImagePath));
+    d->_initMicaBaseImage(QImage(d->_pNXMicaImagePath));
     break;
   }
   default :
@@ -70,49 +74,76 @@ NXApplication::setWindowDisplayMode(NXApplicationType::WindowDisplayMode windowD
 }
 
 NXApplicationType::WindowDisplayMode
-NXApplication::getWindowDisplayMode() const noexcept
+NXApplication::getWindowDisplayMode() const
 {
   Q_D(const NXApplication);
   return d->_pWindowDisplayMode;
 }
 
 void
-NXApplication::setMicaImagePath(const QString &micaImagePath) noexcept
+NXApplication::setNXMicaImagePath(const QString &micaImagePath)
 {
   Q_D(NXApplication);
-  d->_pMicaImagePath = micaImagePath;
-  d->_initMicaBaseImage(QImage(micaImagePath));
-  Q_EMIT pMicaImagePathChanged();
+  d->_pNXMicaImagePath = std::move(micaImagePath);
+  d->_initMicaBaseImage(QImage(d->_pNXMicaImagePath));
+  Q_EMIT pNXMicaImagePathChanged();
 }
 
 QString
-NXApplication::getMicaImagePath() const noexcept
+NXApplication::getNXMicaImagePath() const
 {
   Q_D(const NXApplication);
-  return d->_pMicaImagePath;
+  return d->_pNXMicaImagePath;
 }
 
 void
-NXApplication::init() noexcept
+NXApplication::init()
 {
   Q_D(NXApplication);
   Q_INIT_RESOURCE(NexUs);
   QApplication::setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
   QFontDatabase::addApplicationFont(QStringLiteral(":/Resource/Font/NXAwesome.ttf"));
-  QFontDatabase::addApplicationFont(QStringLiteral(":/Resource/Font/segoe_slboot.ttf"));
-  // 默认字体
+  //默认字体 - 根据平台设置
   QFont font = qApp->font();
   font.setPixelSize(13);
-  font.setFamily(QStringLiteral("Microsoft YaHei"));
+
+  QStringList fontFamilies;
+#ifdef Q_OS_WIN
+  fontFamilies << QStringLiteral("Microsoft YaHei UI") << QStringLiteral("SimSun") << QStringLiteral("Arial");
+#elif defined(Q_OS_MACOS)
+  fontFamilies << QStringLiteral("PingFang SC") << QStringLiteral("Heiti SC") << QStringLiteral("STHeiti")
+               << QStringLiteral("Helvetica");
+#else
+  fontFamilies << QStringLiteral("Noto Sans CJK SC") << QStringLiteral("Source Han Sans SC")
+               << QStringLiteral("WenQuanYi Micro Hei") << QStringLiteral("DejaVu Sans");
+#endif
+
+  bool fontFound = false;
+  for (const QString &family : fontFamilies)
+  {
+    QFont testFont(family);
+    if (QFontInfo(testFont).family() == family)
+    {
+      font.setFamily(family);
+      fontFound = true;
+      break;
+    }
+  }
+
+  if (!fontFound)
+  {
+    qWarning() << "No preferred fonts found, using system default font";
+  }
   font.setHintingPreference(QFont::PreferNoHinting);
   qApp->setFont(font);
 #ifdef Q_OS_WIN
   nxWinHelper->initWinAPI();
 #endif
+  d->syncSystemTheme();
 }
 
 void
-NXApplication::syncWindowDisplayMode(QWidget *widget, bool isSync) noexcept
+NXApplication::syncWindowDisplayMode(QWidget *widget, bool isSync)
 {
   Q_D(NXApplication);
   if (!widget)
@@ -163,7 +194,7 @@ NXApplication::syncWindowDisplayMode(QWidget *widget, bool isSync) noexcept
 }
 
 bool
-NXApplication::containsCursorToItem(QWidget *item) noexcept
+NXApplication::containsCursorToItem(QWidget *item)
 {
   if (!item || !item->isVisible())
   {

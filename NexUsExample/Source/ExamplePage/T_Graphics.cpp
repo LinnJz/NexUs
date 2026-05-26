@@ -1,4 +1,4 @@
-﻿#include "T_Graphics.h"
+#include "T_Graphics.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -11,12 +11,13 @@ T_Graphics::T_Graphics(QWidget *parent)
     : T_BasePage(parent)
 {
   // 预览窗口标题
-  setWindowTitle("NXGraphics");
+  setWindowTitle(QStringLiteral("NXGraphics"));
   // 顶部元素
-  createCustomWidget("图形视图框架被放置于此，可在此界面体验其效果，按住Ctrl进行缩放，按住Shitf进行连接");
+  createCustomWidget(
+      QStringLiteral("图形视图框架被放置于此，可在此界面体验其效果，按住Ctrl进行缩放，按住Shitf进行连接"));
 
   QWidget *centralWidget = new QWidget(this);
-  centralWidget->setWindowTitle("NXGraphics");
+  centralWidget->setWindowTitle(QStringLiteral("NXGraphics"));
 
   // GraphicsView
   NXGraphicsScene *scene = new NXGraphicsScene(this);

@@ -16,7 +16,7 @@ NXScrollBarPrivate::~NXScrollBarPrivate()
 }
 
 void
-NXScrollBarPrivate::onRangeChanged(int min, int max) noexcept
+NXScrollBarPrivate::onRangeChanged(int min, int max)
 {
   Q_Q(NXScrollBar);
   if (q->isVisible() && _pIsAnimation && max != 0)
@@ -50,7 +50,7 @@ NXScrollBarPrivate::onRangeChanged(int min, int max) noexcept
 }
 
 void
-NXScrollBarPrivate::_scroll(Qt::KeyboardModifiers modifiers, int delta) noexcept
+NXScrollBarPrivate::_scroll(Qt::KeyboardModifiers modifiers, int delta)
 {
   Q_Q(NXScrollBar);
   int stepsToScroll = 0;
@@ -77,7 +77,7 @@ NXScrollBarPrivate::_scroll(Qt::KeyboardModifiers modifiers, int delta) noexcept
 }
 
 int
-NXScrollBarPrivate::_pixelPosToRangeValue(int pos) const noexcept
+NXScrollBarPrivate::_pixelPosToRangeValue(int pos) const
 {
   Q_Q(const NXScrollBar);
   QStyleOptionSlider opt;
@@ -106,7 +106,7 @@ NXScrollBarPrivate::_pixelPosToRangeValue(int pos) const noexcept
 }
 
 void
-NXScrollBarPrivate::_initAllConfig() noexcept
+NXScrollBarPrivate::_initAllConfig()
 {
   Q_Q(NXScrollBar);
   _handleScrollBarRangeChanged(_originScrollBar->minimum(), _originScrollBar->maximum());
@@ -115,13 +115,13 @@ NXScrollBarPrivate::_initAllConfig() noexcept
 }
 
 void
-NXScrollBarPrivate::_handleScrollBarValueChanged(QScrollBar *scrollBar, int value) noexcept
+NXScrollBarPrivate::_handleScrollBarValueChanged(QScrollBar *scrollBar, int value)
 {
   scrollBar->setValue(value);
 }
 
 void
-NXScrollBarPrivate::_handleScrollBarRangeChanged(int min, int max) noexcept
+NXScrollBarPrivate::_handleScrollBarRangeChanged(int min, int max)
 {
   Q_Q(NXScrollBar);
   q->setRange(min, max);
@@ -136,18 +136,22 @@ NXScrollBarPrivate::_handleScrollBarRangeChanged(int min, int max) noexcept
 }
 
 void
-NXScrollBarPrivate::_handleScrollBarGeometry() noexcept
+NXScrollBarPrivate::_handleScrollBarGeometry()
 {
   Q_Q(NXScrollBar);
   q->raise();
   q->setSingleStep(_originScrollBar->singleStep());
   q->setPageStep(_originScrollBar->pageStep());
+
+  // 从样式中获取滚动条宽度，而不是硬编码
+  int scrollBarExtent = q->style()->pixelMetric(QStyle::PM_ScrollBarExtent, nullptr, q);
+
   if (q->orientation() == Qt::Horizontal)
   {
-    q->setGeometry(0, _originScrollArea->height() - 10, _originScrollArea->width(), 10);
+    q->setGeometry(0, _originScrollArea->height() - scrollBarExtent, _originScrollArea->width(), scrollBarExtent);
   }
   else
   {
-    q->setGeometry(_originScrollArea->width() - 10, 0, 10, _originScrollArea->height());
+    q->setGeometry(_originScrollArea->width() - scrollBarExtent, 0, scrollBarExtent, _originScrollArea->height());
   }
 }

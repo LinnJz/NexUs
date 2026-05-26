@@ -1,4 +1,4 @@
-﻿#ifndef GENINTERNETADDRESS_H
+#ifndef GENINTERNETADDRESS_H
 #define GENINTERNETADDRESS_H
 
 #include <string>

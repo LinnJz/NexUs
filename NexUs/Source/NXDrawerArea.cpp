@@ -1,4 +1,5 @@
 ﻿#include "NXDrawerArea.h"
+
 #include "NXTheme.h"
 #include "private/NXDrawerAreaPrivate.h"
 
@@ -33,7 +34,7 @@ NXDrawerArea::~NXDrawerArea()
 }
 
 void
-NXDrawerArea::setBorderRadius(int borderRadius) noexcept
+NXDrawerArea::setBorderRadius(int borderRadius)
 {
   Q_D(NXDrawerArea);
   d->_drawerHeader->setBorderRadius(borderRadius);
@@ -42,49 +43,49 @@ NXDrawerArea::setBorderRadius(int borderRadius) noexcept
 }
 
 int
-NXDrawerArea::getBorderRadius() const noexcept
+NXDrawerArea::getBorderRadius() const
 {
   Q_D(const NXDrawerArea);
   return d->_drawerHeader->getBorderRadius();
 }
 
 void
-NXDrawerArea::setHeaderHeight(int headerHeight) noexcept
+NXDrawerArea::setHeaderHeight(int headerHeight)
 {
   Q_D(NXDrawerArea);
   d->_drawerHeader->setFixedHeight(headerHeight);
 }
 
 int
-NXDrawerArea::getHeaderHeight() const noexcept
+NXDrawerArea::getHeaderHeight() const
 {
   Q_D(const NXDrawerArea);
   return d->_drawerHeader->height();
 }
 
 void
-NXDrawerArea::setDrawerHeader(QWidget *widget) noexcept
+NXDrawerArea::setDrawerHeader(QWidget *widget)
 {
   Q_D(NXDrawerArea);
   d->_drawerHeader->setHeaderWidget(widget);
 }
 
 void
-NXDrawerArea::addDrawer(QWidget *widget) noexcept
+NXDrawerArea::addDrawer(QWidget *widget)
 {
   Q_D(NXDrawerArea);
   d->_drawerContainer->addWidget(widget);
 }
 
 void
-NXDrawerArea::removeDrawer(QWidget *widget) noexcept
+NXDrawerArea::removeDrawer(QWidget *widget)
 {
   Q_D(NXDrawerArea);
   d->_drawerContainer->removeWidget(widget);
 }
 
 void
-NXDrawerArea::expand() noexcept
+NXDrawerArea::expand()
 {
   Q_D(NXDrawerArea);
   d->_drawerHeader->setIsExpand(true);
@@ -94,7 +95,7 @@ NXDrawerArea::expand() noexcept
 }
 
 void
-NXDrawerArea::collapse() noexcept
+NXDrawerArea::collapse()
 {
   Q_D(NXDrawerArea);
   d->_drawerHeader->setIsExpand(false);
@@ -104,7 +105,7 @@ NXDrawerArea::collapse() noexcept
 }
 
 bool
-NXDrawerArea::getIsExpand() const noexcept
+NXDrawerArea::getIsExpand() const
 {
   Q_D(const NXDrawerArea);
   return d->_drawerHeader->getIsExpand();

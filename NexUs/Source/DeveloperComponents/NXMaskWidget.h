@@ -13,7 +13,8 @@ class NXMaskWidget : public QWidget
 public:
   explicit NXMaskWidget(QWidget *parent = nullptr);
   ~NXMaskWidget();
-  void doMaskAnimation(int endValue) noexcept;
+  void doMaskAnimation(int endValue);
+  Q_SIGNAL void animationFinished();
 
 protected:
   void paintEvent(QPaintEvent *event) override;

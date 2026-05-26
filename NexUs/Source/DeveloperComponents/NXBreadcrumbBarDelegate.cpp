@@ -31,12 +31,12 @@ NXBreadcrumbBarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
   {
     if (_pPressIndex == index)
     {
-      // 鼠标按下
+      //鼠标按下
       painter->setPen(NXThemeColor(_themeMode, BasicTextPress));
     }
     else
     {
-      // 不为最后一个 且没有被鼠标覆盖
+      //不为最后一个 且没有被鼠标覆盖
       if (!(option.state & QStyle::State_MouseOver))
       {
         painter->setPen(NXThemeColor(_themeMode, BasicTextNoFocus));
@@ -49,12 +49,12 @@ NXBreadcrumbBarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
   }
   else
   {
-    // 分隔符
+    //分隔符
     QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     iconFont.setPixelSize(painter->font().pixelSize() * 0.785);
     painter->setFont(iconFont);
     itemRect.setX(itemRect.x() - itemRect.width() * 0.36);
-    painter->drawText(itemRect, Qt::AlignCenter, QChar(NXIconType::AngleRight));
+    painter->drawText(itemRect, Qt::AlignCenter, QChar((unsigned short) NXIconType::AngleRight));
   }
   painter->restore();
 }

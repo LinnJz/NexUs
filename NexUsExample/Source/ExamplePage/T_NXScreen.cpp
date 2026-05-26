@@ -1,4 +1,4 @@
-﻿#include "T_NXScreen.h"
+#include "T_NXScreen.h"
 
 #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
 #  include <QThread>
@@ -23,10 +23,10 @@
 T_NXScreen::T_NXScreen(QWidget *parent)
     : T_BasePage(parent)
 {
-  setWindowTitle("NXScreen");
+  setWindowTitle(QStringLiteral("NXScreen"));
 
 #  ifdef Q_OS_WIN
-  createCustomWidget("DXGI录制组件被放置于此，可在此界面预览录制效果");
+  createCustomWidget(QStringLiteral("DXGI录制组件被放置于此，可在此界面预览录制效果"));
 
   NXDxgiManager *dxgiManager = NXDxgiManager::getInstance();
   dxgiManager->setGrabArea(1920, 1080);
@@ -38,13 +38,13 @@ T_NXScreen::T_NXScreen(QWidget *parent)
   _dxgiScreen->setFixedSize(1200, 678);
   dxgiScreenLayout->addWidget(_dxgiScreen);
 
-  NXText *dxText = new NXText("显卡选择", this);
+  NXText *dxText = new NXText(QStringLiteral("显卡选择"), this);
   dxText->setTextPixelSize(15);
   _dxComboBox = new NXComboBox(this);
   _dxComboBox->addItems(dxgiManager->getDxDeviceList());
   _dxComboBox->setCurrentIndex(dxgiManager->getDxDeviceID());
 
-  NXText *outputText = new NXText("屏幕选择", this);
+  NXText *outputText = new NXText(QStringLiteral("屏幕选择"), this);
   outputText->setTextPixelSize(15);
   _outputComboBox = new NXComboBox(this);
   _outputComboBox->addItems(dxgiManager->getOutputDeviceList());
@@ -66,7 +66,7 @@ T_NXScreen::T_NXScreen(QWidget *parent)
     _dxgiScreen->update();
   });
 
-  NXToggleButton *startButton = new NXToggleButton("捕获", this);
+  NXToggleButton *startButton = new NXToggleButton(QStringLiteral("捕获"), this);
   connect(startButton, &NXToggleButton::toggled, this, [=](bool isToggled)
   {
     if (isToggled)
@@ -90,7 +90,7 @@ T_NXScreen::T_NXScreen(QWidget *parent)
   comboBoxLayout->addStretch();
 
   QWidget *centralWidget = new QWidget(this);
-  centralWidget->setWindowTitle("NXScreen");
+  centralWidget->setWindowTitle(QStringLiteral("NXScreen"));
   QVBoxLayout *centerLayout = new QVBoxLayout(centralWidget);
   centerLayout->setContentsMargins(0, 0, 0, 0);
   centerLayout->addLayout(comboBoxLayout);
@@ -98,18 +98,19 @@ T_NXScreen::T_NXScreen(QWidget *parent)
 
 #    if defined(BUILD_WITH_NXPACKETIO)
   QHBoxLayout *packetLayout = new QHBoxLayout();
-  NXText *packetIOText      = new NXText("网络视图 (需要先进行屏幕捕获 若接口IP不正确或不可用 程序可能会崩溃)", this);
+  NXText *packetIOText =
+      new NXText(QStringLiteral("网络视图 (需要先进行屏幕捕获 若接口IP不正确或不可用 程序可能会崩溃)"), this);
   packetIOText->setTextPixelSize(17);
 
-  NXText *interfaceIPText = new NXText("接口IP", this);
+  NXText *interfaceIPText = new NXText(QStringLiteral("接口IP"), this);
   interfaceIPText->setTextPixelSize(15);
   NXLineEdit *interfaceIPEdit = new NXLineEdit(this);
   interfaceIPEdit->setMaximumWidth(140);
   interfaceIPEdit->setFixedHeight(33);
-  interfaceIPEdit->setPlaceholderText("接口IP");
-  interfaceIPEdit->setText("192.168.1");
+  interfaceIPEdit->setPlaceholderText(QStringLiteral("接口IP"));
+  interfaceIPEdit->setText(QStringLiteral("192.168.1"));
 
-  NXToggleButton *sendButton2 = new NXToggleButton("初始发送", this);
+  NXToggleButton *sendButton2 = new NXToggleButton(QStringLiteral("初始发送"), this);
   connect(sendButton2, &NXToggleButton::toggled, this, [=](bool isToggled)
   {
     if (isToggled)
@@ -121,7 +122,7 @@ T_NXScreen::T_NXScreen(QWidget *parent)
       _unInitThread(true);
     }
   });
-  NXToggleButton *recvButton = new NXToggleButton("初始接收", this);
+  NXToggleButton *recvButton = new NXToggleButton(QStringLiteral("初始接收"), this);
   connect(recvButton, &NXToggleButton::toggled, this, [=](bool isToggled)
   {
     if (isToggled)
@@ -153,7 +154,7 @@ T_NXScreen::T_NXScreen(QWidget *parent)
 #  endif
 
 #  ifdef Q_OS_MAC
-  createCustomWidget("屏幕录制组件被放置于此，可在此界面预览录制效果");
+  createCustomWidget(QStringLiteral("屏幕录制组件被放置于此，可在此界面预览录制效果"));
 
   NXScreenCaptureManager *captureManager = NXScreenCaptureManager::getInstance();
   captureManager->setGrabArea(1920, 1080);
@@ -165,7 +166,7 @@ T_NXScreen::T_NXScreen(QWidget *parent)
   _captureScreen->setFixedSize(1200, 678);
   captureScreenLayout->addWidget(_captureScreen);
 
-  NXText *displayText = new NXText("显示器选择", this);
+  NXText *displayText = new NXText(QStringLiteral("显示器选择"), this);
   displayText->setTextPixelSize(15);
   _displayComboBox = new NXComboBox(this);
   _displayComboBox->addItems(captureManager->getDisplayList());
@@ -177,7 +178,7 @@ T_NXScreen::T_NXScreen(QWidget *parent)
     _captureScreen->update();
   });
 
-  NXToggleButton *startButton = new NXToggleButton("捕获", this);
+  NXToggleButton *startButton = new NXToggleButton(QStringLiteral("捕获"), this);
   connect(startButton, &NXToggleButton::toggled, this, [=](bool isToggled)
   {
     if (isToggled)
@@ -198,7 +199,7 @@ T_NXScreen::T_NXScreen(QWidget *parent)
   comboBoxLayout->addStretch();
 
   QWidget *centralWidget = new QWidget(this);
-  centralWidget->setWindowTitle("NXScreen");
+  centralWidget->setWindowTitle(QStringLiteral("NXScreen"));
   QVBoxLayout *centerLayout = new QVBoxLayout(centralWidget);
   centerLayout->setContentsMargins(0, 0, 0, 0);
   centerLayout->addLayout(comboBoxLayout);
@@ -218,7 +219,7 @@ T_NXScreen::~T_NXScreen()
 
 #  if defined(Q_OS_WIN) && defined(BUILD_WITH_NXPACKETIO)
 void
-T_NXScreen::_initSendThread(QString interfaceIP)
+T_NXScreen::_initSendThread(const QString &interfaceIP)
 {
   _packetIOSendThread = new QThread(this);
   _packetSendIO       = new T_NXPacketIO();
@@ -229,7 +230,7 @@ T_NXScreen::_initSendThread(QString interfaceIP)
 }
 
 void
-T_NXScreen::_initRecvThread(QString interfaceIP)
+T_NXScreen::_initRecvThread(const QString &interfaceIP)
 {
   // 原则上一个程序最好只初始化一个XIO 但如果需要多个XIO 则控制初始化间隔 不能同时进行初始化
   QTimer::singleShot(1000, this, [=]()

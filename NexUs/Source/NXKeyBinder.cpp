@@ -1,9 +1,13 @@
 ﻿#include <QMouseEvent>
-#include <QPainter>
+#include "NXKeyBinder.h"
+
+#include <NXPushButton.h>
 #include <utility>
+
+#include <QPainter>
+
 #include "DeveloperComponents/NXKeyBinderContainer.h"
 #include "NXContentDialog.h"
-#include "NXKeyBinder.h"
 #include "NXTheme.h"
 #include "private/NXKeyBinderPrivate.h"
 Q_PROPERTY_CREATE_CPP(NXKeyBinder, int, BorderRadius)
@@ -26,16 +30,29 @@ NXKeyBinder::NXKeyBinder(QWidget *parent)
   setText(QStringLiteral("  按键: 未绑定      "));
   d->_binderDialog = new NXContentDialog(window());
   d->_binderDialog->setCentralWidget(d->_binderContainer);
-  d->_binderDialog->setLeftButtonText(QStringLiteral("取消"));
-  d->_binderDialog->setMiddleButtonText(QStringLiteral("重置"));
-  d->_binderDialog->setRightButtonText(QStringLiteral("确认"));
-  connect(d->_binderDialog, &NXContentDialog::middleButtonClicked, this, [=]()
+  auto *cancelBtn  = d->_binderDialog->addButton(QStringLiteral("取消"));
+  auto *resetBtn   = d->_binderDialog->addButton(QStringLiteral("重置"));
+  auto *confirmBtn = d->_binderDialog->addButton(QStringLiteral("确认"));
+
+  confirmBtn->setLightDefaultColor(NXThemeColor(NXThemeType::Light, PrimaryNormal));
+  confirmBtn->setLightHoverColor(NXThemeColor(NXThemeType::Light, PrimaryHover));
+  confirmBtn->setLightPressColor(NXThemeColor(NXThemeType::Light, PrimaryPress));
+  confirmBtn->setLightTextColor(Qt::white);
+  confirmBtn->setDarkDefaultColor(NXThemeColor(NXThemeType::Dark, PrimaryNormal));
+  confirmBtn->setDarkHoverColor(NXThemeColor(NXThemeType::Dark, PrimaryHover));
+  confirmBtn->setDarkPressColor(NXThemeColor(NXThemeType::Dark, PrimaryPress));
+  confirmBtn->setDarkTextColor(Qt::black);
+
+  connect(d->_binderDialog, &NXContentDialog::buttonClicked, this, [=](NXPushButton *btn)
   {
-    d->_binderContainer->logOrResetHistoryData(false);
-  });
-  connect(d->_binderDialog, &NXContentDialog::rightButtonClicked, this, [=]()
-  {
-    d->_binderContainer->saveBinderChanged();
+    if (btn == resetBtn)
+    {
+      d->_binderContainer->logOrResetHistoryData(false);
+    }
+    else if (btn == confirmBtn)
+    {
+      d->_binderContainer->saveBinderChanged();
+    }
   });
   d->onThemeChanged(nxTheme->getThemeMode());
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXKeyBinderPrivate::onThemeChanged);
@@ -46,7 +63,7 @@ NXKeyBinder::~NXKeyBinder()
 }
 
 void
-NXKeyBinder::setBinderKeyText(const QString &binderKeyText) noexcept
+NXKeyBinder::setBinderKeyText(const QString &binderKeyText)
 {
   Q_D(NXKeyBinder);
   d->_binderContainer->setBinderKeyText(binderKeyText);
@@ -54,21 +71,21 @@ NXKeyBinder::setBinderKeyText(const QString &binderKeyText) noexcept
 }
 
 QString
-NXKeyBinder::getBinderKeyText() const noexcept
+NXKeyBinder::getBinderKeyText() const
 {
   Q_D(const NXKeyBinder);
   return d->_binderContainer->getBinderKeyText();
 }
 
 void
-NXKeyBinder::setNativeVirtualBinderKey(quint32 binderKey) noexcept
+NXKeyBinder::setNativeVirtualBinderKey(quint32 binderKey)
 {
   Q_D(NXKeyBinder);
   d->_binderContainer->setNativeVirtualBinderKey(binderKey);
 }
 
 quint32
-NXKeyBinder::getNativeVirtualBinderKey() const noexcept
+NXKeyBinder::getNativeVirtualBinderKey() const
 {
   Q_D(const NXKeyBinder);
   return d->_binderContainer->getNativeVirtualBinderKey();
@@ -129,7 +146,7 @@ NXKeyBinder::paintEvent(QPaintEvent *event)
   painter.setPen(NXThemeColor(d->_themeMode, BasicText));
   QRect iconRect = rect();
   iconRect.adjust(0, 0, -10, 0);
-  painter.drawText(iconRect, Qt::AlignVCenter | Qt::AlignRight, QChar(NXIconType::Pencil));
+  painter.drawText(iconRect, Qt::AlignVCenter | Qt::AlignRight, QChar((unsigned short) NXIconType::Pencil));
   painter.restore();
   QLabel::paintEvent(event);
 }

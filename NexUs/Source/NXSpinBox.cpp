@@ -1,15 +1,15 @@
 ﻿#include "NXSpinBox.h"
 
-#include "DeveloperComponents/NXSpinBoxStyle.h"
-#include "NXMenu.h"
-#include "NXTheme.h"
-#include "private/NXSpinBoxPrivate.h"
-
 #include <QContextMenuEvent>
 #include <QLineEdit>
 #include <QLocale>
 #include <QPainter>
 #include <QPropertyAnimation>
+
+#include "DeveloperComponents/NXSpinBoxStyle.h"
+#include "NXMenu.h"
+#include "NXTheme.h"
+#include "private/NXSpinBoxPrivate.h"
 
 NXSpinBox::NXSpinBox(QWidget *parent)
     : QSpinBox(parent)
@@ -20,11 +20,19 @@ NXSpinBox::NXSpinBox(QWidget *parent)
   d->_pExpandMarkWidth = 0;
   setLocale(QLocale::C);
   setFixedSize(115, 35);
+#ifdef Q_OS_MACOS
+  setAttribute(Qt::WA_Hover);
+  setAttribute(Qt::WA_MacShowFocusRect, false);
+#endif
   d->_style = new NXSpinBoxStyle(style());
   setStyle(d->_style);
   lineEdit()->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+#ifdef Q_OS_MACOS
+  lineEdit()->setStyleSheet(
+      QStringLiteral("background-color:transparent;padding-left:10px;padding-bottom:3px;border:none;outline:none;"));
+#else
   lineEdit()->setStyleSheet(QStringLiteral("background-color:transparent;padding-left:10px;padding-bottom:3px;"));
-  lineEdit()->setAttribute(Qt::WA_MacShowFocusRect, false);
+#endif
   d->onThemeChanged(nxTheme->getThemeMode());
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXSpinBoxPrivate::onThemeChanged);
 }
@@ -36,7 +44,7 @@ NXSpinBox::~NXSpinBox()
 }
 
 void
-NXSpinBox::setButtonMode(NXSpinBoxType::ButtonMode buttonMode) noexcept
+NXSpinBox::setButtonMode(NXSpinBoxType::ButtonMode buttonMode)
 {
   Q_D(NXSpinBox);
   if (minimumWidth() < 90)
@@ -49,7 +57,12 @@ NXSpinBox::setButtonMode(NXSpinBoxType::ButtonMode buttonMode) noexcept
   case NXSpinBoxType::Inline :
   {
     lineEdit()->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    lineEdit()->setStyleSheet("background-color:transparent;padding-left:10px;padding-bottom:3px;");
+#ifdef Q_OS_MACOS
+    lineEdit()->setStyleSheet(
+        QStringLiteral("background-color:transparent;padding-left:10px;padding-bottom:3px;border:none;outline:none;"));
+#else
+    lineEdit()->setStyleSheet(QStringLiteral("background-color:transparent;padding-left:10px;padding-bottom:3px;"));
+#endif
     break;
   }
   case NXSpinBoxType::Compact :
@@ -57,7 +70,12 @@ NXSpinBox::setButtonMode(NXSpinBoxType::ButtonMode buttonMode) noexcept
   case NXSpinBoxType::PMSide :
   {
     lineEdit()->setAlignment(Qt::AlignCenter);
-    lineEdit()->setStyleSheet("background-color:transparent;padding-bottom:3px;");
+#ifdef Q_OS_MACOS
+    lineEdit()->setStyleSheet(
+        QStringLiteral("background-color:transparent;padding-bottom:3px;border:none;outline:none;"));
+#else
+    lineEdit()->setStyleSheet(QStringLiteral("background-color:transparent;padding-bottom:3px;"));
+#endif
     break;
   }
   }
@@ -67,7 +85,7 @@ NXSpinBox::setButtonMode(NXSpinBoxType::ButtonMode buttonMode) noexcept
 }
 
 NXSpinBoxType::ButtonMode
-NXSpinBox::getButtonMode() const noexcept
+NXSpinBox::getButtonMode() const
 {
   Q_D(const NXSpinBox);
   return d->_style->getButtonMode();

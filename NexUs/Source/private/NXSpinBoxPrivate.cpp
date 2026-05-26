@@ -1,12 +1,13 @@
 ﻿#include "NXSpinBoxPrivate.h"
 
-#include "NXMenu.h"
-#include "NXSpinBox.h"
-#include "NXTheme.h"
-
 #include <QClipboard>
 #include <QGuiApplication>
 #include <QLineEdit>
+#include <QTimer>
+
+#include "NXMenu.h"
+#include "NXSpinBox.h"
+#include "NXTheme.h"
 
 NXSpinBoxPrivate::NXSpinBoxPrivate(QObject *parent)
     : QObject { parent }
@@ -18,7 +19,7 @@ NXSpinBoxPrivate::~NXSpinBoxPrivate()
 }
 
 void
-NXSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
+NXSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
 {
   Q_Q(NXSpinBox);
   _themeMode = themeMode;
@@ -29,7 +30,7 @@ NXSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
 }
 
 NXMenu *
-NXSpinBoxPrivate::_createStandardContextMenu() noexcept
+NXSpinBoxPrivate::_createStandardContextMenu()
 {
   Q_Q(NXSpinBox);
   QLineEdit *lineEdit = q->lineEdit();

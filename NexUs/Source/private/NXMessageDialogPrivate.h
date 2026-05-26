@@ -1,4 +1,4 @@
-#ifndef NXMESSAGEDIALOGPRIVATE_H
+﻿#ifndef NXMESSAGEDIALOGPRIVATE_H
 #define NXMESSAGEDIALOGPRIVATE_H
 
 #include <QObject>
@@ -20,16 +20,18 @@ public:
   };
 
   explicit NXMessageDialogButton(ButtonType type, QWidget *parent = nullptr);
-  ~NXMessageDialogButton() override;
-
-Q_SIGNALS:
-  void clicked();
+  ~NXMessageDialogButton();
+  Q_SIGNAL void clicked();
 
 protected:
   void paintEvent(QPaintEvent *event) override;
   void mousePressEvent(QMouseEvent *event) override;
   void mouseReleaseEvent(QMouseEvent *event) override;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
   void enterEvent(QEnterEvent *event) override;
+#else
+  void enterEvent(QEvent *event) override;
+#endif
   void leaveEvent(QEvent *event) override;
 
 private:
@@ -44,18 +46,18 @@ class NXMessageDialogPrivate : public QObject
   Q_OBJECT
   Q_D_CREATE(NXMessageDialog)
 
-  Q_PROPERTY_CREATE_D(int, BorderRadius)
   Q_PROPERTY_CREATE_D(QString, Title)
   Q_PROPERTY_CREATE_D(QString, Content)
+  Q_PROPERTY_CREATE_D(int, BorderRadius)
   Q_PROPERTY_CREATE_D(int, TitlePixelSize)
   Q_PROPERTY_CREATE_D(int, ContentPixelSize)
 
 public:
+  NXThemeType::ThemeMode _themeMode;
   explicit NXMessageDialogPrivate(QObject *parent = nullptr);
 
   ~NXMessageDialogPrivate();
 
-  NXThemeType::ThemeMode _themeMode;
   NXMessageDialogButton *_confirmButton { nullptr };
   NXMessageDialogButton *_cancelButton { nullptr };
 };

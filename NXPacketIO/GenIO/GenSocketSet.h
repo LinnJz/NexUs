@@ -1,4 +1,4 @@
-﻿#ifndef GENSOCKETSET_H
+#ifndef GENSOCKETSET_H
 #define GENSOCKETSET_H
 
 #include "NXPacketIO_Export.h"

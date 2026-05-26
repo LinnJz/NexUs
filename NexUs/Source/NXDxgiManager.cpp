@@ -1,4 +1,4 @@
-﻿#include "NXDxgiManager.h"
+#include "NXDxgiManager.h"
 #ifdef Q_OS_WIN
 #  include <d3d11.h>
 #  include <dxgi1_6.h>
@@ -11,8 +11,8 @@
 #  include <QThread>
 #  include <QUrl>
 
-#  include "DeveloperComponents/NXDxgi.h"
-#  include "private/NXDxgiManagerPrivate.h"
+#  include "NXDxgi.h"
+#  include "NXDxgiManagerPrivate.h"
 
 NXDxgiManager::NXDxgiManager(QObject *parent)
     : QObject { parent }
@@ -62,21 +62,21 @@ NXDxgiManager::~NXDxgiManager()
 }
 
 QStringList
-NXDxgiManager::getDxDeviceList() const noexcept
+NXDxgiManager::getDxDeviceList() const
 {
   Q_D(const NXDxgiManager);
   return d->_dxgi->getDxDeviceList();
 }
 
 QStringList
-NXDxgiManager::getOutputDeviceList() const noexcept
+NXDxgiManager::getOutputDeviceList() const
 {
   Q_D(const NXDxgiManager);
   return d->_dxgi->getOutputDeviceList();
 }
 
 QImage
-NXDxgiManager::grabScreenToImage() const noexcept
+NXDxgiManager::grabScreenToImage() const
 {
   Q_D(const NXDxgiManager);
   if (!d->_dxgi->getIsInitSuccess())
@@ -87,7 +87,7 @@ NXDxgiManager::grabScreenToImage() const noexcept
 }
 
 void
-NXDxgiManager::startGrabScreen() noexcept
+NXDxgiManager::startGrabScreen()
 {
   Q_D(NXDxgiManager);
   d->_isAllowedGrabScreen = true;
@@ -99,7 +99,7 @@ NXDxgiManager::startGrabScreen() noexcept
 }
 
 void
-NXDxgiManager::stopGrabScreen() noexcept
+NXDxgiManager::stopGrabScreen()
 {
   Q_D(NXDxgiManager);
   d->_isAllowedGrabScreen = false;
@@ -107,14 +107,14 @@ NXDxgiManager::stopGrabScreen() noexcept
 }
 
 bool
-NXDxgiManager::getIsGrabScreen() const noexcept
+NXDxgiManager::getIsGrabScreen() const
 {
   Q_D(const NXDxgiManager);
   return d->_dxgi->getIsGrabActive();
 }
 
 bool
-NXDxgiManager::setDxDeviceID(int dxID) noexcept
+NXDxgiManager::setDxDeviceID(int dxID)
 {
   Q_D(NXDxgiManager);
   if (dxID < 0 || d->_dxgi->getDxDeviceList().count() <= dxID)
@@ -124,7 +124,7 @@ NXDxgiManager::setDxDeviceID(int dxID) noexcept
   d->_dxgi->setIsGrabActive(false);
   while (!d->_dxgi->getIsGrabStoped())
   {
-    // 等待任务结束
+    //等待任务结束
     QApplication::processEvents();
   }
   if (d->_dxgi->initialize(dxID, d->_dxgi->getOutputDeviceID()))
@@ -140,14 +140,14 @@ NXDxgiManager::setDxDeviceID(int dxID) noexcept
 }
 
 int
-NXDxgiManager::getDxDeviceID() const noexcept
+NXDxgiManager::getDxDeviceID() const
 {
   Q_D(const NXDxgiManager);
   return d->_dxgi->getDxDeviceID();
 }
 
 bool
-NXDxgiManager::setOutputDeviceID(int deviceID) noexcept
+NXDxgiManager::setOutputDeviceID(int deviceID)
 {
   Q_D(NXDxgiManager);
   if (deviceID < 0 || d->_dxgi->getOutputDeviceList().count() <= deviceID)
@@ -158,7 +158,7 @@ NXDxgiManager::setOutputDeviceID(int deviceID) noexcept
   d->_dxgi->setIsGrabActive(false);
   while (!d->_dxgi->getIsGrabStoped())
   {
-    // 等待任务结束
+    //等待任务结束
     QApplication::processEvents();
   }
   if (d->_dxgi->initialize(d->_dxgi->getDxDeviceID(), deviceID))
@@ -174,14 +174,14 @@ NXDxgiManager::setOutputDeviceID(int deviceID) noexcept
 }
 
 int
-NXDxgiManager::getOutputDeviceID() const noexcept
+NXDxgiManager::getOutputDeviceID() const
 {
   Q_D(const NXDxgiManager);
   return d->_dxgi->getOutputDeviceID();
 }
 
 void
-NXDxgiManager::setGrabArea(int width, int height) noexcept
+NXDxgiManager::setGrabArea(int width, int height)
 {
   Q_D(NXDxgiManager);
   int maxWidth  = GetSystemMetrics(SM_CXVIRTUALSCREEN);
@@ -199,7 +199,7 @@ NXDxgiManager::setGrabArea(int width, int height) noexcept
 }
 
 void
-NXDxgiManager::setGrabArea(int x, int y, int width, int height) noexcept
+NXDxgiManager::setGrabArea(int x, int y, int width, int height)
 {
   Q_D(NXDxgiManager);
   int maxWidth  = GetSystemMetrics(SM_CXVIRTUALSCREEN);
@@ -217,14 +217,14 @@ NXDxgiManager::setGrabArea(int x, int y, int width, int height) noexcept
 }
 
 QRect
-NXDxgiManager::getGrabArea() const noexcept
+NXDxgiManager::getGrabArea() const
 {
   Q_D(const NXDxgiManager);
   return d->_dxgi->getGrabArea();
 }
 
 void
-NXDxgiManager::setGrabFrameRate(int frameRateValue) noexcept
+NXDxgiManager::setGrabFrameRate(int frameRateValue)
 {
   Q_D(NXDxgiManager);
   if (frameRateValue > 0)
@@ -234,14 +234,14 @@ NXDxgiManager::setGrabFrameRate(int frameRateValue) noexcept
 }
 
 int
-NXDxgiManager::getGrabFrameRate() const noexcept
+NXDxgiManager::getGrabFrameRate() const
 {
   Q_D(const NXDxgiManager);
   return d->_dxgi->getGrabFrameRate();
 }
 
 void
-NXDxgiManager::setTimeoutMsValue(int timeoutValue) noexcept
+NXDxgiManager::setTimeoutMsValue(int timeoutValue)
 {
   Q_D(NXDxgiManager);
   if (timeoutValue > 0)
@@ -251,7 +251,7 @@ NXDxgiManager::setTimeoutMsValue(int timeoutValue) noexcept
 }
 
 int
-NXDxgiManager::getTimeoutMsValue() const noexcept
+NXDxgiManager::getTimeoutMsValue() const
 {
   Q_D(const NXDxgiManager);
   return d->_dxgi->getTimeoutMsValue();
@@ -299,7 +299,7 @@ NXDxgiScreen::paintEvent(QPaintEvent *event)
 }
 
 void
-NXDxgiScreen::setIsSyncGrabSize(bool isSyncGrabSize) noexcept
+NXDxgiScreen::setIsSyncGrabSize(bool isSyncGrabSize)
 {
   Q_D(NXDxgiScreen);
   if (isSyncGrabSize)
@@ -309,7 +309,7 @@ NXDxgiScreen::setIsSyncGrabSize(bool isSyncGrabSize) noexcept
 }
 
 bool
-NXDxgiScreen::getIsSyncGrabSize() const noexcept
+NXDxgiScreen::getIsSyncGrabSize() const
 {
   Q_D(const NXDxgiScreen);
   return d->_isSyncGrabSize;

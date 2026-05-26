@@ -13,6 +13,9 @@ NXSlider::NXSlider(QWidget *parent)
 {
   Q_D(NXSlider);
   d->q_ptr = this;
+#ifdef Q_OS_MACOS
+  setAttribute(Qt::WA_Hover);
+#endif
   setOrientation(Qt::Horizontal);
   setStyle(new NXSliderStyle(style()));
   d->_sliderStyle = new NXSliderStyle(style());
@@ -20,7 +23,7 @@ NXSlider::NXSlider(QWidget *parent)
 
   d->_valueToolTip = new NXToolTip(this);
   d->_valueToolTip->setToolTip(QString::number(this->value()));
-  d->_valueToolTip->setIsMoveEnabled(true);
+  d->_valueToolTip->setIsMoveEnable(true);
   d->_valueToolTip->setOffSetX(-20);
   d->_valueToolTip->setOffSetY(-60);
   connect(this, &NXSlider::valueChanged, this, [=](const int value)
@@ -30,9 +33,9 @@ NXSlider::NXSlider(QWidget *parent)
 }
 
 NXSlider::NXSlider(Qt::Orientation orientation, QWidget *parent)
-    : QSlider(orientation, parent)
+    : NXSlider(parent)
 {
-  setStyle(new NXSliderStyle(style()));
+  setOrientation(orientation);
 }
 
 NXSlider::~NXSlider()

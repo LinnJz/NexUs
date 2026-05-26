@@ -1,4 +1,4 @@
-﻿#ifndef NXCOLORDISPLAYMODEL_H
+#ifndef NXCOLORDISPLAYMODEL_H
 #define NXCOLORDISPLAYMODEL_H
 
 #include <QAbstractListModel>
@@ -11,13 +11,13 @@ class NXColorDisplayModel : public QAbstractListModel
 public:
   explicit NXColorDisplayModel(QObject *parent = nullptr);
   ~NXColorDisplayModel();
-  void appendDisplayColor(const QList<QColor> &colorList) noexcept;
-  void appendDisplayColor(const QColor &color) noexcept;
-  void removeDisplayColor(int index) noexcept;
-  void replaceDisplayColor(const QColor &color, int index) noexcept;
+  void appendDisplayColor(const QList<QColor> &colorList);
+  void appendDisplayColor(const QColor &color);
+  void removeDisplayColor(int index);
+  void replaceDisplayColor(const QColor &color, int index);
 
-  QList<QColor> getDisplayColorList() const noexcept;
-  QColor getDisplayColor(int index) const noexcept;
+  QList<QColor> getDisplayColorList() const;
+  QColor getDisplayColor(int index) const;
 
 protected:
   int rowCount(const QModelIndex &parent = QModelIndex()) const override;

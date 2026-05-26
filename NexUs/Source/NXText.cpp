@@ -5,7 +5,7 @@
 
 #include "NXTheme.h"
 #include "private/NXTextPrivate.h"
-Q_PROPERTY_CREATE_CPP(NXText, bool, IsAllowClick)
+Q_PROPERTY_CREATE_CPP(NXText, bool, IsClickEnable)
 
 NXText::NXText(QWidget *parent)
     : QLabel(parent)
@@ -13,7 +13,7 @@ NXText::NXText(QWidget *parent)
 {
   Q_D(NXText);
   d->q_ptr            = this;
-  d->_pIsAllowClick   = false;
+  d->_pIsClickEnable  = false;
   d->_pIsWrapAnywhere = false;
   d->_pTextStyle      = NXTextType::NoStyle;
   d->_pNXIcon         = NXIconType::None;
@@ -30,13 +30,13 @@ NXText::NXText(QWidget *parent)
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXTextPrivate::onThemeChanged);
 }
 
-NXText::NXText(const QString &text, QWidget *parent)
+NXText::NXText(QString text, QWidget *parent)
     : NXText(parent)
 {
   setText(text);
 }
 
-NXText::NXText(const QString &text, int pixelSize, QWidget *parent)
+NXText::NXText(QString text, int pixelSize, QWidget *parent)
     : NXText(text, parent)
 {
   QFont font = this->font();
@@ -49,7 +49,7 @@ NXText::~NXText()
 }
 
 void
-NXText::setIsWrapAnywhere(bool isWrapAnywhere) noexcept
+NXText::setIsWrapAnywhere(bool isWrapAnywhere)
 {
   Q_D(NXText);
   setWordWrap(isWrapAnywhere);
@@ -57,14 +57,14 @@ NXText::setIsWrapAnywhere(bool isWrapAnywhere) noexcept
 }
 
 bool
-NXText::getIsWrapAnywhere() const noexcept
+NXText::getIsWrapAnywhere() const
 {
   Q_D(const NXText);
   return d->_pIsWrapAnywhere;
 }
 
 void
-NXText::setTextPixelSize(int size) noexcept
+NXText::setTextPixelSize(int size)
 {
   QFont font = this->font();
   font.setPixelSize(size);
@@ -72,13 +72,13 @@ NXText::setTextPixelSize(int size) noexcept
 }
 
 int
-NXText::getTextPixelSize() const noexcept
+NXText::getTextPixelSize() const
 {
   return this->font().pixelSize();
 }
 
 void
-NXText::setTextPointSize(int size) noexcept
+NXText::setTextPointSize(int size)
 {
   QFont font = this->font();
   font.setPointSize(size);
@@ -86,13 +86,13 @@ NXText::setTextPointSize(int size) noexcept
 }
 
 int
-NXText::getTextPointSize() const noexcept
+NXText::getTextPointSize() const
 {
   return this->font().pointSize();
 }
 
 void
-NXText::setTextStyle(NXTextType::TextStyle textStyle) noexcept
+NXText::setTextStyle(NXTextType::TextStyle textStyle)
 {
   Q_D(NXText);
   QFont textFont = font();
@@ -145,21 +145,21 @@ NXText::setTextStyle(NXTextType::TextStyle textStyle) noexcept
   }
   default :
   {
-    break;
+    Q_UNREACHABLE();
   }
   }
   setFont(textFont);
 }
 
 NXTextType::TextStyle
-NXText::getTextStyle() const noexcept
+NXText::getTextStyle() const
 {
   Q_D(const NXText);
   return d->_pTextStyle;
 }
 
 void
-NXText::setNXIcon(NXIconType::IconName icon) noexcept
+NXText::setNXIcon(NXIconType::IconName icon)
 {
   Q_D(NXText);
   d->_pNXIcon = icon;
@@ -168,7 +168,7 @@ NXText::setNXIcon(NXIconType::IconName icon) noexcept
 }
 
 NXIconType::IconName
-NXText::getNXIcon() const noexcept
+NXText::getNXIcon() const
 {
   Q_D(const NXText);
   return d->_pNXIcon;
@@ -177,7 +177,7 @@ NXText::getNXIcon() const noexcept
 void
 NXText::mouseReleaseEvent(QMouseEvent *event)
 {
-  if (d_ptr->_pIsAllowClick && event->button() == Qt::LeftButton)
+  if (d_ptr->_pIsClickEnable && event->button() == Qt::LeftButton)
   {
     Q_EMIT clicked();
   }
@@ -187,7 +187,7 @@ NXText::mouseReleaseEvent(QMouseEvent *event)
 void
 NXText::enterEvent(QEnterEvent *event)
 {
-  if (d_ptr->_pIsAllowClick)
+  if (d_ptr->_pIsClickEnable)
   {
     setCursor(QCursor(Qt::PointingHandCursor));
   }
@@ -197,7 +197,7 @@ NXText::enterEvent(QEnterEvent *event)
 void
 NXText::leaveEvent(QEvent *event)
 {
-  if (d_ptr->_pIsAllowClick)
+  if (d_ptr->_pIsClickEnable)
   {
     setCursor(QCursor(Qt::ArrowCursor));
   }
@@ -212,14 +212,13 @@ NXText::paintEvent(QPaintEvent *event)
   {
     d->onThemeChanged(d->_themeMode);
   }
-
   if (d->_pNXIcon != NXIconType::None)
   {
     QPainter painter(this);
     painter.save();
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-    QFont iconFont("NXAwesome");
+    QFont iconFont(QStringLiteral("NXAwesome"));
     iconFont.setPixelSize(this->font().pixelSize());
     painter.setFont(iconFont);
     painter.setPen(NXThemeColor(d->_themeMode, BasicText));

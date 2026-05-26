@@ -4,6 +4,7 @@
 #include <QPainterPath>
 
 #include "NXSuggestModel.h"
+#include "NXSuggestBox.h"
 #include "NXTheme.h"
 #include "private/NXSuggestBoxPrivate.h"
 
@@ -44,12 +45,12 @@ NXSuggestDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
   {
     if (option.state & QStyle::State_MouseOver)
     {
-      // 选中时覆盖
+      //选中时覆盖
       painter->fillPath(path, NXThemeColor(_themeMode, BasicSelectedHoverAlpha));
     }
     else
     {
-      // 选中
+      //选中
       painter->fillPath(path, NXThemeColor(_themeMode, BasicSelectedAlpha));
     }
   }
@@ -57,21 +58,21 @@ NXSuggestDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
   {
     if (option.state & QStyle::State_MouseOver)
     {
-      // 覆盖时颜色
+      //覆盖时颜色
       painter->fillPath(path, NXThemeColor(_themeMode, BasicHoverAlpha));
     }
   }
-  // 文字绘制
+  //文字绘制
   painter->setPen(NXThemeColor(_themeMode, BasicText));
   painter->drawText(option.rect.x() + 37, option.rect.y() + 25, suggest->getSuggestText());
 
-  // 图标绘制
+  //图标绘制
   if (suggest->getNXIcon() != NXIconType::None)
   {
     QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     iconFont.setPixelSize(17);
     painter->setFont(iconFont);
-    painter->drawText(option.rect.x() + 11, option.rect.y() + 26, QChar(suggest->getNXIcon()));
+    painter->drawText(option.rect.x() + 11, option.rect.y() + 26, QChar((unsigned short) suggest->getNXIcon()));
   }
   painter->restore();
 }

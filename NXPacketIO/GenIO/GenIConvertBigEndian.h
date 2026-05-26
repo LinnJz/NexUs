@@ -1,11 +1,11 @@
-﻿#ifndef GENI_CONVERT_BIG_ENDIAN_H
+#ifndef GENI_CONVERT_BIG_ENDIAN_H
 #define GENI_CONVERT_BIG_ENDIAN_H
 
 // This gets data out of a Big Endian buffer
 
 #include "NXPacketIO_Export.h"
 
-#include "GenIO/GenIConvert.h"
+#include "GenIConvert.h"
 
 class NX_PACKETIO_EXPORT GenIConvertBigEndian : public GenIConvert
 {

@@ -1,4 +1,4 @@
-﻿#ifndef NXMENUBAR_H
+#ifndef NXMENUBAR_H
 #define NXMENUBAR_H
 
 #include <QMenuBar>
@@ -16,13 +16,13 @@ public:
   explicit NXMenuBar(QWidget *parent = nullptr);
   ~NXMenuBar();
 
-  QAction *addMenu(QMenu *menu) noexcept;
-  NXMenu *addMenu(const QString &title) noexcept;
-  NXMenu *addMenu(const QIcon &icon, const QString &title) noexcept;
-  NXMenu *addMenu(NXIconType::IconName, const QString &title) noexcept;
+  QAction *addMenu(QMenu *menu);
+  NXMenu *addMenu(const QString &title);
+  NXMenu *addMenu(const QIcon &icon, const QString &title);
+  NXMenu *addMenu(NXIconType::IconName, const QString &title);
 
-  QAction *addNXIconAction(NXIconType::IconName icon, const QString &text) noexcept;
-  QAction *addNXIconAction(NXIconType::IconName icon, const QString &text, const QKeySequence &shortcut) noexcept;
+  QAction *addNXIconAction(NXIconType::IconName icon, const QString &text);
+  QAction *addNXIconAction(NXIconType::IconName icon, const QString &text, const QKeySequence &shortcut);
 };
 
 #endif // NXMENUBAR_H

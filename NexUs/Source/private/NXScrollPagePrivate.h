@@ -1,8 +1,8 @@
 ﻿#ifndef NXSCROLLPAGEPRIVATE_H
 #define NXSCROLLPAGEPRIVATE_H
 
+#include <QMap>
 #include <QObject>
-#include <QVariantMap>
 
 #include "NXProperty.h"
 class NXScrollPage;
@@ -22,18 +22,19 @@ class NXScrollPagePrivate : public QObject
 
 public:
   explicit NXScrollPagePrivate(QObject *parent = nullptr);
-  ~NXScrollPagePrivate() override;
+  ~NXScrollPagePrivate();
+  Q_INVOKABLE void onNavigationRoute(const QVariantMap &routeData);
 
 private:
+  bool _isGrabGesture { false };
+  int _navigationTargetIndex { 0 };
+  int _pageTitleSpacing { 0 };
+  QMap<QString, int> _centralWidgetMap;
   QHBoxLayout *_pageTitleLayout { nullptr };
   QVBoxLayout *_mainLayout { nullptr };
   QStackedWidget *_centralStackedWidget { nullptr };
   NXBreadcrumbBar *_breadcrumbBar { nullptr };
-  QMap<QString, int> _centralWidgetMap;
-  int _navigationTargetIndex { 0 };
-  int _pageTitleSpacing { 0 };
-  bool _isGrabGesture { false };
-  void _switchCentralStackIndex(int targetIndex, int lastIndex) noexcept;
+  void _switchCentralStackIndex(int targetIndex, int lastIndex);
 };
 
 #endif // NXSCROLLPAGEPRIVATE_H

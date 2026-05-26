@@ -12,7 +12,7 @@ class T_Setting : public T_BasePage
 
 public:
   Q_INVOKABLE explicit T_Setting(QWidget *parent = nullptr);
-  ~T_Setting() override;
+  ~T_Setting();
 
 private:
   NXComboBox *_themeComboBox { nullptr };
@@ -22,7 +22,6 @@ private:
   NXRadioButton *_windowPixmapButton { nullptr };
   NXRadioButton *_windowMovieButton { nullptr };
 
-  NXRadioButton *_elaMicaButton { nullptr };
 #ifdef Q_OS_WIN
   NXRadioButton *_micaButton { nullptr };
   NXRadioButton *_micaAltButton { nullptr };

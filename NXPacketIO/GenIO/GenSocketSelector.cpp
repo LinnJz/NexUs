@@ -1,11 +1,11 @@
-﻿#include "GenIO/GenSocketSelector.h"
+#include "GenSocketSelector.h"
 
 #include <algorithm>
 #include <cstring>
 #include <iostream>
 
-#include "GenIO/GenSocket.h"
-#include "GenIO/GenSocketIncludes.h"
+#include "GenSocket.h"
+#include "GenSocketIncludes.h"
 
 namespace GenSockets
 {

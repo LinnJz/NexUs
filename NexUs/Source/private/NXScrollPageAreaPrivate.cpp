@@ -1,4 +1,4 @@
-﻿#include "NXScrollPageAreaPrivate.h"
+#include "NXScrollPageAreaPrivate.h"
 
 NXScrollPageAreaPrivate::NXScrollPageAreaPrivate(QObject *parent)
     : QObject { parent }

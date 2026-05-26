@@ -8,15 +8,15 @@
 
 #include "NXTheme.h"
 #include "private/NXIconButtonPrivate.h"
+Q_PROPERTY_CREATE_CPP(NXIconButton, QS_SET_CREF(QColor), LightHoverColor)
+Q_PROPERTY_CREATE_CPP(NXIconButton, QS_SET_CREF(QColor), DarkHoverColor)
+Q_PROPERTY_CREATE_CPP(NXIconButton, QS_SET_CREF(QColor), LightIconColor)
+Q_PROPERTY_CREATE_CPP(NXIconButton, QS_SET_CREF(QColor), DarkIconColor)
+Q_PROPERTY_CREATE_CPP(NXIconButton, QS_SET_CREF(QColor), LightHoverIconColor)
+Q_PROPERTY_CREATE_CPP(NXIconButton, QS_SET_CREF(QColor), DarkHoverIconColor)
+Q_PROPERTY_CREATE_CPP(NXIconButton, qreal, Opacity)
 Q_PROPERTY_CREATE_CPP(NXIconButton, int, BorderRadius)
 Q_PROPERTY_CREATE_CPP(NXIconButton, bool, IsSelected)
-Q_PROPERTY_CREATE_CPP(NXIconButton, qreal, Opacity)
-Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor &, QColor, LightHoverColor)
-Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor &, QColor, DarkHoverColor)
-Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor &, QColor, LightIconColor)
-Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor &, QColor, DarkIconColor)
-Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor &, QColor, LightHoverIconColor)
-Q_PROPERTY_CREATE_2_CPP(NXIconButton, const QColor &, QColor, DarkHoverIconColor)
 
 NXIconButton::NXIconButton(const QPixmap &pix, QWidget *parent)
     : QPushButton(parent)
@@ -67,7 +67,7 @@ NXIconButton::NXIconButton(NXIconType::IconName awesome, QWidget *parent)
   iconFont.setPixelSize(15);
   this->setFont(iconFont);
   d->_pAwesome = awesome;
-  this->setText(QChar(awesome));
+  this->setText(QChar((unsigned short) awesome));
   connect(this, &NXIconButton::pIsSelectedChanged, this, [=]()
   {
     update();
@@ -99,7 +99,7 @@ NXIconButton::NXIconButton(NXIconType::IconName awesome, int pixelSize, QWidget 
   iconFont.setPixelSize(pixelSize);
   this->setFont(iconFont);
   d->_pAwesome = awesome;
-  this->setText(QChar(awesome));
+  this->setText(QChar((unsigned short) awesome));
   connect(this, &NXIconButton::pIsSelectedChanged, this, [=]()
   {
     update();
@@ -132,7 +132,7 @@ NXIconButton::NXIconButton(
   iconFont.setPixelSize(pixelSize);
   this->setFont(iconFont);
   d->_pAwesome = awesome;
-  this->setText(QChar(awesome));
+  this->setText(QChar((unsigned short) awesome));
   this->setFixedSize(fixedWidth, fixedHeight);
   connect(this, &NXIconButton::pIsSelectedChanged, this, [=]()
   {
@@ -149,21 +149,21 @@ NXIconButton::~NXIconButton()
 }
 
 void
-NXIconButton::setAwesome(NXIconType::IconName awesome) noexcept
+NXIconButton::setAwesome(NXIconType::IconName awesome)
 {
   Q_D(NXIconButton);
   d->_pAwesome = awesome;
-  this->setText(QChar(awesome));
+  this->setText(QChar((unsigned short) awesome));
 }
 
 NXIconType::IconName
-NXIconButton::getAwesome() const noexcept
+NXIconButton::getAwesome() const
 {
   return this->d_ptr->_pAwesome;
 }
 
 void
-NXIconButton::setPixmap(const QPixmap &pix) noexcept
+NXIconButton::setPixmap(const QPixmap &pix)
 {
   Q_D(NXIconButton);
   d->_iconPix = pix.copy();
@@ -265,7 +265,7 @@ NXIconButton::paintEvent(QPaintEvent *event)
                                : underMouse() ? d->_pDarkHoverIconColor
                                               : d->_pDarkIconColor
                                : NXThemeColor(d->_themeMode, BasicTextDisable));
-    painter.drawText(rect(), Qt::AlignCenter, QChar(d->_pAwesome));
+    painter.drawText(rect(), Qt::AlignCenter, QChar((unsigned short) d->_pAwesome));
   }
   painter.restore();
 }

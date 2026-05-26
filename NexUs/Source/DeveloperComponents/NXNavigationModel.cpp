@@ -1,20 +1,9 @@
 ﻿#include "NXNavigationModel.h"
 
-#include <QIODevice>
 #include <QIcon>
 #include <QJsonObject>
-#include <QMimeData>
-#include "NXNavigationNode.h"
 
-static void
-RecursiveUpdateDepth_(NXNavigationNode *node, int baseDepth)
-{
-  node->setDepth(baseDepth + 1);
-  for (auto child : node->getChildrenNodes())
-  {
-    RecursiveUpdateDepth_(child, baseDepth + 1);
-  }
-}
+#include "NXNavigationNode.h"
 
 NXNavigationModel::NXNavigationModel(QObject *parent)
     : QAbstractItemModel { parent }
@@ -23,7 +12,6 @@ NXNavigationModel::NXNavigationModel(QObject *parent)
   _rootNode->setIsRootNode(true);
   _rootNode->setIsExpanderNode(true);
   _rootNode->setIsExpanded(true);
-  _nodesMap.insert(_rootNode->getNodeKey(), _rootNode);
   _pSelectedNode         = nullptr;
   _pSelectedExpandedNode = nullptr;
 }
@@ -33,22 +21,53 @@ NXNavigationModel::~NXNavigationModel()
   _rootNode->deleteLater();
 }
 
+void
+NXNavigationModel::setIsMaximalMode(bool isMaximal)
+{
+  auto rootNodes = _rootNode->getChildrenNodes();
+  for (int i = 0; i < rootNodes.count(); i++)
+  {
+    auto childNode = rootNodes[i];
+    if (childNode->getIsCategoryNode())
+    {
+      if (!isMaximal)
+      {
+        beginRemoveRows({}, i, i);
+        _isMaximalMode = isMaximal;
+        endRemoveRows();
+      }
+      else
+      {
+        beginInsertRows({}, i, i);
+        _isMaximalMode = isMaximal;
+        endInsertRows();
+      }
+    }
+  }
+}
+
+bool
+NXNavigationModel::getIsMaximalMode()
+{
+  return _isMaximalMode;
+}
+
 QModelIndex
 NXNavigationModel::parent(const QModelIndex &child) const
 {
   if (!child.isValid())
   {
-    return QModelIndex();
+    return {};
   }
   NXNavigationNode *childNode  = static_cast<NXNavigationNode *>(child.internalPointer());
   NXNavigationNode *parentNode = childNode->getParentNode();
   if (parentNode == _rootNode)
   {
-    return QModelIndex();
+    return {};
   }
   if (parentNode == nullptr)
   {
-    return QModelIndex();
+    return {};
   }
   return createIndex(parentNode->getRow(), 0, parentNode);
 }
@@ -58,7 +77,7 @@ NXNavigationModel::index(int row, int column, const QModelIndex &parent) const
 {
   if (!hasIndex(row, column, parent))
   {
-    return QModelIndex();
+    return {};
   }
   NXNavigationNode *parentNode;
   if (!parent.isValid())
@@ -74,11 +93,11 @@ NXNavigationModel::index(int row, int column, const QModelIndex &parent) const
   {
     if (parentNode == _rootNode && !_isMaximalMode)
     {
-      childNode = parentNode->getExceptCategoryNodes()[row];
+      childNode = parentNode->getExceptCategoryNodes().at(row);
     }
     else
     {
-      childNode = parentNode->getChildrenNodes()[row];
+      childNode = parentNode->getChildrenNodes().at(row);
     }
   }
   if (childNode)
@@ -86,7 +105,7 @@ NXNavigationModel::index(int row, int column, const QModelIndex &parent) const
     childNode->setModelIndex(createIndex(row, column, childNode));
     return childNode->getModelIndex();
   }
-  return QModelIndex();
+  return {};
 }
 
 int
@@ -134,7 +153,7 @@ NXNavigationModel::flags(const QModelIndex &index) const
   {
     return Qt::NoItemFlags;
   }
-  auto flags = Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | QAbstractItemModel::flags(index);
+  auto flags = Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | QAbstractItemModel::flags(index);
   if (index.column() != 0)
   {
     flags |= Qt::ItemIsEditable;
@@ -142,39 +161,8 @@ NXNavigationModel::flags(const QModelIndex &index) const
   return flags;
 }
 
-void
-NXNavigationModel::setIsMaximalMode(bool isMaximal) noexcept
-{
-  auto rootNodes = _rootNode->getChildrenNodes();
-  for (int i = 0; i < rootNodes.count(); i++)
-  {
-    auto childNode = rootNodes[i];
-    if (childNode->getIsCategoryNode())
-    {
-      if (!isMaximal)
-      {
-        beginRemoveRows({}, i, i);
-        _isMaximalMode = isMaximal;
-        endRemoveRows();
-      }
-      else
-      {
-        beginInsertRows({}, i, i);
-        _isMaximalMode = isMaximal;
-        endInsertRows();
-      }
-    }
-  }
-}
-
-bool
-NXNavigationModel::getIsMaximalMode() const noexcept
-{
-  return _isMaximalMode;
-}
-
 QString
-NXNavigationModel::addExpanderNode(const QString &expanderTitle, NXIconType::IconName awesome) noexcept
+NXNavigationModel::addExpanderNode(const QString &expanderTitle, NXIconType::IconName awesome)
 {
   NXNavigationNode *node = new NXNavigationNode(expanderTitle, _rootNode);
   node->setDepth(1);
@@ -188,23 +176,23 @@ NXNavigationModel::addExpanderNode(const QString &expanderTitle, NXIconType::Ico
   return node->getNodeKey();
 }
 
-NXNodeOperateResult
+NXNodeResultExpected
 NXNavigationModel::addExpanderNode(const QString &expanderTitle,
                                    const QString &targetExpanderKey,
-                                   NXIconType::IconName awesome) noexcept
+                                   NXIconType::IconName awesome)
 {
   if (!_nodesMap.contains(targetExpanderKey))
   {
-    return NXUnexpected<QString> { NXNavigationType::NodeOperateError::TargetNodeInvalid };
+    return NXNodeResultUnexpected { NXNavigationType::NodeResult::TargetNodeInvalid };
   }
   NXNavigationNode *parentNode = _nodesMap.value(targetExpanderKey);
   if (!parentNode->getIsExpanderNode())
   {
-    return NXUnexpected<QString> { NXNavigationType::NodeOperateError::TargetNodeTypeError };
+    return NXNodeResultUnexpected { NXNavigationType::NodeResult::TargetNodeTypeError };
   }
   if (parentNode->getDepth() > 10)
   {
-    return NXUnexpected<QString> { NXNavigationType::NodeOperateError::TargetNodeDepthLimit };
+    return NXNodeResultUnexpected { NXNavigationType::NodeResult::TargetNodeDepthLimit };
   }
   NXNavigationNode *node = new NXNavigationNode(expanderTitle, parentNode);
   node->setDepth(parentNode->getDepth() + 1);
@@ -223,7 +211,7 @@ NXNavigationModel::addExpanderNode(const QString &expanderTitle,
 }
 
 QString
-NXNavigationModel::addPageNode(const QString &pageTitle, NXIconType::IconName awesome) noexcept
+NXNavigationModel::addPageNode(const QString &pageTitle, NXIconType::IconName awesome)
 {
   NXNavigationNode *node = new NXNavigationNode(pageTitle, _rootNode);
   node->setAwesome(awesome);
@@ -240,23 +228,21 @@ NXNavigationModel::addPageNode(const QString &pageTitle, NXIconType::IconName aw
   return node->getNodeKey();
 }
 
-NXNodeOperateResult
-NXNavigationModel::addPageNode(const QString &pageTitle,
-                               const QString &targetExpanderKey,
-                               NXIconType::IconName awesome) noexcept
+NXNodeResultExpected
+NXNavigationModel::addPageNode(const QString &pageTitle, const QString &targetExpanderKey, NXIconType::IconName awesome)
 {
   if (!_nodesMap.contains(targetExpanderKey))
   {
-    return NXUnexpected<QString> { NXNavigationType::NodeOperateError::TargetNodeInvalid };
+    return NXNodeResultUnexpected { NXNavigationType::NodeResult::TargetNodeInvalid };
   }
   NXNavigationNode *parentNode = _nodesMap.value(targetExpanderKey);
   if (!parentNode->getIsExpanderNode())
   {
-    return NXUnexpected<QString> { NXNavigationType::NodeOperateError::TargetNodeTypeError };
+    return NXNodeResultUnexpected { NXNavigationType::NodeResult::TargetNodeTypeError };
   }
   if (parentNode->getDepth() > 10)
   {
-    return NXUnexpected<QString> { NXNavigationType::NodeOperateError::TargetNodeDepthLimit };
+    return NXNodeResultUnexpected { NXNavigationType::NodeResult::TargetNodeDepthLimit };
   }
   NXNavigationNode *node = new NXNavigationNode(pageTitle, parentNode);
   node->setDepth(parentNode->getDepth() + 1);
@@ -278,7 +264,7 @@ NXNavigationModel::addPageNode(const QString &pageTitle,
 }
 
 QString
-NXNavigationModel::addPageNode(const QString &pageTitle, int keyPoints, NXIconType::IconName awesome) noexcept
+NXNavigationModel::addPageNode(const QString &pageTitle, int keyPoints, NXIconType::IconName awesome)
 {
   NXNavigationNode *node = new NXNavigationNode(pageTitle, _rootNode);
   node->setAwesome(awesome);
@@ -296,24 +282,24 @@ NXNavigationModel::addPageNode(const QString &pageTitle, int keyPoints, NXIconTy
   return node->getNodeKey();
 }
 
-NXNodeOperateResult
+NXNodeResultExpected
 NXNavigationModel::addPageNode(const QString &pageTitle,
                                const QString &targetExpanderKey,
                                int keyPoints,
-                               NXIconType::IconName awesome) noexcept
+                               NXIconType::IconName awesome)
 {
   if (!_nodesMap.contains(targetExpanderKey))
   {
-    return NXUnexpected<QString> { NXNavigationType::NodeOperateError::TargetNodeInvalid };
+    return NXNodeResultUnexpected { NXNavigationType::NodeResult::TargetNodeInvalid };
   }
   NXNavigationNode *parentNode = _nodesMap.value(targetExpanderKey);
   if (!parentNode->getIsExpanderNode())
   {
-    return NXUnexpected<QString> { NXNavigationType::NodeOperateError::TargetNodeTypeError };
+    return NXNodeResultUnexpected { NXNavigationType::NodeResult::TargetNodeTypeError };
   }
   if (parentNode->getDepth() > 10)
   {
-    return NXUnexpected<QString> { NXNavigationType::NodeOperateError::TargetNodeDepthLimit };
+    return NXNodeResultUnexpected { NXNavigationType::NodeResult::TargetNodeDepthLimit };
   }
   NXNavigationNode *node = new NXNavigationNode(pageTitle, parentNode);
   node->setDepth(parentNode->getDepth() + 1);
@@ -336,7 +322,7 @@ NXNavigationModel::addPageNode(const QString &pageTitle,
 }
 
 QString
-NXNavigationModel::addCategoryNode(const QString &categoryTitle) noexcept
+NXNavigationModel::addCategoryNode(const QString &categoryTitle)
 {
   NXNavigationNode *node = new NXNavigationNode(categoryTitle, _rootNode);
   node->setDepth(1);
@@ -349,21 +335,21 @@ NXNavigationModel::addCategoryNode(const QString &categoryTitle) noexcept
   return node->getNodeKey();
 }
 
-NXNodeOperateResult
-NXNavigationModel::addCategoryNode(const QString &categoryTitle, const QString &targetExpanderKey) noexcept
+NXNodeResultExpected
+NXNavigationModel::addCategoryNode(const QString &categoryTitle, const QString &targetExpanderKey)
 {
   if (!_nodesMap.contains(targetExpanderKey))
   {
-    return NXUnexpected<QString> { NXNavigationType::NodeOperateError::TargetNodeInvalid };
+    return NXNodeResultUnexpected { NXNavigationType::NodeResult::TargetNodeInvalid };
   }
   NXNavigationNode *parentNode = _nodesMap.value(targetExpanderKey);
   if (!parentNode->getIsExpanderNode())
   {
-    return NXUnexpected<QString> { NXNavigationType::NodeOperateError::TargetNodeTypeError };
+    return NXNodeResultUnexpected { NXNavigationType::NodeResult::TargetNodeTypeError };
   }
   if (parentNode->getDepth() > 10)
   {
-    return NXUnexpected<QString> { NXNavigationType::NodeOperateError::TargetNodeDepthLimit };
+    return NXNodeResultUnexpected { NXNavigationType::NodeResult::TargetNodeDepthLimit };
   }
   NXNavigationNode *node = new NXNavigationNode(categoryTitle, parentNode);
   node->setDepth(parentNode->getDepth() + 1);
@@ -381,7 +367,7 @@ NXNavigationModel::addCategoryNode(const QString &categoryTitle, const QString &
 }
 
 QStringList
-NXNavigationModel::removeNavigationNode(const QString &nodeKey) noexcept
+NXNavigationModel::removeNavigationNode(const QString &nodeKey)
 {
   QList<QString> removeKeyList;
   if (!_nodesMap.contains(nodeKey))
@@ -414,13 +400,13 @@ NXNavigationModel::removeNavigationNode(const QString &nodeKey) noexcept
 }
 
 const NXNavigationNode *
-NXNavigationModel::getRootNode() const noexcept
+NXNavigationModel::getRootNode() const
 {
   return _rootNode;
 }
 
 NXNavigationNode *
-NXNavigationModel::getNavigationNode(const QString &nodeKey) const noexcept
+NXNavigationModel::getNavigationNode(const QString &nodeKey) const
 {
   if (_nodesMap.contains(nodeKey))
   {
@@ -430,7 +416,7 @@ NXNavigationModel::getNavigationNode(const QString &nodeKey) const noexcept
 }
 
 QList<NXNavigationNode *>
-NXNavigationModel::getRootExpanderNodes() const noexcept
+NXNavigationModel::getRootExpanderNodes() const
 {
   QList<NXNavigationNode *> expandedNodeList;
   for (auto node : _rootNode->getChildrenNodes())
@@ -444,7 +430,7 @@ NXNavigationModel::getRootExpanderNodes() const noexcept
 }
 
 QList<NXNavigationNode *>
-NXNavigationModel::getRootExpandedNodes() const noexcept
+NXNavigationModel::getRootExpandedNodes() const
 {
   QList<NXNavigationNode *> expandedNodeList;
   for (auto node : _rootNode->getChildrenNodes())
@@ -458,7 +444,7 @@ NXNavigationModel::getRootExpandedNodes() const noexcept
 }
 
 QList<NXNavigationNode *>
-NXNavigationModel::getRootCategoryNodes() const noexcept
+NXNavigationModel::getRootCategoryNodes() const
 {
   QList<NXNavigationNode *> categoryNodeList;
   for (auto node : _rootNode->getChildrenNodes())
@@ -469,166 +455,4 @@ NXNavigationModel::getRootCategoryNodes() const noexcept
     }
   }
   return categoryNodeList;
-}
-
-Qt::DropActions
-NXNavigationModel::supportedDropActions() const
-{
-  return Qt::MoveAction;
-}
-
-Qt::DropActions
-NXNavigationModel::supportedDragActions() const
-{
-  return Qt::MoveAction;
-}
-
-QStringList
-NXNavigationModel::mimeTypes() const
-{
-  return QStringList() << QStringLiteral("application/x-nxnavigation-node");
-}
-
-QMimeData *
-NXNavigationModel::mimeData(const QModelIndexList &indexes) const
-{
-  QMimeData *mimeData = new QMimeData();
-  if (indexes.isEmpty())
-    return mimeData;
-
-  QModelIndex index      = indexes.first();
-  NXNavigationNode *node = static_cast<NXNavigationNode *>(index.internalPointer());
-  QByteArray encodedData;
-  QDataStream stream(&encodedData, QIODevice::WriteOnly);
-  stream << node->getNodeKey() << node->getNodeTitle();
-  mimeData->setData(QStringLiteral("application/x-nxnavigation-node"), encodedData);
-  return mimeData;
-}
-
-bool
-NXNavigationModel::canDropMimeData(
-    const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const
-{
-  if (!data->hasFormat(QStringLiteral("application/x-nxnavigation-node")) || action != Qt::MoveAction ||
-      _nodesMap.size() <= 1)
-    return false;
-
-  return true;
-}
-
-bool
-NXNavigationModel::dropMimeData(
-    const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
-{
-  enum DropIndicatorPosition
-  {
-    OnItem,
-    AboveItem,
-    BelowItem,
-    OnViewport
-  };
-
-  QByteArray encodedData = data->data(QStringLiteral("application/x-nxnavigation-node"));
-  QDataStream stream(&encodedData, QIODevice::ReadOnly);
-  QString nodeKey, nodeTitle;
-  stream >> nodeKey >> nodeTitle;
-#if defined(DEBUG) || defined(_DEBUG)
-  qDebug() << "nodeKey: " << nodeKey << "\n nodeTitle: " << nodeTitle;
-#endif // ined(DEBUG) || defined(_DEBUG)
-
-  NXNavigationNode *draggedNode = _nodesMap.value(nodeKey);
-  if (!draggedNode)
-    return false;
-
-  const QModelIndex &targetIndex = property("NXDropTargetIndex").value<QModelIndex>();
-  if (!targetIndex.isValid())
-    return false;
-  DropIndicatorPosition dropindicationPos = property("NXDropIndicatorPosition").value<DropIndicatorPosition>();
-
-  NXNavigationNode *targetNode        = static_cast<NXNavigationNode *>(targetIndex.internalPointer());
-  NXNavigationNode *draggedParentNode = draggedNode->getParentNode();
-  NXNavigationNode *targetParentNode  = targetIndex.isValid() ? targetNode->getParentNode() : _rootNode;
-  const bool isSameParent             = (draggedParentNode == targetParentNode);
-
-  int totalRow   = targetParentNode->getChildrenNodes().count();
-  int targetRow  = (row == -1) ? totalRow : row;
-  int draggedRow = draggedNode->getRow();
-
-  // 单个节点移动，上移差1，下移差2（+1）
-  if (isSameParent)
-  {
-    // if (targetRow >= totalRow) targetRow; else
-    if (draggedRow < targetRow)
-    {
-      if (draggedRow + 1 == targetRow)
-        targetRow++; // 差2纠正
-      else if (dropindicationPos == DropIndicatorPosition::BelowItem)
-        targetRow++; // 差2纠正
-      // else if(_dropIndicatorPosition == NXNavigationModel::AboveItem) targetRow;
-    }
-    else if (draggedRow > targetRow)
-    {
-      if (draggedRow - 1 != targetRow)
-        if (dropindicationPos == DropIndicatorPosition::BelowItem)
-          targetRow++; // 下移一个位置
-    }
-  }
-  else
-  {
-    if (dropindicationPos == DropIndicatorPosition::BelowItem)
-      targetRow++; // 下移一个位置
-  }
-
-  beginMoveRows(draggedParentNode->getModelIndex(), draggedRow, draggedRow, parent, targetRow);
-  if (isSameParent)
-  {
-    if (targetRow >= totalRow || draggedRow < targetRow)
-      targetRow--; // 差2纠正，需恢复，确保insert位置正确
-  }
-  draggedParentNode->removeChildNode(draggedNode);
-  targetParentNode->insertChildNode(targetRow, draggedNode);
-
-  // C++23
-  /*auto recursiveUpdateDepth =
-      [](this auto&& self, NXNavigationNode* node, int baseDepth) -> void {
-      node->setDepth(baseDepth + 1);
-      for (auto child : node->getChildrenNodes()) {
-          self(child, baseDepth + 1);
-      }
-      };
-  recursiveUpdateDepth(draggedNode, targetParentNode->getDepth());*/
-  RecursiveUpdateDepth_(draggedNode, targetParentNode->getDepth());
-  endMoveRows();
-  Q_EMIT mineDataDropped(data, draggedNode->getModelIndex(), targetIndex);
-  return true;
-}
-
-bool
-NXNavigationModel::swapTwoNodes(const QString &nodeKey1, const QString &nodeKey2) noexcept
-{
-  auto it = _nodesMap.begin();
-  unsigned flag { 0 };
-  decltype(it) nodeKeyIt1;
-  decltype(it) nodeKeyIt2;
-  for (; it != _nodesMap.end(); ++it)
-  {
-    if (it.key() == nodeKey1)
-    {
-      nodeKeyIt1 = it;
-      ++flag;
-      continue;
-    }
-    if (it.key() == nodeKey2)
-    {
-      nodeKeyIt2 = it;
-      ++flag;
-      continue;
-    }
-    if (flag == 2)
-    {
-      std::swap(nodeKeyIt1.value(), nodeKeyIt2.value());
-      return true;
-    }
-  }
-  return false;
 }

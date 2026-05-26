@@ -7,14 +7,13 @@ class NXNavigationBar;
 class NXNavigationRouteCommand : public NXActionCommand
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE(NXNavigationBar *, NavigationBar);
-  Q_PRIVATE_CREATE(const QString &, UndoPageKey);
-  Q_PRIVATE_CREATE(const QString &, RedoPageKey);
-  Q_PROPERTY_CREATE(QStringList, RedoBreadcrumbList)
+  Q_PRIVATE_CREATE(QS_SET_CREF(QString), UndoPageKey)
+  Q_PRIVATE_CREATE(QS_SET_CREF(QString), RedoPageKey)
+  Q_PRIVATE_CREATE(NXNavigationBar *, NavigationBar)
 
 public:
   explicit NXNavigationRouteCommand(QObject *parent = nullptr);
-  ~NXNavigationRouteCommand() override;
+  ~NXNavigationRouteCommand();
 
   void undo() override;
   void redo() override;

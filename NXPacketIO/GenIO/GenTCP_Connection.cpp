@@ -1,13 +1,13 @@
-﻿#include "GenIO/GenTCP_Connection.h"
+#include "GenTCP_Connection.h"
 
 #include <cstring>
 #include <iostream>
 
-#include "GenIO/GenHostName.h"
-#include "GenIO/GenIP.h"
-#include "GenIO/GenInternetAddress.h"
-#include "GenIO/GenInternetSocketAddress.h"
-#include "GenIO/GenSocket.h"
+#include "GenHostName.h"
+#include "GenIP.h"
+#include "GenInternetAddress.h"
+#include "GenInternetSocketAddress.h"
+#include "GenSocket.h"
 GenTCP_Connection::GenTCP_Connection()
     : GenSocketConnection(new GenSockets::GenSocket(GenSockets::GenSocket::cTCP_SOCKET)), mUseMessageHeaders(false), mIsInitialized(false)
 {

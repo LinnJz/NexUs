@@ -47,7 +47,7 @@ NXToolBarStyle::drawPrimitive(PrimitiveElement element,
   }
   case QStyle::PE_IndicatorToolBarHandle :
   {
-    // 拖动虚线
+    //拖动虚线
     QRect handleRect = option->rect;
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
@@ -69,7 +69,7 @@ NXToolBarStyle::drawPrimitive(PrimitiveElement element,
   }
   case QStyle::PE_IndicatorToolBarSeparator :
   {
-    // 间隔符绘制
+    //间隔符绘制
     QRect separatorRect = option->rect;
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
@@ -107,35 +107,34 @@ NXToolBarStyle::drawControl(ControlElement element,
   {
   case QStyle::CE_ToolButtonLabel :
   {
-    // 展开按钮
+    //展开按钮
     if (const QStyleOptionToolButton *bopt = qstyleoption_cast<const QStyleOptionToolButton *>(option))
     {
       painter->save();
       painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
       painter->setPen(Qt::NoPen);
-      if (widget->objectName() == "qt_toolbar_ext_button")
+      if (widget->objectName() == QStringLiteral("qt_toolbar_ext_button"))
       {
         if (bopt->state.testFlag(QStyle::State_Enabled) && bopt->state.testFlag(QStyle::State_MouseOver))
         {
           painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
           painter->drawRect(bopt->rect);
         }
-        // 展开图标
+        //展开图标
         painter->setPen(!bopt->state.testFlag(QStyle::State_Enabled) ? NXThemeColor(_themeMode, BasicTextDisable)
                                                                      : NXThemeColor(_themeMode, BasicText));
         QFont iconFont = QFont(QStringLiteral("NXAwesome"));
         iconFont.setPixelSize(18);
         painter->setFont(iconFont);
-        painter->drawText(bopt->rect, Qt::AlignCenter, QChar(NXIconType::AngleRight));
+        painter->drawText(bopt->rect, Qt::AlignCenter, QChar((unsigned short) NXIconType::AngleRight));
       }
       else
       {
         if (bopt->arrowType != Qt::NoArrow)
         {
-          painter->restore();
           break;
         }
-        // 背景绘制
+        //背景绘制
         if (bopt->state.testFlag(QStyle::State_Enabled))
         {
           if (bopt->state.testFlag(QStyle::State_Sunken))
@@ -152,17 +151,17 @@ NXToolBarStyle::drawControl(ControlElement element,
             }
           }
         }
-        // 指示器绘制
+        //指示器绘制
         _drawIndicator(painter, bopt, widget);
 
-        // 图标绘制
+        //图标绘制
         QRect contentRect = subControlRect(QStyle::CC_ToolButton, bopt, QStyle::SC_ScrollBarAddLine, widget);
         QRect iconRect    = contentRect;
         int heightOffset  = iconRect.height() * 0.1;
         iconRect.adjust(3, heightOffset, -3, -heightOffset);
         _drawIcon(painter, iconRect, bopt, widget);
 
-        // 文字绘制
+        //文字绘制
         contentRect.adjust(0, heightOffset, 0, -heightOffset);
         _drawText(painter, contentRect, bopt);
       }
@@ -201,9 +200,9 @@ NXToolBarStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
 
 QSize
 NXToolBarStyle::sizeFromContents(ContentsType type,
-                                  const QStyleOption *option,
-                                  const QSize &size,
-                                  const QWidget *widget) const
+                                 const QStyleOption *option,
+                                 const QSize &size,
+                                 const QWidget *widget) const
 {
   if (_pToolButtonSize.isValid())
   {
@@ -223,14 +222,12 @@ NXToolBarStyle::sizeFromContents(ContentsType type,
 }
 
 void
-NXToolBarStyle::_drawIndicator(QPainter *painter,
-                               const QStyleOptionToolButton *bopt,
-                               const QWidget *widget) const noexcept
+NXToolBarStyle::_drawIndicator(QPainter *painter, const QStyleOptionToolButton *bopt, const QWidget *widget) const
 {
   if (bopt->features.testFlag(QStyleOptionToolButton::MenuButtonPopup))
   {
     QRect indicatorRect = subControlRect(QStyle::CC_ToolButton, bopt, QStyle::SC_ScrollBarSubLine, widget);
-    // 指示器区域
+    //指示器区域
     if (bopt->state.testFlag(QStyle::State_Enabled) && bopt->activeSubControls.testFlag(QStyle::SC_ScrollBarSubLine))
     {
       painter->setBrush(NXThemeColor(_themeMode, BasicIndicator));
@@ -244,7 +241,7 @@ NXToolBarStyle::_drawIndicator(QPainter *painter,
       path.closeSubpath();
       painter->drawPath(path);
     }
-    // 指示器
+    //指示器
     painter->setBrush(bopt->state.testFlag(QStyle::State_Enabled) ? NXThemeColor(_themeMode, BasicText)
                                                                   : NXThemeColor(_themeMode, BasicTextDisable));
     QPainterPath indicatorPath;
@@ -261,7 +258,7 @@ void
 NXToolBarStyle::_drawIcon(QPainter *painter,
                           QRectF iconRect,
                           const QStyleOptionToolButton *bopt,
-                          const QWidget *widget) const noexcept
+                          const QWidget *widget) const
 {
   if (bopt->toolButtonStyle != Qt::ToolButtonTextOnly)
   {
@@ -274,7 +271,7 @@ NXToolBarStyle::_drawIcon(QPainter *painter,
     }
     if (action->property("NXIconType").toString().isEmpty())
     {
-      // 绘制QIcon
+      //绘制QIcon
       QIcon icon = bopt->icon;
       if (!icon.isNull())
       {
@@ -309,7 +306,7 @@ NXToolBarStyle::_drawIcon(QPainter *painter,
     }
     else
     {
-      // 绘制NXIcon
+      //绘制NXIcon
       painter->save();
       painter->setPen(NXThemeColor(_themeMode, BasicText));
       QFont iconFont = QFont(QStringLiteral("NXAwesome"));
@@ -345,7 +342,7 @@ NXToolBarStyle::_drawIcon(QPainter *painter,
 }
 
 void
-NXToolBarStyle::_drawText(QPainter *painter, QRect contentRect, const QStyleOptionToolButton *bopt) const noexcept
+NXToolBarStyle::_drawText(QPainter *painter, QRect contentRect, const QStyleOptionToolButton *bopt) const
 {
   if (!bopt->text.isEmpty())
   {

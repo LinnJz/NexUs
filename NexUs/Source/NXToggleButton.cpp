@@ -5,23 +5,18 @@
 #include <QPainterPath>
 #include <QPropertyAnimation>
 
-#include "NXIcon.h"
 #include "NXTheme.h"
 #include "private/NXToggleButtonPrivate.h"
-Q_PROPERTY_CREATE_CPP(NXToggleButton, bool, IsIconVisible)
+Q_PROPERTY_CREATE_CPP(NXToggleButton, QS_SET_CREF(QString), Text)
 Q_PROPERTY_CREATE_CPP(NXToggleButton, int, BorderRadius)
-Q_PROPERTY_CREATE_2_CPP(NXToggleButton, const QString &, QString, Text)
 
 NXToggleButton::NXToggleButton(QWidget *parent)
     : QWidget(parent)
     , d_ptr(new NXToggleButtonPrivate())
 {
   Q_D(NXToggleButton);
-  d->q_ptr           = this;
-  d->_pIsIconVisible = false;
-  d->_pBorderRadius  = 3;
-  d->_themeMode      = nxTheme->getThemeMode();
-  d->_pToggleAlpha   = 0;
+  d->q_ptr      = this;
+  d->_themeMode = nxTheme->getThemeMode();
   setMouseTracking(true);
   setFixedSize(80, 32);
   QFont font = this->font();
@@ -33,8 +28,6 @@ NXToggleButton::NXToggleButton(QWidget *parent)
   {
     d->_themeMode = themeMode;
   });
-
-  setProperty("NXIconType", QChar(NXIconType::AngleRight));
 }
 
 NXToggleButton::NXToggleButton(const QString &text, QWidget *parent)
@@ -49,7 +42,7 @@ NXToggleButton::~NXToggleButton()
 }
 
 void
-NXToggleButton::setIsToggled(bool isToggled) noexcept
+NXToggleButton::setIsToggled(bool isToggled)
 {
   Q_D(NXToggleButton);
   d->_isToggled                = isToggled;
@@ -60,17 +53,17 @@ NXToggleButton::setIsToggled(bool isToggled) noexcept
 }
 
 bool
-NXToggleButton::getIsToggled() const noexcept
+NXToggleButton::getIsToggled() const
 {
   Q_D(const NXToggleButton);
   return d->_isToggled;
 }
 
 void
-NXToggleButton::setNXIcon(NXIconType::IconName icon) noexcept
+NXToggleButton::setNXIcon(NXIconType::IconName icon)
 {
   Q_D(NXToggleButton);
-  d->_pAwesome = icon;
+  d->_pNXIcon = icon;
 }
 
 bool
@@ -176,16 +169,16 @@ NXToggleButton::paintEvent(QPaintEvent *event)
                      foregroundRect.x() + foregroundRect.width() - d->_pBorderRadius, height() - 1);
   }
 
-  // 文字绘制
+  //文字绘制
   painter.setPen(isEnabled() ? d->_isToggled ? NXThemeColor(d->_themeMode, BasicTextInvert)
                                              : NXThemeColor(d->_themeMode, BasicText)
                              : NXThemeColor(d->_themeMode, BasicTextDisable));
-  if (d->_pIsIconVisible)
+  if (d->_pNXIcon != NXIconType::None)
   {
     painter.setFont(QFont(QStringLiteral("NXAwesome")));
     QFontMetrics fm(painter.font());
     QRect iconRect = foregroundRect.adjusted(0, 3, -foregroundRect.width() / 3 * 2 - 5, 0);
-    painter.drawText(iconRect, Qt::AlignVCenter | Qt::AlignRight, QChar(d->_pAwesome));
+    painter.drawText(iconRect, Qt::AlignVCenter | Qt::AlignRight, QChar(d->_pNXIcon));
     painter.setFont(QFont(QStringLiteral("Microsoft YaHei")));
     QRect textRect = foregroundRect.adjusted(foregroundRect.width() / 3 + 5, 0, 0, 0);
     painter.drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, d->_pText);

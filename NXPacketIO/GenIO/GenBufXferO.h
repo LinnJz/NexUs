@@ -1,4 +1,4 @@
-﻿// GenOBufXfer - This class holds all the put logic for a GenIO Buffer
+// GenOBufXfer - This class holds all the put logic for a GenIO Buffer
 //               Note the virtual inheritance for the multiple inheritance
 //               in GenIOBuf.
 //               This class is intended to be a base class for GenBufOUser,
@@ -13,9 +13,9 @@
 #include <string>
 #include <vector>
 
-#include "GenIO/GenBuf.h"
-#include "GenIO/GenIODefs.h"
-#include "GenIO/GenOConvert.h"
+#include "GenBuf.h"
+#include "GenIODefs.h"
+#include "GenOConvert.h"
 
 class NX_PACKETIO_EXPORT GenBufXferO : virtual public GenBuf
 {

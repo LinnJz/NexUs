@@ -1,6 +1,7 @@
-﻿#include "NXApplication.h"
+﻿#include "NXPlainTextEditPrivate.h"
+
+#include "NXApplication.h"
 #include "NXPlainTextEdit.h"
-#include "NXPlainTextEditPrivate.h"
 #include "NXTheme.h"
 
 NXPlainTextEditPrivate::NXPlainTextEditPrivate(QObject *parent)
@@ -40,7 +41,7 @@ NXPlainTextEditPrivate::onWMWindowClickedEvent(const QVariantMap &data)
 }
 
 void
-NXPlainTextEditPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
+NXPlainTextEditPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
 {
   Q_Q(NXPlainTextEdit);
   _themeMode       = themeMode;

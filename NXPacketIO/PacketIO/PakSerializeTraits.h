@@ -1,4 +1,4 @@
-﻿#ifndef PAKSERIALIZETRAITS_H
+#ifndef PAKSERIALIZETRAITS_H
 #define PAKSERIALIZETRAITS_H
 /* This file is used to categorize, variable types.  Currently, basic types
  * such as int, float, etc are separated from other types.

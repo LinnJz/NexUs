@@ -5,9 +5,8 @@
 #include <QPoint>
 #include <QRect>
 #include <QTimer>
-#include "NXDef.h"
-#include "NXProperty.h"
 
+#include "NXDef.h"
 class NXRoller;
 class QPropertyAnimation;
 
@@ -15,8 +14,8 @@ class NXRollerPrivate : public QObject
 {
   Q_OBJECT
   Q_D_CREATE(NXRoller)
-  Q_PROPERTY_CREATE(qreal, ScrollOffset)
   Q_PROPERTY_CREATE_D(QStringList, ItemList)
+  Q_PROPERTY_CREATE(qreal, ScrollOffset)
   Q_PROPERTY_CREATE_D(int, BorderRadius)
   Q_PROPERTY_CREATE_D(int, ItemHeight)
   Q_PROPERTY_CREATE_D(int, MaxVisibleItems)
@@ -26,7 +25,7 @@ class NXRollerPrivate : public QObject
 
 public:
   explicit NXRollerPrivate(QObject *parent = nullptr);
-  ~NXRollerPrivate() override;
+  ~NXRollerPrivate();
 
 private:
   bool _isUpArrowPress { false };
@@ -41,8 +40,7 @@ private:
   QPropertyAnimation *_scrollAnimation { nullptr };
   QTimer *_pressSustainTimer { nullptr };
   QTimer *_repeatScrollTimer { nullptr };
-
-  void _scroll(int delta) noexcept;
+  void _scroll(int delta);
 };
 
-#endif // NXFRAMEWORK_NEXUS_PRIVATE_NXROLLERPRIVATE_H_
+#endif //NXFRAMEWORK_NEXUS_PRIVATE_NXROLLERPRIVATE_H_

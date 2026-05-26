@@ -1,9 +1,9 @@
-﻿#ifndef PAKPACKET_H
+#ifndef PAKPACKET_H
 #define PAKPACKET_H
 
 #include "NXPacketIO_Export.h"
 
-#include "PacketIO/PakIntTypes.h"
+#include "PakIntTypes.h"
 
 class PakConnection;
 

@@ -1,13 +1,13 @@
 ﻿#include "NXDoubleSpinBoxPrivate.h"
 
-#include "NXDoubleSpinBox.h"
-#include "NXMenu.h"
-#include "NXTheme.h"
-
 #include <QClipboard>
 #include <QGuiApplication>
 #include <QLineEdit>
 #include <QTimer>
+
+#include "NXDoubleSpinBox.h"
+#include "NXMenu.h"
+#include "NXTheme.h"
 
 NXDoubleSpinBoxPrivate::NXDoubleSpinBoxPrivate(QObject *parent)
     : QObject { parent }
@@ -19,25 +19,25 @@ NXDoubleSpinBoxPrivate::~NXDoubleSpinBoxPrivate()
 }
 
 void
-NXDoubleSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
+NXDoubleSpinBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
 {
   Q_Q(NXDoubleSpinBox);
   _themeMode = themeMode;
   if (q->isVisible())
   {
-    _changnxTheme();
+    _changeTheme();
   }
   else
   {
     QTimer::singleShot(1, this, [=]
     {
-      _changnxTheme();
+      _changeTheme();
     });
   }
 }
 
 NXMenu *
-NXDoubleSpinBoxPrivate::_createStandardContextMenu() noexcept
+NXDoubleSpinBoxPrivate::_createStandardContextMenu()
 {
   Q_Q(NXDoubleSpinBox);
   QLineEdit *lineEdit = q->lineEdit();
@@ -102,7 +102,7 @@ NXDoubleSpinBoxPrivate::_createStandardContextMenu() noexcept
 }
 
 void
-NXDoubleSpinBoxPrivate::_changnxTheme() noexcept
+NXDoubleSpinBoxPrivate::_changeTheme()
 {
   Q_Q(NXDoubleSpinBox);
   QPalette palette;

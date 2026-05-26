@@ -1,0 +1,47 @@
+﻿使用当前skills，tdd开发，写一个python脚本，扫描指定目录下的所有与C++相关的文件，将#include 的顺序调整，同时需要给相关的文件添加前缀DeveloperComponents/Command、DeveloperComponents/、private/
+按照标准来：
+#include "" // 头文件相关（仅.cpp文件，如果是.h就没有这）
+
+#include <> 标准库相关
+
+#include <> qt相关
+
+#include "" 引入的关联类
+示例：
+#include "ElaApplication.h"
+
+#include "ElaTheme.h"
+#include "ElaWinShadowHelper.h"
+#include "private/ElaApplicationPrivate.h"
+#include <QApplication>
+#include <QCursor>
+#include <QFontDatabase>
+#include <QFontInfo>
+#include <QWidget>
+#include <utility>
+修改为顺序，并补全关联文件的前缀，注意头文件相关的不需要添加关联前缀
+#include "ElaApplication.h" // 不需要添加关联前缀，即使文件在DeveloperComponents、private、DeveloperComponents/Command等
+
+#include <utility>
+
+#include <QApplication>
+#include <QCursor>
+#include <QFontDatabase>
+#include <QFontInfo>
+#include <QWidget>
+
+#include "DeveloperComponents/ElaWinShadowHelper.h" // 添加关联前缀
+#include "ElaTheme.h" // 与指定目录同级的文件不需要关联
+#include "private/ElaApplicationPrivate.h"
+注意事项，每个part部分，需要按照字母顺序进行声明，如我们给定的结果qtpart部分
+#include <QApplication>
+#include <QCursor>
+#include <QFontDatabase>
+#include <QFontInfo>
+#include <QWidget>
+顺序符合字母比较顺序，
+引入的关联类part部分
+#include "DeveloperComponents/ElaWinShadowHelper.h" // 添加关联前缀
+#include "ElaTheme.h" // 与指定目录同级的文件不需要关联
+#include "private/ElaApplicationPrivate.h"
+顺序符合字母比较顺序。

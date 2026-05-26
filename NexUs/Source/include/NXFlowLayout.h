@@ -1,4 +1,4 @@
-﻿#ifndef NXFLOWLAYOUT_H
+#ifndef NXFLOWLAYOUT_H
 #define NXFLOWLAYOUT_H
 
 #include <QLayout>
@@ -16,11 +16,11 @@ class NX_EXPORT NXFlowLayout : public QLayout
 public:
   explicit NXFlowLayout(QWidget *parent, int margin = -1, int hSpacing = -1, int vSpacing = -1);
   explicit NXFlowLayout(int margin = -1, int hSpacing = -1, int vSpacing = -1);
-  ~NXFlowLayout() override;
+  ~NXFlowLayout();
 
   void addItem(QLayoutItem *item) override;
-  int horizontalSpacing() const noexcept;
-  int verticalSpacing() const noexcept;
+  int horizontalSpacing() const;
+  int verticalSpacing() const;
   Qt::Orientations expandingDirections() const override;
   bool hasHeightForWidth() const override;
   int heightForWidth(int) const override;
@@ -31,7 +31,7 @@ public:
   QSize sizeHint() const override;
   QLayoutItem *takeAt(int index) override;
 
-  void setIsAnimation(bool isAnimation) noexcept;
+  void setIsAnimation(bool isAnimation);
 };
 
 #endif // NXFLOWLAYOUT_H

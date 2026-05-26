@@ -1,9 +1,9 @@
 ﻿#ifndef NEXUS_NXLCDNUMBERPRIVATE_H
 #define NEXUS_NXLCDNUMBERPRIVATE_H
 
-#include "NXDef.h"
-
 #include <QObject>
+
+#include "NXDef.h"
 class QTimer;
 class NXLCDNumber;
 class NXLCDNumberStyle;
@@ -17,9 +17,9 @@ class NXLCDNumberPrivate : public QObject
 
 public:
   explicit NXLCDNumberPrivate(QObject *parent = nullptr);
-  ~NXLCDNumberPrivate() override;
+  ~NXLCDNumberPrivate();
 
-  Q_SLOT void onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept;
+  Q_SLOT void onThemeModeChanged(NXThemeType::ThemeMode themeMode);
 
 private:
   NXThemeType::ThemeMode _themeMode;
@@ -27,4 +27,4 @@ private:
   NXLCDNumberStyle *_lcdNumberStyle { nullptr };
 };
 
-#endif // NEXUS_NXLCDNUMBERPRIVATE_H
+#endif //NEXUS_NXLCDNUMBERPRIVATE_H

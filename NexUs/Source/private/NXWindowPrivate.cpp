@@ -1,15 +1,15 @@
 ﻿#include "NXWindowPrivate.h"
 
 #include <QApplication>
-#include <QMovie>
 #include <QPropertyAnimation>
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QtMath>
-#include "DeveloperComponents/NXThemeAnimationWidget.h"
+
 #include "NXAppBarPrivate.h"
-#include "NXApplication.h"
 #include "NXCentralStackedWidget.h"
+#include "DeveloperComponents/NXThemeAnimationWidget.h"
+#include "NXApplication.h"
 #include "NXNavigationBar.h"
 #include "NXTheme.h"
 #include "NXWindow.h"
@@ -24,7 +24,7 @@ NXWindowPrivate::~NXWindowPrivate()
 }
 
 void
-NXWindowPrivate::onNavigationButtonClicked() noexcept
+NXWindowPrivate::onNavigationButtonClicked()
 {
   if (_isNavigationBarFloat)
   {
@@ -107,7 +107,7 @@ NXWindowPrivate::onWMWindowClickedEvent(const QVariantMap &data)
 }
 
 void
-NXWindowPrivate::onThemeReadyChange() noexcept
+NXWindowPrivate::onThemeReadyChange()
 {
   Q_Q(NXWindow);
   // 主题变更绘制窗口
@@ -116,7 +116,7 @@ NXWindowPrivate::onThemeReadyChange() noexcept
   case NXApplicationType::Normal :
   case NXApplicationType::NXMica :
   {
-    if (_pThemeChangeTime <= 0)
+    if (_pThemeChangeTime <= 0 || _pThemeChangeTime > 3000)
     {
       if (nxTheme->getThemeMode() == NXThemeType::Light)
       {
@@ -178,7 +178,7 @@ NXWindowPrivate::onThemeReadyChange() noexcept
 }
 
 void
-NXWindowPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept
+NXWindowPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode)
 {
   Q_Q(NXWindow);
   _themeMode = themeMode;
@@ -195,7 +195,7 @@ NXWindowPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept
 }
 
 void
-NXWindowPrivate::onWindowDisplayModeChanged() noexcept
+NXWindowPrivate::onWindowDisplayModeChanged()
 {
   Q_Q(NXWindow);
   _windowDisplayMode = nxApp->getWindowDisplayMode();
@@ -214,11 +214,11 @@ NXWindowPrivate::onWindowDisplayModeChanged() noexcept
 void
 NXWindowPrivate::onNavigationNodeClicked(NXNavigationType::NavigationNodeType nodeType,
                                          const QString &nodeKey,
-                                         bool isRouteBack) noexcept
+                                         bool isRouteBack)
 {
   Q_Q(NXWindow);
-  QWidget *page = _routeMap.value(nodeKey);
-  if (page)
+
+  if (QWidget *page = _routeMap.value(nodeKey))
   {
     int nodeIndex = _navigationCenterStackedWidget->getContainerStackedWidget()->indexOf(page);
     if (_navigationTargetIndex == nodeIndex ||
@@ -229,14 +229,13 @@ NXWindowPrivate::onNavigationNodeClicked(NXNavigationType::NavigationNodeType no
     _navigationTargetIndex = nodeIndex;
     _navigationCenterStackedWidget->doWindowStackSwitch(_pStackSwitchMode, nodeIndex, isRouteBack);
   }
-  // 仅允许页脚节点窗口为空，可作为功能按钮使用
-  Q_EMIT q->navigationNodeClicked(nodeType, nodeKey, page);
+  Q_EMIT q->navigationNodeClicked(nodeType, nodeKey);
 }
 
 void
 NXWindowPrivate::onNavigationNodeAdded(NXNavigationType::NavigationNodeType nodeType,
                                        const QString &nodeKey,
-                                       QWidget *page) noexcept
+                                       QWidget *page)
 {
   if (nodeType == NXNavigationType::CategoryNode)
   {
@@ -250,72 +249,85 @@ NXWindowPrivate::onNavigationNodeAdded(NXNavigationType::NavigationNodeType node
 }
 
 void
-NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString &nodeKey) noexcept
+NXWindowPrivate::onNavigationNodeRemoved(NXNavigationType::NavigationNodeType nodeType, const QString &nodeKey)
 {
   Q_Q(NXWindow);
-  if (!_routeMap.contains(nodeKey))
+  auto it = _routeMap.find(nodeKey);
+  if (it == _routeMap.end())
   {
     return;
   }
+  QWidget *page = it.value();
+  _routeMap.remove(nodeKey);
   _pageMetaMap.remove(nodeKey);
-  QWidget *page = _routeMap.take(nodeKey);
   _navigationCenterStackedWidget->getContainerStackedWidget()->removeWidget(page);
   page->deleteLater();
   QWidget *currentWidget = _navigationCenterStackedWidget->getContainerStackedWidget()->currentWidget();
   if (currentWidget)
   {
-    const QString &currentKey = currentWidget->property("NXPageKey").toString();
-    q->navigation(currentKey);
-    Q_EMIT q->navigationNodeRemoved(nodeType, currentKey, currentWidget);
+    q->navigation(currentWidget->property("NXPageKey").toString());
   }
-  else
-  {
-    Q_EMIT q->navigationNodeRemoved(nodeType, _navigationBar->getNavigationRootKey(), nullptr);
-  }
+  Q_EMIT q->navigationNodeRemoved(nodeType, nodeKey);
 }
 
 void
-NXWindowPrivate::onNavigationRouterStateChanged(const QString &domainName, NXActionCommanderType::CommanderState state)
+NXWindowPrivate::onNavigationRouterStateChanged(NXNavigationRouterType::RouteMode routeMode)
 {
-  if (domainName != QStringLiteral("NXWidgetToolsAction"))
+  switch (routeMode)
   {
-    return;
-  }
-  switch (state)
-  {
-  case NXActionCommanderType::UndoValid :
+  case NXNavigationRouterType::BackValid :
   {
     _appBar->setRouteBackButtonEnable(true);
     break;
   }
-  case NXActionCommanderType::UndoInvalid :
+  case NXNavigationRouterType::BackInvalid :
   {
     _appBar->setRouteBackButtonEnable(false);
     break;
   }
-  case NXActionCommanderType::RedoValid :
+  case NXNavigationRouterType::ForwardValid :
   {
     _appBar->setRouteForwardButtonEnable(true);
     break;
   }
-  case NXActionCommanderType::RedoInvalid :
+  case NXNavigationRouterType::ForwardInvalid :
   {
     _appBar->setRouteForwardButtonEnable(false);
     break;
   }
-  default : Q_UNREACHABLE();
+  }
+}
+
+void
+NXWindowPrivate::onNavigationRoute(const QVariantMap &routeData)
+{
+  Q_Q(NXWindow);
+  int routeIndex           = -1;
+  _centralStackTargetIndex = routeIndex;
+  bool isRouteBack         = routeData.value(QStringLiteral("NXRouteBackMode")).toBool();
+  if (isRouteBack)
+  {
+    routeIndex = routeData.value(QStringLiteral("NXBackCentralStackIndex")).toUInt();
+  }
+  else
+  {
+    routeIndex = routeData.value(QStringLiteral("NXForwardCentralStackIndex")).toUInt();
+  }
+  if (routeIndex != _centerStackedWidget->getContainerStackedWidget()->currentIndex())
+  {
+    _centerStackedWidget->doWindowStackSwitch(_pStackSwitchMode, routeIndex, isRouteBack);
   }
 }
 
 qreal
-NXWindowPrivate::_distance(QPoint point1, QPoint point2) noexcept
+NXWindowPrivate::_distance(QPoint point1, QPoint point2)
 {
   return std::sqrt((point1.x() - point2.x()) * (point1.x() - point2.x()) +
                    (point1.y() - point2.y()) * (point1.y() - point2.y()));
 }
 
 void
-NXWindowPrivate::_resetWindowLayout(bool isAnimation) noexcept
+NXWindowPrivate::_resetWindowLayout(bool isAnimation)
 {
   if (isAnimation)
   {
@@ -337,7 +349,7 @@ NXWindowPrivate::_resetWindowLayout(bool isAnimation) noexcept
 }
 
 void
-NXWindowPrivate::_doNavigationDisplayModeChange() noexcept
+NXWindowPrivate::_doNavigationDisplayModeChange()
 {
   Q_Q(NXWindow);
   if (!_isNavigationEnable || !_isInitFinished)

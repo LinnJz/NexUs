@@ -1,4 +1,4 @@
-﻿#ifndef UTTHREAD_H
+#ifndef UTTHREAD_H
 #define UTTHREAD_H
 
 #define MAX_THREADS 64

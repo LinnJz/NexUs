@@ -35,9 +35,9 @@ NXGroupBoxStyle::drawComplexControl(ComplexControl control,
       painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
       int borderRadius = 6;
-      if (const NXGroupBox *elaGroupBox = qobject_cast<const NXGroupBox *>(widget))
+      if (const NXGroupBox *groupBox = qobject_cast<const NXGroupBox *>(widget))
       {
-        borderRadius = elaGroupBox->getBorderRadius();
+        borderRadius = groupBox->getBorderRadius();
       }
 
       QRect frameRect = proxy()->subControlRect(CC_GroupBox, option, SC_GroupBoxFrame, widget);
@@ -65,9 +65,10 @@ NXGroupBoxStyle::drawComplexControl(ComplexControl control,
 
         int textWidth = fm.horizontalAdvance(groupBox->text);
         int textLeft  = textRect.center().x() - textWidth / 2;
+        int textRight = textRect.center().x() + textWidth / 2;
 
         QRect titleBgRect(textLeft - 4, borderTop - 2, textWidth + 8, 2);
-        // painter->fillRect(titleBgRect, NXThemeColor(_themeMode, WindowBase));
+        //painter->fillRect(titleBgRect, NXThemeColor(_themeMode, WindowBase));
 
         QColor textColor = NXThemeColor(_themeMode, BasicText);
         if (option->state & State_HasFocus)

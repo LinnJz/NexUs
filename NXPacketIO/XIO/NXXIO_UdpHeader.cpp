@@ -1,8 +1,8 @@
-﻿#include "xio/NXXIO_UdpHeader.h"
+#include "xio/NXXIO_UdpHeader.h"
 #include <iostream>
 
-#include "GenIO/GenI.h"
-#include "GenIO/GenO.h"
+#include "GenI.h"
+#include "GenO.h"
 NXXIO_UdpHeader::NXXIO_UdpHeader(int aVersionID)
     : mXIO_Version(0xfeedbeef ^ aVersionID)
 {

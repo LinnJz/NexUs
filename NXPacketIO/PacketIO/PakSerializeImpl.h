@@ -1,7 +1,7 @@
-﻿#ifndef PAKSERIALIZEIMPL_H
+#ifndef PAKSERIALIZEIMPL_H
 #define PAKSERIALIZEIMPL_H
 
-#include "PacketIO/PakSerialize.h"
+#include "PakSerialize.h"
 
 namespace PakSerialization
 {

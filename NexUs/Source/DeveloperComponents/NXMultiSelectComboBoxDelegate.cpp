@@ -20,7 +20,7 @@ NXMultiSelectComboBoxDelegate::~NXMultiSelectComboBoxDelegate()
 }
 
 void
-NXMultiSelectComboBoxDelegate::setItemSelection(const QList<bool> &selection) noexcept
+NXMultiSelectComboBoxDelegate::setItemSelection(const QVector<bool> &selection)
 {
   _itemSelection = selection;
 }
@@ -101,8 +101,9 @@ NXMultiSelectComboBoxDelegate::paint(QPainter *painter,
     QFont iconFont(QStringLiteral("NXAwesome"));
     iconFont.setPixelSize(checkBoxSize * 0.75);
     painter->setFont(iconFont);
-    painter->drawText(checkBoxRect, Qt::AlignCenter, QChar(NXIconType::Check));
+    painter->drawText(checkBoxRect, Qt::AlignCenter, QChar((unsigned short) NXIconType::Check));
   }
+
   painter->setFont(option.font);
   painter->setPen(NXThemeColor(_themeMode, BasicText));
   QRect textRect(bgRect.x() + checkBoxSize + 18, bgRect.y(), bgRect.width() - checkBoxSize - 18, bgRect.height());

@@ -1,12 +1,36 @@
-﻿#include "NXComboBox.h"
-#include "NXComboBoxPrivate.h"
-#include "NXTheme.h"
+﻿#include "NXComboBoxPrivate.h"
 
+#include <QEvent>
 #include <QLineEdit>
+
+#include "NXComboBox.h"
+#include "NXTheme.h"
 
 NXComboBoxPrivate::NXComboBoxPrivate(QObject *parent)
     : QObject { parent }
 {
+}
+
+bool
+NXComboBoxPrivate::eventFilter(QObject *watched, QEvent *event)
+{
+  if (event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease)
+  {
+    _isKeyEvent = true;
+  }
+  else if (event->type() == QEvent::MouseMove || event->type() == QEvent::HoverMove)
+  {
+    _isKeyEvent = false;
+  }
+  else if (event->type() == QEvent::Hide)
+  {
+    Q_Q(NXComboBox);
+    if (watched == q->findChild<QFrame *>())
+    {
+      q->_resetIndicatorAnimations();
+    }
+  }
+  return QObject::eventFilter(watched, event);
 }
 
 NXComboBoxPrivate::~NXComboBoxPrivate()
@@ -14,7 +38,7 @@ NXComboBoxPrivate::~NXComboBoxPrivate()
 }
 
 void
-NXComboBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
+NXComboBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
 {
   Q_Q(NXComboBox);
   _themeMode    = themeMode;

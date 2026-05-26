@@ -11,7 +11,7 @@ class NXWindowStyle : public QProxyStyle
 
 public:
   explicit NXWindowStyle(QStyle *style = nullptr);
-  ~NXWindowStyle() override;
+  ~NXWindowStyle();
   void drawPrimitive(PrimitiveElement element,
                      const QStyleOption *option,
                      QPainter *painter,

@@ -1,4 +1,4 @@
-﻿#ifndef NXTOOLBAR_H
+#ifndef NXTOOLBAR_H
 #define NXTOOLBAR_H
 
 #include <QToolBar>
@@ -10,18 +10,20 @@ class NX_EXPORT NXToolBar : public QToolBar
 {
   Q_OBJECT
   Q_Q_CREATE(NXToolBar)
-  Q_PRIVATE_CREATE_H(QSize, ToolButtonSize)
 
 public:
   explicit NXToolBar(QWidget *parent = nullptr);
   explicit NXToolBar(const QString &title, QWidget *parent = nullptr);
-  ~NXToolBar() override;
+  ~NXToolBar();
 
-  void setToolBarSpacing(int spacing) noexcept;
-  int getToolBarSpacing() const noexcept;
+  void setToolBarSpacing(int spacing);
+  int getToolBarSpacing() const;
 
-  QAction *addNXIconAction(NXIconType::IconName icon, const QString &text) noexcept;
-  QAction *addNXIconAction(NXIconType::IconName icon, const QString &text, const QKeySequence &shortcut) noexcept;
+  void setToolButtonSize(QSize size);
+  QSize getToolButtonSize() const;
+
+  QAction *addNXIconAction(NXIconType::IconName icon, const QString &text);
+  QAction *addNXIconAction(NXIconType::IconName icon, const QString &text, const QKeySequence &shortcut);
 
 protected:
   void paintEvent(QPaintEvent *event) override;

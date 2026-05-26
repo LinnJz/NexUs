@@ -15,6 +15,9 @@ NXToolBar::NXToolBar(QWidget *parent)
 {
   Q_D(NXToolBar);
   d->q_ptr = this;
+#ifdef Q_OS_MACOS
+  setAttribute(Qt::WA_Hover);
+#endif
   setObjectName("NXToolBar");
   d->_toolBarStyle = new NXToolBarStyle(style());
   setStyle(d->_toolBarStyle);
@@ -55,51 +58,54 @@ NXToolBar::NXToolBar(const QString &title, QWidget *parent)
 NXToolBar::~NXToolBar()
 {
   Q_D(NXToolBar);
-  delete d->_toolBarStyle;
+  QStyle *proxy    = d->_toolBarStyle;
+  d->_toolBarStyle = nullptr;
+  setStyle(nullptr);
+  delete proxy;
 }
 
 void
-NXToolBar::setToolBarSpacing(int spacing) noexcept
+NXToolBar::setToolBarSpacing(int spacing)
 {
   layout()->setSpacing(spacing);
 }
 
 int
-NXToolBar::getToolBarSpacing() const noexcept
+NXToolBar::getToolBarSpacing() const
 {
   return layout()->spacing();
 }
 
 void
-NXToolBar::setToolButtonSize(QSize size) noexcept
+NXToolBar::setToolButtonSize(QSize size)
 {
   Q_D(NXToolBar);
   d->_toolBarStyle->setToolButtonSize(size);
 }
 
 QSize
-NXToolBar::getToolButtonSize() const noexcept
+NXToolBar::getToolButtonSize() const
 {
   Q_D(const NXToolBar);
   return d->_toolBarStyle->getToolButtonSize();
 }
 
 QAction *
-NXToolBar::addNXIconAction(NXIconType::IconName icon, const QString &text) noexcept
+NXToolBar::addNXIconAction(NXIconType::IconName icon, const QString &text)
 {
   QAction *action = new QAction(text, this);
-  action->setProperty("NXIconType", QChar(icon));
+  action->setProperty("NXIconType", QChar((unsigned short) icon));
   action->setIcon(NXIcon::getInstance()->getNXIcon(NXIconType::Broom, 1));
   addAction(action);
   return action;
 }
 
 QAction *
-NXToolBar::addNXIconAction(NXIconType::IconName icon, const QString &text, const QKeySequence &shortcut) noexcept
+NXToolBar::addNXIconAction(NXIconType::IconName icon, const QString &text, const QKeySequence &shortcut)
 {
   QAction *action = new QAction(text, this);
   action->setShortcut(shortcut);
-  action->setProperty("NXIconType", QChar(icon));
+  action->setProperty("NXIconType", QChar((unsigned short) icon));
   action->setIcon(NXIcon::getInstance()->getNXIcon(NXIconType::Broom, 1));
   addAction(action);
   return action;
@@ -116,7 +122,7 @@ NXToolBar::paintEvent(QPaintEvent *event)
   {
     // 高性能阴影
     nxTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, 6);
-    // 背景
+    //背景
     painter.setPen(NXThemeColor(d->_themeMode, PopupBorder));
     painter.setBrush(NXThemeColor(d->_themeMode, DialogBase));
     QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * d->_shadowBorderWidth,

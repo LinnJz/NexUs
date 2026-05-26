@@ -1,4 +1,4 @@
-﻿#ifndef NXCOMBOBOX_H
+#ifndef NXCOMBOBOX_H
 #define NXCOMBOBOX_H
 
 #include <QComboBox>
@@ -15,7 +15,7 @@ class NX_EXPORT NXComboBox : public QComboBox
 
 public:
   explicit NXComboBox(QWidget *parent = nullptr);
-  ~NXComboBox() override;
+  ~NXComboBox();
 
   void setEditable(bool editable);
 
@@ -23,6 +23,10 @@ protected:
   void showPopup() override;
   void hidePopup() override;
   void paintEvent(QPaintEvent *event) override;
+
+private:
+  friend class NXComboBoxPrivate;
+  void _resetIndicatorAnimations();
 };
 
 #endif // NXCOMBOBOX_H

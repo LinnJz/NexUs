@@ -1,4 +1,4 @@
-﻿#include "NXProgressRingPrivate.h"
+#include "NXProgressRingPrivate.h"
 
 NXProgressRingPrivate::NXProgressRingPrivate(QObject *parent)
     : QObject(parent)

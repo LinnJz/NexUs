@@ -23,18 +23,18 @@ class NXCalendarPrivate : public QObject
 
 public:
   explicit NXCalendarPrivate(QObject *parent = nullptr);
-  ~NXCalendarPrivate() override;
-  Q_SLOT void onSwitchButtonClicked() noexcept;
-  Q_SLOT void onCalendarViewClicked(const QModelIndex &index) noexcept;
-  Q_SLOT void onUpButtonClicked() noexcept;
-  Q_SLOT void onDownButtonClicked() noexcept;
+  ~NXCalendarPrivate();
+  Q_SLOT void onSwitchButtonClicked();
+  Q_SLOT void onCalendarViewClicked(const QModelIndex &index);
+  Q_SLOT void onUpButtonClicked();
+  Q_SLOT void onDownButtonClicked();
 
 private:
-  NXThemeType::ThemeMode _themeMode;
-  int _lastSelectedYear { 0 };
-  int _lastSelectedMonth { 1 };
   bool _isSwitchAnimationFinished { true };
   bool _isDrawNewPix { false };
+  int _lastSelectedYear { 0 };
+  int _lastSelectedMonth { 1 };
+  NXThemeType::ThemeMode _themeMode;
   qreal _borderWidth { 1.5 };
   QPixmap _oldCalendarViewPix;
   QPixmap _newCalendarViewPix;
@@ -45,10 +45,9 @@ private:
   NXToolButton *_modeSwitchButton { nullptr };
   NXToolButton *_upButton { nullptr };
   NXToolButton *_downButton { nullptr };
-
-  void _scrollToDate(QDate date) noexcept;
+  void _scrollToDate(QDate date);
   void _doSwitchAnimation(bool isZoomIn);
-  void _updateSwitchButtonText() noexcept;
+  void _updateSwitchButtonText();
 };
 
 #endif // NXCALENDARPRIVATE_H

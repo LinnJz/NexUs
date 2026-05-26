@@ -1,4 +1,4 @@
-﻿#include "NXBreadcrumbBarModel.h"
+#include "NXBreadcrumbBarModel.h"
 
 NXBreadcrumbBarModel::NXBreadcrumbBarModel(QObject *parent)
     : QAbstractListModel { parent }
@@ -37,14 +37,14 @@ NXBreadcrumbBarModel::data(const QModelIndex &index, int role) const
   {
     if (index.row() == _breadcrumbList.count() * 2 - 2 || index.row() == _breadcrumbList.count() * 2 - 3)
     {
-      return QStringLiteral("LastBreadcrumb");
+      return QString(QStringLiteral("LastBreadcrumb"));
     }
   }
   return QVariant();
 }
 
 void
-NXBreadcrumbBarModel::appendBreadcrumb(const QString &breadcrumb) noexcept
+NXBreadcrumbBarModel::appendBreadcrumb(const QString &breadcrumb)
 {
   if (!breadcrumb.isEmpty())
   {
@@ -66,7 +66,7 @@ NXBreadcrumbBarModel::appendBreadcrumb(const QString &breadcrumb) noexcept
 }
 
 void
-NXBreadcrumbBarModel::removeBreadcrumb(const QString &breadcrumb) noexcept
+NXBreadcrumbBarModel::removeBreadcrumb(const QString &breadcrumb)
 {
   if (_breadcrumbList.contains(breadcrumb))
   {
@@ -77,7 +77,7 @@ NXBreadcrumbBarModel::removeBreadcrumb(const QString &breadcrumb) noexcept
 }
 
 void
-NXBreadcrumbBarModel::removeBreadcrumb(int index) noexcept
+NXBreadcrumbBarModel::removeBreadcrumb(int index)
 {
   if (index >= _breadcrumbList.count())
   {
@@ -100,7 +100,7 @@ NXBreadcrumbBarModel::removeBreadcrumb(int index) noexcept
 }
 
 void
-NXBreadcrumbBarModel::setBreadcrumbList(const QStringList &breadcrumbList) noexcept
+NXBreadcrumbBarModel::setBreadcrumbList(const QStringList &breadcrumbList)
 {
   beginResetModel();
   this->_breadcrumbList = breadcrumbList;
@@ -108,13 +108,13 @@ NXBreadcrumbBarModel::setBreadcrumbList(const QStringList &breadcrumbList) noexc
 }
 
 int
-NXBreadcrumbBarModel::getBreadcrumbListCount() const noexcept
+NXBreadcrumbBarModel::getBreadcrumbListCount()
 {
   return _breadcrumbList.count();
 }
 
 QStringList
-NXBreadcrumbBarModel::getBreadcrumbList() const noexcept
+NXBreadcrumbBarModel::getBreadcrumbList()
 {
   return _breadcrumbList;
 }

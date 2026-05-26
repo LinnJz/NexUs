@@ -1,10 +1,10 @@
-﻿#include "XIO/NXXIO_PacketRegistry.h"
+#include "NXXIO_PacketRegistry.h"
 
 #include <cassert>
 
-#include "PacketIO/PakProcessor.h"
-#include "PacketIO/PakSerializeImpl.h"
-#include "PacketIO/PakTypeDictionary.h"
+#include "PakProcessor.h"
+#include "PakSerializeImpl.h"
+#include "PakTypeDictionary.h"
 
 int NXXIO_PacketRegistry::sPacketVersion = 0;
 

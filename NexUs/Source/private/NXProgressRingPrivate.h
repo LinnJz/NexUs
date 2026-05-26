@@ -11,9 +11,6 @@ class NXProgressRingPrivate : public QObject
 {
   Q_OBJECT
   Q_D_CREATE(NXProgressRing);
-  Q_PROPERTY_CREATE_D(bool, IsBusying)
-  Q_PROPERTY_CREATE_D(bool, IsTransparent)
-  Q_PROPERTY_CREATE_D(bool, IsDisplayValue)
   Q_PROPERTY_CREATE_D(NXProgressRingType::ValueDisplayMode, ValueDisplayMode)
   Q_PROPERTY_CREATE_D(int, BusyingWidth)
   Q_PROPERTY_CREATE_D(int, BusyingDurationTime)
@@ -24,10 +21,13 @@ class NXProgressRingPrivate : public QObject
   Q_PROPERTY_CREATE(int, BusyIndex)
   Q_PROPERTY_CREATE(int, BusyStartDeg)
   Q_PROPERTY_CREATE(int, BusyContentDeg)
+  Q_PROPERTY_CREATE_D(bool, IsBusying)
+  Q_PROPERTY_CREATE_D(bool, IsTransparent)
+  Q_PROPERTY_CREATE_D(bool, IsDisplayValue)
 
 public:
   explicit NXProgressRingPrivate(QObject *parent = nullptr);
-  ~NXProgressRingPrivate() override;
+  ~NXProgressRingPrivate();
 
 private:
   NXThemeType::ThemeMode _themeMode;
@@ -35,4 +35,4 @@ private:
   QPropertyAnimation *_busyContentDegAnimation { nullptr };
 };
 
-#endif // NXFRAMEWORK_NEXUS_PRIVATE_NXPROGRESSRINGPRIVATE_H_
+#endif //NXFRAMEWORK_NEXUS_PRIVATE_NXPROGRESSRINGPRIVATE_H_

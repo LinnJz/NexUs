@@ -1,4 +1,4 @@
-﻿#include "NXMaskWidget.h"
+#include "NXMaskWidget.h"
 
 #include <QPainter>
 #include <QPropertyAnimation>
@@ -16,7 +16,7 @@ NXMaskWidget::~NXMaskWidget()
 }
 
 void
-NXMaskWidget::doMaskAnimation(int endValue) noexcept
+NXMaskWidget::doMaskAnimation(int endValue)
 {
   QPropertyAnimation *opacityAnimation = new QPropertyAnimation(this, "pMaskAlpha");
   connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)
@@ -29,6 +29,7 @@ NXMaskWidget::doMaskAnimation(int endValue) noexcept
     {
       setVisible(false);
     }
+    Q_EMIT animationFinished();
   });
   opacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
   opacityAnimation->setDuration(250);

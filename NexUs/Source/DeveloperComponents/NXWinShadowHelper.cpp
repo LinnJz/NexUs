@@ -1,4 +1,4 @@
-﻿#include "NXWinShadowHelper.h"
+#include "NXWinShadowHelper.h"
 
 #ifdef Q_OS_WIN
 #  include <QDebug>
@@ -12,7 +12,7 @@ NXWinShadowHelper::NXWinShadowHelper(QObject *parent)
   HMODULE module          = LoadLibraryW(L"ntdll.dll");
   if (module)
   {
-    auto pRtlGetVersion = reinterpret_cast<RtlGetVersionFunc>(::GetProcAddress(module, "RtlGetVersion"));
+    auto pRtlGetVersion = reinterpret_cast<RtlGetVersionFunc>(GetProcAddress(module, "RtlGetVersion"));
     Q_ASSERT(pRtlGetVersion);
     _windowsVersion.dwOSVersionInfoSize = sizeof(_windowsVersion);
     pRtlGetVersion(&_windowsVersion);
@@ -293,7 +293,7 @@ NXWinShadowHelper::getIsCompositionEnabled() const
 }
 
 bool
-NXWinShadowHelper::getIsFullScreen(const HWND hwnd) const
+NXWinShadowHelper::getIsFullScreen(const HWND &hwnd)
 {
   RECT windowRect {};
   ::GetWindowRect(hwnd, &windowRect);
@@ -303,7 +303,7 @@ NXWinShadowHelper::getIsFullScreen(const HWND hwnd) const
 }
 
 MONITORINFOEXW
-NXWinShadowHelper::getMonitorForWindow(const HWND hwnd) const
+NXWinShadowHelper::getMonitorForWindow(const HWND &hwnd)
 {
   HMONITOR monitor = ::MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
   MONITORINFOEXW monitorInfo {};
@@ -313,13 +313,13 @@ NXWinShadowHelper::getMonitorForWindow(const HWND hwnd) const
 }
 
 quint32
-NXWinShadowHelper::getResizeBorderThickness(const HWND hwnd) const
+NXWinShadowHelper::getResizeBorderThickness(const HWND &hwnd)
 {
   return getSystemMetricsForDpi(hwnd, SM_CXSIZEFRAME) + getSystemMetricsForDpi(hwnd, SM_CXPADDEDBORDER);
 }
 
 quint32
-NXWinShadowHelper::getDpiForWindow(const HWND hwnd) const
+NXWinShadowHelper::getDpiForWindow(const HWND &hwnd)
 {
   if (_getDpiForWindow)
   {
@@ -343,7 +343,7 @@ NXWinShadowHelper::getDpiForWindow(const HWND hwnd) const
 }
 
 int
-NXWinShadowHelper::getSystemMetricsForDpi(const HWND hwnd, const int index) const
+NXWinShadowHelper::getSystemMetricsForDpi(const HWND &hwnd, const int index)
 {
   const quint32 dpi = getDpiForWindow(hwnd);
   if (_getSystemMetricsForDpi)
@@ -362,7 +362,7 @@ NXWinShadowHelper::getSystemMetricsForDpi(const HWND hwnd, const int index) cons
 bool
 NXWinShadowHelper::compareWindowsVersion(const QString &windowsVersion) const
 {
-  QStringList versionList = windowsVersion.split(".");
+  QStringList versionList = windowsVersion.split(QStringLiteral("."));
   if (versionList.count() != 3)
   {
     return false;

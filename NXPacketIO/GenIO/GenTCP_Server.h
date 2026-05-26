@@ -1,4 +1,4 @@
-﻿#ifndef GENTCP_SERVER_H
+#ifndef GENTCP_SERVER_H
 #define GENTCP_SERVER_H
 
 #include "NXPacketIO_Export.h"

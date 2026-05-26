@@ -1,8 +1,8 @@
-﻿#ifndef _WIN32
+#ifndef _WIN32
 #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif
 
-#include "GenIO/GenOConvertBigEndian.h"
+#include "GenOConvertBigEndian.h"
 
 #include <cstddef> // for size_t
 

@@ -1,4 +1,4 @@
-﻿#ifndef T_BASEPAGE_H
+#ifndef T_BASEPAGE_H
 #define T_BASEPAGE_H
 
 #include <NXScrollPage.h>
@@ -11,10 +11,10 @@ class T_BasePage : public NXScrollPage
 
 public:
   explicit T_BasePage(QWidget *parent = nullptr);
-  ~T_BasePage() override;
+  ~T_BasePage();
 
 protected:
-  void createCustomWidget(QString desText);
+  void createCustomWidget(const QString &desText);
 };
 
 #endif // T_BASEPAGE_H

@@ -54,7 +54,7 @@ NXToolTipPrivate::eventFilter(QObject *watched, QEvent *event)
     case QEvent::HoverMove :
     case QEvent::MouseMove :
     {
-      if (_pIsMoveEnabled)
+      if (_pIsMoveEnable)
       {
         _updatePos();
       }
@@ -67,13 +67,13 @@ NXToolTipPrivate::eventFilter(QObject *watched, QEvent *event)
 }
 
 void
-NXToolTipPrivate::onShowTimeout() noexcept
+NXToolTipPrivate::onShowTimeout()
 {
   _doShowAnimation();
 }
 
 void
-NXToolTipPrivate::onHideTimeout() noexcept
+NXToolTipPrivate::onHideTimeout()
 {
   Q_Q(NXToolTip);
   q->hide();
@@ -81,7 +81,7 @@ NXToolTipPrivate::onHideTimeout() noexcept
 }
 
 void
-NXToolTipPrivate::onAutoHideTimeout() noexcept
+NXToolTipPrivate::onAutoHideTimeout()
 {
   Q_Q(NXToolTip);
   q->hide();
@@ -89,7 +89,7 @@ NXToolTipPrivate::onAutoHideTimeout() noexcept
 }
 
 void
-NXToolTipPrivate::_doShowAnimation() noexcept
+NXToolTipPrivate::_doShowAnimation()
 {
   Q_Q(NXToolTip);
   QPoint cursorPoint = QCursor::pos();
@@ -109,7 +109,7 @@ NXToolTipPrivate::_doShowAnimation() noexcept
 }
 
 void
-NXToolTipPrivate::_updatePos() noexcept
+NXToolTipPrivate::_updatePos()
 {
   Q_Q(NXToolTip);
   QPoint cursorPoint = QCursor::pos();
@@ -117,7 +117,7 @@ NXToolTipPrivate::_updatePos() noexcept
 }
 
 void
-NXToolTipPrivate::_stopAllTimers() noexcept
+NXToolTipPrivate::_stopAllTimers()
 {
   _showTimer->stop();
   _hideTimer->stop();

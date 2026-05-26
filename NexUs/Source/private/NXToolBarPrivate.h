@@ -13,12 +13,16 @@ class NXToolBarPrivate : public QObject
 
 public:
   explicit NXToolBarPrivate(QObject *parent = nullptr);
-  ~NXToolBarPrivate() override;
+  ~NXToolBarPrivate();
 
 private:
   NXToolBarStyle *_toolBarStyle { nullptr };
   NXThemeType::ThemeMode _themeMode;
+#if defined(Q_OS_WIN) && QT_VERSION == QT_VERSION_CHECK(6, 11, 0)
+  int _shadowBorderWidth { 0 };
+#else
   int _shadowBorderWidth { 6 };
+#endif
 };
 
 #endif // NXTOOLBARPRIVATE_H

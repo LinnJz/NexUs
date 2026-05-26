@@ -25,22 +25,26 @@ class NXInputDialogPrivate : public QObject
   Q_PROPERTY_CREATE_D(QString, SubTitleText)
   Q_PROPERTY_CREATE_D(QString, LabelText)
   Q_PROPERTY_CREATE_D(QString, TextValue)
-  Q_PROPERTY_CREATE_D(int, IntValue)
-  Q_PROPERTY_CREATE_D(double, DoubleValue)
   Q_PROPERTY_CREATE_D(QString, OkButtonText)
   Q_PROPERTY_CREATE_D(QString, CancelButtonText)
   Q_PROPERTY_CREATE_D(QString, PlaceholderText)
+  Q_PROPERTY_CREATE_D(double, DoubleValue)
+  Q_PROPERTY_CREATE_D(int, IntValue)
   Q_PROPERTY_CREATE_D(int, InputMinimumWidth)
   Q_PROPERTY_CREATE_D(int, InputMaximumWidth)
 
 public:
   explicit NXInputDialogPrivate(QObject *parent = nullptr);
-  ~NXInputDialogPrivate() override;
+  ~NXInputDialogPrivate();
 
 private:
+  friend class NXInputDialog;
+  bool _isMultiLine { false };
+  bool _isIntMode { false };
+  bool _isDoubleMode { false };
+  NXThemeType::ThemeMode _themeMode;
   qint64 _currentWinID { 0 };
   NXAppBar *_appBar { nullptr };
-  NXThemeType::ThemeMode _themeMode;
   NXMaskWidget *_maskWidget { nullptr };
   NXText *_titleLabel { nullptr };
   NXText *_subTitleLabel { nullptr };
@@ -53,11 +57,7 @@ private:
   QWidget *_buttonWidget { nullptr };
   NXPushButton *_okButton { nullptr };
   NXPushButton *_cancelButton { nullptr };
-  bool _isMultiLine { false };
-  bool _isIntMode { false };
-  bool _isDoubleMode { false };
   void _doCloseAnimation(bool isAccept);
-  friend class NXInputDialog;
 };
 
 #endif // NXINPUTDIALOGPRIVATE_H

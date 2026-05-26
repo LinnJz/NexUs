@@ -1,4 +1,4 @@
-﻿#include "NXCalendarModel.h"
+#include "NXCalendarModel.h"
 
 NXCalendarModel::NXCalendarModel(QObject *parent)
     : QAbstractListModel { parent }
@@ -13,33 +13,33 @@ NXCalendarModel::~NXCalendarModel()
 }
 
 void
-NXCalendarModel::setMinimumDate(QDate minimudate) noexcept
+NXCalendarModel::setMinimumDate(QDate minimudate)
 {
   _pMinimumDate = minimudate;
   _initRowCount();
 }
 
 QDate
-NXCalendarModel::getMinimumDate() const noexcept
+NXCalendarModel::getMinimumDate() const
 {
   return _pMinimumDate;
 }
 
 void
-NXCalendarModel::setMaximumDate(QDate maximumDate) noexcept
+NXCalendarModel::setMaximumDate(QDate maximumDate)
 {
   _pMaximumDate = maximumDate;
   _initRowCount();
 }
 
 QDate
-NXCalendarModel::getMaximumDate() const noexcept
+NXCalendarModel::getMaximumDate() const
 {
   return _pMaximumDate;
 }
 
 void
-NXCalendarModel::setDisplayMode(NXCalendarType displayMode) noexcept
+NXCalendarModel::setDisplayMode(NXCalendarType displayMode)
 {
   beginResetModel();
   _displayMode = displayMode;
@@ -48,13 +48,13 @@ NXCalendarModel::setDisplayMode(NXCalendarType displayMode) noexcept
 }
 
 NXCalendarType
-NXCalendarModel::getDisplayMode() const noexcept
+NXCalendarModel::getDisplayMode() const
 {
   return _displayMode;
 }
 
 QModelIndex
-NXCalendarModel::getIndexFromDate(QDate date) const noexcept
+NXCalendarModel::getIndexFromDate(QDate date)
 {
   switch (_displayMode)
   {
@@ -75,7 +75,7 @@ NXCalendarModel::getIndexFromDate(QDate date) const noexcept
 }
 
 QDate
-NXCalendarModel::getDateFromIndex(const QModelIndex &index) const noexcept
+NXCalendarModel::getDateFromIndex(const QModelIndex &index) const
 {
   if (!index.isValid() || index.row() < _offset)
   {
@@ -116,7 +116,7 @@ NXCalendarModel::data(const QModelIndex &index, int role) const
         if (date.day() == 1)
         {
           return QVariant::fromValue<NXCalendarData>(
-              NXCalendarData(date.year(), date.month(), date.day(), QStringLiteral("%1月").arg(date.month())));
+              NXCalendarData(date.year(), date.month(), date.day(), QString(QStringLiteral("%1月")).arg(date.month())));
         }
         else
         {

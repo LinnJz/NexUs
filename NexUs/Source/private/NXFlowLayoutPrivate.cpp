@@ -1,5 +1,6 @@
 ﻿#include "NXFlowLayoutPrivate.h"
 
+#include <QDebug>
 #include <QPropertyAnimation>
 #include <QWidget>
 
@@ -15,7 +16,7 @@ NXFlowLayoutPrivate::~NXFlowLayoutPrivate()
 }
 
 int
-NXFlowLayoutPrivate::_doLayout(const QRect &rect, bool testOnly) const
+NXFlowLayoutPrivate::_doLayout(QRect rect, bool testOnly) const
 {
   Q_Q(const NXFlowLayout);
   int left, top, right, bottom;
@@ -24,7 +25,6 @@ NXFlowLayoutPrivate::_doLayout(const QRect &rect, bool testOnly) const
   int x               = effectiveRect.x();
   int y               = effectiveRect.y();
   int lineHeight      = 0;
-
   for (QLayoutItem *item : _itemList)
   {
     const QWidget *wid = item->widget();
@@ -89,7 +89,7 @@ NXFlowLayoutPrivate::_doLayout(const QRect &rect, bool testOnly) const
 }
 
 int
-NXFlowLayoutPrivate::_smartSpacing(QStyle::PixelMetric pm) const noexcept
+NXFlowLayoutPrivate::_smartSpacing(QStyle::PixelMetric pm) const
 {
   Q_Q(const NXFlowLayout);
   QObject *parent = q->parent();

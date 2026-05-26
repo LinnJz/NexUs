@@ -15,7 +15,7 @@ NXPopularCardPrivate::~NXPopularCardPrivate()
 }
 
 void
-NXPopularCardPrivate::_showFloater() noexcept
+NXPopularCardPrivate::_showFloater()
 {
   Q_Q(NXPopularCard);
   q->update();

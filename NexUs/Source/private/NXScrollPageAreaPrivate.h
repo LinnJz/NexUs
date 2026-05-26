@@ -14,7 +14,7 @@ class NXScrollPageAreaPrivate : public QObject
 
 public:
   explicit NXScrollPageAreaPrivate(QObject *parent = nullptr);
-  ~NXScrollPageAreaPrivate() override;
+  ~NXScrollPageAreaPrivate();
 
 private:
   NXThemeType::ThemeMode _themeMode;

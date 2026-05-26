@@ -1,9 +1,9 @@
-﻿#ifndef PAKUNDEFINEDPACKET_H
+#ifndef PAKUNDEFINEDPACKET_H
 #define PAKUNDEFINEDPACKET_H
 
 #include "NXPacketIO_Export.h"
 
-#include "PacketIO/PakPacket.h"
+#include "PakPacket.h"
 
 class NX_PACKETIO_EXPORT PakUndefinedPacket : public PakPacket
 {

@@ -9,22 +9,22 @@
 #include "NXLineEdit.h"
 #include "NXListView.h"
 #include "NXMessageBar.h"
-#include "T_IconDelegate.h"
-#include "T_IconModel.h"
+#include "ModelView/T_IconDelegate.h"
+#include "ModelView/T_IconModel.h"
 
 T_Icon::T_Icon(QWidget *parent)
     : T_BasePage(parent)
 {
   // 预览窗口标题
-  setWindowTitle("NXIcon");
+  setWindowTitle(QStringLiteral("NXIcon"));
   // 顶部元素
-  createCustomWidget("一堆常用图标被放置于此，左键单击以复制其枚举");
+  createCustomWidget(QStringLiteral("一堆常用图标被放置于此，左键单击以复制其枚举"));
 
   _metaEnum                  = QMetaEnum::fromType<NXIconType::IconName>();
   QWidget *centralWidget     = new QWidget(this);
   QVBoxLayout *centerVLayout = new QVBoxLayout(centralWidget);
   centerVLayout->setContentsMargins(0, 0, 5, 0);
-  centralWidget->setWindowTitle("NXIcon");
+  centralWidget->setWindowTitle(QStringLiteral("NXIcon"));
   // ListView
   _iconView = new NXListView(this);
   _iconView->setIsTransparent(true);
@@ -39,7 +39,8 @@ T_Icon::T_Icon(QWidget *parent)
       return;
     }
     qApp->clipboard()->setText(iconName);
-    NXMessageBar::success(NXMessageBarType::Top, "复制完成", iconName + "已被复制到剪贴板", 1000, this);
+    NXMessageBar::success(NXMessageBarType::Top, QStringLiteral("复制完成"),
+                          iconName + QStringLiteral("已被复制到剪贴板"), 1000, this);
   });
   _iconModel    = new T_IconModel(this);
   _iconDelegate = new T_IconDelegate(this);
@@ -48,7 +49,7 @@ T_Icon::T_Icon(QWidget *parent)
   _iconView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
   _searchEdit = new NXLineEdit(this);
-  _searchEdit->setPlaceholderText("搜索图标");
+  _searchEdit->setPlaceholderText(QStringLiteral("搜索图标"));
   _searchEdit->setFixedSize(300, 35);
   connect(_searchEdit, &NXLineEdit::textEdited, this, &T_Icon::onSearchEditTextEdit);
   connect(_searchEdit, &NXLineEdit::focusIn, this, &T_Icon::onSearchEditTextEdit);

@@ -1,4 +1,4 @@
-﻿#include "NXToolBarPrivate.h"
+#include "NXToolBarPrivate.h"
 
 NXToolBarPrivate::NXToolBarPrivate(QObject *parent)
     : QObject { parent }

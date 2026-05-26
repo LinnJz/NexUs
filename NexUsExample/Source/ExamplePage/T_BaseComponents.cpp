@@ -1,4 +1,8 @@
-﻿#include "T_BaseComponents.h"
+#include "T_BaseComponents.h"
+
+#include <QButtonGroup>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 
 #include "NXCheckBox.h"
 #include "NXComboBox.h"
@@ -16,29 +20,25 @@
 #include "NXToggleButton.h"
 #include "NXToggleSwitch.h"
 
-#include <QButtonGroup>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-
 T_BaseComponents::T_BaseComponents(QWidget *parent)
     : T_BasePage(parent)
 {
   // 预览窗口标题
-  setWindowTitle("NXBaseComponents");
+  setWindowTitle(QStringLiteral("NXBaseComponents"));
 
   // 顶部元素
-  createCustomWidget("一些常用的基础组件被放置于此，可在此界面体验其效果并按需添加进项目中");
+  createCustomWidget(QStringLiteral("一些常用的基础组件被放置于此，可在此界面体验其效果并按需添加进项目中"));
 
   _toggleSwitch                      = new NXToggleSwitch(this);
   NXScrollPageArea *toggleSwitchArea = new NXScrollPageArea(this);
   QHBoxLayout *toggleSwitchLayout    = new QHBoxLayout(toggleSwitchArea);
-  NXText *toggleSwitchText           = new NXText("NXToggleSwitch", this);
+  NXText *toggleSwitchText           = new NXText(QStringLiteral("NXToggleSwitch"), this);
   toggleSwitchText->setTextPixelSize(15);
   toggleSwitchLayout->addWidget(toggleSwitchText);
   toggleSwitchLayout->addWidget(_toggleSwitch);
   toggleSwitchLayout->addStretch();
   NXToggleSwitch *toggleSwitchDisableSwitch = new NXToggleSwitch(this);
-  NXText *toggleSwitchDisableText           = new NXText("禁用", this);
+  NXText *toggleSwitchDisableText           = new NXText(QStringLiteral("禁用"), this);
   toggleSwitchDisableText->setTextPixelSize(15);
   connect(toggleSwitchDisableSwitch, &NXToggleSwitch::toggled, this, [=](bool checked)
   {
@@ -48,17 +48,17 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   toggleSwitchLayout->addWidget(toggleSwitchDisableText);
   toggleSwitchLayout->addSpacing(10);
 
-  _toggleButton = new NXToggleButton("ToggleButton", this);
+  _toggleButton = new NXToggleButton(QStringLiteral("ToggleButton"), this);
   _toggleButton->setFixedWidth(120);
   NXScrollPageArea *toggleButtonArea = new NXScrollPageArea(this);
   QHBoxLayout *toggleButtonLayout    = new QHBoxLayout(toggleButtonArea);
-  NXText *toggleButtonText           = new NXText("NXToggleButton", this);
+  NXText *toggleButtonText           = new NXText(QStringLiteral("NXToggleButton"), this);
   toggleButtonText->setTextPixelSize(15);
   toggleButtonLayout->addWidget(toggleButtonText);
   toggleButtonLayout->addWidget(_toggleButton);
   toggleButtonLayout->addStretch();
   NXToggleSwitch *toggleButtonDisableSwitch = new NXToggleSwitch(this);
-  NXText *toggleButtonDisableText           = new NXText("禁用", this);
+  NXText *toggleButtonDisableText           = new NXText(QStringLiteral("禁用"), this);
   toggleButtonDisableText->setTextPixelSize(15);
   connect(toggleButtonDisableSwitch, &NXToggleSwitch::toggled, this, [=](bool checked)
   {
@@ -69,18 +69,19 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   toggleButtonLayout->addSpacing(10);
 
   _comboBox = new NXComboBox(this);
-  QStringList comboList { "我愿投身前途未卜的群星", "潜行 步伐小心翼翼", "不留游走痕迹",
-                          "如同一簇幽灵",           "所谓 道德加上伦理", "抱歉只能律己" };
+  QStringList comboList { QStringLiteral("我愿投身前途未卜的群星"), QStringLiteral("潜行 步伐小心翼翼"),
+                          QStringLiteral("不留游走痕迹"),           QStringLiteral("如同一簇幽灵"),
+                          QStringLiteral("所谓 道德加上伦理"),      QStringLiteral("抱歉只能律己") };
   _comboBox->addItems(comboList);
   NXScrollPageArea *comboBoxArea = new NXScrollPageArea(this);
   QHBoxLayout *comboBoxLayout    = new QHBoxLayout(comboBoxArea);
-  NXText *comboBoxText           = new NXText("NXComboBox", this);
+  NXText *comboBoxText           = new NXText(QStringLiteral("NXComboBox"), this);
   comboBoxText->setTextPixelSize(15);
   comboBoxLayout->addWidget(comboBoxText);
   comboBoxLayout->addWidget(_comboBox);
   comboBoxLayout->addStretch();
   NXToggleSwitch *comboBoxDisableSwitch = new NXToggleSwitch(this);
-  NXText *comboBoxDisableText           = new NXText("禁用", this);
+  NXText *comboBoxDisableText           = new NXText(QStringLiteral("禁用"), this);
   comboBoxDisableText->setTextPixelSize(15);
   connect(comboBoxDisableSwitch, &NXToggleSwitch::toggled, this, [=](bool checked)
   {
@@ -91,21 +92,27 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   comboBoxLayout->addSpacing(10);
 
   _multiSelectComboBox = new NXMultiSelectComboBox(this);
-  QStringList multiComboList { "执念的鱼", "提着灯闯过远洋的甄选",  "继续下潜", "无需誓言", "我的心像自沉的旧母舰",
-                               "没入深渊", "我曾凝望曾是航向的日出" };
-  QStringList multiSelectComboList { "执念的鱼", "提着灯闯过远洋的甄选", "无需誓言", "我的心像自沉的旧母舰" };
+  QStringList multiComboList { QStringLiteral("执念的鱼"),
+                               QStringLiteral("提着灯闯过远洋的甄选"),
+                               QStringLiteral("继续下潜"),
+                               QStringLiteral("无需誓言"),
+                               QStringLiteral("我的心像自沉的旧母舰"),
+                               QStringLiteral("没入深渊"),
+                               QStringLiteral("我曾凝望曾是航向的日出") };
+  QStringList multiSelectComboList { QStringLiteral("执念的鱼"), QStringLiteral("提着灯闯过远洋的甄选"),
+                                     QStringLiteral("无需誓言"), QStringLiteral("我的心像自沉的旧母舰") };
   _multiSelectComboBox->addItems(multiComboList);
   _multiSelectComboBox->setCurrentSelection(multiSelectComboList);
   //_multiSelectComboBox->setShowCheckBox(true);
   NXScrollPageArea *multiSelectComboBoxArea = new NXScrollPageArea(this);
   QHBoxLayout *multiSelectComboBoxLayout    = new QHBoxLayout(multiSelectComboBoxArea);
-  NXText *multiSelectComboBoxText           = new NXText("NXMutilSelectComboBox", this);
+  NXText *multiSelectComboBoxText           = new NXText(QStringLiteral("NXMutilSelectComboBox"), this);
   multiSelectComboBoxText->setTextPixelSize(15);
   multiSelectComboBoxLayout->addWidget(multiSelectComboBoxText);
   multiSelectComboBoxLayout->addWidget(_multiSelectComboBox);
   multiSelectComboBoxLayout->addStretch();
   NXToggleSwitch *multiSelectComboBoxDisableSwitch = new NXToggleSwitch(this);
-  NXText *multiSelectComboBoxDisableText           = new NXText("禁用", this);
+  NXText *multiSelectComboBoxDisableText           = new NXText(QStringLiteral("禁用"), this);
   multiSelectComboBoxDisableText->setTextPixelSize(15);
   connect(multiSelectComboBoxDisableSwitch, &NXToggleSwitch::toggled, this, [=](bool checked)
   {
@@ -115,31 +122,32 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   multiSelectComboBoxLayout->addWidget(multiSelectComboBoxDisableText);
   multiSelectComboBoxLayout->addSpacing(10);
 
-  _messageButton = new NXMessageButton("Success", this);
-  _messageButton->setBarTitle("Success");
-  _messageButton->setBarText("点燃星 亲手点燃黑暗森林的火星 蒙昧初醒 而我却 轻声告别这新生的黎明");
+  _messageButton = new NXMessageButton(QStringLiteral("Success"), this);
+  _messageButton->setBarTitle(QStringLiteral("Success"));
+  _messageButton->setBarText(QStringLiteral("点燃星 亲手点燃黑暗森林的火星 蒙昧初醒 而我却 轻声告别这新生的黎明"));
 
-  _infoMessageButton = new NXMessageButton("Info", this);
-  _infoMessageButton->setBarTitle("Information");
-  _infoMessageButton->setBarText("点燃星 亲手点燃黑暗森林的火星 蒙昧初醒 而我却 轻声告别这新生的黎明");
+  _infoMessageButton = new NXMessageButton(QStringLiteral("Info"), this);
+  _infoMessageButton->setBarTitle(QStringLiteral("Information"));
+  _infoMessageButton->setBarText(QStringLiteral("点燃星 亲手点燃黑暗森林的火星 蒙昧初醒 而我却 轻声告别这新生的黎明"));
   _infoMessageButton->setMessageMode(NXMessageBarType::Information);
   _infoMessageButton->setPositionPolicy(NXMessageBarType::TopLeft);
 
-  _warningMessageButton = new NXMessageButton("Warning", this);
-  _warningMessageButton->setBarTitle("Warning");
-  _warningMessageButton->setBarText("点燃星 亲手点燃黑暗森林的火星 蒙昧初醒 而我却 轻声告别这新生的黎明");
+  _warningMessageButton = new NXMessageButton(QStringLiteral("Warning"), this);
+  _warningMessageButton->setBarTitle(QStringLiteral("Warning"));
+  _warningMessageButton->setBarText(
+      QStringLiteral("点燃星 亲手点燃黑暗森林的火星 蒙昧初醒 而我却 轻声告别这新生的黎明"));
   _warningMessageButton->setMessageMode(NXMessageBarType::Warning);
   _warningMessageButton->setPositionPolicy(NXMessageBarType::BottomLeft);
 
-  _errorMessageButton = new NXMessageButton("Error", this);
-  _errorMessageButton->setBarTitle("Error");
-  _errorMessageButton->setBarText("点燃星 亲手点燃黑暗森林的火星 蒙昧初醒 而我却 轻声告别这新生的黎明");
+  _errorMessageButton = new NXMessageButton(QStringLiteral("Error"), this);
+  _errorMessageButton->setBarTitle(QStringLiteral("Error"));
+  _errorMessageButton->setBarText(QStringLiteral("点燃星 亲手点燃黑暗森林的火星 蒙昧初醒 而我却 轻声告别这新生的黎明"));
   _errorMessageButton->setMessageMode(NXMessageBarType::Error);
   _errorMessageButton->setPositionPolicy(NXMessageBarType::BottomRight);
 
   NXScrollPageArea *messageButtonArea = new NXScrollPageArea(this);
   QHBoxLayout *messageButtonLayout    = new QHBoxLayout(messageButtonArea);
-  NXText *messageButtonText           = new NXText("NXMessageButton", this);
+  NXText *messageButtonText           = new NXText(QStringLiteral("NXMessageButton"), this);
   messageButtonText->setTextPixelSize(15);
   messageButtonLayout->addWidget(messageButtonText);
   messageButtonLayout->addWidget(_messageButton);
@@ -148,7 +156,7 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   messageButtonLayout->addWidget(_errorMessageButton);
   messageButtonLayout->addStretch();
   NXToggleSwitch *messageButtonDisableSwitch = new NXToggleSwitch(this);
-  NXText *messageButtonDisableText           = new NXText("禁用", this);
+  NXText *messageButtonDisableText           = new NXText(QStringLiteral("禁用"), this);
   messageButtonDisableText->setTextPixelSize(15);
   connect(messageButtonDisableSwitch, &NXToggleSwitch::toggled, this, [=](bool checked)
   {
@@ -161,16 +169,16 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   messageButtonLayout->addWidget(messageButtonDisableText);
   messageButtonLayout->addSpacing(10);
 
-  _checkBox                      = new NXCheckBox("CheckBox", this);
+  _checkBox                      = new NXCheckBox(QStringLiteral("CheckBox"), this);
   NXScrollPageArea *checkBoxArea = new NXScrollPageArea(this);
   QHBoxLayout *checkBoxLayout    = new QHBoxLayout(checkBoxArea);
-  NXText *checkBoxText           = new NXText("NXcheckBox", this);
+  NXText *checkBoxText           = new NXText(QStringLiteral("NXcheckBox"), this);
   checkBoxText->setTextPixelSize(15);
   checkBoxLayout->addWidget(checkBoxText);
   checkBoxLayout->addWidget(_checkBox);
   checkBoxLayout->addStretch();
   NXToggleSwitch *checkBoxDisableSwitch = new NXToggleSwitch(this);
-  NXText *checkBoxDisableText           = new NXText("禁用", this);
+  NXText *checkBoxDisableText           = new NXText(QStringLiteral("禁用"), this);
   checkBoxDisableText->setTextPixelSize(15);
   connect(checkBoxDisableSwitch, &NXToggleSwitch::toggled, this, [=](bool checked)
   {
@@ -183,19 +191,19 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   _spinBox                      = new NXSpinBox(this);
   NXScrollPageArea *spinBoxArea = new NXScrollPageArea(this);
   QHBoxLayout *spinBoxLayout    = new QHBoxLayout(spinBoxArea);
-  NXText *spinBoxText           = new NXText("NXSpinBox", this);
+  NXText *spinBoxText           = new NXText(QStringLiteral("NXSpinBox"), this);
   spinBoxText->setTextPixelSize(15);
   spinBoxLayout->addWidget(spinBoxText);
   spinBoxLayout->addWidget(_spinBox);
   spinBoxLayout->addStretch();
 
-  NXRadioButton *inlineButton  = new NXRadioButton("Inline", this);
-  NXRadioButton *compactButton = new NXRadioButton("Compact", this);
-  NXRadioButton *sideButton    = new NXRadioButton("Side", this);
-  NXRadioButton *pmSideButton  = new NXRadioButton("PMSide", this);
+  NXRadioButton *inlineButton  = new NXRadioButton(QStringLiteral("Inline"), this);
+  NXRadioButton *compactButton = new NXRadioButton(QStringLiteral("Compact"), this);
+  NXRadioButton *sideButton    = new NXRadioButton(QStringLiteral("Side"), this);
+  NXRadioButton *pmSideButton  = new NXRadioButton(QStringLiteral("PMSide"), this);
   inlineButton->setChecked(true);
   QHBoxLayout *buttonModeLayout = new QHBoxLayout();
-  NXText *buttonModeText        = new NXText("按钮模式切换", this);
+  NXText *buttonModeText        = new NXText(QStringLiteral("按钮模式切换"), this);
   buttonModeText->setWordWrap(false);
   buttonModeText->setTextPixelSize(15);
   buttonModeLayout->addWidget(buttonModeText);
@@ -223,16 +231,16 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   _slider                      = new NXSlider(this);
   NXScrollPageArea *sliderArea = new NXScrollPageArea(this);
   QHBoxLayout *sliderLayout    = new QHBoxLayout(sliderArea);
-  NXText *sliderText           = new NXText("NXSlider", this);
+  NXText *sliderText           = new NXText(QStringLiteral("NXSlider"), this);
   sliderText->setTextPixelSize(15);
   sliderLayout->addWidget(sliderText);
   sliderLayout->addWidget(_slider);
   sliderLayout->addStretch();
 
-  _radioButton                      = new NXRadioButton("RadioButton", this);
+  _radioButton                      = new NXRadioButton(QStringLiteral("RadioButton"), this);
   NXScrollPageArea *radioButtonArea = new NXScrollPageArea(this);
   QHBoxLayout *radioButtonLayout    = new QHBoxLayout(radioButtonArea);
-  NXText *radioButtonText           = new NXText("NXRadioButton", this);
+  NXText *radioButtonText           = new NXText(QStringLiteral("NXRadioButton"), this);
   radioButtonText->setTextPixelSize(15);
   radioButtonLayout->addWidget(radioButtonText);
   radioButtonLayout->addWidget(_radioButton);
@@ -243,7 +251,7 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   _progressBar->setMaximum(0);
   NXScrollPageArea *progressBarArea = new NXScrollPageArea(this);
   QHBoxLayout *progressBarLayout    = new QHBoxLayout(progressBarArea);
-  NXText *progressBarText           = new NXText("NXProgressBar", this);
+  NXText *progressBarText           = new NXText(QStringLiteral("NXProgressBar"), this);
   progressBarText->setTextPixelSize(15);
   progressBarLayout->addWidget(progressBarText);
   progressBarLayout->addWidget(_progressBar);
@@ -262,7 +270,7 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   NXScrollPageArea *progressRingArea = new NXScrollPageArea(this);
   progressRingArea->setFixedHeight(90);
   QHBoxLayout *progressRingLayout = new QHBoxLayout(progressRingArea);
-  NXText *progressRingText        = new NXText("NXProgressRing", this);
+  NXText *progressRingText        = new NXText(QStringLiteral("NXProgressRing"), this);
   progressRingText->setTextPixelSize(15);
   progressRingLayout->addWidget(progressRingText);
   progressRingLayout->addWidget(_progressRing);
@@ -274,7 +282,7 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   progressRingLayout->addWidget(_progressBusyTransparentRing);
   progressRingLayout->addStretch();
 
-  _groupBox = new NXGroupBox("NXGroupBox", this);
+  _groupBox = new NXGroupBox(QStringLiteral("NXGroupBox"), this);
   _groupBox->setFixedSize(350, 220);
   _groupBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
@@ -282,12 +290,12 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   groupBoxLayout->setSpacing(8);
   groupBoxLayout->setContentsMargins(15, 25, 15, 15);
 
-  NXText *label1        = new NXText("这是一个 NXGroupBox 示例", _groupBox);
-  NXText *label2        = new NXText("可以在其中放置各种控件", _groupBox);
-  NXCheckBox *checkbox  = new NXCheckBox("GroupBox 内的复选框", _groupBox);
-  NXRadioButton *radio1 = new NXRadioButton("选项 1", _groupBox);
-  NXRadioButton *radio2 = new NXRadioButton("选项 2", _groupBox);
-  NXRadioButton *radio3 = new NXRadioButton("选项 3", _groupBox);
+  NXText *label1        = new NXText(QStringLiteral("这是一个 NXGroupBox 示例"), _groupBox);
+  NXText *label2        = new NXText(QStringLiteral("可以在其中放置各种控件"), _groupBox);
+  NXCheckBox *checkbox  = new NXCheckBox(QStringLiteral("GroupBox 内的复选框"), _groupBox);
+  NXRadioButton *radio1 = new NXRadioButton(QStringLiteral("选项 1"), _groupBox);
+  NXRadioButton *radio2 = new NXRadioButton(QStringLiteral("选项 2"), _groupBox);
+  NXRadioButton *radio3 = new NXRadioButton(QStringLiteral("选项 3"), _groupBox);
   checkbox->setChecked(true);
   radio1->setChecked(true);
 
@@ -302,13 +310,13 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   NXScrollPageArea *groupBoxArea = new NXScrollPageArea(this);
   groupBoxArea->setFixedHeight(240);
   QHBoxLayout *groupBoxAreaLayout = new QHBoxLayout(groupBoxArea);
-  NXText *groupBoxLabel           = new NXText("NXGroupBox", this);
+  NXText *groupBoxLabel           = new NXText(QStringLiteral("NXGroupBox"), this);
   groupBoxLabel->setTextPixelSize(12);
   groupBoxAreaLayout->addWidget(groupBoxLabel);
   groupBoxAreaLayout->addWidget(_groupBox);
   groupBoxAreaLayout->addStretch();
   NXToggleSwitch *groupBoxDisableSwitch = new NXToggleSwitch(this);
-  NXText *groupBoxDisableText           = new NXText("禁用", this);
+  NXText *groupBoxDisableText           = new NXText(QStringLiteral("禁用"), this);
   groupBoxDisableText->setTextPixelSize(15);
   connect(groupBoxDisableSwitch, &NXToggleSwitch::toggled, this, [=](bool checked)
   {
@@ -319,10 +327,10 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   groupBoxAreaLayout->addSpacing(10);
 
   NXPlainTextEdit *edit = new NXPlainTextEdit(this);
-  edit->setPlainText("这是一个NXPlainTextEdit  暂时放在这里");
+  edit->setPlainText(QStringLiteral("这是一个NXPlainTextEdit  暂时放在这里"));
 
   QWidget *centralWidget = new QWidget(this);
-  centralWidget->setWindowTitle("NXBaseComponents");
+  centralWidget->setWindowTitle(QStringLiteral("NXBaseComponents"));
   QVBoxLayout *centerLayout = new QVBoxLayout(centralWidget);
   centerLayout->addWidget(toggleSwitchArea);
   centerLayout->addWidget(toggleButtonArea);
@@ -341,17 +349,17 @@ T_BaseComponents::T_BaseComponents(QWidget *parent)
   centerLayout->setContentsMargins(0, 0, 0, 0);
   addCentralWidget(centralWidget, true, true, 0);
 
-  NXText *homeStack1 = new NXText("HomeStack1", this);
+  NXText *homeStack1 = new NXText(QStringLiteral("HomeStack1"), this);
   QFont font         = homeStack1->font();
   font.setPixelSize(32);
   homeStack1->setFont(font);
   homeStack1->setAlignment(Qt::AlignCenter);
-  homeStack1->setWindowTitle("HomeStack1");
+  homeStack1->setWindowTitle(QStringLiteral("HomeStack1"));
   addCentralWidget(homeStack1);
-  NXText *homeStack2 = new NXText("HomeStack2", this);
+  NXText *homeStack2 = new NXText(QStringLiteral("HomeStack2"), this);
   homeStack2->setFont(font);
   homeStack2->setAlignment(Qt::AlignCenter);
-  homeStack2->setWindowTitle("HomeStack2");
+  homeStack2->setWindowTitle(QStringLiteral("HomeStack2"));
   addCentralWidget(homeStack2);
 }
 
@@ -366,8 +374,8 @@ T_BaseComponents::mouseReleaseEvent(QMouseEvent *event)
   {
   case Qt::LeftButton :
   {
-    // NXMessageBar::success(NXMessageBarType::TopRight, "Success", "Never Close Your Eyes", 2500);
-    // NXMessageBar::success(NXMessageBarType::TopRight, "Success", "Never Close Your Eyes", 1500);
+    //NXMessageBar::success(NXMessageBarType::TopRight, "Success", "Never Close Your Eyes", 2500);
+    //NXMessageBar::success(NXMessageBarType::TopRight, "Success", "Never Close Your Eyes", 1500);
     break;
   }
   case Qt::BackButton :

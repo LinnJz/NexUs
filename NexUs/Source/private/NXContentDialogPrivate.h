@@ -18,23 +18,25 @@ class NXContentDialogPrivate : public QObject
 
 public:
   explicit NXContentDialogPrivate(QObject *parent = nullptr);
-  ~NXContentDialogPrivate() override;
+  ~NXContentDialogPrivate();
+
+  void startCloseAnimation(NXPushButton *triggeredButton);
 
 private:
+  bool _isClosing { false };
   NXThemeType::ThemeMode _themeMode;
   qint64 _currentWinID { 0 };
-
   NXAppBar *_appBar { nullptr };
   NXMaskWidget *_maskWidget { nullptr };
   QWidget *_centralWidget { nullptr };
   QWidget *_buttonWidget { nullptr };
   QVBoxLayout *_mainLayout { nullptr };
   QHBoxLayout *_buttonLayout { nullptr };
-  NXPushButton *_leftButton { nullptr };
-  NXPushButton *_middleButton { nullptr };
-  NXPushButton *_rightButton { nullptr };
-  void _doCloseAnimation(bool isAccept);
-  void _moveToCenter() noexcept;
+  NXPushButton *_activeButton { nullptr };
+  QList<NXPushButton *> _buttons;
+
+  void _handleCloseAnimation();
+  void _moveToCenter();
 };
 
 #endif // NXCONTENTDIALOGPRIVATE_H

@@ -1,5 +1,8 @@
-﻿#include "NXKeyBinder.h"
-#include "NXKeyBinderPrivate.h"
+﻿#include "NXKeyBinderPrivate.h"
+
+#include <QTimer>
+
+#include "NXKeyBinder.h"
 #include "NXTheme.h"
 
 NXKeyBinderPrivate::NXKeyBinderPrivate(QObject *parent)
@@ -12,7 +15,7 @@ NXKeyBinderPrivate::~NXKeyBinderPrivate()
 }
 
 void
-NXKeyBinderPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
+NXKeyBinderPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
 {
   Q_Q(NXKeyBinder);
   _themeMode       = themeMode;

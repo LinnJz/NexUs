@@ -1,14 +1,29 @@
-**/WindowBase
-**/.vs
-**/Bin
-**/GeneratedFiles
-**/ThirdParty
-**/out
+﻿# ========== Qt 编译输出与临时文件 ==========
+*.qmlc
+*.jsc
+*.qm
+*.prl
+*_qmlcache.qrc
+Makefile*
 
-# C++ objects and libs
-*.slo
-*.lo
+# ========== Qt Creator 特定文件 ==========
+*.autosave
+*.qmlproject.user
+*.qmlproject.user.*
+*.creator.user*
+target_wrapper.*
+CMakeLists.txt.user*
+compile_commands.json
+
+# ========== CLion / CMake 相关 ==========
+.idea/
+cmake-build-*/
+CMakeLists.txt.user*
+CMakeSettings.json
+
+# ========== 通用 C++ 构建产物与库 ==========
 *.o
+*.obj
 *.a
 *.la
 *.lai
@@ -16,79 +31,46 @@
 *.so.*
 *.dll
 *.dylib
+*.slo
+*.lo
+*.dylib
 
-# Qt-es
-object_script.*.Release
-object_script.*.Debug
-*_plugin_import.cpp
-/.qmake.cache
-/.qmake.stash
-*.pro.user
-*.pro.user.*
-*.qbs.user
-*.qbs.user.*
-*.moc
-moc_*.cpp
-moc_*.h
-qrc_*.cpp
-ui_*.h
-*.qmlc
-*.jsc
-Makefile*
-*build-*
-*.qm
-*.prl
+# ========== 可执行文件和应用程序 ==========
+*.exe
+*.app
 
-# Qt unit tests
-target_wrapper.*
-
-# QtCreator
+# ========== IDE 与编辑器配置 ==========
+*.user
 *.autosave
+.vscode/
 
-# QtCreator Qml
-*.qmlproject.user
-*.qmlproject.user.*
+# ========== Python 缓存 ==========
+__pycache__/
+*.pyc
 
-# QtCreator CMake
-CMakeLists.txt.user*
+# ========== 操作系统特定 ==========
+.DS_Store
 
-# QtCreator 4.8< compilation database
-compile_commands.json
+# ========== 项目自定义目录与文件 ==========
+# 编译中间目录
+**/Install
+**/install
+**/Bin
+**/bin
+**/GeneratedFiles
+**/out
+**/Image
+**/Resource/Image
+**/Build
+**/build
+**/bin
 
-# QtCreator local machine specific files for imported projects
-*creator.user*
+# 第三方库
+/ThirdParty
 
-*_qmlcache.qrc
+# Windows 特定
+**/.vs
 
-# CLion
-/.idea
-*.clang-format
-/install
 
-#/CMakeLists.txt
-#/CMakePresets.json
-#/CMakeUserPresets.json
-#/NexUs/CMakeLists.txt
-#/NexUs/NexUsConfig.cmake.in
-#/NexUsExample/CMakeLists.txt
-#/NXPacketIO/CMakeLists.txt
-#/NXPacketIO/NXPacketIoConfig.cmake.in
-
-#/Dependencies.lua
-#/premake5.lua
-#/NexUs/premake5.lua
-#/NexUsExample/premake5.lua
-#/NXPacketIO/premake5.lua
-
-#/NexUs.sln
-#/NexUs/NexUs.vcxproj
-#/NexUs/NexUs.vcxproj.filters
-#/NexUs/NexUs.vcxproj.user
-#/NexUsExample/NexUsExample.vcxproj
-#/NexUsExample/NexUsExample.vcxproj.filters
-#/NexUsExample/NexUsExample.vcxproj.user
-#/NXPacketIO/NXPacketIO.vcxproj
-#/NXPacketIO/NXPacketIO.vcxproj.filters
-#/NXPacketIO/NXPacketIO.vcxproj.user
-
-#!/Build/
+# 项目特定二进制/中间文件（如果 WindowBase 是生成的可执行或库）
+**/WindowBase

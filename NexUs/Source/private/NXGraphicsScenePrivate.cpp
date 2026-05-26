@@ -47,7 +47,7 @@ operator>> (QDataStream &stream, NXGraphicsScenePrivate *data)
 }
 
 QList<NXGraphicsItem *>
-NXGraphicsScenePrivate::_serializeItem(int count) noexcept
+NXGraphicsScenePrivate::_serializeItem(int count)
 {
   Q_Q(NXGraphicsScene);
   QList<NXGraphicsItem *> itemList;
@@ -63,7 +63,7 @@ NXGraphicsScenePrivate::_serializeItem(int count) noexcept
 }
 
 void
-NXGraphicsScenePrivate::_removeLinkLineItem() noexcept
+NXGraphicsScenePrivate::_removeLinkLineItem()
 {
   Q_Q(NXGraphicsScene);
   if (_linkLineItem)
@@ -75,7 +75,7 @@ NXGraphicsScenePrivate::_removeLinkLineItem() noexcept
 }
 
 void
-NXGraphicsScenePrivate::_deserializeLink() noexcept
+NXGraphicsScenePrivate::_deserializeLink()
 {
   Q_Q(NXGraphicsScene);
   for (int i = 0; i < _itemsLink.count(); i++)

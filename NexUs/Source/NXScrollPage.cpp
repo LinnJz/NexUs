@@ -9,8 +9,8 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
-#include "DeveloperComponents/Command/NXScrollPageRouteCommand.h"
 #include "NXBreadcrumbBar.h"
+#include "NXNavigationRouter.h"
 #include "NXScrollArea.h"
 #include "NXScrollBar.h"
 #include "private/NXScrollPagePrivate.h"
@@ -26,16 +26,18 @@ NXScrollPage::NXScrollPage(QWidget *parent)
   d->_breadcrumbBar = new NXBreadcrumbBar(this);
   d->_breadcrumbBar->setTextPixelSize(28);
   connect(d->_breadcrumbBar, &NXBreadcrumbBar::breadcrumbClicked, this,
-          [=](const QString &breadcrumb, const QStringList &lastBreadcrumbList)
+          [=](QString breadcrumb, QStringList lastBreadcrumbList)
   {
     if (d->_centralWidgetMap.contains(breadcrumb))
     {
-      auto command = new NXScrollPageRouteCommand(this);
-      command->setIsBreadcrumbClicked(true);
-      command->setScrollPagePrivate(d);
-      command->setUndoBreadcrumbList(lastBreadcrumbList);
-      command->setRedoBreadcrumbList(d->_breadcrumbBar->getBreadcrumbList());
-      NXActionCommander::getInstance()->recordCommand(QStringLiteral("NXWidgetToolsAction"), command);
+      int widgetIndex = d->_centralWidgetMap.value(breadcrumb);
+      d->_switchCentralStackIndex(widgetIndex, d->_navigationTargetIndex);
+      d->_navigationTargetIndex = widgetIndex;
+      QVariantMap routeData     = QVariantMap();
+      routeData.insert(QStringLiteral("NXScrollPageCheckSumKey"), QStringLiteral("BreadcrumbClicked"));
+      routeData.insert(QStringLiteral("NXBackBreadcrumbList"), lastBreadcrumbList);
+      routeData.insert(QStringLiteral("NXForwardBreadcrumbList"), d->_breadcrumbBar->getBreadcrumbList());
+      NXNavigationRouter::getInstance()->navigationRoute(window(), d, QStringLiteral("onNavigationRoute"), routeData);
     }
   });
   d->_pageTitleLayout = new QHBoxLayout();
@@ -63,7 +65,7 @@ NXScrollPage::addCentralWidget(QWidget *centralWidget,
                                bool isVerticalGrabGesture,
                                qreal mousePressEventDelay,
                                Qt::ScrollBarPolicy vScrollBarPolicy,
-                               Qt::ScrollBarPolicy hScrollBarPolicy) noexcept
+                               Qt::ScrollBarPolicy hScrollBarPolicy)
 {
   Q_D(NXScrollPage);
   if (!centralWidget)
@@ -72,7 +74,7 @@ NXScrollPage::addCentralWidget(QWidget *centralWidget,
   }
   if (centralWidget->windowTitle().isEmpty())
   {
-    centralWidget->setWindowTitle(QStringLiteral("Page_%1").arg(d->_centralStackedWidget->count()));
+    centralWidget->setWindowTitle(QString(QStringLiteral("Page_%1")).arg(d->_centralStackedWidget->count()));
   }
   if (d->_centralStackedWidget->count() == 0)
   {
@@ -84,7 +86,6 @@ NXScrollPage::addCentralWidget(QWidget *centralWidget,
   scrollArea->setWidgetResizable(isWidgetResizeable);
   scrollArea->setIsGrabGesture(isVerticalGrabGesture, mousePressEventDelay);
   scrollArea->setIsOverShoot(Qt::Vertical, true);
-
   scrollArea->setVerticalScrollBarPolicy(vScrollBarPolicy);
   scrollArea->setHorizontalScrollBarPolicy(hScrollBarPolicy);
   NXScrollBar *floatVScrollBar = new NXScrollBar(scrollArea->verticalScrollBar(), scrollArea);
@@ -103,7 +104,25 @@ NXScrollPage::addCentralWidget(QWidget *centralWidget,
 }
 
 void
-NXScrollPage::setCustomWidget(QWidget *widget) noexcept
+NXScrollPage::setPageTitle(const QString &title)
+{
+  Q_D(NXScrollPage);
+  QStringList breadcrumbList = d->_breadcrumbBar->getBreadcrumbList();
+  if (!breadcrumbList.isEmpty())
+  {
+    QString oldTitle  = breadcrumbList.first();
+    breadcrumbList[0] = title;
+    d->_breadcrumbBar->setBreadcrumbList(breadcrumbList);
+    if (d->_centralWidgetMap.contains(oldTitle))
+    {
+      int index = d->_centralWidgetMap.take(oldTitle);
+      d->_centralWidgetMap.insert(title, index);
+    }
+  }
+}
+
+void
+NXScrollPage::setCustomWidget(QWidget *widget)
 {
   Q_D(NXScrollPage);
   if (!widget || widget == this)
@@ -120,38 +139,37 @@ NXScrollPage::setCustomWidget(QWidget *widget) noexcept
 }
 
 QWidget *
-NXScrollPage::getCustomWidget() const noexcept
+NXScrollPage::getCustomWidget() const
 {
   Q_D(const NXScrollPage);
   return d->_pCustomWidget;
 }
 
 void
-NXScrollPage::navigation(int widgetIndex, bool isLogRoute) noexcept
+NXScrollPage::navigation(int widgetIndex, bool isLogRoute)
 {
   Q_D(NXScrollPage);
   if (widgetIndex >= d->_centralStackedWidget->count() || d->_navigationTargetIndex == widgetIndex)
   {
     return;
   }
-  int currentIndex = d->_navigationTargetIndex;
   d->_switchCentralStackIndex(widgetIndex, d->_navigationTargetIndex);
   d->_navigationTargetIndex = widgetIndex;
   QString pageTitle         = d->_centralWidgetMap.key(widgetIndex);
   if (isLogRoute)
   {
-    auto command = new NXScrollPageRouteCommand(this);
-    command->setIsBreadcrumbClicked(false);
-    command->setScrollPagePrivate(d);
-    command->setUndoPageIndex(currentIndex);
-    command->setRedoPageIndex(widgetIndex);
-    NXActionCommander::getInstance()->recordCommand(QStringLiteral("NXWidgetToolsAction"), command, false);
+    QVariantMap routeData = QVariantMap();
+    routeData.insert(QStringLiteral("NXScrollPageCheckSumKey"), QStringLiteral("Navigation"));
+    QStringList breadcrumbList = d->_breadcrumbBar->getBreadcrumbList();
+    routeData.insert(QStringLiteral("NXBackPageTitle"), breadcrumbList.last());
+    routeData.insert(QStringLiteral("NXForwardPageTitle"), pageTitle);
+    NXNavigationRouter::getInstance()->navigationRoute(d, QStringLiteral("onNavigationRoute"), routeData);
   }
   d->_breadcrumbBar->appendBreadcrumb(pageTitle);
 }
 
 void
-NXScrollPage::setPageTitleSpacing(int spacing) noexcept
+NXScrollPage::setPageTitleSpacing(int spacing)
 {
   Q_D(NXScrollPage);
   d->_pageTitleLayout->takeAt(0);
@@ -160,32 +178,14 @@ NXScrollPage::setPageTitleSpacing(int spacing) noexcept
 }
 
 int
-NXScrollPage::getPageTitleSpacing() const noexcept
+NXScrollPage::getPageTitleSpacing() const
 {
   return d_ptr->_pageTitleSpacing;
 }
 
 void
-NXScrollPage::setTitleVisible(bool isVisible) noexcept
+NXScrollPage::setTitleVisible(bool isVisible)
 {
   Q_D(NXScrollPage);
   d->_breadcrumbBar->setVisible(isVisible);
-}
-
-void
-NXScrollPage::setPageTitle(const QString &title)
-{
-  Q_D(NXScrollPage);
-  QStringList breadcrumbList = d->_breadcrumbBar->getBreadcrumbList();
-  if (!breadcrumbList.isEmpty())
-  {
-    QString oldTitle  = breadcrumbList.first();
-    breadcrumbList[0] = title;
-    d->_breadcrumbBar->setBreadcrumbList(breadcrumbList);
-    if (d->_centralWidgetMap.contains(oldTitle))
-    {
-      int index = d->_centralWidgetMap.take(oldTitle);
-      d->_centralWidgetMap.insert(title, index);
-    }
-  }
 }

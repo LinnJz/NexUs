@@ -1,5 +1,5 @@
-﻿#ifndef NXFRAMEWORK_NXWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_RECVSCREEN_H_
-#define NXFRAMEWORK_NXWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_RECVSCREEN_H_
+#ifndef NXFRAMEWORK_NEXUSEXAMPLE_EXAMPLEPAGE_T_RECVSCREEN_H_
+#define NXFRAMEWORK_NEXUSEXAMPLE_EXAMPLEPAGE_T_RECVSCREEN_H_
 
 #include <QWidget>
 
@@ -11,7 +11,7 @@ public:
   explicit T_RecvScreen(QWidget *parent = nullptr);
   ~T_RecvScreen();
 
-  Q_SLOT void onSendHandleResult(QPixmap pix);
+  Q_SLOT void onSendHandleResult(const QPixmap &pix);
 
 protected:
   void paintEvent(QPaintEvent *event) override;
@@ -20,4 +20,4 @@ private:
   QPixmap _pix;
 };
 
-#endif // NXFRAMEWORK_NXWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_RECVSCREEN_H_
+#endif //NXFRAMEWORK_NEXUSEXAMPLE_EXAMPLEPAGE_T_RECVSCREEN_H_

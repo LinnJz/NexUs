@@ -1,4 +1,4 @@
-﻿#ifndef T_CARD_H
+#ifndef T_CARD_H
 #define T_CARD_H
 
 #include "T_BasePage.h"

@@ -1,11 +1,11 @@
-﻿#include "XIO/NXXIO_Connection.h"
+#include "NXXIO_Connection.h"
 
 #include <iostream>
 
-#include "XIO/NXXIO_Interface.h"
-#include "XIO/NXXIO_PacketRegistry.h"
-#include "PacketIO/PakTCP_IO.h"
-#include "PacketIO/PakUDP_IO.h"
+#include "NXXIO_Interface.h"
+#include "NXXIO_PacketRegistry.h"
+#include "PakTCP_IO.h"
+#include "PakUDP_IO.h"
 
 NXXIO_Connection::NXXIO_Connection(NXXIO_Interface* aInterfacePtr, PakSocketIO* aIOPtr)
     : mInterfacePtr(aInterfacePtr), mLinkedConnectionPtr(nullptr), mIOPtr(aIOPtr), mIsServer(false), mIsInitialized(false), mDisconnecting(false), mHasClockTranslation(false), mLastTimeStamp(0.0)

@@ -1,14 +1,13 @@
-﻿#include "NXAppBar.h"
+#include "NXAppBar.h"
 
 #include <QApplication>
 #include <QDebug>
 
-#include "DeveloperComponents/NXWinShadowHelper.h"
 #include "NXText.h"
 #include "NXToolButton.h"
+#include "NXWinShadowHelper.h"
 
 #ifndef Q_OS_WIN
-#  include <QDateTime>
 #  include <QWindow>
 #endif
 #include <QGuiApplication>
@@ -97,7 +96,7 @@ NXAppBar::NXAppBar(QWidget *parent)
   });
   connect(this, &NXAppBar::pIsStayTopChanged, d, &NXAppBarPrivate::onStayTopButtonClicked);
 
-  // 图标
+  //图标
   d->_iconLabel       = new QLabel(this);
   d->_iconLabelLayout = d->_createVLayout(d->_iconLabel);
   if (parent->windowIcon().isNull())
@@ -116,7 +115,7 @@ NXAppBar::NXAppBar(QWidget *parent)
     d->_iconLabelLayout->setContentsMargins(icon.isNull() ? 0 : 10, 0, 0, 0);
   });
 
-  // 标题
+  //标题
   d->_titleLabel = new NXText(this);
   d->_titleLabel->setIsWrapAnywhere(false);
   d->_titleLabel->setTextPixelSize(13);
@@ -222,7 +221,7 @@ NXAppBar::NXAppBar(QWidget *parent)
       }
     });
   }
-  // 主屏幕变更处理
+  //主屏幕变更处理
   connect(qApp, &QApplication::primaryScreenChanged, this, [=]()
   {
     HWND hwnd = (HWND) (d->_currentWinID);
@@ -246,7 +245,7 @@ NXAppBar::~NXAppBar()
 }
 
 void
-NXAppBar::setAppBarHeight(int height) noexcept
+NXAppBar::setAppBarHeight(int height)
 {
   Q_D(NXAppBar);
   d->_pAppBarHeight = height;
@@ -256,7 +255,7 @@ NXAppBar::setAppBarHeight(int height) noexcept
 }
 
 int
-NXAppBar::getAppBarHeight() const noexcept
+NXAppBar::getAppBarHeight() const
 {
   Q_D(const NXAppBar);
   return d->_pAppBarHeight;
@@ -266,7 +265,7 @@ void
 NXAppBar::setCustomWidget(NXAppBarType::CustomArea customArea,
                           QWidget *widget,
                           QObject *hitTestObject,
-                          const QString &hitTestFunctionName) noexcept
+                          const QString &hitTestFunctionName)
 {
   Q_D(NXAppBar);
   if (!widget || widget == this)
@@ -286,7 +285,7 @@ NXAppBar::setCustomWidget(NXAppBarType::CustomArea customArea,
 }
 
 QWidget *
-NXAppBar::getCustomWidget(NXAppBarType::CustomArea customArea) const noexcept
+NXAppBar::getCustomWidget(NXAppBarType::CustomArea customArea) const
 {
   Q_D(const NXAppBar);
   int customAreaIndex = (int) customArea - 1;
@@ -294,7 +293,7 @@ NXAppBar::getCustomWidget(NXAppBarType::CustomArea customArea) const noexcept
 }
 
 void
-NXAppBar::setCustomMenu(QMenu *customMenu) noexcept
+NXAppBar::setCustomMenu(QMenu *customMenu)
 {
   Q_D(NXAppBar);
   d->_pCustomMenu = customMenu;
@@ -302,14 +301,14 @@ NXAppBar::setCustomMenu(QMenu *customMenu) noexcept
 }
 
 QMenu *
-NXAppBar::getCustomMenu() const noexcept
+NXAppBar::getCustomMenu() const
 {
   Q_D(const NXAppBar);
   return d->_pCustomMenu;
 }
 
 void
-NXAppBar::setIsFixedSize(bool isFixedSize) noexcept
+NXAppBar::setIsFixedSize(bool isFixedSize)
 {
   Q_D(NXAppBar);
   d->_pIsFixedSize = isFixedSize;
@@ -318,7 +317,7 @@ NXAppBar::setIsFixedSize(bool isFixedSize) noexcept
   DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
   if (d->_pIsFixedSize)
   {
-    // 切换DPI处理
+    //切换DPI处理
     style &= ~WS_THICKFRAME;
     ::SetWindowLongPtr(hwnd, GWL_STYLE, style);
   }
@@ -343,14 +342,14 @@ NXAppBar::setIsFixedSize(bool isFixedSize) noexcept
 }
 
 bool
-NXAppBar::getIsFixedSize() const noexcept
+NXAppBar::getIsFixedSize() const
 {
   Q_D(const NXAppBar);
   return d->_pIsFixedSize;
 }
 
 void
-NXAppBar::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable) noexcept
+NXAppBar::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable)
 {
   Q_D(NXAppBar);
   if (isEnable)
@@ -364,7 +363,7 @@ NXAppBar::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable
 }
 
 void
-NXAppBar::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags) noexcept
+NXAppBar::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags)
 {
   Q_D(NXAppBar);
   d->_buttonFlags = buttonFlags;
@@ -393,20 +392,20 @@ NXAppBar::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags) noexcept
 }
 
 NXAppBarType::ButtonFlags
-NXAppBar::getWindowButtonFlags() const noexcept
+NXAppBar::getWindowButtonFlags() const
 {
   return d_ptr->_buttonFlags;
 }
 
 void
-NXAppBar::setRouteBackButtonEnable(bool isEnable) noexcept
+NXAppBar::setRouteBackButtonEnable(bool isEnable)
 {
   Q_D(NXAppBar);
   d->_routeBackButton->setEnabled(isEnable);
 }
 
 void
-NXAppBar::setRouteForwardButtonEnable(bool isEnable) noexcept
+NXAppBar::setRouteForwardButtonEnable(bool isEnable)
 {
   Q_D(NXAppBar);
   d->_routeForwardButton->setEnabled(isEnable);
@@ -422,7 +421,7 @@ NXAppBar::takeOverNativeEvent(const QByteArray &eventType, void *message, long *
 #  endif
 {
   Q_D(NXAppBar);
-  if ((eventType != "windows_generic_MSG") || !message)
+  if ((eventType != QStringLiteral("windows_generic_MSG")) || !message)
   {
     return 0;
   }
@@ -673,29 +672,29 @@ NXAppBar::takeOverNativeEvent(const QByteArray &eventType, void *message, long *
   case WM_LBUTTONDBLCLK :
   {
     QVariantMap postData;
-    postData.insert("WMClickType", NXAppBarType::WMLBUTTONDBLCLK);
-    NXEventBus::getInstance()->post("WMWindowClicked", postData);
+    postData.insert(QStringLiteral("WMClickType"), NXAppBarType::WMLBUTTONDBLCLK);
+    NXEventBus::getInstance()->post(QStringLiteral("WMWindowClicked"), postData);
     return 0;
   }
   case WM_LBUTTONDOWN :
   {
     QVariantMap postData;
-    postData.insert("WMClickType", NXAppBarType::WMLBUTTONDOWN);
-    NXEventBus::getInstance()->post("WMWindowClicked", postData);
+    postData.insert(QStringLiteral("WMClickType"), NXAppBarType::WMLBUTTONDOWN);
+    NXEventBus::getInstance()->post(QStringLiteral("WMWindowClicked"), postData);
     return 0;
   }
   case WM_LBUTTONUP :
   {
     QVariantMap postData;
-    postData.insert("WMClickType", NXAppBarType::WMLBUTTONUP);
-    NXEventBus::getInstance()->post("WMWindowClicked", postData);
+    postData.insert(QStringLiteral("WMClickType"), NXAppBarType::WMLBUTTONUP);
+    NXEventBus::getInstance()->post(QStringLiteral("WMWindowClicked"), postData);
     return 0;
   }
   case WM_NCLBUTTONDOWN :
   {
     QVariantMap postData;
-    postData.insert("WMClickType", NXAppBarType::WMNCLBUTTONDOWN);
-    NXEventBus::getInstance()->post("WMWindowClicked", postData);
+    postData.insert(QStringLiteral("WMClickType"), NXAppBarType::WMNCLBUTTONDOWN);
+    NXEventBus::getInstance()->post(QStringLiteral("WMWindowClicked"), postData);
     if (d->_containsCursorToItem(d->_maxButton) || d->_pIsOnlyAllowMinAndClose)
     {
       return 1;
@@ -705,8 +704,8 @@ NXAppBar::takeOverNativeEvent(const QByteArray &eventType, void *message, long *
   case WM_NCLBUTTONUP :
   {
     QVariantMap postData;
-    postData.insert("WMClickType", NXAppBarType::WMNCLBUTTONDOWN);
-    NXEventBus::getInstance()->post("WMWindowClicked", postData);
+    postData.insert(QStringLiteral("WMClickType"), NXAppBarType::WMNCLBUTTONDOWN);
+    NXEventBus::getInstance()->post(QStringLiteral("WMWindowClicked"), postData);
     if (d->_containsCursorToItem(d->_maxButton) && !d->_pIsOnlyAllowMinAndClose)
     {
       d->onMaxButtonClicked();
@@ -742,6 +741,87 @@ NXAppBar::takeOverNativeEvent(const QByteArray &eventType, void *message, long *
   }
   }
   return -1;
+}
+#endif
+
+#ifdef Q_OS_MACOS
+void
+NXAppBar::mousePressEvent(QMouseEvent *event)
+{
+  Q_D(NXAppBar);
+  if (event->button() == Qt::LeftButton)
+  {
+    if (d->_containsCursorToItem(this))
+    {
+      d->_isDragging = true;
+#  if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+      d->_dragStartPos = event->globalPosition().toPoint() - window()->frameGeometry().topLeft();
+#  else
+      d->_dragStartPos = event->globalPos() - window()->frameGeometry().topLeft();
+#  endif
+      grabMouse();
+      event->accept();
+      return;
+    }
+  }
+  QWidget::mousePressEvent(event);
+}
+
+void
+NXAppBar::mouseMoveEvent(QMouseEvent *event)
+{
+  Q_D(NXAppBar);
+  if (d->_isDragging && !d->_pIsFixedSize && !window()->isMaximized() && !window()->isFullScreen())
+  {
+#  if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    window()->move(event->globalPosition().toPoint() - d->_dragStartPos);
+#  else
+    window()->move(event->globalPos() - d->_dragStartPos);
+#  endif
+    event->accept();
+    return;
+  }
+  QWidget::mouseMoveEvent(event);
+}
+
+void
+NXAppBar::mouseReleaseEvent(QMouseEvent *event)
+{
+  Q_D(NXAppBar);
+  if (event->button() == Qt::LeftButton)
+  {
+    if (d->_isDragging)
+    {
+      releaseMouse();
+    }
+    d->_isDragging = false;
+    event->accept();
+    return;
+  }
+  QWidget::mouseReleaseEvent(event);
+}
+
+void
+NXAppBar::mouseDoubleClickEvent(QMouseEvent *event)
+{
+  Q_D(NXAppBar);
+  if (event->button() == Qt::LeftButton && !d->_pIsFixedSize)
+  {
+    if (d->_containsCursorToItem(this))
+    {
+      if (window()->isMaximized())
+      {
+        window()->showNormal();
+      }
+      else
+      {
+        window()->showMaximized();
+      }
+      event->accept();
+      return;
+    }
+  }
+  QWidget::mouseDoubleClickEvent(event);
 }
 #endif
 
@@ -816,33 +896,29 @@ NXAppBar::eventFilter(QObject *obj, QEvent *event)
 #ifndef Q_OS_WIN
   case QEvent::MouseButtonPress :
   {
+    QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+    if (mouseEvent->button() != Qt::LeftButton)
+    {
+      break;
+    }
+
     if (d->_edges != 0)
     {
-      QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-      if (mouseEvent->button() == Qt::LeftButton)
-      {
-        d->_updateCursor(d->_edges);
-        window()->windowHandle()->startSystemResize(Qt::Edges(d->_edges));
-      }
+      d->_updateCursor(d->_edges);
+      window()->windowHandle()->startSystemResize(Qt::Edges(d->_edges));
     }
     else
     {
-      if (d->_containsCursorToItem(this))
+      if (d->_containsCursorToItem(this) && !d->_pIsFixedSize)
       {
-        qint64 clickTimer = QDateTime::currentMSecsSinceEpoch();
-        qint64 offset     = clickTimer - d->_clickTimer;
-        d->_clickTimer    = clickTimer;
-        if (offset > 300)
-        {
-          window()->windowHandle()->startSystemMove();
-        }
+        window()->windowHandle()->startSystemMove();
       }
     }
     break;
   }
   case QEvent::MouseButtonDblClick :
   {
-    if (d->_containsCursorToItem(this))
+    if (d->_containsCursorToItem(this) && !d->_pIsFixedSize)
     {
       if (window()->isMaximized())
       {

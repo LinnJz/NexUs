@@ -9,50 +9,50 @@
 class NXNavigationNode : public QObject
 {
   Q_OBJECT
-  Q_PROPERTY_CREATE_2(const QList<NXNavigationNode *> &, auto, ChildrenNodes)
-  Q_PROPERTY_CREATE_2(const QModelIndex &, QModelIndex, ModelIndex)
+  Q_PRIVATE_CREATE(QS_SET_CREF(QList<NXNavigationNode *>), ChildrenNodes)
+  Q_PRIVATE_CREATE(QS_SET_CREF(QModelIndex), ModelIndex)
+  Q_PRIVATE_CREATE(QS_SET_CREF(QString), NodeTitle)
   Q_PRIVATE_CREATE(NXNavigationNode *, ParentNode)
-  Q_PROPERTY_CREATE(NXIconType::IconName, Awesome)
-  Q_PROPERTY_CREATE(int, KeyPoints)
-  Q_PROPERTY_CREATE(int, Depth)
-  Q_PROPERTY_CREATE(bool, IsRootNode)
-  Q_PROPERTY_CREATE(bool, IsFooterNode)
-  Q_PROPERTY_CREATE(bool, IsHasFooterPage)
-  Q_PROPERTY_CREATE(bool, IsExpanderNode)
-  Q_PROPERTY_CREATE(bool, IsVisible)
-  Q_PROPERTY_CREATE_D(bool, IsExpanded)
+  Q_PRIVATE_CREATE(NXIconType::IconName, Awesome)
+  Q_PRIVATE_CREATE(int, KeyPoints)
+  Q_PRIVATE_CREATE(int, Depth)
+  Q_PRIVATE_CREATE(bool, IsRootNode)
+  Q_PRIVATE_CREATE(bool, IsFooterNode)
+  Q_PRIVATE_CREATE(bool, IsHasFooterPage)
+  Q_PRIVATE_CREATE(bool, IsExpanderNode)
   Q_PRIVATE_CREATE(bool, IsCategoryNode)
-  Q_PROPERTY_CREATE_D(QString, NodeKey)
-  Q_PROPERTY_CREATE_2(const QString &, QString, NodeTitle)
+  Q_PRIVATE_CREATE(bool, IsVisible)
 
 public:
   explicit NXNavigationNode(const QString &nodeTitle, NXNavigationNode *parent = nullptr);
-  ~NXNavigationNode() override;
+  ~NXNavigationNode();
 
-  QString getNodeKey() const noexcept;
+  QString getNodeKey() const;
 
-  void setIsExpanded(bool isExpanded) noexcept;
-  bool getIsExpanded() const noexcept;
+  void setIsExpanded(bool isExpanded);
+  bool getIsExpanded() const;
 
-  void setChildVisible(bool isVisible) noexcept;
-  bool getIsHasChild() const noexcept;
-  bool getIsHasPageChild() const noexcept;
+  void setChildVisible(bool isVisible);
+  bool getIsHasChild() const;
+  bool getIsHasPageChild() const;
 
-  void appendChildNode(NXNavigationNode *childNode) noexcept;
-  void removeChildNode(NXNavigationNode *childNode) noexcept;
-  void insertChildNode(int row, NXNavigationNode *childNode) noexcept;
+  void appendChildNode(NXNavigationNode *childNode);
+  void removeChildNode(NXNavigationNode *childNode);
+  void insertChildNode(int row, NXNavigationNode *childNode);
 
-  bool getIsChildHasKeyPoints() const noexcept;
+  bool getIsChildHasKeyPoints() const;
 
-  NXNavigationNode *getOriginalNode() noexcept;
-  bool getIsChildNode(NXNavigationNode *node) const noexcept;
+  NXNavigationNode *getOriginalNode();
+  bool getIsChildNode(NXNavigationNode *node);
 
-  int getRow() const noexcept;
+  int getRow() const;
   int getRowExceptCategoryNodes() const;
 
-  QList<NXNavigationNode *> getExceptCategoryNodes() const noexcept;
+  QList<NXNavigationNode *> getExceptCategoryNodes();
 
-  void swap(NXNavigationNode *other);
+private:
+  bool _isExpanded { false };
+  QString _nodeKey = QStringLiteral("");
 };
 
 #endif // NXNAVIGATIONNODE_H

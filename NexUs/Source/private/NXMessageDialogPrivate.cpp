@@ -1,7 +1,8 @@
-#include "NXMessageDialogPrivate.h"
+﻿#include "NXMessageDialogPrivate.h"
 
 #include <QMouseEvent>
 #include <QPainter>
+
 #include "NXTheme.h"
 
 NXMessageDialogButton::NXMessageDialogButton(ButtonType type, QWidget *parent)
@@ -84,8 +85,13 @@ NXMessageDialogButton::mouseReleaseEvent(QMouseEvent *event)
   QWidget::mouseReleaseEvent(event);
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 void
 NXMessageDialogButton::enterEvent(QEnterEvent *event)
+#else
+void
+NXMessageDialogButton::enterEvent(QEvent *event)
+#endif
 {
   _isHovered = true;
   update();

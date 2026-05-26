@@ -1,4 +1,4 @@
-﻿#ifndef PAKTYPEDICTIONARY_H
+#ifndef PAKTYPEDICTIONARY_H
 #define PAKTYPEDICTIONARY_H
 
 #include "NXPacketIO_Export.h"
@@ -7,7 +7,7 @@
 #include <typeindex>
 #include <typeinfo>
 
-#include "PacketIO/PakSerialize.h"
+#include "PakSerialize.h"
 
 class PakO;
 class PakI;

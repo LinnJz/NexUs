@@ -1,4 +1,4 @@
-﻿#ifndef NXXIO_PACKETREGISTRY_H
+#ifndef NXXIO_PACKETREGISTRY_H
 #define NXXIO_PACKETREGISTRY_H
 
 #include "NXPacketIO_Export.h"
@@ -6,10 +6,10 @@
 #include <climits>
 #include <vector>
 
-#include "GenIO/GenUniqueId.h"
+#include "GenUniqueId.h"
 class PakProcessor;
-#include "XIO/NXXIO_Packet.h"
-#include "PacketIO/PakSerializeFwd.h"
+#include "NXXIO_Packet.h"
+#include "PakSerializeFwd.h"
 
 class NX_PACKETIO_EXPORT NXXIO_PacketRegistry
 {

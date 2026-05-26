@@ -1,13 +1,13 @@
-﻿#include "GenIO/GenUniqueId.h"
+#include "GenUniqueId.h"
 
 #include <cassert>
 #include <cstring>
 #include <ctime>
 #include <sstream>
 
-#include "GenIO/GenHostName.h"
-#include "GenIO/GenIP.h"
-#include "GenIO/GenSocketManager.h"
+#include "GenHostName.h"
+#include "GenIP.h"
+#include "GenSocketManager.h"
 
 #ifdef _WIN32
 #include <windows.h>

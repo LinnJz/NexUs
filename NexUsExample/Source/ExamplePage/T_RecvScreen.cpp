@@ -1,5 +1,6 @@
-#include <QPainter>
 #include "T_RecvScreen.h"
+
+#include <QPainter>
 
 T_RecvScreen::T_RecvScreen(QWidget *parent)
     : QWidget(parent)
@@ -12,7 +13,7 @@ T_RecvScreen::~T_RecvScreen()
 }
 
 void
-T_RecvScreen::onSendHandleResult(QPixmap pix)
+T_RecvScreen::onSendHandleResult(const QPixmap &pix)
 {
   _pix = std::move(pix);
   update();

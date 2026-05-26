@@ -2,7 +2,6 @@
 
 #include <QFontMetrics>
 #include <QSize>
-#include <QtGlobal>
 
 NXPivotModel::NXPivotModel(QObject *parent)
     : QAbstractListModel { parent }
@@ -14,25 +13,25 @@ NXPivotModel::~NXPivotModel()
 }
 
 void
-NXPivotModel::appendPivot(const QPixmap &pixmap) noexcept
+NXPivotModel::appendPivot(const QPixmap &pixmap)
 {
   appendPivot(QString {}, pixmap);
 }
 
 void
-NXPivotModel::appendPivot(const QString &text, const QPixmap &pixmap) noexcept
+NXPivotModel::appendPivot(const QString &text, const QPixmap &pixmap)
 {
   insertPivot(_pivotList.count(), text, pixmap);
 }
 
 void
-NXPivotModel::insertPivot(int index, const QPixmap &pixmap) noexcept
+NXPivotModel::insertPivot(int index, const QPixmap &pixmap)
 {
   insertPivot(index, QString {}, pixmap);
 }
 
 void
-NXPivotModel::insertPivot(int index, const QString &text, const QPixmap &pixmap) noexcept
+NXPivotModel::insertPivot(int index, const QString &text, const QPixmap &pixmap)
 {
   beginInsertRows(QModelIndex(), index, index);
   _pivotList.insert(index, { text, pixmap });
@@ -40,7 +39,7 @@ NXPivotModel::insertPivot(int index, const QString &text, const QPixmap &pixmap)
 }
 
 void
-NXPivotModel::removePivot(int index) noexcept
+NXPivotModel::removePivot(int index)
 {
   beginRemoveRows(QModelIndex(), index, index);
   _pivotList.removeAt(index);
@@ -48,24 +47,22 @@ NXPivotModel::removePivot(int index) noexcept
 }
 
 void
-NXPivotModel::setPivot(int index, const QPixmap &pixmap) noexcept
+NXPivotModel::setPivot(int index, const QPixmap &pixmap)
 {
   _pivotList[index].icon = pixmap;
-  Q_EMIT dataChanged(this->index(index, 0), this->index(index, 0),
-                     { Qt::UserRole, Qt::DisplayRole, Qt::DecorationRole, Qt::SizeHintRole });
+  Q_EMIT dataChanged(this->index(index, 0), this->index(index, 0), { Qt::UserRole, Qt::DisplayRole });
 }
 
 void
-NXPivotModel::setPivot(int index, const QString &text, const QPixmap &pixmap) noexcept
+NXPivotModel::setPivot(int index, const QString &text, const QPixmap &pixmap)
 {
   _pivotList[index].text = text;
   _pivotList[index].icon = pixmap;
-  Q_EMIT dataChanged(this->index(index, 0), this->index(index, 0),
-                     { Qt::UserRole, Qt::DisplayRole, Qt::DecorationRole, Qt::SizeHintRole });
+  Q_EMIT dataChanged(this->index(index, 0), this->index(index, 0), { Qt::UserRole, Qt::DisplayRole });
 }
 
 int
-NXPivotModel::getPivotListCount() const noexcept
+NXPivotModel::getPivotListCount() const
 {
   return _pivotList.count();
 }

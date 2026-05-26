@@ -11,7 +11,7 @@ class NXMenuBarStyle : public QProxyStyle
 
 public:
   explicit NXMenuBarStyle(QStyle *style = nullptr);
-  ~NXMenuBarStyle() override;
+  ~NXMenuBarStyle();
   void drawPrimitive(PrimitiveElement element,
                      const QStyleOption *option,
                      QPainter *painter,

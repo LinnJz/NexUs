@@ -1,10 +1,10 @@
-﻿#ifndef NXXIO_PACKET_H
+#ifndef NXXIO_PACKET_H
 #define NXXIO_PACKET_H
 
 #include "NXPacketIO_Export.h"
 
-#include "GenIO/GenUniqueId.h"
-#include "PacketIO/PakPacket.h"
+#include "GenUniqueId.h"
+#include "PakPacket.h"
 
 class NX_PACKETIO_EXPORT NXXIO_Packet : public PakPacket
 {

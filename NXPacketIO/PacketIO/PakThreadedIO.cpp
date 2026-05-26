@@ -1,13 +1,13 @@
-﻿#include "PacketIO/PakThreadedIO.h"
+#include "PakThreadedIO.h"
 
 #include <iostream>
 
-#include "GenIO/GenInternetSocketAddress.h"
-#include "GenIO/GenTCP_IO.h"
-#include "GenIO/GenUDP_IO.h"
-#include "PacketIO/PakProcessor.h"
-#include "PacketIO/PakTCP_IO.h"
-#include "PacketIO/PakUDP_IO.h"
+#include "GenInternetSocketAddress.h"
+#include "GenTCP_IO.h"
+#include "GenUDP_IO.h"
+#include "PakProcessor.h"
+#include "PakTCP_IO.h"
+#include "PakUDP_IO.h"
 
 // Split into reactor thread, and send thread...
 

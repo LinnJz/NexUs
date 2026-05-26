@@ -1,4 +1,4 @@
-﻿#ifndef T_BASECOMPONENTS_H
+#ifndef T_BASECOMPONENTS_H
 #define T_BASECOMPONENTS_H
 
 #include "T_BasePage.h"
@@ -22,10 +22,10 @@ class T_BaseComponents : public T_BasePage
 
 public:
   Q_INVOKABLE explicit T_BaseComponents(QWidget *parent = nullptr);
-  ~T_BaseComponents() override;
+  ~T_BaseComponents();
 
 protected:
-  void mouseReleaseEvent(QMouseEvent *event);
+  void mouseReleaseEvent(QMouseEvent *event) override;
 
 private:
   NXToggleSwitch *_toggleSwitch { nullptr };

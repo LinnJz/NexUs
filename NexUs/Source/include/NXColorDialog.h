@@ -4,26 +4,26 @@
 #include <QDialog>
 
 #include "NXAppBar.h"
+#include "NXProperty.h"
 class NXColorDialogPrivate;
 
 class NX_EXPORT NXColorDialog : public QDialog
 {
   Q_OBJECT
   Q_Q_CREATE(NXColorDialog)
-  Q_PROPERTY_CREATE_2_H(const QColor &, QColor, CurrentColor)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QColor), CurrentColor)
   Q_PROPERTY_CREATE_H(NXColorSchemeType::ColorSchemeType, ColorSchemeType)
   Q_TAKEOVER_NATIVEEVENT_H
 
 public:
   explicit NXColorDialog(QWidget *parent = nullptr);
   explicit NXColorDialog(const QColor &currentColor, QWidget *parent = nullptr);
-  ~NXColorDialog() override;
+  ~NXColorDialog();
 
-  QList<QColor> getCustomColorList() const noexcept;
-  QColor getCustomColor(int index) const noexcept;
-  QString getCurrent4ChannelColor() const noexcept;
-Q_SIGNALS:
-  void colorSelected(const QColor &color);
+  QList<QColor> getCustomColorList() const;
+  QColor getCustomColor(int index) const;
+  QString getCurrent4ChannelColor() const;
+  Q_SIGNAL void colorSelected(const QColor &color);
 
 protected:
   void paintEvent(QPaintEvent *event) override;

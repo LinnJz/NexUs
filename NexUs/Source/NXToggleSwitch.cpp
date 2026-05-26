@@ -4,6 +4,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
+#include <QtMath>
 
 #include "NXTheme.h"
 #include "private/NXToggleSwitchPrivate.h"
@@ -33,7 +34,7 @@ NXToggleSwitch::~NXToggleSwitch()
 }
 
 void
-NXToggleSwitch::setIsToggled(bool isToggled) noexcept
+NXToggleSwitch::setIsToggled(bool isToggled)
 {
   Q_D(NXToggleSwitch);
   if (d->_isToggled == isToggled)
@@ -51,7 +52,7 @@ NXToggleSwitch::setIsToggled(bool isToggled) noexcept
 }
 
 bool
-NXToggleSwitch::getIsToggled() const noexcept
+NXToggleSwitch::getIsToggled() const
 {
   return d_ptr->_isToggled;
 }
@@ -98,6 +99,8 @@ NXToggleSwitch::mousePressEvent(QMouseEvent *event)
   d->_adjustCircleCenterX();
   d->_isLeftButtonPress = true;
   d->_lastMouseX        = event->pos().x();
+  d->_pressStartX       = event->pos().x();
+  d->_isMousePressMove  = false;
   d->_startRadiusAnimation(d->_circleRadius, height() * 0.25);
   QWidget::mousePressEvent(event);
 }
@@ -140,11 +143,20 @@ NXToggleSwitch::mouseMoveEvent(QMouseEvent *event)
   Q_D(NXToggleSwitch);
   if (d->_isLeftButtonPress)
   {
-    d->_isMousePressMove = true;
-    int moveX            = event->pos().x() - d->_lastMouseX;
-    d->_lastMouseX       = event->pos().x();
-    d->_circleCenterX += moveX;
-    d->_adjustCircleCenterX();
+    // 添加移动阈值判断，避免 macOS 上的微小抖动被识别为拖动
+    int totalMoveX = qAbs(event->pos().x() - d->_pressStartX);
+    if (totalMoveX > 3)
+    {
+      d->_isMousePressMove = true;
+    }
+
+    if (d->_isMousePressMove)
+    {
+      int moveX      = event->pos().x() - d->_lastMouseX;
+      d->_lastMouseX = event->pos().x();
+      d->_circleCenterX += moveX;
+      d->_adjustCircleCenterX();
+    }
   }
   QWidget::mouseMoveEvent(event);
 }

@@ -137,7 +137,7 @@ NXDockWidget::nativeEvent(const QByteArray &eventType, void *message, long *resu
 #  endif
 {
   Q_D(NXDockWidget);
-  if ((eventType != "windows_generic_MSG") || !message)
+  if ((eventType != QStringLiteral("windows_generic_MSG")) || !message)
   {
     return false;
   }

@@ -1,4 +1,4 @@
-﻿#ifndef T_ICONDELEGATE_H
+#ifndef T_ICONDELEGATE_H
 #define T_ICONDELEGATE_H
 
 #include <QStyledItemDelegate>
@@ -11,7 +11,7 @@ class T_IconDelegate : public QStyledItemDelegate
 
 public:
   explicit T_IconDelegate(QObject *parent = nullptr);
-  ~T_IconDelegate() override;
+  ~T_IconDelegate();
 
 protected:
   void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;

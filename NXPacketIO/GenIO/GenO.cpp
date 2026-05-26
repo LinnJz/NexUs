@@ -1,9 +1,9 @@
-﻿#include "GenIO/GenO.h"
+#include "GenO.h"
 
 #include <iostream>
 
-#include "GenIO/GenError.h"
-#include "Util/UtWallClock.h"
+#include "GenError.h"
+#include "UtWallClock.h"
 GenO::GenO(const char* aName)
     : mName(aName != nullptr ? aName : ""), mGenBufXferO(nullptr), mErrorStatus(GenBuf::NoError)
 {

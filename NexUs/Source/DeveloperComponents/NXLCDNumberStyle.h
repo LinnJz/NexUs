@@ -11,7 +11,7 @@ class NXLCDNumberStyle : public QProxyStyle
 
 public:
   explicit NXLCDNumberStyle(QStyle *style = nullptr);
-  ~NXLCDNumberStyle() override;
+  ~NXLCDNumberStyle();
   void drawControl(ControlElement element,
                    const QStyleOption *option,
                    QPainter *painter,
@@ -21,4 +21,4 @@ private:
   NXThemeType::ThemeMode _themeMode;
 };
 
-#endif // NEXUS_NXLCDNUMBERSTYLE_H
+#endif //NEXUS_NXLCDNUMBERSTYLE_H

@@ -36,7 +36,7 @@ public:
   int year  = 1924;
   int month = 1;
   int day   = 1;
-  QString desText {};
+  QString desText { "" };
 };
 
 Q_DECLARE_METATYPE(NXCalendarData);
@@ -46,30 +46,29 @@ class NXCalendarModel : public QAbstractListModel
   Q_OBJECT
   Q_PRIVATE_CREATE_H(QDate, MinimumDate)
   Q_PRIVATE_CREATE_H(QDate, MaximumDate)
-  Q_PRIVATE_CREATE_H(NXCalendarType, DisplayMode)
 
 public:
   explicit NXCalendarModel(QObject *parent = nullptr);
   ~NXCalendarModel();
 
-  QModelIndex getIndexFromDate(QDate date) const noexcept;
-  QDate getDateFromIndex(const QModelIndex &index) const noexcept;
-  QVariant data(const QModelIndex &index, int role) const override;
+  void setDisplayMode(NXCalendarType displayType);
+  NXCalendarType getDisplayMode() const;
 
-Q_SIGNALS:
-  void currentYearMonthChanged(const QString &date);
-  void displayModeChanged();
+  QModelIndex getIndexFromDate(QDate date);
+  QDate getDateFromIndex(const QModelIndex &index) const;
+  QVariant data(const QModelIndex &index, int role) const override;
+  Q_SIGNAL void currentYearMonthChanged(const QString &date);
+  Q_SIGNAL void displayModeChanged();
 
 protected:
-  int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+  virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
 private:
-  NXCalendarType _displayMode { NXCalendarType::DayMode };
-  int _dayRowCount { 0 };
   int _offset { 0 };
   QDate _pMinimumDate;
   QDate _pMaximumDate;
-
+  NXCalendarType _displayMode { NXCalendarType::DayMode };
+  int _dayRowCount { 0 };
   void _initRowCount();
   int _getCurrentDay(int row) const;
 };

@@ -1,4 +1,4 @@
-﻿#ifndef GENSOCKETCONNECTION_H
+#ifndef GENSOCKETCONNECTION_H
 #define GENSOCKETCONNECTION_H
 
 #include "NXPacketIO_Export.h"
@@ -6,7 +6,7 @@
 #include <memory>
 #include <string>
 
-#include "GenIO/GenSocket.h"
+#include "GenSocket.h"
 
 //! Base class for a socket connection.  Not much more than a GenSocket.
 class NX_PACKETIO_EXPORT GenSocketConnection

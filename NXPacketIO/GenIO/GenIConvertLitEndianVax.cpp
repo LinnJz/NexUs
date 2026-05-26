@@ -1,4 +1,4 @@
-﻿#include "GenIO/GenIConvertLitEndianVax.h"
+#include "GenIConvertLitEndianVax.h"
 
 #include <cstddef> // for size_t
 

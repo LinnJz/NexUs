@@ -1,4 +1,4 @@
-﻿#ifndef T_POPUP_H
+#ifndef T_POPUP_H
 #define T_POPUP_H
 
 #include "T_BasePage.h"
@@ -12,7 +12,6 @@ class NXKeyBinder;
 class NXRoller;
 class NXRollerPicker;
 class NXDrawerArea;
-class NXMessageCard;
 class NXMessageDialog;
 
 class T_Popup : public T_BasePage
@@ -21,7 +20,7 @@ class T_Popup : public T_BasePage
 
 public:
   Q_INVOKABLE explicit T_Popup(QWidget *parent = nullptr);
-  ~T_Popup() override;
+  ~T_Popup();
 
 private:
   NXToolButton *_toolButton { nullptr };

@@ -1,7 +1,8 @@
-﻿#ifndef NXFRAMEWORK_NEXUS_INCLUDE_NXDRAWERAREA_H_
+#ifndef NXFRAMEWORK_NEXUS_INCLUDE_NXDRAWERAREA_H_
 #define NXFRAMEWORK_NEXUS_INCLUDE_NXDRAWERAREA_H_
 
 #include <QWidget>
+
 #include "NXProperty.h"
 
 class NXDrawerAreaPrivate;
@@ -15,19 +16,18 @@ class NX_EXPORT NXDrawerArea : public QWidget
 
 public:
   explicit NXDrawerArea(QWidget *parent = nullptr);
-  ~NXDrawerArea() override;
+  ~NXDrawerArea();
 
-  void setDrawerHeader(QWidget *widget) noexcept;
+  void setDrawerHeader(QWidget *widget);
 
-  void addDrawer(QWidget *widget) noexcept;
-  void removeDrawer(QWidget *widget) noexcept;
+  void addDrawer(QWidget *widget);
+  void removeDrawer(QWidget *widget);
 
-  void expand() noexcept;
-  void collapse() noexcept;
+  void expand();
+  void collapse();
 
-  bool getIsExpand() const noexcept;
-Q_SIGNALS:
-  void expandStateChanged(bool isExpand);
+  bool getIsExpand() const;
+  Q_SIGNAL void expandStateChanged(bool isExpand);
 };
 
-#endif // NXFRAMEWORK_NEXUS_INCLUDE_NXDRAWERAREA_H_
+#endif //NXFRAMEWORK_NEXUS_INCLUDE_NXDRAWERAREA_H_

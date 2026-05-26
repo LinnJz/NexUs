@@ -22,7 +22,7 @@ NXCalendarPrivate::~NXCalendarPrivate()
 }
 
 void
-NXCalendarPrivate::onSwitchButtonClicked() noexcept
+NXCalendarPrivate::onSwitchButtonClicked()
 {
   if (!_isSwitchAnimationFinished)
   {
@@ -56,7 +56,7 @@ NXCalendarPrivate::onSwitchButtonClicked() noexcept
 }
 
 void
-NXCalendarPrivate::onCalendarViewClicked(const QModelIndex &index) noexcept
+NXCalendarPrivate::onCalendarViewClicked(const QModelIndex &index)
 {
   Q_Q(NXCalendar);
   if (!_isSwitchAnimationFinished)
@@ -109,7 +109,7 @@ NXCalendarPrivate::onCalendarViewClicked(const QModelIndex &index) noexcept
 }
 
 void
-NXCalendarPrivate::onUpButtonClicked() noexcept
+NXCalendarPrivate::onUpButtonClicked()
 {
   QScrollBar *vscrollBar              = _calendarView->verticalScrollBar();
   QPropertyAnimation *scrollAnimation = new QPropertyAnimation(vscrollBar, "value");
@@ -121,7 +121,7 @@ NXCalendarPrivate::onUpButtonClicked() noexcept
 }
 
 void
-NXCalendarPrivate::onDownButtonClicked() noexcept
+NXCalendarPrivate::onDownButtonClicked()
 {
   QScrollBar *vscrollBar              = _calendarView->verticalScrollBar();
   QPropertyAnimation *scrollAnimation = new QPropertyAnimation(vscrollBar, "value");
@@ -133,7 +133,7 @@ NXCalendarPrivate::onDownButtonClicked() noexcept
 }
 
 void
-NXCalendarPrivate::_scrollToDate(QDate date) noexcept
+NXCalendarPrivate::_scrollToDate(QDate date)
 {
   int index = _calendarModel->getIndexFromDate(date).row();
   switch (_calendarModel->getDisplayMode())
@@ -231,7 +231,7 @@ NXCalendarPrivate::_doSwitchAnimation(bool isZoomIn)
 }
 
 void
-NXCalendarPrivate::_updateSwitchButtonText() noexcept
+NXCalendarPrivate::_updateSwitchButtonText()
 {
   QModelIndex modelIndex =
       _calendarView->indexAt(QPoint(_calendarView->rect().center().x() - 20, _calendarView->rect().center().y()));
@@ -244,17 +244,17 @@ NXCalendarPrivate::_updateSwitchButtonText() noexcept
   {
   case YearMode :
   {
-    _modeSwitchButton->setText(QStringLiteral("%1-%2").arg(data.year - 5).arg(data.year + 10));
+    _modeSwitchButton->setText(QString(QStringLiteral("%1-%2")).arg(data.year - 5).arg(data.year + 10));
     break;
   }
   case MonthMode :
   {
-    _modeSwitchButton->setText(QStringLiteral("%1年").arg(data.year));
+    _modeSwitchButton->setText(QString(QStringLiteral("%1年")).arg(data.year));
     break;
   }
   case DayMode :
   {
-    _modeSwitchButton->setText(QStringLiteral("%1年%2月").arg(data.year).arg(data.month));
+    _modeSwitchButton->setText(QString(QStringLiteral("%1年%2月")).arg(data.year).arg(data.month));
     break;
   }
   }

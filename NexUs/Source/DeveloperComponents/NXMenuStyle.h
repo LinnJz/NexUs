@@ -13,7 +13,7 @@ class NXMenuStyle : public QProxyStyle
 
 public:
   explicit NXMenuStyle(QStyle *style = nullptr);
-  ~NXMenuStyle() override;
+  ~NXMenuStyle();
   void drawPrimitive(PrimitiveElement element,
                      const QStyleOption *option,
                      QPainter *painter,
@@ -30,10 +30,10 @@ public:
                          const QWidget *widget) const override;
 
 private:
-  mutable int _iconWidth { 0 };
+  mutable bool _isAnyoneItemHasIcon { false };
   int _shadowBorderWidth { 6 };
   NXThemeType::ThemeMode _themeMode;
-  mutable bool _isAnyoneItemHasIcon { false };
+  mutable int _iconWidth { 0 };
 };
 
 #endif // NXMENUSTYLE_H

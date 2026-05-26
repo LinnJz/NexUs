@@ -12,8 +12,8 @@ class NXRadioButtonPrivate : public QObject
 
 public:
   explicit NXRadioButtonPrivate(QObject *parent = nullptr);
-  ~NXRadioButtonPrivate() override;
-  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept;
+  ~NXRadioButtonPrivate();
+  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
 
 private:
   NXTextType::TextStyle _textStyle { NXTextType::NoStyle };

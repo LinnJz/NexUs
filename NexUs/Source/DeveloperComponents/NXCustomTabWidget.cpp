@@ -1,11 +1,13 @@
 ﻿#include "NXCustomTabWidget.h"
 
 #include <QDebug>
+#include <QEvent>
 #include <QMimeData>
 #include <QMouseEvent>
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QVariant>
+
 #include "NXAppBar.h"
 #include "NXTabBar.h"
 #include "NXTabWidget.h"
@@ -16,7 +18,7 @@ NXCustomTabWidget::NXCustomTabWidget(QWidget *parent)
 {
   _pIsFinished = false;
   resize(700, 500);
-  setWindowTitle({});
+  setWindowTitle(QStringLiteral(""));
 #ifndef Q_OS_WIN
   setAttribute(Qt::WA_Hover);
 #endif
@@ -82,20 +84,20 @@ NXCustomTabWidget::~NXCustomTabWidget()
 }
 
 void
-NXCustomTabWidget::addTab(QWidget *widget, QIcon tabIcon, const QString &tabTitle) noexcept
+NXCustomTabWidget::addTab(QWidget *widget, const QIcon &tabIcon, const QString &tabTitle)
 {
   _customTabBar->addTab(tabIcon, tabTitle);
   _customTabWidget->addTab(widget, tabIcon, tabTitle);
 }
 
 NXTabBar *
-NXCustomTabWidget::getCustomTabBar() const noexcept
+NXCustomTabWidget::getCustomTabBar() const
 {
   return _customTabBar;
 }
 
 NXTabWidget *
-NXCustomTabWidget::getCustomTabWidget() const noexcept
+NXCustomTabWidget::getCustomTabWidget() const
 {
   return _customTabWidget;
 }

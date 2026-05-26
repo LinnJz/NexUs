@@ -1,5 +1,13 @@
 ﻿#include "NXThemePrivate.h"
 
+#include <QApplication>
+#include <QEvent>
+#include <QGuiApplication>
+#include <QPalette>
+#include <QStyleHints>
+
+#include "NXTheme.h"
+
 NXThemePrivate::NXThemePrivate(QObject *parent)
     : QObject { parent }
 {
@@ -9,17 +17,48 @@ NXThemePrivate::~NXThemePrivate()
 {
 }
 
+bool
+NXThemePrivate::eventFilter(QObject *watched, QEvent *event)
+{
+  if (_pIsFollowSystemTheme && event->type() == QEvent::ApplicationPaletteChange)
+  {
+    _applySystemTheme();
+  }
+  return QObject::eventFilter(watched, event);
+}
+
+NXThemeType::ThemeMode
+NXThemePrivate::_detectSystemThemeMode() const
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+  const Qt::ColorScheme scheme = QGuiApplication::styleHints()->colorScheme();
+  if (scheme == Qt::ColorScheme::Dark)
+  {
+    return NXThemeType::Dark;
+  }
+  if (scheme == Qt::ColorScheme::Light)
+  {
+    return NXThemeType::Light;
+  }
+#endif
+  const QColor windowColor = QApplication::palette().color(QPalette::Window);
+  return windowColor.lightness() < 128 ? NXThemeType::Dark : NXThemeType::Light;
+}
+
+void
+NXThemePrivate::_applySystemTheme()
+{
+  Q_Q(NXTheme);
+  const NXThemeType::ThemeMode mode = _detectSystemThemeMode();
+  if (_themeMode != mode)
+  {
+    q->setThemeMode(mode);
+  }
+}
+
 void
 NXThemePrivate::_initThemeColor()
 {
-  // NXScrollBar
-  _lightThemeColorList[NXThemeType::ScrollBarHandle] = QColor(0x8A, 0x8A, 0x8A);
-  _darkThemeColorList[NXThemeType::ScrollBarHandle]  = QColor(0x9F, 0x9F, 0x9F);
-
-  // NXToggleSwitch
-  _lightThemeColorList[NXThemeType::ToggleSwitchNoToggledCenter] = QColor(0x6A, 0x6A, 0x6A);
-  _darkThemeColorList[NXThemeType::ToggleSwitchNoToggledCenter]  = QColor(0xD0, 0xD0, 0xD0);
-
   // NXTabBar
   _lightThemeColorList[NXThemeType::TabBarBase] = QColor(0xEA, 0xEA, 0xED);
   _darkThemeColorList[NXThemeType::TabBarBase]  = QColor(0x1C, 0x20, 0x27);
@@ -36,7 +75,14 @@ NXThemePrivate::_initThemeColor()
   _lightThemeColorList[NXThemeType::TabBarSelectedCloseButtonHover] = QColor(0xE7, 0xE7, 0xE8);
   _darkThemeColorList[NXThemeType::TabBarSelectedCloseButtonHover]  = QColor(0x57, 0x5A, 0x60);
 
-  // 通用颜色
+  // NXScrollBar
+  _lightThemeColorList[NXThemeType::ScrollBarHandle] = QColor(0x8A, 0x8A, 0x8A);
+  _darkThemeColorList[NXThemeType::ScrollBarHandle]  = QColor(0x9F, 0x9F, 0x9F);
+
+  // NXToggleSwitch
+  _lightThemeColorList[NXThemeType::ToggleSwitchNoToggledCenter] = QColor(0x6A, 0x6A, 0x6A);
+  _darkThemeColorList[NXThemeType::ToggleSwitchNoToggledCenter]  = QColor(0xD0, 0xD0, 0xD0);
+
   // 主题颜色
   _lightThemeColorList[NXThemeType::PrimaryNormal] = QColor(0x00, 0x67, 0xC0);
   _darkThemeColorList[NXThemeType::PrimaryNormal]  = QColor(0x4C, 0xC2, 0xFF);
@@ -44,6 +90,29 @@ NXThemePrivate::_initThemeColor()
   _darkThemeColorList[NXThemeType::PrimaryHover]   = QColor(0x47, 0xB1, 0xE8);
   _lightThemeColorList[NXThemeType::PrimaryPress]  = QColor(0x31, 0x83, 0xCA);
   _darkThemeColorList[NXThemeType::PrimaryPress]   = QColor(0x42, 0xA1, 0xD2);
+
+  // 通用颜色
+  // 普通窗体
+  _lightThemeColorList[NXThemeType::WindowBase]             = QColor(0xEC, 0xEC, 0xEC);
+  _darkThemeColorList[NXThemeType::WindowBase]              = QColor(0x20, 0x20, 0x20);
+  _lightThemeColorList[NXThemeType::WindowCentralStackBase] = QColor(0xF8, 0xF8, 0xF8, 90);
+  _darkThemeColorList[NXThemeType::WindowCentralStackBase]  = QColor(0x3E, 0x3E, 0x3E, 60);
+
+  // 浮动窗体
+  _lightThemeColorList[NXThemeType::PopupBorder]      = QColor(0xC8, 0xC8, 0xC8);
+  _darkThemeColorList[NXThemeType::PopupBorder]       = QColor(0x47, 0x47, 0x47);
+  _lightThemeColorList[NXThemeType::PopupBorderHover] = QColor(0xBC, 0xBC, 0xBC);
+  _darkThemeColorList[NXThemeType::PopupBorderHover]  = QColor(0x54, 0x54, 0x54);
+  _lightThemeColorList[NXThemeType::PopupBase]        = QColor(0xF6, 0xF6, 0xF6);
+  _darkThemeColorList[NXThemeType::PopupBase]         = QColor(0x2C, 0x2C, 0x2C);
+  _lightThemeColorList[NXThemeType::PopupHover]       = QColor(0xEE, 0xEE, 0xEE);
+  _darkThemeColorList[NXThemeType::PopupHover]        = QColor(0x38, 0x38, 0x38);
+
+  // Dialog窗体
+  _lightThemeColorList[NXThemeType::DialogBase]       = QColor(0xF7, 0xF7, 0xF7);
+  _darkThemeColorList[NXThemeType::DialogBase]        = QColor(0x1F, 0x1F, 0x1F);
+  _lightThemeColorList[NXThemeType::DialogLayoutArea] = QColor(0xED, 0xED, 0xED);
+  _darkThemeColorList[NXThemeType::DialogLayoutArea]  = QColor(0x20, 0x20, 0x20);
 
   // 基础颜色
   _lightThemeColorList[NXThemeType::BasicText]          = Qt::black;
@@ -106,28 +175,6 @@ NXThemePrivate::_initThemeColor()
   // 状态颜色
   _lightThemeColorList[NXThemeType::StatusDanger] = QColor(0xE8, 0x11, 0x23);
   _darkThemeColorList[NXThemeType::StatusDanger]  = QColor(0xE8, 0x11, 0x23);
-
-  // 浮动窗体
-  _lightThemeColorList[NXThemeType::PopupBorder]      = QColor(0xC8, 0xC8, 0xC8);
-  _darkThemeColorList[NXThemeType::PopupBorder]       = QColor(0x47, 0x47, 0x47);
-  _lightThemeColorList[NXThemeType::PopupBorderHover] = QColor(0xBC, 0xBC, 0xBC);
-  _darkThemeColorList[NXThemeType::PopupBorderHover]  = QColor(0x54, 0x54, 0x54);
-  _lightThemeColorList[NXThemeType::PopupBase]        = QColor(0xF6, 0xF6, 0xF6);
-  _darkThemeColorList[NXThemeType::PopupBase]         = QColor(0x2C, 0x2C, 0x2C);
-  _lightThemeColorList[NXThemeType::PopupHover]       = QColor(0xEE, 0xEE, 0xEE);
-  _darkThemeColorList[NXThemeType::PopupHover]        = QColor(0x38, 0x38, 0x38);
-
-  // Dialog窗体
-  _lightThemeColorList[NXThemeType::DialogBase]       = QColor(0xF7, 0xF7, 0xF7);
-  _darkThemeColorList[NXThemeType::DialogBase]        = QColor(0x1F, 0x1F, 0x1F);
-  _lightThemeColorList[NXThemeType::DialogLayoutArea] = QColor(0xED, 0xED, 0xED);
-  _darkThemeColorList[NXThemeType::DialogLayoutArea]  = QColor(0x20, 0x20, 0x20);
-
-  // 普通窗体
-  _lightThemeColorList[NXThemeType::WindowBase]             = QColor(0xEC, 0xEC, 0xEC);
-  _darkThemeColorList[NXThemeType::WindowBase]              = QColor(0x20, 0x20, 0x20);
-  _lightThemeColorList[NXThemeType::WindowCentralStackBase] = QColor(0xF8, 0xF8, 0xF8, 90);
-  _darkThemeColorList[NXThemeType::WindowCentralStackBase]  = QColor(0x3E, 0x3E, 0x3E, 60);
 
   // Win10顶部边框颜色
   _lightThemeColorList[NXThemeType::Win10BorderActive]   = QColor(0x6E, 0x6E, 0x6E);

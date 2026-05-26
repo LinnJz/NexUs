@@ -1,5 +1,7 @@
 ﻿#include "NXMultiSelectComboBoxPrivate.h"
 
+#include <QEvent>
+#include <QFrame>
 #include <QPropertyAnimation>
 
 #include "DeveloperComponents/NXComboBoxView.h"
@@ -14,8 +16,22 @@ NXMultiSelectComboBoxPrivate::~NXMultiSelectComboBoxPrivate()
 {
 }
 
+bool
+NXMultiSelectComboBoxPrivate::eventFilter(QObject *watched, QEvent *event)
+{
+  if (event->type() == QEvent::Hide)
+  {
+    Q_Q(NXMultiSelectComboBox);
+    if (watched == q->findChild<QFrame *>())
+    {
+      q->_resetIndicatorAnimations();
+    }
+  }
+  return QObject::eventFilter(watched, event);
+}
+
 void
-NXMultiSelectComboBoxPrivate::onItemPressed(const QModelIndex &index) noexcept
+NXMultiSelectComboBoxPrivate::onItemPressed(const QModelIndex &index)
 {
   Q_Q(NXMultiSelectComboBox);
   if (!_comboView->selectionModel()->isSelected(index))
@@ -41,12 +57,12 @@ NXMultiSelectComboBoxPrivate::onItemPressed(const QModelIndex &index) noexcept
 }
 
 void
-NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs() noexcept
+NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs()
 {
   Q_Q(NXMultiSelectComboBox);
   QString str;
   _adjustSelectedVector();
-  QList<bool> selectedIndexVector;
+  QVector<bool> selectedIndexVector;
   for (int i = 0; i < q->count(); i++)
   {
     // 该位选中
@@ -56,7 +72,7 @@ NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs() noexcept
       _comboView->selectionModel()->select(index, QItemSelectionModel::Select | QItemSelectionModel::Rows);
       if (!str.isEmpty())
       {
-        str.append(QStringLiteral(","));
+        str.append(QStringLiteral(", "));
       }
       str.append(q->itemText(i));
       selectedIndexVector.append(true);
@@ -87,7 +103,7 @@ NXMultiSelectComboBoxPrivate::_refreshCurrentIndexs() noexcept
 }
 
 void
-NXMultiSelectComboBoxPrivate::_adjustSelectedVector() noexcept
+NXMultiSelectComboBoxPrivate::_adjustSelectedVector()
 {
   Q_Q(NXMultiSelectComboBox);
   while (_itemSelection.count() < q->count())

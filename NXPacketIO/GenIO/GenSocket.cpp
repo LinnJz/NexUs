@@ -1,4 +1,4 @@
-﻿#include "GenIO/GenSocket.h"
+#include "GenSocket.h"
 
 #include <cerrno>
 #include <cstdio>
@@ -11,8 +11,8 @@
 #include <sys/filio.h>
 #endif
 
-#include "GenIO/GenInternetSocketAddress.h"
-#include "GenIO/GenSocketIncludes.h"
+#include "GenInternetSocketAddress.h"
+#include "GenSocketIncludes.h"
 
 namespace GenSockets
 {
@@ -523,7 +523,7 @@ void GenSocket::SetOptions(int aOptionMask, bool aOnOff)
     if (aOptionMask & cTCP_NODNXY)
     {
 #ifdef _WIN32
-        SetSockOpt(mSocket, IPPROTO_TCP, cTCP_NODNXY, onOff);
+        SetSockOpt(mSocket, IPPROTO_TCP, TCP_NODELAY, onOff);
 // TODO: Set on unix
 #endif
     }

@@ -1,10 +1,12 @@
 ﻿#include "NXSpinBoxStyle.h"
 
+#include <cmath>
+
 #include <QDebug>
 #include <QPainter>
 #include <QPainterPath>
 #include <QStyleOptionSpinBox>
-#include <cmath>
+
 #include "NXTheme.h"
 
 NXSpinBoxStyle::NXSpinBoxStyle(QStyle *style)
@@ -23,9 +25,9 @@ NXSpinBoxStyle::~NXSpinBoxStyle()
 
 void
 NXSpinBoxStyle::drawComplexControl(ComplexControl control,
-                                    const QStyleOptionComplex *option,
-                                    QPainter *painter,
-                                    const QWidget *widget) const
+                                   const QStyleOptionComplex *option,
+                                   QPainter *painter,
+                                   const QWidget *widget) const
 {
   switch (control)
   {
@@ -112,16 +114,17 @@ NXSpinBoxStyle::drawComplexControl(ComplexControl control,
     painter->drawPath(path);
 
     //添加图标
-    QFont iconFont = QFont("NXAwesome");
+    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
     iconFont.setPixelSize(17);
     painter->setFont(iconFont);
     painter->setPen(isEnable ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));
     painter->drawText(addLineRect, Qt::AlignCenter,
-                      _pButtonMode == NXSpinBoxType::PMSide ? QChar(NXIconType::Plus) : QChar(NXIconType::AngleUp));
+                      _pButtonMode == NXSpinBoxType::PMSide ? QChar((unsigned short) NXIconType::Plus)
+                                                            : QChar((unsigned short) NXIconType::AngleUp));
     //减小图标
     painter->drawText(subLineRect, Qt::AlignCenter,
-                      _pButtonMode == NXSpinBoxType::PMSide ? QChar(NXIconType::Minus)
-                                                             : QChar(NXIconType::AngleDown));
+                      _pButtonMode == NXSpinBoxType::PMSide ? QChar((unsigned short) NXIconType::Minus)
+                                                            : QChar((unsigned short) NXIconType::AngleDown));
     painter->restore();
     return;
   }
@@ -135,9 +138,9 @@ NXSpinBoxStyle::drawComplexControl(ComplexControl control,
 
 QRect
 NXSpinBoxStyle::subControlRect(ComplexControl cc,
-                                const QStyleOptionComplex *opt,
-                                SubControl sc,
-                                const QWidget *widget) const
+                               const QStyleOptionComplex *opt,
+                               SubControl sc,
+                               const QWidget *widget) const
 {
   QRect rect = QProxyStyle::subControlRect(cc, opt, sc, widget);
   switch (cc)

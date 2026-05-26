@@ -5,16 +5,16 @@
 
 #include "NXTheme.h"
 #include "private/NXInteractiveCardPrivate.h"
+Q_PROPERTY_CREATE_CPP(NXInteractiveCard, QS_SET_CREF(QString), Title)
+Q_PROPERTY_CREATE_CPP(NXInteractiveCard, QS_SET_CREF(QString), SubTitle)
+Q_PROPERTY_CREATE_CPP(NXInteractiveCard, QS_SET_CREF(QPixmap), CardPixmap)
+Q_PROPERTY_CREATE_CPP(NXInteractiveCard, QSize, CardPixmapSize)
 Q_PROPERTY_CREATE_CPP(NXInteractiveCard, int, BorderRadius)
 Q_PROPERTY_CREATE_CPP(NXInteractiveCard, int, TitlePixelSize)
 Q_PROPERTY_CREATE_CPP(NXInteractiveCard, int, SubTitlePixelSize)
 Q_PROPERTY_CREATE_CPP(NXInteractiveCard, int, TitleSpacing)
 Q_PROPERTY_CREATE_CPP(NXInteractiveCard, int, CardPixmapBorderRadius)
 Q_PROPERTY_CREATE_CPP(NXInteractiveCard, NXCardPixType::PixMode, CardPixMode)
-Q_PROPERTY_CREATE_CPP(NXInteractiveCard, QSize, CardPixmapSize)
-Q_PROPERTY_CREATE_2_CPP(NXInteractiveCard, const QPixmap &, QPixmap, CardPixmap)
-Q_PROPERTY_CREATE_2_CPP(NXInteractiveCard, const QString &, QString, Title)
-Q_PROPERTY_CREATE_2_CPP(NXInteractiveCard, const QString &, QString, SubTitle)
 
 NXInteractiveCard::NXInteractiveCard(QWidget *parent)
     : QPushButton(parent)
@@ -43,7 +43,7 @@ NXInteractiveCard::~NXInteractiveCard()
 }
 
 void
-NXInteractiveCard::setCardPixmapSize(int width, int height) noexcept
+NXInteractiveCard::setCardPixmapSize(int width, int height)
 {
   Q_D(NXInteractiveCard);
   d->_pCardPixmapSize = QSize(width, height);

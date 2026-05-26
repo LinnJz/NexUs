@@ -1,12 +1,12 @@
 ﻿#ifndef NXDEF_H
 #define NXDEF_H
+#include <QObject>
 
 #include "NXProperty.h"
 
 namespace __NXDefNamespace_MOC
 {
-Q_NAMESPACE_EXPORT(NX_EXPORT) // 空的命名空间，只是为了触发 moc
-                              // 处理，当然可以使用CMAKE使用INTERFACE_AUTOMOC_MACRO_NAMES指定这个文件为MOC
+Q_NAMESPACE_EXPORT(NX_EXPORT)
 } // namespace __NXDefNamespace_MOC
 
 Q_BEGIN_ENUM_CREATE(NXApplicationType, NX_EXPORT)
@@ -36,16 +36,24 @@ Q_ENUM_CREATE(ThemeMode)
 
 enum ThemeColor
 {
-  ScrollBarHandle,
-  ToggleSwitchNoToggledCenter,
   TabBarBase,
   TabBarSelected,
   TabBarHover,
   TabBarCloseButtonHover,
   TabBarSelectedCloseButtonHover,
+  ScrollBarHandle,
+  ToggleSwitchNoToggledCenter,
+  WindowBase,
+  WindowCentralStackBase,
   PrimaryNormal,
   PrimaryHover,
   PrimaryPress,
+  PopupBorder,
+  PopupBorderHover,
+  PopupBase,
+  PopupHover,
+  DialogBase,
+  DialogLayoutArea,
   BasicText,
   BasicTextInvert,
   BasicDetailsText,
@@ -74,37 +82,11 @@ enum ThemeColor
   BasicSelectedAlpha,
   BasicSelectedHoverAlpha,
   StatusDanger,
-  PopupBorder,
-  PopupBorderHover,
-  PopupBase,
-  PopupHover,
-  DialogBase,
-  DialogLayoutArea,
-  WindowBase,
-  WindowCentralStackBase,
   Win10BorderActive,
-  Win10BorderInactive,
+  Win10BorderInactive
 };
 Q_ENUM_CREATE(ThemeColor)
 Q_END_ENUM_CREATE(NXThemeType)
-
-Q_BEGIN_ENUM_CREATE(NXTabBarType, NX_EXPORT)
-
-enum TabBarStyle
-{
-  Google  = 0x00'00,
-  Firefox = 0x00'01,
-};
-Q_ENUM_CREATE(TabBarStyle)
-
-enum TabBarColorRole
-{
-  Base     = 0x00'00,
-  Selected = 0x00'01,
-  Hover    = 0x00'02,
-};
-Q_ENUM_CREATE(TabBarColorRole)
-Q_END_ENUM_CREATE(NXTabBarType)
 
 Q_BEGIN_ENUM_CREATE(NXAppBarType, NX_EXPORT)
 
@@ -155,23 +137,23 @@ enum TextStyle
   Subtitle   = 0x00'04,
   Title      = 0x00'05,
   TitleLarge = 0x00'06,
-  Display    = 0x00'07
+  Display    = 0x00'07,
 };
 Q_ENUM_CREATE(TextStyle)
 Q_END_ENUM_CREATE(NXTextType)
 
 Q_BEGIN_ENUM_CREATE(NXNavigationType, NX_EXPORT)
 
-enum NodeOperateError
+enum NodeResult
 {
-  None                 = 0x00'00,
+  Success              = 0x00'00,
   TargetNodeInvalid    = 0x00'01,
   TargetNodeTypeError  = 0x00'02,
   TargetNodeDepthLimit = 0x00'03,
   PageInvalid          = 0x00'04,
   FooterUpperLimit     = 0x00'05,
 };
-Q_ENUM_CREATE(NodeOperateError)
+Q_ENUM_CREATE(NodeResult)
 
 enum NavigationDisplayMode
 {
@@ -186,7 +168,8 @@ enum NavigationNodeType
 {
   PageNode     = 0x00'00,
   FooterNode   = 0x00'01,
-  CategoryNode = 0x00'02,
+  ExpanderNode = 0x00'02,
+  CategoryNode = 0x00'03
 };
 Q_ENUM_CREATE(NavigationNodeType)
 Q_END_ENUM_CREATE(NXNavigationType)
@@ -202,6 +185,26 @@ enum CommanderState
 };
 Q_ENUM_CREATE(CommanderState)
 Q_END_ENUM_CREATE(NXActionCommanderType)
+
+Q_BEGIN_ENUM_CREATE(NXNavigationRouterType, NX_EXPORT)
+
+enum NavigationRouteType
+{
+  Success             = 0x00'00,
+  ObjectInvalid       = 0x00'01,
+  FunctionNameInvalid = 0x00'02,
+};
+Q_ENUM_CREATE(NavigationRouteType)
+
+enum RouteMode
+{
+  BackValid      = 0x00'00,
+  BackInvalid    = 0x00'01,
+  ForwardValid   = 0x00'02,
+  ForwardInvalid = 0x00'03,
+};
+Q_ENUM_CREATE(RouteMode)
+Q_END_ENUM_CREATE(NXNavigationRouterType)
 
 Q_BEGIN_ENUM_CREATE(NXEventBusType, NX_EXPORT)
 
@@ -263,6 +266,18 @@ enum MessageMode
 Q_ENUM_CREATE(MessageMode)
 Q_END_ENUM_CREATE(NXMessageBarType)
 
+Q_BEGIN_ENUM_CREATE(NXInfoBarType, NX_EXPORT)
+
+enum InfoBarSeverity
+{
+  Informational = 0x00'00,
+  Success       = 0x00'01,
+  Warning       = 0x00'02,
+  Error         = 0x00'03,
+};
+Q_ENUM_CREATE(InfoBarSeverity)
+Q_END_ENUM_CREATE(NXInfoBarType)
+
 Q_BEGIN_ENUM_CREATE(NXProgressRingType, NX_EXPORT)
 
 enum ValueDisplayMode
@@ -305,6 +320,40 @@ enum ButtonMode
 };
 Q_ENUM_CREATE(ButtonMode)
 Q_END_ENUM_CREATE(NXSpinBoxType)
+
+Q_BEGIN_ENUM_CREATE(NXSheetPanelType, NX_EXPORT)
+
+enum Direction
+{
+  Bottom = 0x00'00,
+  Left   = 0x00'01,
+  Right  = 0x00'02,
+};
+Q_ENUM_CREATE(Direction)
+
+enum DetentLevel
+{
+  Peek = 0x00'00,
+  Half = 0x00'01,
+  Full = 0x00'02,
+};
+Q_ENUM_CREATE(DetentLevel)
+Q_END_ENUM_CREATE(NXSheetPanelType)
+
+Q_BEGIN_ENUM_CREATE(NXRouterType, NX_EXPORT)
+
+enum NavigationResult
+{
+  Success             = 0x00'00,
+  RouteNotFound       = 0x00'01,
+  GuardRejected       = 0x00'02,
+  FactoryFailed       = 0x00'03,
+  WindowNotBound      = 0x00'04,
+  RouteAlreadyExists  = 0x00'05,
+  ParentRouteNotFound = 0x00'06,
+};
+Q_ENUM_CREATE(NavigationResult)
+Q_END_ENUM_CREATE(NXRouterType)
 
 Q_BEGIN_ENUM_CREATE(NXIconType, NX_EXPORT)
 
@@ -1259,7 +1308,7 @@ enum IconName
   Crab                                   = 0xeb'b1,
   CreditCardBlank                        = 0xeb'b2,
   CreditCard                             = 0xeb'b3,
-  CratnxApple                            = 0xeb'b4,
+  CrateApple                             = 0xeb'b4,
   ConveyorBeltEmpty                      = 0xeb'b5,
   Crop                                   = 0xeb'b6,
   Crosshairs                             = 0xeb'b7,
@@ -1621,7 +1670,7 @@ enum IconName
   FilePrescription                       = 0xed'1b,
   FilePlus                               = 0xed'1c,
   FilePowerpoint                         = 0xed'1d,
-  FilePPT                                = 0xed'1e,
+  FilePpt                                = 0xed'1e,
   Files                                  = 0xed'1f,
   FileShield                             = 0xed'20,
   FileSignature                          = 0xed'21,
@@ -3602,6 +3651,23 @@ Q_END_ENUM_CREATE(NXIconType)
  * @ Version      : V1.0
  * @ Author       : Re11a/LinnJz
  *************************************************************************************/
+Q_BEGIN_ENUM_CREATE(NXTabBarType, NX_EXPORT)
+
+enum TabBarStyle
+{
+  Google  = 0x00'00,
+  Firefox = 0x00'01,
+};
+Q_ENUM_CREATE(TabBarStyle)
+
+enum TabBarColorRole
+{
+  Base     = 0x00'00,
+  Selected = 0x00'01,
+  Hover    = 0x00'02,
+};
+Q_ENUM_CREATE(TabBarColorRole)
+Q_END_ENUM_CREATE(NXTabBarType)
 
 Q_BEGIN_ENUM_CREATE(NXColorSchemeType, NX_EXPORT)
 
@@ -3668,33 +3734,29 @@ enum DisplayMode
 };
 Q_ENUM_CREATE(DisplayMode)
 
-enum MarkType
+enum IndicatorType
 {
-  MarkNone            = 0x00'00,
-  MarkCheck           = 0x00'01,
-  MarkTopIndicator    = 0x00'02,
-  MarkBottomIndicator = 0x00'04
+  IndicatorNone   = 0x00'00,
+  IndicatorCheck  = 0x00'01,
+  IndicatorTop    = 0x00'02,
+  IndicatorBottom = 0x00'04
 };
-Q_ENUM_CREATE(MarkType)
-Q_DECLARE_FLAGS(MarkFlags, MarkType)
+Q_ENUM_CREATE(IndicatorType)
+Q_DECLARE_FLAGS(IndicatorTypeFlags, IndicatorType)
 Q_END_ENUM_CREATE(NXPivotType)
-Q_DECLARE_OPERATORS_FOR_FLAGS(NXPivotType::MarkFlags)
+Q_DECLARE_OPERATORS_FOR_FLAGS(NXPivotType::IndicatorTypeFlags)
 
 #if defined(__cpp_lib_expected) || (__cplusplus >= 202302L && __has_include(<expected>))
 #  include <expected>
-template<typename T>
-using NXExpected = std::expected<T, NXNavigationType::NodeOperateError>;
+using NXNodeResultExpected = std::expected<QString, NXNavigationType::NodeResult>;
 
-template<typename T>
-using NXUnexpected = std::unexpected<NXNavigationType::NodeOperateError>;
+using NXNodeResultUnexpected = std::unexpected<NXNavigationType::NodeResult>;
 #else
 #  include "expected.hpp"
 template<typename T>
-using NXExpected = tl::expected<T, NXNavigationType::NodeOperateError>;
+using NXNodeResultExpected = tl::expected<QString, NXNavigationType::NodeResult>;
 
-template<typename T>
-using NXUnexpected = tl::unexpected<NXNavigationType::NodeOperateError>;
+using NXNodeResultUnexpected = tl::unexpected<NXNavigationType::NodeResult>;
 #endif // __cplusplus >= 202302L && __has_include(<expected>)
-using NXNodeOperateResult = NXExpected<QString>;
 
 #endif // NXDEF_H

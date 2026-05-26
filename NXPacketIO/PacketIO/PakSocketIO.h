@@ -1,9 +1,9 @@
-﻿#ifndef PakIO_H
+#ifndef PakIO_H
 #define PakIO_H
 
 #include "NXPacketIO_Export.h"
 
-#include "GenIO/GenBuffer.h"
+#include "GenBuffer.h"
 
 class GenIO;
 // class PakSerializeReader;

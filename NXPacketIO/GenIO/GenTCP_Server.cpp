@@ -1,11 +1,11 @@
-﻿#include "GenIO/GenTCP_Server.h"
+#include "GenTCP_Server.h"
 
 #include <algorithm>
 #include <cstddef> // for size_t
 #include <iostream>
 
-#include "GenIO/GenSocket.h"
-#include "GenIO/GenTCP_IO.h"
+#include "GenSocket.h"
+#include "GenTCP_IO.h"
 
 GenTCP_Server::GenTCP_Server()
     : mServerSocketPtr(nullptr), mOwnsConnections(true)

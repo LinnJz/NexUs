@@ -1,6 +1,6 @@
-﻿#include "PacketIO/PakUndefinedPacket.h"
+#include "PakUndefinedPacket.h"
 
-#include "PacketIO/PakSerialize.h"
+#include "PakSerialize.h"
 
 PakUndefinedPacket::~PakUndefinedPacket()
 {

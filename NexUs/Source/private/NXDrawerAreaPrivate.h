@@ -2,6 +2,7 @@
 #define NXFRAMEWORK_NEXUS_PRIVATE_NXDRAWERAREAPRIVATE_H_
 
 #include <QObject>
+
 #include "DeveloperComponents/NXDrawerContainer.h"
 #include "DeveloperComponents/NXDrawerHeader.h"
 #include "NXDef.h"
@@ -14,9 +15,9 @@ class NXDrawerAreaPrivate : public QObject
 
 public:
   explicit NXDrawerAreaPrivate(QObject *parent = nullptr);
-  ~NXDrawerAreaPrivate() override;
+  ~NXDrawerAreaPrivate();
 
-  Q_SLOT void onDrawerHeaderClicked(bool isExpand) noexcept;
+  Q_SLOT void onDrawerHeaderClicked(bool isExpand);
 
 private:
   NXThemeType::ThemeMode _themeMode;
@@ -24,4 +25,4 @@ private:
   NXDrawerContainer *_drawerContainer { nullptr };
 };
 
-#endif // NXFRAMEWORK_NEXUS_PRIVATE_NXDRAWERAREAPRIVATE_H_
+#endif //NXFRAMEWORK_NEXUS_PRIVATE_NXDRAWERAREAPRIVATE_H_

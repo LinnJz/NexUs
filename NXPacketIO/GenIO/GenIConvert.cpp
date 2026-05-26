@@ -1,4 +1,4 @@
-﻿#include "GenIO/GenIConvert.h"
+#include "GenIConvert.h"
 
 GenIConvert::GenIConvert() {}
 

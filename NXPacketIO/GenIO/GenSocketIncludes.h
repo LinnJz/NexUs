@@ -1,4 +1,4 @@
-﻿
+
 #if !defined(GENSOCKETINCLUDES_H)
 #define GENSOCKETINCLUDES_H
 

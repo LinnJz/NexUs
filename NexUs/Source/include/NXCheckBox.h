@@ -4,6 +4,7 @@
 #include <QCheckBox>
 
 #include "NXDef.h"
+
 class NXCheckBoxPrivate;
 
 class NX_EXPORT NXCheckBox : public QCheckBox
@@ -19,7 +20,7 @@ class NX_EXPORT NXCheckBox : public QCheckBox
 public:
   explicit NXCheckBox(QWidget *parent = nullptr);
   explicit NXCheckBox(const QString &text, QWidget *parent = nullptr);
-  ~NXCheckBox() override;
+  ~NXCheckBox();
 };
 
 #endif // NXCHECKBOX_H

@@ -1,11 +1,11 @@
-﻿#ifndef PAKBUFI_ARCHIVE_H
+#ifndef PAKBUFI_ARCHIVE_H
 #define PAKBUFI_ARCHIVE_H
 
 #include "NXPacketIO_Export.h"
 
 #include <string>
 
-#include "GenIO/GenBuffer.h"
+#include "GenBuffer.h"
 
 class PakBufO_Archive;
 

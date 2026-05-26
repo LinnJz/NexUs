@@ -129,10 +129,11 @@ private:                                                                        
     {                                                                                                                  \
       if (!(expr)) [[unlikely]]                                                                                        \
       {                                                                                                                \
-        std::cerr << "[CONTRACT VIOLATION] " << (msg) << "\n"                                                          \
-                  << "  Condition: " << #expr << "\n"                                                                  \
-                  << "  File: " << (location).file_name() << ":" << (location).line() << "\n"                          \
-                  << "  Function: " << (location).function_name() << "\n";                                             \
+        std::cerr << QStringLiteral("[CONTRACT VIOLATION] ") << (msg) << QStringLiteral("\n")                          \
+                  << QStringLiteral("  Condition: ") << #expr << "\n"                                                  \
+                  << QStringLiteral("  File: ") << (location).file_name() << QStringLiteral(":") << (location).line()  \
+                  << QStringLiteral("\n") << QStringLiteral("  Function: ") << (location).function_name()              \
+                  << QStringLiteral("\n");                                                                             \
         std::abort();                                                                                                  \
       }                                                                                                                \
     }                                                                                                                  \
@@ -146,8 +147,8 @@ private:                                                                        
   {                                                                                                                    \
     if (!(expr)) [[unlikely]]                                                                                          \
     {                                                                                                                  \
-      std::cerr << "[CRITICAL CONTRACT VIOLATION] " << (msg) << "\n"                                                   \
-                << "  Condition: " << #expr << "\n";                                                                   \
+      std::cerr << QStringLiteral("[CRITICAL CONTRACT VIOLATION] ") << (msg) << QStringLiteral("\n")                   \
+                << QStringLiteral("  Condition: ") << #expr << "\n";                                                   \
       std::abort();                                                                                                    \
     }                                                                                                                  \
   }                                                                                                                    \
@@ -200,10 +201,12 @@ private:                                                                        
 
 #define LINN_CONTRACT_CHECK_FROM_TAG_0(NAME, EXPR)
 #define LINN_CONTRACT_CHECK_FROM_TAG_1(NAME, EXPR)                                                                     \
-  LINN_CONTRACT_ASSERT_ALWAYS((EXPR), "Critical invariant violated in " LINN_STRINGIFY(NAME) " setter");
+  LINN_CONTRACT_ASSERT_ALWAYS((EXPR), QStringLiteral("Critical invariant violated in ") LINN_STRINGIFY(NAME)           \
+                                          QStringLiteral(" setter"));
 #define LINN_CONTRACT_CHECK_FROM_TAG_2(NAME, EXPR)                                                                     \
-  LINN_CONTRACT_ASSERT_DEBUG((EXPR), "Precondition failed for " LINN_STRINGIFY(NAME) " setter",                        \
-                             std::source_location::current());
+  LINN_CONTRACT_ASSERT_DEBUG(                                                                                          \
+      (EXPR), QStringLiteral("Precondition failed for ") LINN_STRINGIFY(NAME) QStringLiteral(" setter"),               \
+      std::source_location::current());
 #define LINN_CONTRACT_CHECK_FROM_TAG_3(NAME, EXPR)
 #define LINN_CONTRACT_CHECK_FROM_TAG_4(NAME, EXPR)
 

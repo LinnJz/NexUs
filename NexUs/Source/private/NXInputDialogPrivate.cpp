@@ -1,7 +1,7 @@
 ﻿#include "NXInputDialogPrivate.h"
 
+#include "DeveloperComponents/NXMaskWidget.h"
 #include "NXInputDialog.h"
-#include "NXMaskWidget.h"
 
 NXInputDialogPrivate::NXInputDialogPrivate(QObject *parent)
     : QObject { parent }

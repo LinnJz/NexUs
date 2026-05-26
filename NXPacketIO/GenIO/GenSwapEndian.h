@@ -1,11 +1,11 @@
-﻿#ifndef GENSWAPENDIAN_H
+#ifndef GENSWAPENDIAN_H
 #define GENSWAPENDIAN_H
 
 #include "NXPacketIO_Export.h"
 
 #include <algorithm>
 
-#include "GenIO/GenIODefs.h"
+#include "GenIODefs.h"
 
 namespace GenSwapEndian_Detail
 {

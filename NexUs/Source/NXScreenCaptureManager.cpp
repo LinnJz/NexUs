@@ -1,4 +1,4 @@
-﻿#include "NXScreenCaptureManager.h"
+#include "NXScreenCaptureManager.h"
 #ifdef Q_OS_MAC
 #  include <QApplication>
 #  include <QDebug>

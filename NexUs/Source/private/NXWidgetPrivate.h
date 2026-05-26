@@ -2,8 +2,8 @@
 #define NXWIDGETPRIVATE_H
 
 #include <QObject>
-#include "NXDef.h"
 
+#include "NXDef.h"
 class NXWidget;
 class NXAppBar;
 
@@ -14,11 +14,11 @@ class NXWidgetPrivate : public QObject
 
 public:
   explicit NXWidgetPrivate(QObject *parent = nullptr);
-  ~NXWidgetPrivate() override;
+  ~NXWidgetPrivate();
 
 private:
-  NXApplicationType::WindowDisplayMode _windowDisplayMode;
   NXThemeType::ThemeMode _themeMode;
+  NXApplicationType::WindowDisplayMode _windowDisplayMode;
   NXAppBar *_appBar { nullptr };
 };
 

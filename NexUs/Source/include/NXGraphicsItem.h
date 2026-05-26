@@ -1,4 +1,4 @@
-﻿#ifndef NXGRAPHICSITEM_H
+#ifndef NXGRAPHICSITEM_H
 #define NXGRAPHICSITEM_H
 
 #include <QGraphicsObject>
@@ -14,35 +14,35 @@ class NX_EXPORT NXGraphicsItem : public QGraphicsObject
 {
   Q_OBJECT
   Q_Q_CREATE(NXGraphicsItem)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QImage), ItemImage)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QImage), ItemSelectedImage)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QString), ItemName)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QVariantMap), DataRoutes)
   Q_PROPERTY_CREATE_H(int, Width)
   Q_PROPERTY_CREATE_H(int, Height)
   Q_PROPERTY_CREATE_H(int, MaxLinkPortCount)
-  Q_PROPERTY_CREATE_2_H(const QImage &, QImage, ItemImage)
-  Q_PROPERTY_CREATE_2_H(const QImage &, QImage, ItemSelectedImage)
-  Q_PROPERTY_CREATE_2_H(const QString &, QString, ItemName)
-  Q_PROPERTY_CREATE_2_H(const QVariantMap &, QVariantMap, DataRoutes)
 
 public:
   explicit NXGraphicsItem(QGraphicsItem *parent = nullptr);
   explicit NXGraphicsItem(int width, int height, QGraphicsItem *parent = nullptr);
   ~NXGraphicsItem();
 
-  QString getItemUID() const noexcept;
+  QString getItemUID() const;
 
-  void setLinkPortState(bool isFullLink) noexcept;
-  void setLinkPortState(bool isLink, int portIndex) noexcept;
+  void setLinkPortState(bool isFullLink);
+  void setLinkPortState(bool isLink, int portIndex);
 
-  bool getLinkPortState(int portIndex) const noexcept;
-  QList<bool> getLinkPortState() const noexcept;
+  bool getLinkPortState(int portIndex) const;
+  QVector<bool> getLinkPortState() const;
 
-  int getUsedLinkPortCount() const noexcept;
-  QList<int> getUsedLinkPort() const noexcept;
-  int getUnusedLinkPortCount() const noexcept;
-  QList<int> getUnusedLinkPort() const noexcept;
+  int getUsedLinkPortCount() const;
+  QVector<int> getUsedLinkPort() const;
+  int getUnusedLinkPortCount() const;
+  QVector<int> getUnusedLinkPort() const;
 
 protected:
   QRectF boundingRect() const override;
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
+  virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
   friend QDataStream &operator<< (QDataStream &stream, const NXGraphicsItem *item);
   friend QDataStream &operator>> (QDataStream &stream, NXGraphicsItem *item);
 };

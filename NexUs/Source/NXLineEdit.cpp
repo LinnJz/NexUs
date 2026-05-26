@@ -3,7 +3,6 @@
 #include <QClipboard>
 #include <QContextMenuEvent>
 #include <QGuiApplication>
-#include <QKeyEvent>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPropertyAnimation>
@@ -22,9 +21,9 @@ NXLineEdit::NXLineEdit(QWidget *parent)
   d->q_ptr = this;
   setObjectName("NXLineEdit");
   setFixedHeight(35);
-  d->_themeMode             = nxTheme->getThemeMode();
-  d->_pExpandMarkWidth      = 0;
-  d->_pIsClearButtonEnabled = true;
+  d->_themeMode            = nxTheme->getThemeMode();
+  d->_pExpandMarkWidth     = 0;
+  d->_pIsClearButtonEnable = true;
   setFocusPolicy(Qt::StrongFocus);
   // 事件总线
   d->_focusEvent = new NXEvent(QStringLiteral("WMWindowClicked"), QStringLiteral("onWMWindowClickedEvent"), d);
@@ -38,11 +37,6 @@ NXLineEdit::NXLineEdit(QWidget *parent)
   setStyleSheet(QStringLiteral("#NXLineEdit{background-color:transparent;padding-left: 10px;}"));
   d->onThemeChanged(nxTheme->getThemeMode());
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXLineEditPrivate::onThemeChanged);
-  connect(this, &QLineEdit::textEdited, d, [d](const QString &)
-  {
-    d->pushTextRoute();
-  });
-  d->resetTextRoute();
   setVisible(true);
 }
 
@@ -51,7 +45,6 @@ NXLineEdit::NXLineEdit(const QString &text, QWidget *parent)
 {
   Q_D(NXLineEdit);
   setText(text);
-  d->resetTextRoute();
 }
 
 NXLineEdit::~NXLineEdit()
@@ -60,73 +53,47 @@ NXLineEdit::~NXLineEdit()
 }
 
 void
-NXLineEdit::setIsClearButtonEnabled(bool isClearButtonEnabled) noexcept
+NXLineEdit::setIsClearButtonEnable(bool isClearButtonEnable)
 {
   Q_D(NXLineEdit);
-  d->_pIsClearButtonEnabled = isClearButtonEnabled;
-  setClearButtonEnabled(isClearButtonEnabled);
-  Q_EMIT pIsClearButtonEnabledChanged();
+  d->_pIsClearButtonEnable = isClearButtonEnable;
+  setClearButtonEnabled(isClearButtonEnable);
+  Q_EMIT pIsClearButtonEnableChanged();
 }
 
 bool
-NXLineEdit::getIsClearButtonEnabled() const noexcept
+NXLineEdit::getIsClearButtonEnable() const
 {
   Q_D(const NXLineEdit);
-  return d->_pIsClearButtonEnabled;
+  return d->_pIsClearButtonEnable;
 }
 
 void
-NXLineEdit::setBorderRadius(int borderRadius) noexcept
+NXLineEdit::setBorderRadius(int borderRadius)
 {
   Q_D(const NXLineEdit);
-  d->_lineEditStyle->setLineEditBorderRadius(borderRadius);
+  d->_lineEditStyle->setBorderRadius(borderRadius);
 }
 
 int
-NXLineEdit::getBorderRadius() const noexcept
+NXLineEdit::getBorderRadius() const
 {
   Q_D(const NXLineEdit);
-  return d->_lineEditStyle->getLineEditBorderRadius();
+  return d->_lineEditStyle->getBorderRadius();
 }
 
 void
-NXLineEdit::setContentsMargins(const QMargins &margins) noexcept
+NXLineEdit::setIconMargin(int margin)
 {
   Q_D(NXLineEdit);
-  d->_pContentMargins = margins;
-  QString styleSheet  = QStringLiteral("#NXLineEdit { "
-                                        "padding-left: %1px; "
-                                        "padding-top: %2px; "
-                                        "padding-right: %3px; "
-                                        "padding-bottom: %4px; "
-                                        "}")
-                           .arg(margins.left())
-                           .arg(margins.top())
-                           .arg(margins.right())
-                           .arg(margins.bottom());
-
-  setStyleSheet(styleSheet);
-}
-
-QMargins
-NXLineEdit::getContentsMargins() const noexcept
-{
-  Q_D(const NXLineEdit);
-  return d->_pContentMargins;
-}
-
-void
-NXLineEdit::setLineEditIconMargin(int margin) noexcept
-{
-  Q_D(NXLineEdit);
-  d->_lineEditStyle->setLineEditIconMargin(margin);
+  d->_lineEditStyle->setIconMargin(margin);
 }
 
 int
-NXLineEdit::getLineEditIconMargin() const noexcept
+NXLineEdit::getIconMargin() const
 {
   Q_D(const NXLineEdit);
-  return d->_lineEditStyle->getLineEditIconMargin();
+  return d->_lineEditStyle->getIconMargin();
 }
 
 void
@@ -136,7 +103,7 @@ NXLineEdit::focusInEvent(QFocusEvent *event)
   Q_EMIT focusIn(this->text());
   if (event->reason() == Qt::MouseFocusReason)
   {
-    if (d->_pIsClearButtonEnabled)
+    if (d->_pIsClearButtonEnable)
     {
       setClearButtonEnabled(true);
     }
@@ -148,7 +115,7 @@ NXLineEdit::focusInEvent(QFocusEvent *event)
     markAnimation->setDuration(300);
     markAnimation->setEasingCurve(QEasingCurve::InOutSine);
     markAnimation->setStartValue(d->_pExpandMarkWidth);
-    markAnimation->setEndValue(width() / 2 - d->_lineEditStyle->getLineEditBorderRadius() / 2);
+    markAnimation->setEndValue(width() / 2 - d->_lineEditStyle->getBorderRadius() / 2);
     markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
   }
   QLineEdit::focusInEvent(event);
@@ -161,7 +128,7 @@ NXLineEdit::focusOutEvent(QFocusEvent *event)
   Q_EMIT focusOut(this->text());
   if (event->reason() != Qt::PopupFocusReason)
   {
-    if (d->_pIsClearButtonEnabled)
+    if (d->_pIsClearButtonEnable)
     {
       setClearButtonEnabled(false);
     }
@@ -194,15 +161,14 @@ NXLineEdit::paintEvent(QPaintEvent *event)
   painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
   painter.setPen(Qt::NoPen);
   painter.setBrush(NXThemeColor(d->_themeMode, PrimaryNormal));
-  painter.drawRoundedRect(
-      QRectF(width() / 2 - d->_pExpandMarkWidth + 0.5, height() - 2.5, d->_pExpandMarkWidth * 2 - 1, 2.5), 2, 2);
+  painter.drawRoundedRect(QRectF(width() / 2 - d->_pExpandMarkWidth, height() - 2.5, d->_pExpandMarkWidth * 2, 2.5), 2,
+                          2);
   painter.restore();
 }
 
 void
 NXLineEdit::contextMenuEvent(QContextMenuEvent *event)
 {
-  Q_D(NXLineEdit);
   NXMenu *menu = new NXMenu(this);
   menu->setMenuItemHeight(27);
   menu->setAttribute(Qt::WA_DeleteOnClose);
@@ -210,34 +176,12 @@ NXLineEdit::contextMenuEvent(QContextMenuEvent *event)
   if (!isReadOnly())
   {
     action = menu->addNXIconAction(NXIconType::ArrowRotateLeft, tr("撤销"), QKeySequence::Undo);
-    action->setEnabled(d->canTextRouteBack());
-    connect(action, &QAction::triggered, this, [d]()
-    {
-      d->textRouteBack();
-    });
+    action->setEnabled(isUndoAvailable());
+    connect(action, &QAction::triggered, this, &NXLineEdit::undo);
 
     action = menu->addNXIconAction(NXIconType::ArrowRotateRight, tr("恢复"), QKeySequence::Redo);
-    action->setEnabled(d->canTextRouteForward());
-    connect(action, &QAction::triggered, this, [d]()
-    {
-      d->textRouteForward();
-    });
-
-    action = menu->addNXIconAction(NXIconType::ArrowRotateLeft, tr("整体撤销"),
-                                   QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Z));
-    action->setEnabled(d->canOverallUndo());
-    connect(action, &QAction::triggered, this, [d]()
-    {
-      d->overallUndo();
-    });
-
-    action = menu->addNXIconAction(NXIconType::ArrowRotateRight, tr("整体恢复"),
-                                   QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Y));
-    action->setEnabled(d->canOverallRedo());
-    connect(action, &QAction::triggered, this, [d]()
-    {
-      d->overallRedo();
-    });
+    action->setEnabled(isRedoAvailable());
+    connect(action, &QAction::triggered, this, &NXLineEdit::redo);
     menu->addSeparator();
   }
 #ifndef QT_NO_CLIPBOARD
@@ -270,7 +214,6 @@ NXLineEdit::contextMenuEvent(QContextMenuEvent *event)
         int startIndex = selectionStart();
         int endIndex   = selectionEnd();
         setText(text().remove(startIndex, endIndex - startIndex));
-        d->pushTextRoute();
       }
     });
   }
@@ -283,39 +226,4 @@ NXLineEdit::contextMenuEvent(QContextMenuEvent *event)
   action->setEnabled(!text().isEmpty() && !(selectedText() == text()));
   connect(action, &QAction::triggered, this, &NXLineEdit::selectAll);
   menu->popup(event->globalPos());
-}
-
-void
-NXLineEdit::keyPressEvent(QKeyEvent *event)
-{
-  Q_D(NXLineEdit);
-  if (event->modifiers().testFlag(Qt::ControlModifier))
-  {
-    bool isShiftPressed = event->modifiers().testFlag(Qt::ShiftModifier);
-    if (!isShiftPressed && event->key() == Qt::Key_Z)
-    {
-      d->textRouteBack();
-      event->accept();
-      return;
-    }
-    if (!isShiftPressed && event->key() == Qt::Key_Y)
-    {
-      d->textRouteForward();
-      event->accept();
-      return;
-    }
-    if (isShiftPressed && event->key() == Qt::Key_Z)
-    {
-      d->overallUndo();
-      event->accept();
-      return;
-    }
-    if (isShiftPressed && event->key() == Qt::Key_Y)
-    {
-      d->overallRedo();
-      event->accept();
-      return;
-    }
-  }
-  QLineEdit::keyPressEvent(event);
 }

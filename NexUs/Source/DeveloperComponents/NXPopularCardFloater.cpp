@@ -74,7 +74,7 @@ NXPopularCardFloater::showFloater()
   geometryAnimation->setEndValue(endGeometry);
   geometryAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
-  // Button动画
+  //Button动画
   QPropertyAnimation *buttonAnimation = new QPropertyAnimation(_overButton, "geometry");
   buttonAnimation->setEasingCurve(QEasingCurve::OutQuad);
   buttonAnimation->setDuration(300);
@@ -117,7 +117,7 @@ NXPopularCardFloater::hideFloater()
   opacityAnimation->setEndValue(0);
   opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
-  // 内容调整动画
+  //内容调整动画
   QPropertyAnimation *hoverAnimation = new QPropertyAnimation(this, "pHoverYOffset");
   connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]()
   {
@@ -128,7 +128,7 @@ NXPopularCardFloater::hideFloater()
   hoverAnimation->setEndValue(0);
   hoverAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
-  // Button动画
+  //Button动画
   QPropertyAnimation *buttonAnimation = new QPropertyAnimation(_overButton, "geometry");
   buttonAnimation->setEasingCurve(QEasingCurve::InOutSine);
   buttonAnimation->setDuration(300);
@@ -187,13 +187,13 @@ NXPopularCardFloater::paintEvent(QPaintEvent *event)
       _cardPrivate->_shadowBorderWidth, _cardPrivate->_shadowBorderWidth - _cardPrivate->_pHoverYOffset + 1,
       _card->width() - 2 * _cardPrivate->_shadowBorderWidth, _card->height() - 2 * _cardPrivate->_shadowBorderWidth);
 
-  // 背景绘制
+  //背景绘制
   painter.setOpacity(1);
   painter.setPen(NXThemeColor(_themeMode, PopupBorderHover));
   painter.setBrush(NXThemeColor(_themeMode, DialogBase));
   painter.drawRoundedRect(foregroundRect, _cardPrivate->_pBorderRadius, _cardPrivate->_pBorderRadius);
   painter.setClipRect(foregroundRect);
-  // 图片绘制
+  //图片绘制
   painter.save();
   QRectF pixRect(foregroundRect.x() + cardForegroundRect.height() * 0.15,
                  foregroundRect.y() + cardForegroundRect.height() * 0.15, cardForegroundRect.height() * 0.7,
@@ -205,8 +205,8 @@ NXPopularCardFloater::paintEvent(QPaintEvent *event)
   painter.drawPixmap(pixRect, _cardPrivate->_pCardPixmap, _cardPrivate->_pCardPixmap.rect());
   painter.restore();
 
-  // 文字绘制
-  // Title
+  //文字绘制
+  //Title
   painter.setPen(NXThemeColor(_themeMode, BasicText));
   QFont font = painter.font();
   font.setWeight(QFont::Bold);
@@ -221,7 +221,7 @@ NXPopularCardFloater::paintEvent(QPaintEvent *event)
   QString titleText = painter.fontMetrics().elidedText(_cardPrivate->_pTitle, Qt::ElideRight, titleRect.width());
   painter.drawText(titleRect, Qt::AlignLeft | Qt::AlignTop | Qt::TextSingleLine, titleText);
 
-  // SubTitle
+  //SubTitle
   font.setWeight(QFont::DemiBold);
   font.setPixelSize(13);
   painter.setFont(font);
@@ -235,7 +235,7 @@ NXPopularCardFloater::paintEvent(QPaintEvent *event)
       painter.fontMetrics().elidedText(_cardPrivate->_pSubTitle, Qt::ElideRight, subTitleRect.width());
   painter.drawText(subTitleRect, Qt::AlignLeft | Qt::AlignTop | Qt::TextSingleLine, subTitleText);
 
-  // DetailedText
+  //DetailedText
   painter.setPen(NXThemeColor(_themeMode, BasicDetailsText));
   int detailedTextHeight = painter.fontMetrics().height() * 2 + 2;
   QRectF detailedTextRect(pixRect.x(), pixRect.bottom() + cardForegroundRect.height() * 0.15,
@@ -246,12 +246,12 @@ NXPopularCardFloater::paintEvent(QPaintEvent *event)
       painter.fontMetrics().elidedText(_cardPrivate->_pDetailedText, Qt::ElideRight, detailedTextRect.width() * 1.9);
   painter.drawText(detailedTextRect, Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, detailedText);
 
-  // 分割线绘制
+  //分割线绘制
   painter.setPen(NXThemeColor(_themeMode, BasicBaseLine));
   painter.drawLine(foregroundRect.x(), detailedTextRect.bottom() + 5, foregroundRect.right(),
                    detailedTextRect.bottom() + 5);
 
-  // CardFloatPixmap
+  //CardFloatPixmap
   painter.drawPixmap(QRect(pixRect.x(), detailedTextRect.bottom() + 15,
                            cardForegroundRect.bottom() + _floatGeometryOffset + 90 - detailedTextRect.bottom() - 15 -
                                _cardPrivate->_shadowBorderWidth - 10,

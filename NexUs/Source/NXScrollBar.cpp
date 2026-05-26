@@ -10,8 +10,8 @@
 #include "DeveloperComponents/NXScrollBarStyle.h"
 #include "NXMenu.h"
 #include "private/NXScrollBarPrivate.h"
-Q_PROPERTY_CREATE_CPP(NXScrollBar, bool, IsAnimation)
 Q_PROPERTY_CREATE_CPP(NXScrollBar, qreal, SpeedLimit)
+Q_PROPERTY_CREATE_CPP(NXScrollBar, bool, IsAnimation)
 
 NXScrollBar::NXScrollBar(QWidget *parent)
     : QScrollBar(parent)
@@ -221,14 +221,14 @@ NXScrollBar::contextMenuEvent(QContextMenuEvent *event)
   // Page left Page up
   QAction *actPageUp = menu->addNXIconAction(horiz ? NXIconType::AnglesLeft : NXIconType::AnglesUp,
                                              horiz ? tr("向左翻页") : tr("向上翻页"));
-  // Page right Page down
+  //Page right Page down
   QAction *actPageDn = menu->addNXIconAction(horiz ? NXIconType::AnglesRight : NXIconType::AnglesDown,
                                              horiz ? tr("向右翻页") : tr("向下翻页"));
   menu->addSeparator();
-  // Scroll left Scroll up
+  //Scroll left Scroll up
   QAction *actScrollUp = menu->addNXIconAction(horiz ? NXIconType::AngleLeft : NXIconType::AngleUp,
                                                horiz ? tr("向左滚动") : tr("向上滚动"));
-  // Scroll right Scroll down
+  //Scroll right Scroll down
   QAction *actScrollDn = menu->addNXIconAction(horiz ? NXIconType::AngleRight : NXIconType::AngleDown,
                                                horiz ? tr("向右滚动") : tr("向下滚动"));
   QAction *actionSelected = menu->exec(event->globalPos());

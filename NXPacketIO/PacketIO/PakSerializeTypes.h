@@ -1,4 +1,4 @@
-﻿#ifndef PAKSERIALIZETYPES_H
+#ifndef PAKSERIALIZETYPES_H
 #define PAKSERIALIZETYPES_H
 
 #include "NXPacketIO_Export.h"
@@ -11,11 +11,11 @@
 #include <string>
 #include <vector>
 
-#include "GenIO/GenBuffer.h"
-#include "PacketIO/PakI.h"
-#include "PacketIO/PakO.h"
-#include "PacketIO/PakSerialize.h"
-#include "Util/UtImmutableList.h"
+#include "GenBuffer.h"
+#include "PakI.h"
+#include "PakO.h"
+#include "PakSerialize.h"
+#include "UtImmutableList.h"
 
 // Defines serialization methods for some standard types
 // std::(string, vector, set, map, pair, list), UtSharedPtr, GenMemIO

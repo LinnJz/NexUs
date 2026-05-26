@@ -10,23 +10,24 @@ class NX_EXPORT NXToolTip : public QWidget
 {
   Q_OBJECT
   Q_Q_CREATE(NXToolTip)
-  Q_PROPERTY_CREATE_H(bool, IsMoveEnabled)
-  Q_PROPERTY_CREATE_H(int, OffSetX)
-  Q_PROPERTY_CREATE_H(int, OffSetY)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QString), ToolTip)
+  Q_PROPERTY_CREATE_H(QWidget *, CustomWidget)
   Q_PROPERTY_CREATE_H(int, BorderRadius)
   Q_PROPERTY_CREATE_H(int, DisplayMsec)
   Q_PROPERTY_CREATE_H(int, ShowDelayMsec)
   Q_PROPERTY_CREATE_H(int, HideDelayMsec)
-  Q_PROPERTY_CREATE_H(QWidget *, CustomWidget)
-  Q_PROPERTY_CREATE_2_H(const QString &, QString, ToolTip)
+  Q_PROPERTY_CREATE_H(int, OffSetX)
+  Q_PROPERTY_CREATE_H(int, OffSetY)
+  Q_PROPERTY_CREATE_H(bool, IsMoveEnable)
 
 public:
   explicit NXToolTip(QWidget *parent = nullptr);
-  ~NXToolTip() override;
-  void updatePos() noexcept;
+  ~NXToolTip();
+
+  void updatePos();
 
 protected:
-  void paintEvent(QPaintEvent *event);
+  void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // NXTOOLTIP_H

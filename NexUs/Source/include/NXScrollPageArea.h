@@ -1,4 +1,4 @@
-﻿#ifndef NXSCROLLPAGEAREA_H
+#ifndef NXSCROLLPAGEAREA_H
 #define NXSCROLLPAGEAREA_H
 
 #include <QWidget>
@@ -14,7 +14,7 @@ class NX_EXPORT NXScrollPageArea : public QWidget
 
 public:
   explicit NXScrollPageArea(QWidget *parent = nullptr);
-  ~NXScrollPageArea() override;
+  ~NXScrollPageArea();
 
 protected:
   void paintEvent(QPaintEvent *event) override;

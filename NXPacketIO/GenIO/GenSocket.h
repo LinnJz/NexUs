@@ -1,12 +1,12 @@
-﻿#ifndef GENSOCKET_H
+#ifndef GENSOCKET_H
 #define GENSOCKET_H
 
 #include "NXPacketIO_Export.h"
 
 #include <list>
 
-#include "GenIO/GenOConvertBigEndian.h"
-#include "GenIO/GenSocketManager.h"
+#include "GenOConvertBigEndian.h"
+#include "GenSocketManager.h"
 #if defined(_WIN32)
 #include <basetsd.h>
 #endif

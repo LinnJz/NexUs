@@ -17,13 +17,13 @@ class NXSpinBoxPrivate : public QObject
 
 public:
   explicit NXSpinBoxPrivate(QObject *parent = nullptr);
-  ~NXSpinBoxPrivate() override;
-  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept;
+  ~NXSpinBoxPrivate();
+  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
 
 private:
-  NXSpinBoxStyle *_style { nullptr };
   NXThemeType::ThemeMode _themeMode;
-  NXMenu *_createStandardContextMenu() noexcept;
+  NXSpinBoxStyle *_style { nullptr };
+  NXMenu *_createStandardContextMenu();
 };
 
 #endif // NXSPINBOXPRIVATE_H

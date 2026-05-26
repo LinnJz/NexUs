@@ -1,4 +1,4 @@
-﻿#include "NXGraphicsView.h"
+#include "NXGraphicsView.h"
 
 #include <QEvent>
 #include <QScrollBar>

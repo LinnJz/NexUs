@@ -1,4 +1,4 @@
-﻿#ifndef T_HOME_H
+#ifndef T_HOME_H
 #define T_HOME_H
 
 #include "T_BasePage.h"
@@ -11,15 +11,14 @@ class T_Home : public T_BasePage
 public:
   Q_INVOKABLE explicit T_Home(QWidget *parent = nullptr);
   ~T_Home();
-Q_SIGNALS:
-  Q_SIGNAL void elaScreenNavigation();
-  Q_SIGNAL void elaBaseComponentNavigation();
-  Q_SIGNAL void elaSceneNavigation();
-  Q_SIGNAL void elaCardNavigation();
-  Q_SIGNAL void elaIconNavigation();
+  Q_SIGNAL void screenNavigation();
+  Q_SIGNAL void baseComponentNavigation();
+  Q_SIGNAL void sceneNavigation();
+  Q_SIGNAL void cardNavigation();
+  Q_SIGNAL void iconNavigation();
 
 protected:
-  void mouseReleaseEvent(QMouseEvent *event);
+  void mouseReleaseEvent(QMouseEvent *event) override;
 
 private:
   NXMenu *_homeMenu { nullptr };

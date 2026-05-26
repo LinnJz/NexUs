@@ -1,4 +1,4 @@
-﻿#include "NXExponentialBlurPrivate.h"
+#include "NXExponentialBlurPrivate.h"
 
 #include <QPixmap>
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -17,7 +17,7 @@ NXExponentialBlurPrivate::~NXExponentialBlurPrivate()
 }
 
 void
-NXExponentialBlurPrivate::_drawExponentialBlur(QImage &image, const quint16 &qRadius) noexcept
+NXExponentialBlurPrivate::_drawExponentialBlur(QImage &image, const quint16 &qRadius)
 {
   if (qRadius < 1)
   {
@@ -39,7 +39,7 @@ NXExponentialBlurPrivate::_drawExponentialBlur(QImage &image, const quint16 &qRa
 }
 
 void
-NXExponentialBlurPrivate::_drawRowBlur(QImage &image, const int &row, const int &alpha) noexcept
+NXExponentialBlurPrivate::_drawRowBlur(QImage &image, int row, int alpha)
 {
   int zR, zG, zB, zA;
 
@@ -62,7 +62,7 @@ NXExponentialBlurPrivate::_drawRowBlur(QImage &image, const int &row, const int 
 }
 
 void
-NXExponentialBlurPrivate::_drawColumnBlur(QImage &image, const int &column, const int &alpha) noexcept
+NXExponentialBlurPrivate::_drawColumnBlur(QImage &image, int column, int alpha)
 {
   int zR, zG, zB, zA;
 
@@ -87,7 +87,7 @@ NXExponentialBlurPrivate::_drawColumnBlur(QImage &image, const int &column, cons
 }
 
 void
-NXExponentialBlurPrivate::_drawInnerBlur(unsigned char *bptr, int &zR, int &zG, int &zB, int &zA, int alpha) noexcept
+NXExponentialBlurPrivate::_drawInnerBlur(unsigned char *bptr, int &zR, int &zG, int &zB, int &zA, int alpha)
 {
   int R, G, B, A;
   R = *bptr;

@@ -1,11 +1,11 @@
-﻿// GenOConvert - An abstract base class for the GenO byte swapping routines
+// GenOConvert - An abstract base class for the GenO byte swapping routines
 
 #ifndef GENO_CONVERT_LIT_ENDIAN_INT_H
 #define GENO_CONVERT_LIT_ENDIAN_INT_H
 
 #include "NXPacketIO_Export.h"
 
-#include "GenIO/GenOConvert.h"
+#include "GenOConvert.h"
 
 #if defined(sgi) && (_COMPILER_VERSION >= 720)
 #pragma set woff 1681, 1682

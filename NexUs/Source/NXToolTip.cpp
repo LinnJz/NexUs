@@ -6,13 +6,13 @@
 #include "NXText.h"
 #include "NXTheme.h"
 #include "private/NXToolTipPrivate.h"
-Q_PROPERTY_CREATE_CPP(NXToolTip, bool, IsMoveEnabled)
-Q_PROPERTY_CREATE_CPP(NXToolTip, int, OffSetX)
-Q_PROPERTY_CREATE_CPP(NXToolTip, int, OffSetY)
 Q_PROPERTY_CREATE_CPP(NXToolTip, int, BorderRadius)
 Q_PROPERTY_CREATE_CPP(NXToolTip, int, DisplayMsec)
 Q_PROPERTY_CREATE_CPP(NXToolTip, int, ShowDelayMsec)
 Q_PROPERTY_CREATE_CPP(NXToolTip, int, HideDelayMsec)
+Q_PROPERTY_CREATE_CPP(NXToolTip, int, OffSetX)
+Q_PROPERTY_CREATE_CPP(NXToolTip, int, OffSetY)
+Q_PROPERTY_CREATE_CPP(NXToolTip, bool, IsMoveEnable)
 
 NXToolTip::NXToolTip(QWidget *parent)
     : QWidget { parent }
@@ -20,7 +20,7 @@ NXToolTip::NXToolTip(QWidget *parent)
 {
   Q_D(NXToolTip);
   d->q_ptr           = this;
-  d->_pIsMoveEnabled = false;
+  d->_pIsMoveEnable  = false;
   d->_pOffSetX       = 10;
   d->_pOffSetY       = 0;
   d->_pBorderRadius  = 5;
@@ -41,8 +41,13 @@ NXToolTip::NXToolTip(QWidget *parent)
   d->_toolTipText->setWordWrap(false);
   d->_toolTipText->setTextPixelSize(17);
   d->_mainLayout = new QVBoxLayout(this);
+#if defined(Q_OS_WIN) && QT_VERSION == QT_VERSION_CHECK(6, 11, 0)
+  d->_mainLayout->setContentsMargins(d->_shadowBorderWidth, d->_shadowBorderWidth, d->_shadowBorderWidth,
+                                     d->_shadowBorderWidth);
+#else
   d->_mainLayout->setContentsMargins(d->_shadowBorderWidth * 2, d->_shadowBorderWidth * 2, d->_shadowBorderWidth * 2,
                                      d->_shadowBorderWidth * 2);
+#endif
   d->_mainLayout->addWidget(d->_toolTipText);
 
   d->_themeMode = nxTheme->getThemeMode();
@@ -59,14 +64,7 @@ NXToolTip::~NXToolTip()
 }
 
 void
-NXToolTip::updatePos() noexcept
-{
-  Q_D(NXToolTip);
-  d->_updatePos();
-}
-
-void
-NXToolTip::setToolTip(const QString &toolTip) noexcept
+NXToolTip::setToolTip(const QString &toolTip)
 {
   Q_D(NXToolTip);
   d->_toolTipText->setText(toolTip);
@@ -79,14 +77,14 @@ NXToolTip::setToolTip(const QString &toolTip) noexcept
 }
 
 QString
-NXToolTip::getToolTip() const noexcept
+NXToolTip::getToolTip() const
 {
   Q_D(const NXToolTip);
   return d->_toolTipText->text();
 }
 
 void
-NXToolTip::setCustomWidget(QWidget *customWidget) noexcept
+NXToolTip::setCustomWidget(QWidget *customWidget)
 {
   Q_D(NXToolTip);
   if (!customWidget || customWidget == this)
@@ -105,10 +103,17 @@ NXToolTip::setCustomWidget(QWidget *customWidget) noexcept
 }
 
 QWidget *
-NXToolTip::getCustomWidget() const noexcept
+NXToolTip::getCustomWidget() const
 {
   Q_D(const NXToolTip);
   return d->_pCustomWidget;
+}
+
+void
+NXToolTip::updatePos()
+{
+  Q_D(NXToolTip);
+  d->_updatePos();
 }
 
 void
@@ -118,10 +123,14 @@ NXToolTip::paintEvent(QPaintEvent *event)
   QPainter painter(this);
   painter.save();
   painter.setRenderHint(QPainter::Antialiasing);
-  // 阴影
+#if defined(Q_OS_WIN) && QT_VERSION == QT_VERSION_CHECK(6, 11, 0)
+  QRect foregroundRect = rect();
+#else
+  //阴影
   nxTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
   QRect foregroundRect = rect();
   foregroundRect.adjust(d->_shadowBorderWidth, d->_shadowBorderWidth, -d->_shadowBorderWidth, -d->_shadowBorderWidth);
+#endif
   painter.setPen(NXThemeColor(d->_themeMode, PopupBorder));
   painter.setBrush(NXThemeColor(d->_themeMode, PopupBase));
   painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);

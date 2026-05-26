@@ -1,4 +1,4 @@
-﻿#ifndef GENUNIQUEID_H
+#ifndef GENUNIQUEID_H
 #define GENUNIQUEID_H
 
 #include "NXPacketIO_Export.h"

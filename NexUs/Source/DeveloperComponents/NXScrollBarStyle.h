@@ -8,14 +8,14 @@ class NXScrollBar;
 class NXScrollBarStyle : public QProxyStyle
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE(bool, IsExpand)
   Q_PROPERTY_CREATE(qreal, Opacity)
   Q_PROPERTY_CREATE(qreal, SliderExtent)
   Q_PRIVATE_CREATE(NXScrollBar *, ScrollBar)
+  Q_PRIVATE_CREATE(bool, IsExpand)
 
 public:
   explicit NXScrollBarStyle(QStyle *style = nullptr);
-  ~NXScrollBarStyle() override;
+  ~NXScrollBarStyle();
   void drawComplexControl(ComplexControl control,
                           const QStyleOptionComplex *option,
                           QPainter *painter,
@@ -26,12 +26,20 @@ public:
                 const QStyleOption *option   = nullptr,
                 const QWidget *widget        = nullptr,
                 QStyleHintReturn *returnData = nullptr) const override;
-  void startExpandAnimation(bool isExpand) noexcept;
+  void startExpandAnimation(bool isExpand);
 
 private:
   NXThemeType::ThemeMode _themeMode;
+#ifdef Q_OS_MACOS
+  int _scrollBarExtent { 8 };
+#else
   int _scrollBarExtent { 10 };
+#endif
+#ifdef Q_OS_MACOS
+  qreal _sliderMargin { 2.0 };
+#else
   qreal _sliderMargin { 2.5 };
+#endif
 };
 
 #endif // NXSCROLLBARSTYLE_H

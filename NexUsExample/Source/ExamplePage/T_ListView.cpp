@@ -6,19 +6,19 @@
 #include "NXListView.h"
 #include "NXScrollBar.h"
 #include "NXText.h"
-#include "T_ListViewModel.h"
+#include "ModelView/T_ListViewModel.h"
 
 T_ListView::T_ListView(QWidget *parent)
     : T_BasePage(parent)
 {
   // 预览窗口标题
-  setWindowTitle("NXListView");
+  setWindowTitle(QStringLiteral("NXListView"));
 
   // 顶部元素
-  createCustomWidget("列表视图被放置于此，可在此界面体验其效果并按需添加进项目中");
+  createCustomWidget(QStringLiteral("列表视图被放置于此，可在此界面体验其效果并按需添加进项目中"));
 
-  // NXListView
-  NXText *listText = new NXText("NXListView", this);
+  //NXListView
+  NXText *listText = new NXText(QStringLiteral("NXListView"), this);
   listText->setTextPixelSize(18);
   _listView = new NXListView(this);
   _listView->setFixedHeight(450);
@@ -31,7 +31,7 @@ T_ListView::T_ListView(QWidget *parent)
   listViewLayout->addWidget(_listView);
 
   QWidget *centralWidget = new QWidget(this);
-  centralWidget->setWindowTitle("NXView");
+  centralWidget->setWindowTitle(QStringLiteral("NXView"));
   QVBoxLayout *centerVLayout = new QVBoxLayout(centralWidget);
   centerVLayout->setContentsMargins(0, 0, 0, 0);
   centerVLayout->addWidget(listText);

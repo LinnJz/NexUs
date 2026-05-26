@@ -1,4 +1,4 @@
-﻿#include "NXFlowLayout.h"
+#include "NXFlowLayout.h"
 
 #include <QPropertyAnimation>
 #include <QWidget>
@@ -43,7 +43,7 @@ NXFlowLayout::addItem(QLayoutItem *item)
 }
 
 int
-NXFlowLayout::horizontalSpacing() const noexcept
+NXFlowLayout::horizontalSpacing() const
 {
   Q_D(const NXFlowLayout);
   if (d->_hSpacing >= 0)
@@ -57,7 +57,7 @@ NXFlowLayout::horizontalSpacing() const noexcept
 }
 
 int
-NXFlowLayout::verticalSpacing() const noexcept
+NXFlowLayout::verticalSpacing() const
 {
   Q_D(const NXFlowLayout);
   if (d->_vSpacing >= 0)
@@ -96,7 +96,7 @@ NXFlowLayout::takeAt(int index)
 }
 
 void
-NXFlowLayout::setIsAnimation(bool isAnimation) noexcept
+NXFlowLayout::setIsAnimation(bool isAnimation)
 {
   Q_D(NXFlowLayout);
   d->_isAnimation = isAnimation;

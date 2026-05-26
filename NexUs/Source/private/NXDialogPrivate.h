@@ -14,7 +14,7 @@ class NXDialogPrivate : public QObject
 
 public:
   explicit NXDialogPrivate(QObject *parent = nullptr);
-  ~NXDialogPrivate() override;
+  ~NXDialogPrivate();
 
 private:
   NXThemeType::ThemeMode _themeMode;
@@ -22,4 +22,4 @@ private:
   NXAppBar *_appBar { nullptr };
 };
 
-#endif // NXFRAMEWORK_NXDIALOGPRIVATE_H
+#endif //NXFRAMEWORK_NXDIALOGPRIVATE_H

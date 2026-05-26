@@ -1,7 +1,9 @@
-﻿#include <QMouseEvent>
+﻿#include "NXRollerPickerContainer.h"
+
+#include <QMouseEvent>
 #include <QPainter>
+
 #include "NXRoller.h"
-#include "NXRollerPickerContainer.h"
 #include "NXTheme.h"
 
 NXRollerPickerContainer::NXRollerPickerContainer(QWidget *parent)
@@ -12,7 +14,11 @@ NXRollerPickerContainer::NXRollerPickerContainer(QWidget *parent)
   setMouseTracking(true);
   setWindowFlags(Qt::FramelessWindowHint | Qt::Popup | Qt::NoDropShadowWindowHint);
   setAttribute(Qt::WA_TranslucentBackground);
+#if defined(Q_OS_WIN) && QT_VERSION == QT_VERSION_CHECK(6, 11, 0)
+  setContentsMargins(2, 2, 2, _pButtonAreaHeight);
+#else
   setContentsMargins(8, 8, 8, 6 + _pButtonAreaHeight);
+#endif
   setObjectName("NXCalendarPickerContainer");
   setStyleSheet(QStringLiteral("#NXCalendarPickerContainer{background-color:transparent}"));
 
@@ -29,7 +35,7 @@ NXRollerPickerContainer::~NXRollerPickerContainer()
 }
 
 void
-NXRollerPickerContainer::doPickerAnimation() noexcept
+NXRollerPickerContainer::doPickerAnimation()
 {
   _handleSaveOrReset(true);
   if (!_animationPix.isNull())
@@ -137,10 +143,14 @@ NXRollerPickerContainer::paintEvent(QPaintEvent *event)
   }
   else
   {
+#if defined(Q_OS_WIN) && QT_VERSION == QT_VERSION_CHECK(6, 11, 0)
+    QRect foregroundRect = rect();
+#else
     nxTheme->drawEffectShadow(&painter, rect(), 6, 5);
+    QRect foregroundRect(6, 6, rect().width() - 2 * 6, rect().height() - 2 * 6);
+#endif
     painter.setPen(NXThemeColor(_themeMode, PopupBorder));
     painter.setBrush(NXThemeColor(_themeMode, PopupBase));
-    QRect foregroundRect(6, 6, rect().width() - 2 * 6, rect().height() - 2 * 6);
     painter.drawRoundedRect(foregroundRect, 8, 8);
     // 纵向分割线
     painter.setPen(NXThemeColor(_themeMode, BasicBorder));
@@ -180,9 +190,9 @@ NXRollerPickerContainer::paintEvent(QPaintEvent *event)
     painter.setFont(iconFont);
     painter.setPen(NXThemeColor(_themeMode, BasicText));
     // 确定
-    painter.drawText(_overButtonRect, Qt::AlignCenter, QChar(NXIconType::Check));
+    painter.drawText(_overButtonRect, Qt::AlignCenter, QChar((unsigned short) NXIconType::Check));
     // 取消
-    painter.drawText(_cancelButtonRect, Qt::AlignCenter, QChar(NXIconType::Xmark));
+    painter.drawText(_cancelButtonRect, Qt::AlignCenter, QChar((unsigned short) NXIconType::Xmark));
   }
   painter.restore();
 }

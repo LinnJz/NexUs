@@ -1,4 +1,4 @@
-﻿#ifndef NXCALENDARTITLEMODEL_H
+#ifndef NXCALENDARTITLEMODEL_H
 #define NXCALENDARTITLEMODEL_H
 
 #include <QAbstractListModel>
@@ -12,7 +12,7 @@ public:
   ~NXCalendarTitleModel();
 
 protected:
-  int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+  virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
   QVariant data(const QModelIndex &index, int role) const override;
 };
 

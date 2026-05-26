@@ -17,7 +17,8 @@ class NX_EXPORT NXTreeView : public QTreeView
 public:
   explicit NXTreeView(QWidget *parent = nullptr);
   ~NXTreeView();
-  void setNXIcon(NXIconType::IconName icon) noexcept;
+
+  void setNXIcon(NXIconType::IconName icon);
 };
 
 #endif // NXTREEVIEW_H

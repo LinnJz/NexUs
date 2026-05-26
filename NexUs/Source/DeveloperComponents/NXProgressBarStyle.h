@@ -11,7 +11,7 @@ class NXProgressBarStyle : public QProxyStyle
 
 public:
   explicit NXProgressBarStyle(QStyle *style = nullptr);
-  ~NXProgressBarStyle() override;
+  ~NXProgressBarStyle();
   void drawControl(ControlElement element,
                    const QStyleOption *option,
                    QPainter *painter,

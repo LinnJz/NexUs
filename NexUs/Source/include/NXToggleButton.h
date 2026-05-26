@@ -10,22 +10,19 @@ class NX_EXPORT NXToggleButton : public QWidget
 {
   Q_OBJECT
   Q_Q_CREATE(NXToggleButton)
-  Q_PROPERTY_CREATE_H(bool, IsIconVisible)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QString), Text)
   Q_PROPERTY_CREATE_H(int, BorderRadius)
-  Q_PROPERTY_CREATE_2_H(const QString &, QString, Text)
 
 public:
   explicit NXToggleButton(QWidget *parent = nullptr);
   explicit NXToggleButton(const QString &text, QWidget *parent = nullptr);
-  ~NXToggleButton() override;
+  ~NXToggleButton();
 
-  void setIsToggled(bool isToggled) noexcept;
-  bool getIsToggled() const noexcept;
+  void setNXIcon(NXIconType::IconName icon);
 
-  void setNXIcon(NXIconType::IconName icon) noexcept;
-
-Q_SIGNALS:
-  void toggled(bool checked);
+  void setIsToggled(bool isToggled);
+  bool getIsToggled() const;
+  Q_SIGNAL void toggled(bool checked);
 
 protected:
   bool event(QEvent *event) override;

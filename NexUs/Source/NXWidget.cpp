@@ -6,6 +6,7 @@
 #include <QScreen>
 #include <QTimer>
 #include <QVBoxLayout>
+
 #include "NXApplication.h"
 #include "NXTheme.h"
 #include "private/NXWidgetPrivate.h"
@@ -56,33 +57,33 @@ NXWidget::~NXWidget()
 }
 
 void
-NXWidget::setIsStayTop(bool isStayTop) noexcept
+NXWidget::setIsStayTop(bool isStayTop)
 {
   Q_D(NXWidget);
   d->_appBar->setIsStayTop(isStayTop);
 }
 
 bool
-NXWidget::getIsStayTop() const noexcept
+NXWidget::getIsStayTop() const
 {
   return d_ptr->_appBar->getIsStayTop();
 }
 
 void
-NXWidget::setIsFixedSize(bool isFixedSize) noexcept
+NXWidget::setIsFixedSize(bool isFixedSize)
 {
   Q_D(NXWidget);
   d->_appBar->setIsFixedSize(isFixedSize);
 }
 
 bool
-NXWidget::getIsFixedSize() const noexcept
+NXWidget::getIsFixedSize() const
 {
   return d_ptr->_appBar->getIsFixedSize();
 }
 
 void
-NXWidget::setIsDefaultClosed(bool isDefaultClosed) noexcept
+NXWidget::setIsDefaultClosed(bool isDefaultClosed)
 {
   Q_D(NXWidget);
   d->_appBar->setIsDefaultClosed(isDefaultClosed);
@@ -90,14 +91,14 @@ NXWidget::setIsDefaultClosed(bool isDefaultClosed) noexcept
 }
 
 bool
-NXWidget::getIsDefaultClosed() const noexcept
+NXWidget::getIsDefaultClosed() const
 {
   Q_D(const NXWidget);
   return d->_appBar->getIsDefaultClosed();
 }
 
 void
-NXWidget::setAppBarHeight(int appBarHeight) noexcept
+NXWidget::setAppBarHeight(int appBarHeight)
 {
   Q_D(NXWidget);
   d->_appBar->setAppBarHeight(appBarHeight);
@@ -105,14 +106,14 @@ NXWidget::setAppBarHeight(int appBarHeight) noexcept
 }
 
 int
-NXWidget::getAppBarHeight() const noexcept
+NXWidget::getAppBarHeight() const
 {
   Q_D(const NXWidget);
   return d->_appBar->getAppBarHeight();
 }
 
 void
-NXWidget::moveToCenter() noexcept
+NXWidget::moveToCenter()
 {
   if (isMaximized() || isFullScreen())
   {
@@ -128,27 +129,27 @@ NXWidget::moveToCenter() noexcept
 }
 
 void
-NXWidget::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable) noexcept
+NXWidget::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable)
 {
   Q_D(NXWidget);
   d->_appBar->setWindowButtonFlag(buttonFlag, isEnable);
 }
 
 void
-NXWidget::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags) noexcept
+NXWidget::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags)
 {
   Q_D(NXWidget);
   d->_appBar->setWindowButtonFlags(buttonFlags);
 }
 
 NXAppBarType::ButtonFlags
-NXWidget::getWindowButtonFlags() const noexcept
+NXWidget::getWindowButtonFlags() const
 {
   return d_ptr->_appBar->getWindowButtonFlags();
 }
 
 NXAppBar *
-NXWidget::getAppBar() const noexcept
+NXWidget::getAppBar() const
 {
   Q_D(const NXWidget);
   return d->_appBar;

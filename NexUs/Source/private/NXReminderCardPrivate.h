@@ -7,7 +7,6 @@
 #include <QSize>
 
 #include "NXDef.h"
-#include "NXProperty.h"
 class NXReminderCard;
 
 class NXReminderCardPrivate : public QObject

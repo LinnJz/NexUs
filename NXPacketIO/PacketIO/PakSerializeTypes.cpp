@@ -1,8 +1,8 @@
-﻿#include "PacketIO/PakSerializeTypes.h"
+#include "PakSerializeTypes.h"
 
-#include "PacketIO/PakSerializeFwd.h"
+#include "PakSerializeFwd.h"
 // Keep as last include
-#include "PacketIO/PakSerializeImpl.h"
+#include "PakSerializeImpl.h"
 
 namespace PakSerialization
 {

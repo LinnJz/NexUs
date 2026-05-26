@@ -26,7 +26,7 @@ class NXWinShadowHelper : public QObject
 
 private:
   explicit NXWinShadowHelper(QObject *parent = nullptr);
-  ~NXWinShadowHelper() override;
+  ~NXWinShadowHelper();
 
 public:
   bool initWinAPI();
@@ -37,11 +37,11 @@ public:
                             NXApplicationType::WindowDisplayMode displayMode,
                             NXApplicationType::WindowDisplayMode lastDisplayMode);
   bool getIsCompositionEnabled() const;
-  bool getIsFullScreen(const HWND hwnd) const;
-  MONITORINFOEXW getMonitorForWindow(const HWND hwnd) const;
-  quint32 getResizeBorderThickness(const HWND hwnd) const;
-  quint32 getDpiForWindow(const HWND hwnd) const;
-  int getSystemMetricsForDpi(const HWND hwnd, const int index) const;
+  bool getIsFullScreen(const HWND &hwnd);
+  MONITORINFOEXW getMonitorForWindow(const HWND &hwnd);
+  quint32 getResizeBorderThickness(const HWND &hwnd);
+  quint32 getDpiForWindow(const HWND &hwnd);
+  int getSystemMetricsForDpi(const HWND &hwnd, const int index);
   bool compareWindowsVersion(const QString &windowsVersion) const;
 
 private:
@@ -118,6 +118,14 @@ private:
     _ACCENT_ENABLE_ACRYLIC_WITH_LUMINOSITY = 482
   };
 
+  enum _MONITOR_DPI_TYPE
+  {
+    MDT_EFFECTIVE_DPI = 0,
+    MDT_ANGULAR_DPI   = 1,
+    MDT_RAW_DPI       = 2,
+    MDT_DEFAULT       = MDT_EFFECTIVE_DPI
+  };
+
   struct _ACCENT_POLICY
   {
     DWORD dwAccentState;
@@ -133,14 +141,6 @@ private:
     SIZE_T cbData;
   };
 
-  enum _MONITOR_DPI_TYPE
-  {
-    MDT_EFFECTIVE_DPI = 0,
-    MDT_ANGULAR_DPI   = 1,
-    MDT_RAW_DPI       = 2,
-    MDT_DEFAULT       = MDT_EFFECTIVE_DPI
-  };
-
   using DwmExtendFrameIntoClientAreaFunc  = HRESULT(WINAPI *)(HWND hWnd, const MARGINS *pMarInset);
   using DwmSetWindowAttributeFunc         = HRESULT(WINAPI *)(HWND hwnd,
                                                       DWORD dwAttribute,
@@ -153,7 +153,6 @@ private:
   using GetDpiForWindowFunc               = UINT(WINAPI *)(HWND hwnd);
   using GetDpiForMonitorFunc = HRESULT(WINAPI *)(HMONITOR hmonitor, _MONITOR_DPI_TYPE dpiType, UINT *dpiX, UINT *dpiY);
   using GetSystemMetricsForDpiFunc = int(WINAPI *)(int index, UINT dpi);
-
   DwmExtendFrameIntoClientAreaFunc _dwmExtendFrameIntoClientArea { nullptr };
   DwmSetWindowAttributeFunc _dwmSetWindowAttribute { nullptr };
   DwmIsCompositionEnabledFunc _dwmIsCompositionEnabled { nullptr };
@@ -163,6 +162,8 @@ private:
   GetDpiForMonitorFunc _getDpiForMonitor { nullptr };
   GetSystemMetricsForDpiFunc _getSystemMetricsForDpi { nullptr };
   RTL_OSVERSIONINFOW _windowsVersion {};
+
+
   void _externWindowMargins(HWND hwnd);
 };
 

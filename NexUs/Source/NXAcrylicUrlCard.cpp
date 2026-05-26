@@ -7,21 +7,21 @@
 
 #include "NXTheme.h"
 #include "private/NXAcrylicUrlCardPrivate.h"
-Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, BorderRadius)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, QS_SET_CREF(QString), Title)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, QS_SET_CREF(QString), SubTitle)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, QS_SET_CREF(QString), Url)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, QS_SET_CREF(QPixmap), CardPixmap)
 Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, qreal, MainOpacity)
 Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, qreal, NoiseOpacity)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, QSize, CardPixmapSize)
+Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, BorderRadius)
 Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, BrushAlpha)
 Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, TitlePixelSize)
 Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, SubTitlePixelSize)
 Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, TitleSpacing)
 Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, SubTitleSpacing)
-Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, QSize, CardPixmapSize)
 Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, int, CardPixmapBorderRadius)
 Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, NXCardPixType::PixMode, CardPixMode)
-Q_PROPERTY_CREATE_2_CPP(NXAcrylicUrlCard, const QPixmap &, QPixmap, CardPixmap)
-Q_PROPERTY_CREATE_2_CPP(NXAcrylicUrlCard, const QString &, QString, Url)
-Q_PROPERTY_CREATE_2_CPP(NXAcrylicUrlCard, const QString &, QString, Title)
-Q_PROPERTY_CREATE_2_CPP(NXAcrylicUrlCard, const QString &, QString, SubTitle)
 
 NXAcrylicUrlCard::NXAcrylicUrlCard(QWidget *parent)
     : QPushButton(parent)
@@ -29,7 +29,7 @@ NXAcrylicUrlCard::NXAcrylicUrlCard(QWidget *parent)
 {
   Q_D(NXAcrylicUrlCard);
   d->q_ptr               = this;
-  d->_noisePix           = QPixmap(":/Resource/Image/noise.png");
+  d->_noisePix           = QPixmap(QStringLiteral(":/Resource/Image/noise.png"));
   d->_pBorderRadius      = 5;
   d->_pMainOpacity       = 0.95;
   d->_pNoiseOpacity      = 0.06;
@@ -58,7 +58,7 @@ NXAcrylicUrlCard::~NXAcrylicUrlCard()
 }
 
 void
-NXAcrylicUrlCard::setCardPixmapSize(int width, int height) noexcept
+NXAcrylicUrlCard::setCardPixmapSize(int width, int height)
 {
   Q_D(NXAcrylicUrlCard);
   d->_pCardPixmapSize = QSize(width, height);
@@ -141,6 +141,6 @@ NXAcrylicUrlCard::paintEvent(QPaintEvent *event)
   painter.setFont(iconFont);
   painter.setPen(NXThemeColor(d->_themeMode, BasicText));
   painter.drawText(width - 1.5 * iconFont.pixelSize(), height() - iconFont.pixelSize(),
-                   QChar(NXIconType::UpRightFromSquare));
+                   QChar((unsigned short) NXIconType::UpRightFromSquare));
   painter.restore();
 }

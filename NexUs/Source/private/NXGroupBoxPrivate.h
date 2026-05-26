@@ -14,8 +14,8 @@ class NXGroupBoxPrivate : public QObject
 
 public:
   explicit NXGroupBoxPrivate(QObject *parent = nullptr);
-  ~NXGroupBoxPrivate() override;
-  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept;
+  ~NXGroupBoxPrivate();
+  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
 
 private:
   NXThemeType::ThemeMode _themeMode;

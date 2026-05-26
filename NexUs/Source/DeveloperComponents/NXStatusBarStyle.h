@@ -11,7 +11,7 @@ class NXStatusBarStyle : public QProxyStyle
 
 public:
   explicit NXStatusBarStyle(QStyle *style = nullptr);
-  ~NXStatusBarStyle() override;
+  ~NXStatusBarStyle();
   void drawPrimitive(PrimitiveElement element,
                      const QStyleOption *option,
                      QPainter *painter,

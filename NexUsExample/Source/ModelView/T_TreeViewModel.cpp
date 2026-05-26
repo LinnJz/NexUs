@@ -1,4 +1,4 @@
-﻿#include "T_TreeViewModel.h"
+#include "T_TreeViewModel.h"
 
 #include <QIcon>
 
@@ -7,19 +7,19 @@
 T_TreeViewModel::T_TreeViewModel(QObject *parent)
     : QAbstractItemModel { parent }
 {
-  _rootItem = new T_TreeItem("root");
+  _rootItem = new T_TreeItem(QStringLiteral("root"));
   for (int i = 0; i < 20; i++)
   {
-    T_TreeItem *level1Item = new T_TreeItem(QString("Lv1--TreeItem%1").arg(i + 1), _rootItem);
+    T_TreeItem *level1Item = new T_TreeItem(QString(QStringLiteral("Lv1--TreeItem%1")).arg(i + 1), _rootItem);
     for (int j = 0; j < 6; j++)
     {
-      T_TreeItem *level2Item = new T_TreeItem(QString("Lv2--TreeItem%1").arg(j + 1), level1Item);
+      T_TreeItem *level2Item = new T_TreeItem(QString(QStringLiteral("Lv2--TreeItem%1")).arg(j + 1), level1Item);
       for (int k = 0; k < 6; k++)
       {
-        T_TreeItem *level3Item = new T_TreeItem(QString("Lv3--TreeItem%1").arg(k + 1), level2Item);
+        T_TreeItem *level3Item = new T_TreeItem(QString(QStringLiteral("Lv3--TreeItem%1")).arg(k + 1), level2Item);
         for (int l = 0; l < 6; l++)
         {
-          T_TreeItem *level4Item = new T_TreeItem(QString("Lv4--TreeItem%1").arg(l + 1), level3Item);
+          T_TreeItem *level4Item = new T_TreeItem(QString(QStringLiteral("Lv4--TreeItem%1")).arg(l + 1), level3Item);
           level3Item->appendChildItem(level4Item);
           _itemsMap.insert(level4Item->getItemKey(), level4Item);
         }
@@ -122,7 +122,7 @@ T_TreeViewModel::data(const QModelIndex &index, int role) const
   }
   else if (role == Qt::DecorationRole)
   {
-    return QIcon(":/Resource/Image/Cirno.jpg");
+    return QIcon(QStringLiteral(":/Resource/Image/Cirno.jpg"));
   }
   else if (role == Qt::CheckStateRole)
   {
@@ -167,7 +167,7 @@ T_TreeViewModel::headerData(int section, Qt::Orientation orientation, int role) 
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
   {
-    return QString("NXTreeView-Example-4Level");
+    return QString(QStringLiteral("NXTreeView-Example-4Level"));
   }
   return QAbstractItemModel::headerData(section, orientation, role);
 }

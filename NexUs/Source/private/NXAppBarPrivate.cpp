@@ -1,23 +1,26 @@
-﻿#include "NXAppBarPrivate.h"
+#include "NXAppBarPrivate.h"
 
 #include "NXToolButton.h"
 #ifdef Q_OS_WIN
 #  include <Windows.h>
 #endif
+#include "NXAppBar.h"
+#include "NXIconButton.h"
+#include "NXNavigationBar.h"
+#include "NXText.h"
+
 #include <QApplication>
 #include <QDebug>
 #include <QGuiApplication>
 #include <QLabel>
 #include <QMenu>
+#include <QPointer>
 #include <QPropertyAnimation>
 #include <QScreen>
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QWindow>
-#include "NXAppBar.h"
-#include "NXIconButton.h"
-#include "NXNavigationBar.h"
-#include "NXText.h"
+#include <QtMath>
 
 NXAppBarPrivate::NXAppBarPrivate(QObject *parent)
     : QObject { parent }
@@ -29,14 +32,14 @@ NXAppBarPrivate::~NXAppBarPrivate()
 }
 
 void
-NXAppBarPrivate::onMinButtonClicked() noexcept
+NXAppBarPrivate::onMinButtonClicked()
 {
   Q_Q(NXAppBar);
   q->window()->showMinimized();
 }
 
 void
-NXAppBarPrivate::onMaxButtonClicked() noexcept
+NXAppBarPrivate::onMaxButtonClicked()
 {
   Q_Q(NXAppBar);
   bool isMaximized = q->window()->isMaximized();
@@ -47,17 +50,21 @@ NXAppBarPrivate::onMaxButtonClicked() noexcept
 }
 
 void
-NXAppBarPrivate::onCloseButtonClicked() noexcept
+NXAppBarPrivate::onCloseButtonClicked()
 {
   Q_Q(NXAppBar);
   if (_pIsDefaultClosed)
   {
-    auto *window = q->window();
-    window->close();
-    QApplication::processEvents();
-    if (auto *windowHandle = window->windowHandle())
+    QPointer<QWidget> windowGuard = q->window();
+    QPointer<QWindow> handleGuard = windowGuard ? windowGuard->windowHandle() : nullptr;
+    if (windowGuard)
     {
-      windowHandle->close();
+      windowGuard->close();
+    }
+    QApplication::processEvents();
+    if (handleGuard)
+    {
+      handleGuard->close();
     }
   }
   else
@@ -67,7 +74,7 @@ NXAppBarPrivate::onCloseButtonClicked() noexcept
 }
 
 void
-NXAppBarPrivate::onStayTopButtonClicked() noexcept
+NXAppBarPrivate::onStayTopButtonClicked()
 {
 #ifdef Q_OS_WIN
   HWND hwnd = (HWND) _currentWinID;
@@ -85,11 +92,23 @@ NXAppBarPrivate::onStayTopButtonClicked() noexcept
   }
 #endif
   _stayTopButton->setIsSelected(_pIsStayTop);
-  _stayTopButton->update();
+
+  int currentRotate                   = _stayTopButton->property("NXIconRotate").toInt();
+  int targetRotate                    = _pIsStayTop ? 0 : 45;
+  QPropertyAnimation *rotateAnimation = new QPropertyAnimation(_stayTopButton, "NXIconRotate");
+  rotateAnimation->setDuration(300);
+  rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
+  rotateAnimation->setStartValue(currentRotate);
+  rotateAnimation->setEndValue(targetRotate);
+  connect(rotateAnimation, &QPropertyAnimation::valueChanged, _stayTopButton, [=]()
+  {
+    _stayTopButton->update();
+  });
+  rotateAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 void
-NXAppBarPrivate::_changeMaxButtonAwesome(bool isMaximized) noexcept
+NXAppBarPrivate::_changeMaxButtonAwesome(bool isMaximized)
 {
   if (isMaximized)
   {
@@ -102,7 +121,7 @@ NXAppBarPrivate::_changeMaxButtonAwesome(bool isMaximized) noexcept
 }
 
 void
-NXAppBarPrivate::_showAppBarMenu(QPoint point) noexcept
+NXAppBarPrivate::_showAppBarMenu(QPoint point)
 {
   Q_Q(const NXAppBar);
   if (_pCustomMenu)
@@ -157,7 +176,7 @@ NXAppBarPrivate::_showAppBarMenu(QPoint point) noexcept
 }
 
 void
-NXAppBarPrivate::_updateCursor(int edges) noexcept
+NXAppBarPrivate::_updateCursor(int edges)
 {
   Q_Q(const NXAppBar);
   switch (edges)
@@ -199,7 +218,7 @@ NXAppBarPrivate::_updateCursor(int edges) noexcept
 }
 
 bool
-NXAppBarPrivate::_containsCursorToItem(QWidget *item) noexcept
+NXAppBarPrivate::_containsCursorToItem(QWidget *item)
 {
   Q_Q(const NXAppBar);
   if (!item || !item->isVisible())
@@ -230,7 +249,10 @@ NXAppBarPrivate::_containsCursorToItem(QWidget *item) noexcept
                                     Q_RETURN_ARG(bool, isContainsInAppBar));
           return isContainsInAppBar;
         }
-        return false;
+        else
+        {
+          return false;
+        }
       }
     }
   }
@@ -246,7 +268,7 @@ NXAppBarPrivate::_containsCursorToItem(QWidget *item) noexcept
 }
 
 void
-NXAppBarPrivate::_onThemeModeChange(NXThemeType::ThemeMode themeMode) noexcept
+NXAppBarPrivate::_onThemeModeChange(NXThemeType::ThemeMode themeMode)
 {
   if (themeMode == NXThemeType::Light)
   {
@@ -259,7 +281,7 @@ NXAppBarPrivate::_onThemeModeChange(NXThemeType::ThemeMode themeMode) noexcept
 }
 
 int
-NXAppBarPrivate::_calculateMinimumWidth() noexcept
+NXAppBarPrivate::_calculateMinimumWidth()
 {
   Q_Q(NXAppBar);
   int appBarWidth = 0;
@@ -281,7 +303,6 @@ NXAppBarPrivate::_calculateMinimumWidth() noexcept
       appBarWidth += customAreaWidget->minimumWidth();
     }
   }
-  QList<QAbstractButton *> buttonList = q->findChildren<QAbstractButton *>();
   for (const auto clientWidget : _clientWidgetList)
   {
     if (clientWidget->isVisible())
@@ -294,7 +315,7 @@ NXAppBarPrivate::_calculateMinimumWidth() noexcept
 }
 
 QVBoxLayout *
-NXAppBarPrivate::_createVLayout(QWidget *widget) noexcept
+NXAppBarPrivate::_createVLayout(QWidget *widget)
 {
   if (!widget)
   {

@@ -14,7 +14,7 @@ NXGroupBoxPrivate::~NXGroupBoxPrivate()
 }
 
 void
-NXGroupBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
+NXGroupBoxPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
 {
   Q_Q(NXGroupBox);
   _themeMode       = themeMode;

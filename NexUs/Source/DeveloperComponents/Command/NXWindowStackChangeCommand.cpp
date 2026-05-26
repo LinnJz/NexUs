@@ -1,4 +1,4 @@
-#include "NXWindowStackChangeCommand.h"
+﻿#include "NXWindowStackChangeCommand.h"
 
 #include "NXCentralStackedWidget.h"
 #include "NXWindow.h"

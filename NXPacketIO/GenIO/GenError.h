@@ -1,4 +1,4 @@
-﻿#ifndef GENERROR_H
+#ifndef GENERROR_H
 #define GENERROR_H
 
 #include "NXPacketIO_Export.h"

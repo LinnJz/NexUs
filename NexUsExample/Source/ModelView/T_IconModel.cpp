@@ -1,4 +1,4 @@
-﻿#include "T_IconModel.h"
+#include "T_IconModel.h"
 
 #include "NXDef.h"
 
@@ -21,7 +21,7 @@ T_IconModel::rowCount(const QModelIndex &parent) const
 }
 
 void
-T_IconModel::setSearchKeyList(QStringList list)
+T_IconModel::setSearchKeyList(const QStringList &list)
 {
   beginResetModel();
   this->_searchKeyList = list;
@@ -78,14 +78,14 @@ T_IconModel::getIconNameFromModelIndex(const QModelIndex &index) const
   {
     if (index.row() < _searchKeyList.count())
     {
-      iconName = QString("NXIconType::") + _searchKeyList.at(index.row());
+      iconName = QString(QStringLiteral("NXIconType::")) + _searchKeyList.at(index.row());
     }
   }
   else
   {
     if (index.row() < _metaEnum.keyCount() - 1)
     {
-      iconName = QString("NXIconType::") + _metaEnum.key(index.row() + 1);
+      iconName = QString(QStringLiteral("NXIconType::")) + _metaEnum.key(index.row() + 1);
     }
   }
   return iconName;

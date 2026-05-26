@@ -13,7 +13,7 @@ NXRadioButtonPrivate::~NXRadioButtonPrivate()
 }
 
 void
-NXRadioButtonPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode) noexcept
+NXRadioButtonPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
 {
   Q_Q(NXRadioButton);
   _themeMode       = themeMode;

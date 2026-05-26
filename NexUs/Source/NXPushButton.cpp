@@ -3,17 +3,19 @@
 #include <QPainter>
 #include <QPainterPath>
 
+#include "NXIcon.h"
 #include "NXTheme.h"
 #include "private/NXPushButtonPrivate.h"
+Q_PROPERTY_CREATE_CPP(NXPushButton, QS_SET_CREF(QColor), LightDefaultColor)
+Q_PROPERTY_CREATE_CPP(NXPushButton, QS_SET_CREF(QColor), DarkDefaultColor)
+Q_PROPERTY_CREATE_CPP(NXPushButton, QS_SET_CREF(QColor), LightHoverColor)
+Q_PROPERTY_CREATE_CPP(NXPushButton, QS_SET_CREF(QColor), DarkHoverColor)
+Q_PROPERTY_CREATE_CPP(NXPushButton, QS_SET_CREF(QColor), LightPressColor)
+Q_PROPERTY_CREATE_CPP(NXPushButton, QS_SET_CREF(QColor), DarkPressColor)
+Q_PROPERTY_CREATE_CPP(NXPushButton, QS_SET_CREF(QColor), LightTextColor)
+Q_PROPERTY_CREATE_CPP(NXPushButton, QS_SET_CREF(QColor), DarkTextColor)
 Q_PROPERTY_CREATE_CPP(NXPushButton, int, BorderRadius)
-Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor &, QColor, LightDefaultColor)
-Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor &, QColor, DarkDefaultColor)
-Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor &, QColor, LightHoverColor)
-Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor &, QColor, DarkHoverColor)
-Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor &, QColor, LightPressColor)
-Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor &, QColor, DarkPressColor)
-Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor &, QColor, LightTextColor)
-Q_PROPERTY_CREATE_2_CPP(NXPushButton, const QColor &, QColor, DarkTextColor)
+Q_PROPERTY_CREATE_CPP(NXPushButton, bool, IsHoverEnable)
 
 NXPushButton::NXPushButton(QWidget *parent)
     : QPushButton(parent)
@@ -22,6 +24,7 @@ NXPushButton::NXPushButton(QWidget *parent)
   Q_D(NXPushButton);
   d->q_ptr               = this;
   d->_pBorderRadius      = 3;
+  d->_pIsHoverEnable     = true;
   d->_themeMode          = nxTheme->getThemeMode();
   d->_pLightDefaultColor = NXThemeColor(NXThemeType::Light, BasicBase);
   d->_pDarkDefaultColor  = NXThemeColor(NXThemeType::Dark, BasicBase);
@@ -37,7 +40,7 @@ NXPushButton::NXPushButton(QWidget *parent)
   font.setPixelSize(15);
   setFont(font);
   setObjectName("NXPushButton");
-  setStyleSheet(QStringLiteral("#NXPushButton{background-color:transparent;border:none;outline:none;}"));
+  setStyleSheet(QStringLiteral("#NXPushButton{background-color:transparent;}"));
   connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
     d->_themeMode = themeMode;
@@ -55,7 +58,7 @@ NXPushButton::~NXPushButton()
 }
 
 void
-NXPushButton::setTextPixelSize(int size) noexcept
+NXPushButton::setTextPixelSize(int size)
 {
   QFont font = this->font();
   font.setPixelSize(size);
@@ -63,13 +66,13 @@ NXPushButton::setTextPixelSize(int size) noexcept
 }
 
 int
-NXPushButton::getTextPixelSize() const noexcept
+NXPushButton::getTextPixelSize() const
 {
   return this->font().pixelSize();
 }
 
 void
-NXPushButton::setTextPointSize(int size) noexcept
+NXPushButton::setTextPointSize(int size)
 {
   QFont font = this->font();
   font.setPointSize(size);
@@ -77,13 +80,13 @@ NXPushButton::setTextPointSize(int size) noexcept
 }
 
 int
-NXPushButton::getTextPointSize() const noexcept
+NXPushButton::getTextPointSize() const
 {
   return this->font().pointSize();
 }
 
 void
-NXPushButton::setTextStyle(NXTextType::TextStyle textStyle) noexcept
+NXPushButton::setTextStyle(NXTextType::TextStyle textStyle)
 {
   Q_D(NXPushButton);
   QFont textFont = font();
@@ -143,14 +146,14 @@ NXPushButton::setTextStyle(NXTextType::TextStyle textStyle) noexcept
 }
 
 NXTextType::TextStyle
-NXPushButton::getTextStyle() const noexcept
+NXPushButton::getTextStyle() const
 {
   Q_D(const NXPushButton);
   return d->_textStyle;
 }
 
 void
-NXPushButton::setNXIcon(NXIconType::IconName icon) noexcept
+NXPushButton::setNXIcon(NXIconType::IconName icon)
 {
   Q_D(NXPushButton);
   d->_icon    = icon;
@@ -159,7 +162,7 @@ NXPushButton::setNXIcon(NXIconType::IconName icon) noexcept
 }
 
 void
-NXPushButton::setNXIcon(NXIconType::IconName icon, int iconSize) noexcept
+NXPushButton::setNXIcon(NXIconType::IconName icon, int iconSize)
 {
   Q_D(NXPushButton);
   d->_icon     = icon;
@@ -201,14 +204,16 @@ NXPushButton::paintEvent(QPaintEvent *event)
   {
     painter.setPen(NXThemeColor(NXThemeType::Light, BasicBorder));
     painter.setBrush(isEnabled() ? d->_isPressed ? d->_pLightPressColor
-                                                 : (underMouse() ? d->_pLightHoverColor : d->_pLightDefaultColor)
+                                                 : ((d->_pIsHoverEnable && underMouse()) ? d->_pLightHoverColor
+                                                                                         : d->_pLightDefaultColor)
                                  : NXThemeColor(d->_themeMode, BasicDisable));
   }
   else
   {
     painter.setPen(Qt::NoPen);
     painter.setBrush(isEnabled() ? d->_isPressed ? d->_pDarkPressColor
-                                                 : (underMouse() ? d->_pDarkHoverColor : d->_pDarkDefaultColor)
+                                                 : ((d->_pIsHoverEnable && underMouse()) ? d->_pDarkHoverColor
+                                                                                         : d->_pDarkDefaultColor)
                                  : NXThemeColor(d->_themeMode, BasicDisable));
   }
   painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
@@ -216,12 +221,41 @@ NXPushButton::paintEvent(QPaintEvent *event)
   if (!d->_isPressed)
   {
     painter.setPen(NXThemeColor(d->_themeMode, BasicBaseLine));
-    painter.drawLine(foregroundRect.x() + d->_pBorderRadius, height() - d->_shadowBorderWidth + 1,
-                     foregroundRect.width() - d->_pBorderRadius, height() - d->_shadowBorderWidth + 1);
+    painter.drawLine(foregroundRect.x() + d->_pBorderRadius, height() - d->_shadowBorderWidth, foregroundRect.width(),
+                     height() - d->_shadowBorderWidth);
   }
-  // 文字绘制
   painter.setPen(isEnabled() ? d->_themeMode == NXThemeType::Light ? d->_pLightTextColor : d->_pDarkTextColor
                              : NXThemeColor(d->_themeMode, BasicTextDisable));
-  painter.drawText(foregroundRect, Qt::AlignCenter, text());
+  if (d->_hasIcon)
+  {
+    QFont iconFont = QFont(QStringLiteral("NXAwesome"));
+    iconFont.setPixelSize(d->_iconSize);
+
+    QFontMetrics iconFontMetrics(iconFont);
+    int iconWidth = iconFontMetrics.horizontalAdvance(QChar((unsigned short) d->_icon));
+
+    QFont textFont = this->font();
+    QFontMetrics textFontMetrics(textFont);
+    int textWidth = textFontMetrics.horizontalAdvance(text());
+
+    int spacing    = text().isEmpty() ? 0 : 8;
+    int totalWidth = iconWidth + spacing + textWidth;
+    int startX     = foregroundRect.x() + (foregroundRect.width() - totalWidth) / 2;
+
+    painter.setFont(iconFont);
+    painter.drawText(QRect(startX, foregroundRect.y(), iconWidth, foregroundRect.height()),
+                     Qt::AlignLeft | Qt::AlignVCenter, QChar((unsigned short) d->_icon));
+
+    if (!text().isEmpty())
+    {
+      painter.setFont(textFont);
+      painter.drawText(QRect(startX + iconWidth + spacing, foregroundRect.y(), textWidth, foregroundRect.height()),
+                       Qt::AlignLeft | Qt::AlignVCenter, text());
+    }
+  }
+  else
+  {
+    painter.drawText(foregroundRect, Qt::AlignCenter, text());
+  }
   painter.restore();
 }

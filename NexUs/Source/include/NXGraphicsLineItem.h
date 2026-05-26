@@ -1,4 +1,4 @@
-﻿#ifndef NXGRAPHICSLINEITEM_H
+#ifndef NXGRAPHICSLINEITEM_H
 #define NXGRAPHICSLINEITEM_H
 
 #include <QGraphicsPathItem>
@@ -26,9 +26,9 @@ public:
   explicit NXGraphicsLineItem(QPointF startPoint, QPointF endPoint, QGraphicsItem *parent = nullptr);
   ~NXGraphicsLineItem();
 
-  bool isTargetLink(NXGraphicsItem *item) const noexcept;
-  bool isTargetLink(NXGraphicsItem *item1, NXGraphicsItem *item2) const noexcept;
-  bool isTargetLink(NXGraphicsItem *item1, NXGraphicsItem *item2, int port1, int port2) const noexcept;
+  bool isTargetLink(NXGraphicsItem *item) const;
+  bool isTargetLink(NXGraphicsItem *item1, NXGraphicsItem *item2) const;
+  bool isTargetLink(NXGraphicsItem *item1, NXGraphicsItem *item2, int port1, int port2) const;
 
 protected:
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;

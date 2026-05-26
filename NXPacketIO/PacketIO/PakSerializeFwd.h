@@ -1,12 +1,12 @@
-﻿#ifndef PAKSERIALIZEFWD_H
+#ifndef PAKSERIALIZEFWD_H
 #define PAKSERIALIZEFWD_H
 
 #include <cstdint>
 #include <string>
 
-#include "PacketIO/PakI.h"
-#include "PacketIO/PakIntTypes.h"
-#include "PacketIO/PakO.h"
+#include "PakI.h"
+#include "PakIntTypes.h"
+#include "PakO.h"
 namespace PakSerialization
 {
 template <typename T>

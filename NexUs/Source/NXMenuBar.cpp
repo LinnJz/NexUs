@@ -4,19 +4,23 @@
 #include <QPainter>
 #include <QToolButton>
 
+#include "DeveloperComponents/NXMenuBarStyle.h"
 #include "NXIcon.h"
 #include "NXMenu.h"
-#include "NXMenuBarStyle.h"
 
 NXMenuBar::NXMenuBar(QWidget *parent)
     : QMenuBar(parent)
 {
+#ifdef Q_OS_MAC
+  setNativeMenuBar(false);
+#endif
   setMouseTracking(true);
   setObjectName("NXMenuBar");
   setStyle(new NXMenuBarStyle(style()));
   QToolButton *tool = this->findChild<QToolButton *>();
-  if (tool->objectName() == QStringLiteral("qt_menubar_ext_button"))
+  if (tool && tool->objectName() == QStringLiteral("qt_menubar_ext_button"))
   {
+    tool->setStyleSheet(QStringLiteral("QToolButton{background-color:transparent; border:none;}"));
     QMenu *oldMenu = tool->menu();
     NXMenu *menu   = new NXMenu(this);
     menu->setObjectName("NXExtendMenu");
@@ -35,18 +39,18 @@ NXMenuBar::~NXMenuBar()
 }
 
 QAction *
-NXMenuBar::addMenu(QMenu *menu) noexcept
+NXMenuBar::addMenu(QMenu *qmenu)
 {
-  NXMenu *elaMenu = dynamic_cast<NXMenu *>(menu);
-  if (elaMenu)
+  NXMenu *menu = dynamic_cast<NXMenu *>(qmenu);
+  if (menu)
   {
-    elaMenu->setMenuItemHeight(27);
+    menu->setMenuItemHeight(27);
   }
-  return QMenuBar::addMenu(menu);
+  return QMenuBar::addMenu(qmenu);
 }
 
 NXMenu *
-NXMenuBar::addMenu(const QString &title) noexcept
+NXMenuBar::addMenu(const QString &title)
 {
   NXMenu *menu = new NXMenu(title, this);
   menu->setMenuItemHeight(27);
@@ -55,7 +59,7 @@ NXMenuBar::addMenu(const QString &title) noexcept
 }
 
 NXMenu *
-NXMenuBar::addMenu(const QIcon &icon, const QString &title) noexcept
+NXMenuBar::addMenu(const QIcon &icon, const QString &title)
 {
   NXMenu *menu = new NXMenu(title, this);
   menu->setMenuItemHeight(27);
@@ -65,32 +69,32 @@ NXMenuBar::addMenu(const QIcon &icon, const QString &title) noexcept
 }
 
 NXMenu *
-NXMenuBar::addMenu(NXIconType::IconName icon, const QString &title) noexcept
+NXMenuBar::addMenu(NXIconType::IconName icon, const QString &title)
 {
   NXMenu *menu = new NXMenu(title, this);
   menu->setMenuItemHeight(27);
-  menu->menuAction()->setProperty("NXIconType", QChar(icon));
+  menu->menuAction()->setProperty("NXIconType", QChar((unsigned short) icon));
   menu->menuAction()->setIcon(NXIcon::getInstance()->getNXIcon(NXIconType::Broom, 1));
   QMenuBar::addAction(menu->menuAction());
   return menu;
 }
 
 QAction *
-NXMenuBar::addNXIconAction(NXIconType::IconName icon, const QString &text) noexcept
+NXMenuBar::addNXIconAction(NXIconType::IconName icon, const QString &text)
 {
   QAction *action = new QAction(text, this);
-  action->setProperty("NXIconType", QChar(icon));
+  action->setProperty("NXIconType", QChar((unsigned short) icon));
   action->setIcon(NXIcon::getInstance()->getNXIcon(NXIconType::Broom, 1));
   QMenuBar::addAction(action);
   return action;
 }
 
 QAction *
-NXMenuBar::addNXIconAction(NXIconType::IconName icon, const QString &text, const QKeySequence &shortcut) noexcept
+NXMenuBar::addNXIconAction(NXIconType::IconName icon, const QString &text, const QKeySequence &shortcut)
 {
   QAction *action = new QAction(text, this);
   action->setShortcut(shortcut);
-  action->setProperty("NXIconType", QChar(icon));
+  action->setProperty("NXIconType", QChar((unsigned short) icon));
   action->setIcon(NXIcon::getInstance()->getNXIcon(NXIconType::Broom, 1));
   QMenuBar::addAction(action);
   return action;

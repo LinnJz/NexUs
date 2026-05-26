@@ -28,7 +28,7 @@ NXCalendarDelegate::~NXCalendarDelegate()
 }
 
 void
-NXCalendarDelegate::onCalendarModelDisplayModeChanged() noexcept
+NXCalendarDelegate::onCalendarModelDisplayModeChanged()
 {
   switch (_calendarModel->getDisplayMode())
   {

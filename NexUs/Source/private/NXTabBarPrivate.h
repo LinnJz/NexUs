@@ -4,6 +4,7 @@
 #include <QMimeData>
 #include <QObject>
 #include <QPixmap>
+
 #include "NXProperty.h"
 class NXTabBar;
 class NXTabBarStyle;
@@ -16,7 +17,7 @@ class NXTabBarPrivate : public QObject
 
 public:
   explicit NXTabBarPrivate(QObject *parent = nullptr);
-  ~NXTabBarPrivate() override;
+  ~NXTabBarPrivate();
 
 private:
   QMimeData *_mimeData { nullptr };

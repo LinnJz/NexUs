@@ -8,12 +8,12 @@
 class NXLineEditStyle : public QProxyStyle
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE(int, LineEditBorderRadius)
-  Q_PRIVATE_CREATE(int, LineEditIconMargin)
+  Q_PRIVATE_CREATE(int, BorderRadius)
+  Q_PRIVATE_CREATE(int, IconMargin)
 
 public:
   explicit NXLineEditStyle(QStyle *style = nullptr);
-  ~NXLineEditStyle() override;
+  ~NXLineEditStyle();
   void drawPrimitive(PrimitiveElement element,
                      const QStyleOption *option,
                      QPainter *painter,

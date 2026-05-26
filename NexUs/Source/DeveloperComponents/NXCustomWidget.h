@@ -4,6 +4,7 @@
 #include <QDialog>
 
 #include "NXAppBar.h"
+#include "NXDef.h"
 
 class QVBoxLayout;
 
@@ -14,9 +15,9 @@ class NXCustomWidget : public QDialog
 
 public:
   explicit NXCustomWidget(QWidget *parent = nullptr);
-  ~NXCustomWidget() override;
+  ~NXCustomWidget();
 
-  void setCentralWidget(QWidget *widget) noexcept;
+  void setCentralWidget(QWidget *widget);
 
 protected:
   void paintEvent(QPaintEvent *event) override;

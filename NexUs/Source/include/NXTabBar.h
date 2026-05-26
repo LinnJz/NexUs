@@ -11,22 +11,22 @@ class NX_EXPORT NXTabBar : public QTabBar
 {
   Q_OBJECT
   Q_Q_CREATE(NXTabBar)
-  Q_PROPERTY_CREATE_H(bool, IsSelectedIndicatorVisible)
-  Q_PROPERTY_CREATE_H(int, TabCornerRadius)
-  Q_PROPERTY_CREATE_H(NXTabBarType::TabBarStyle, TabBarStyle)
   Q_PROPERTY_CREATE_H(QSize, TabSize)
+  Q_PROPERTY_CREATE_H(NXTabBarType::TabBarStyle, TabBarStyle)
+  Q_PROPERTY_CREATE_H(int, TabCornerRadius)
+  Q_PROPERTY_CREATE_H(bool, IsSelectedIndicatorVisible)
 
 public:
   explicit NXTabBar(QWidget *parent = nullptr);
-  ~NXTabBar() override;
-Q_SIGNALS:
-  void tabDragCreate(QMimeData *mimeData);
-  void tabDragEnter(QMimeData *mimeData);
-  void tabDragLeave(QMimeData *mimeData);
-  void tabDragDrop(QMimeData *mimeData);
+  ~NXTabBar();
+  Q_SIGNAL void tabDragCreate(QMimeData *mimeData);
+  Q_SIGNAL void tabDragEnter(QMimeData *mimeData);
+  Q_SIGNAL void tabDragLeave(QMimeData *mimeData);
+  Q_SIGNAL void tabDragDrop(QMimeData *mimeData);
 
 protected:
   QSize sizeHint() const;
+  void mousePressEvent(QMouseEvent *event) override;
   void mouseMoveEvent(QMouseEvent *event) override;
   void dragEnterEvent(QDragEnterEvent *event) override;
   void dragMoveEvent(QDragMoveEvent *event) override;

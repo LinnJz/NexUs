@@ -1,40 +1,40 @@
-﻿#include "xio/NXXIO_Interface.h"
+#include "xio/NXXIO_Interface.h"
 
 #include <limits>
 #include <memory>
 
-#include "XIO/NXXIO_Connection.h"
-#include "XIO/NXXIO_PacketRegistry.h"
-#include "XIO/NXXIO_UdpHeader.h"
-#include "GenIO/GenIP.h"
-#include "GenIO/GenInternetSocketAddress.h"
-#include "GenIO/GenNetInfo.h"
-#include "GenIO/GenSocket.h"
-#include "GenIO/GenTCP_IO.h"
-#include "GenIO/GenUDP_IO.h"
-#include "PacketIO/PakProcessor.h"
-#include "PacketIO/PakTCP_Connector.h"
-#include "PacketIO/PakTCP_IO.h"
-#include "PacketIO/PakUDP_IO.h"
+#include "NXXIO_Connection.h"
+#include "NXXIO_PacketRegistry.h"
+#include "NXXIO_UdpHeader.h"
+#include "GenIP.h"
+#include "GenInternetSocketAddress.h"
+#include "GenNetInfo.h"
+#include "GenSocket.h"
+#include "GenTCP_IO.h"
+#include "GenUDP_IO.h"
+#include "PakProcessor.h"
+#include "PakTCP_Connector.h"
+#include "PakTCP_IO.h"
+#include "PakUDP_IO.h"
 
 NXXIO_Interface::NXXIO_Interface()
     : _applicationName("NXPacketIO"),
-    mTCP_Port(0),
-    mMulticastTimeToLive(-1),
-    mMulticastLoopback(true),
-    mHeartbeatInterval(5.0),
-    mShowTransferRate(false),
-    _isInit(false),
-    mConnectorPtr(nullptr),
-    mCurrentTime(0.0),
-    mPreviousHeartbeatTime(-1.0E6),
-    mPreviousConnectionUpdateTime(-1.0E6),
-    mConnectionUpdateInterval(0.5),
-    mTotalBytesSent(0),
-    mTotalBytesReceived(0),
-    mPreviousBytesSent(0),
-    mPreviousBytesReceived(0),
-    mUDP_HeaderPtr(new NXXIO_UdpHeader(NXXIO_PacketRegistry::getPacketVersion()))
+      mTCP_Port(0),
+      mMulticastTimeToLive(-1),
+      mMulticastLoopback(true),
+      mHeartbeatInterval(5.0),
+      mShowTransferRate(false),
+      _isInit(false),
+      mConnectorPtr(nullptr),
+      mCurrentTime(0.0),
+      mPreviousHeartbeatTime(-1.0E6),
+      mPreviousConnectionUpdateTime(-1.0E6),
+      mConnectionUpdateInterval(0.5),
+      mTotalBytesSent(0),
+      mTotalBytesReceived(0),
+      mPreviousBytesSent(0),
+      mPreviousBytesReceived(0),
+      mUDP_HeaderPtr(new NXXIO_UdpHeader(NXXIO_PacketRegistry::getPacketVersion()))
 {
     NXXIO_PacketRegistry::registerPackets(*this);
 
@@ -58,9 +58,9 @@ NXXIO_Interface::~NXXIO_Interface()
         double recvRate = recvBytes / elapsedTime;
 
         std::cout << "xio_interface: Terminated."
-            << " Sent " << sentBytes << " bytes at " << sendRate << " bytes/second"
-            << " Received " << recvBytes << " bytes at " << recvRate << " bytes/second"
-            << std::endl;
+                  << " Sent " << sentBytes << " bytes at " << sendRate << " bytes/second"
+                  << " Received " << recvBytes << " bytes at " << recvRate << " bytes/second"
+                  << std::endl;
         _threadedIO.Stop();
         _threadedIO.Join();
         delete mUDP_HeaderPtr;
@@ -72,7 +72,7 @@ NXXIO_Interface::~NXXIO_Interface()
         delete mUDP_HeaderPtr;
         delete mConnectorPtr;
         const ConnectionList& connectionList = GetConnections();
-        for (auto& connection : mConnections)
+        for (auto& connection: mConnections)
         {
             delete connection;
         }
@@ -95,7 +95,7 @@ void NXXIO_Interface::init(int port)
         mTCP_Port = mConnectorPtr->GetBoundPort();
         std::cout << "xio_interface: Accepting connections." << " Port: " << mTCP_Port << std::endl;
     }
-    for (UDP_Target& target : mUDP_Targets)
+    for (UDP_Target& target: mUDP_Targets)
     {
         _connectToTarget(target);
     }
@@ -107,7 +107,7 @@ void NXXIO_Interface::init(int port)
             _executeCoreProcessor();
             std::this_thread::sleep_for(std::chrono::microseconds(30));
         }
-        });
+    });
     _updateThread = std::move(updateThread);
 }
 
@@ -124,7 +124,7 @@ void NXXIO_Interface::unInit()
         removeUDP_Target(i);
     }
     const ConnectionList& connectionList = GetConnections();
-    for (auto& connection : mConnections)
+    for (auto& connection: mConnections)
     {
         delete connection;
     }
@@ -295,7 +295,7 @@ void NXXIO_Interface::sendToAllUDP(NXXIO_Packet& packet)
     packet._applicationId = _applicationId;
     packet.SetBaseTime(_clock.GetClock());
     std::vector<PakSocketIO*> sendList;
-    for (auto& connection : mConnections)
+    for (auto& connection: mConnections)
     {
         PakUDP_IO* ioPtr = connection->GetUDP_IO();
         if (ioPtr != nullptr && ioPtr->GetConnection().GetSendToPort() > 0)
@@ -310,7 +310,7 @@ void NXXIO_Interface::sendToAllTCP(NXXIO_Packet& packet)
 {
     packet._applicationId = _applicationId;
     std::vector<PakSocketIO*> sendList;
-    for (auto& connection : mConnections)
+    for (auto& connection: mConnections)
     {
         if (connection->GetTCP_IO())
         {
@@ -366,7 +366,7 @@ void NXXIO_Interface::_executeCoreProcessor()
         _acceptConnections();
     }
     _processMessages();
-    for (auto& connection : mConnections)
+    for (auto& connection: mConnections)
     {
         PakTCP_IO* ioPtr = connection->GetTCP_IO();
         if (ioPtr != nullptr)
@@ -390,10 +390,10 @@ void NXXIO_Interface::_executeCoreProcessor()
             if (mShowTransferRate)
             {
                 std::cout << "xio_interface: Advanced time."
-                    << " Sent " << sentBytes << " bytes at " << newSentBytes / mHeartbeatInterval << " bytes/second"
-                    << " Received " << recvBytes << " bytes at " << newRecvBytes / mHeartbeatInterval
-                    << " bytes/second"
-                    << std::endl;
+                          << " Sent " << sentBytes << " bytes at " << newSentBytes / mHeartbeatInterval << " bytes/second"
+                          << " Received " << recvBytes << " bytes at " << newRecvBytes / mHeartbeatInterval
+                          << " bytes/second"
+                          << std::endl;
             }
         }
     }
@@ -403,7 +403,7 @@ void NXXIO_Interface::_processMessages()
 {
     PakThreadedIO::PacketList packets;
     _threadedIO.Extract(packets);
-    for (auto packet : packets)
+    for (auto packet: packets)
     {
         NXXIO_Packet* pkt = dynamic_cast<NXXIO_Packet*>(packet);
         if (!pkt)
@@ -448,7 +448,7 @@ void NXXIO_Interface::_handleHeartbeat(NXXIO_HeartbeatPkt& pkt)
             newHeartbeat.mConnectionPtr = (NXXIO_Connection*)pkt.GetSender();
             mProcessedHeartbeats.insert(newHeartbeat);
 
-            for (NXXIO_Connection* connectionPtr : mConnections)
+            for (NXXIO_Connection* connectionPtr: mConnections)
             {
                 if (connectionPtr->getApplicationId() == pkt._applicationId && connectionPtr->GetTCP_IO() != nullptr)
                 {
@@ -462,7 +462,7 @@ void NXXIO_Interface::_handleHeartbeat(NXXIO_HeartbeatPkt& pkt)
 bool NXXIO_Interface::_checkForDuplicateConnection(NXXIO_Connection* checkedConnection)
 {
     NXXIO_Connection* duplicatePtr = nullptr;
-    for (const auto& connection : mConnections)
+    for (const auto& connection: mConnections)
     {
         if (checkedConnection != connection && checkedConnection->getApplicationId() == connection->getApplicationId())
         {
@@ -627,7 +627,7 @@ void NXXIO_Interface::_handleDisconnect(PakSocketIO* socketIO, PakConnection* co
 NXXIO_Connection* NXXIO_Interface::FindConnection(const GenUniqueId& aApplicationId)
 {
     NXXIO_Connection* connectionPtr = nullptr;
-    for (auto& connection : mConnections)
+    for (auto& connection: mConnections)
     {
         if (aApplicationId == connection->getApplicationId())
         {
@@ -651,7 +651,7 @@ NXXIO_Connection* NXXIO_Interface::FindConnection(int aConnectionIndex)
 NXXIO_Connection* NXXIO_Interface::FindConnection(const std::string& aApplicationName)
 {
     NXXIO_Connection* connectionPtr = nullptr;
-    for (auto& connection : mConnections)
+    for (auto& connection: mConnections)
     {
         if (aApplicationName == connection->getApplicationName())
         {
@@ -666,7 +666,7 @@ void NXXIO_Interface::getBytesCommunicated(size_t& aBytesSent, size_t& aBytesRec
     aBytesSent = mTotalBytesSent;
     aBytesReceived = mTotalBytesReceived;
 
-    for (NXXIO_Connection* connectionPtr : mConnections)
+    for (NXXIO_Connection* connectionPtr: mConnections)
     {
         PakTCP_IO* tcpPtr = connectionPtr->GetTCP_IO();
         if (tcpPtr != nullptr)
@@ -708,7 +708,7 @@ bool NXXIO_Interface::removeUDP_Target(int aTargetIndex)
         if (connectionPtr != nullptr)
         {
             // Don't remove if it is linked to another connection.
-            for (NXXIO_Connection* cPtr : mConnections)
+            for (NXXIO_Connection* cPtr: mConnections)
             {
                 if (cPtr->GetLinkedConnection() == connectionPtr)
                 {

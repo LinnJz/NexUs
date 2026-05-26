@@ -1,4 +1,4 @@
-﻿#ifndef PAKCONNECTION_H
+#ifndef PAKCONNECTION_H
 #define PAKCONNECTION_H
 
 #include "NXPacketIO_Export.h"

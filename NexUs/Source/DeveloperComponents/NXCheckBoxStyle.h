@@ -13,7 +13,7 @@ class NXCheckBoxStyle : public QProxyStyle
 
 public:
   explicit NXCheckBoxStyle(QStyle *style = nullptr);
-  ~NXCheckBoxStyle() override;
+  ~NXCheckBoxStyle();
   void drawControl(ControlElement element,
                    const QStyleOption *option,
                    QPainter *painter,

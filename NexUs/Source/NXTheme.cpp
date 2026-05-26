@@ -1,7 +1,10 @@
 ﻿#include "NXTheme.h"
 
+#include <QCoreApplication>
+#include <QGuiApplication>
 #include <QPainter>
 #include <QPainterPath>
+#include <QStyleHints>
 
 #include "private/NXThemePrivate.h"
 
@@ -19,7 +22,7 @@ NXTheme::~NXTheme()
 }
 
 void
-NXTheme::setThemeMode(NXThemeType::ThemeMode themeMode) noexcept
+NXTheme::setThemeMode(NXThemeType::ThemeMode themeMode)
 {
   Q_D(NXTheme);
   d->_themeMode = themeMode;
@@ -27,16 +30,62 @@ NXTheme::setThemeMode(NXThemeType::ThemeMode themeMode) noexcept
 }
 
 NXThemeType::ThemeMode
-NXTheme::getThemeMode() const noexcept
+NXTheme::getThemeMode() const
 {
   Q_D(const NXTheme);
   return d->_themeMode;
 }
 
 void
-NXTheme::setThemeColor(NXThemeType::ThemeMode themeMode,
-                       NXThemeType::ThemeColor themeColor,
-                       const QColor &newColor) noexcept
+NXTheme::setIsFollowSystemTheme(bool isFollow)
+{
+  Q_D(NXTheme);
+  if (d->_pIsFollowSystemTheme == isFollow)
+  {
+    return;
+  }
+  d->_pIsFollowSystemTheme = isFollow;
+  if (isFollow)
+  {
+    if (QCoreApplication::instance())
+    {
+      QCoreApplication::instance()->installEventFilter(d);
+    }
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+    d->_colorSchemeConnection =
+        connect(QGuiApplication::styleHints(), &QStyleHints::colorSchemeChanged, d, [d](Qt::ColorScheme)
+    {
+      d->_applySystemTheme();
+    });
+#endif
+    d->_applySystemTheme();
+  }
+  else
+  {
+    if (QCoreApplication::instance())
+    {
+      QCoreApplication::instance()->removeEventFilter(d);
+    }
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+    if (d->_colorSchemeConnection)
+    {
+      disconnect(d->_colorSchemeConnection);
+      d->_colorSchemeConnection = {};
+    }
+#endif
+  }
+  Q_EMIT pIsFollowSystemThemeChanged(isFollow);
+}
+
+bool
+NXTheme::getIsFollowSystemTheme() const
+{
+  Q_D(const NXTheme);
+  return d->_pIsFollowSystemTheme;
+}
+
+void
+NXTheme::setThemeColor(NXThemeType::ThemeMode themeMode, NXThemeType::ThemeColor themeColor, const QColor &newColor)
 {
   Q_D(NXTheme);
   if (themeMode == NXThemeType::Light)
@@ -49,10 +98,10 @@ NXTheme::setThemeColor(NXThemeType::ThemeMode themeMode,
   }
 }
 
-const QColor &
-NXTheme::getThemeColor(NXThemeType::ThemeMode themeMode, NXThemeType::ThemeColor themeColor) const noexcept
+QColor
+NXTheme::getThemeColor(NXThemeType::ThemeMode themeMode, NXThemeType::ThemeColor themeColor)
 {
-  Q_D(const NXTheme);
+  Q_D(NXTheme);
   if (themeMode == NXThemeType::Light)
   {
     return d->_lightThemeColorList[themeColor];
@@ -71,7 +120,7 @@ NXTheme::drawEffectShadow(QPainter *painter,
                           int maxAlpha,
                           int extendPixels,
                           const QColor &lightColor,
-                          const QColor &darkColor) noexcept
+                          const QColor &darkColor)
 {
   Q_D(NXTheme);
   painter->save();

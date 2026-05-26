@@ -3,8 +3,6 @@
 
 #include <QMap>
 #include <QObject>
-#include <QQueue>
-#include <QVariantMap>
 
 #include "NXDef.h"
 
@@ -21,22 +19,19 @@ class NXMessageBarPrivate : public QObject
 
 public:
   explicit NXMessageBarPrivate(QObject *parent = nullptr);
-  ~NXMessageBarPrivate() override;
+  ~NXMessageBarPrivate();
   void onOtherMessageBarEnd();
   Q_SLOT void messageBarEnd();
+  Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
 
 private:
-  static QMap<QObject *, QMap<NXMessageBarType::PositionPolicy, QList<NXMessageBar *> *>> _messageBarActiveMap;
-
+  bool _isClosing { false };
+  bool _isNormalDisplay { false };
+  bool _isOtherMessageBarEnd { false };
   NXThemeType::ThemeMode _themeMode;
   int _borderRadius { 6 };
-  QString _title { "" };
-  QString _text { "" };
   NXMessageBarType::PositionPolicy _policy;
   NXMessageBarType::MessageMode _messageMode;
-  qreal _createTime { 0 };
-
-  // 位置数据
   int _leftPadding { 20 };                // 左边框到图标中心
   int _titleLeftSpacing { 30 };           // 图标中心到Title左侧
   int _textLeftSpacing { 15 };            // Title右侧到Text左侧
@@ -47,12 +42,16 @@ private:
   int _messageBarVerticalTopMargin { 25 };
   int _messageBarSpacing { 15 };
   int _shadowBorderWidth { 6 };
+  qreal _createTime { 0 };
   qreal _timePercentHeight { 2 };
+  QString _title { QStringLiteral("") };
+  QString _text { QStringLiteral("") };
+  NXIconButton *_closeButton { nullptr };
+  static QMap<QObject *, QMap<NXMessageBarType::PositionPolicy, QList<NXMessageBar *> *>> _messageBarActiveMap;
+
+  // 位置数据
 
   // 逻辑数据
-  bool _isNormalDisplay { false };
-  bool _isOtherMessageBarEnd { false };
-  NXIconButton *_closeButton { nullptr };
   void _messageBarCreate(int displayMsec);
 
   // 初始坐标计算

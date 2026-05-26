@@ -1,13 +1,14 @@
 ﻿#include "NXNavigationStyle.h"
 
+#include <QDebug>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPropertyAnimation>
 #include <QStyleOption>
 
-#include "DeveloperComponents/NXNavigationModel.h"
-#include "DeveloperComponents/NXNavigationNode.h"
-#include "DeveloperComponents/NXNavigationView.h"
+#include "NXNavigationModel.h"
+#include "NXNavigationNode.h"
+#include "NXNavigationView.h"
 #include "NXTheme.h"
 
 NXNavigationStyle::NXNavigationStyle(QStyle *style)
@@ -39,7 +40,7 @@ NXNavigationStyle::NXNavigationStyle(QStyle *style)
   {
     _isSelectMarkDisplay = true;
     _lastSelectedNode    = nullptr;
-    _selectMarkBottomAnimation->setStartValue(0.0);
+    _selectMarkBottomAnimation->setStartValue(0);
     _selectMarkBottomAnimation->setEndValue(10.5);
     _selectMarkBottomAnimation->start();
   });
@@ -157,30 +158,27 @@ NXNavigationStyle::drawPrimitive(PrimitiveElement element,
   }
   case QStyle::PE_IndicatorBranch :
   {
-    // Branch指示器
-    return;
-  }
-  case QStyle::PE_IndicatorItemViewItemDrop :
-  {
-    /* if (option->rect.isNull()) return;
+    //// Branch指示器
+    //if (option->rect.isNull())
+    //  return;
 
-     QRect itemRect = option->rect;
-     QPen pen;
-     pen.setColor(NXThemeColor(_themeMode, PrimaryNormal));
-     pen.setWidth(2);
-     painter->setPen(pen);
-     painter->setRenderHint(QPainter::Antialiasing);
-     if (option->rect.height() == 0)
-     {
-         painter->drawEllipse(QPoint(10, option->rect.top()), 4, 4);
-         painter->drawLine(QPoint(10, option->rect.top()), QPoint(widget->width() - 10, option->rect.top()));
-     }
-     else
-     {
-         itemRect.setLeft(5);
-         itemRect.setRight(widget->width() - 5);
-         painter->drawRect(itemRect);
-     }*/
+    //QRect itemRect = option->rect;
+    //QPen pen;
+    //pen.setColor(NXThemeColor(_themeMode, PrimaryNormal));
+    //pen.setWidth(2);
+    //painter->setPen(pen);
+    //painter->setRenderHint(QPainter::Antialiasing);
+    //if (option->rect.height() == 0)
+    //{
+    //  painter->drawEllipse(QPoint(10, option->rect.top()), 4, 4);
+    //  painter->drawLine(QPoint(10, option->rect.top()), QPoint(widget->width() - 10, option->rect.top()));
+    //}
+    //else
+    //{
+    //  itemRect.setLeft(5);
+    //  itemRect.setRight(widget->width() - 5);
+    //  painter->drawRect(itemRect);
+    //}
     return;
   }
   default :
@@ -252,7 +250,7 @@ NXNavigationStyle::drawControl(ControlElement element,
         iconFont.setPixelSize(17);
         painter->setFont(iconFont);
         painter->drawText(QRect(itemRect.x(), itemRect.y(), _iconAreaWidth, itemRect.height()), Qt::AlignCenter,
-                          QChar(node->getAwesome()));
+                          QChar((unsigned short) node->getAwesome()));
         painter->restore();
       }
 
@@ -267,8 +265,8 @@ NXNavigationStyle::drawControl(ControlElement element,
       }
       else
       {
-        painter->setPen(vopt->index == _pPressIndex ? NXThemeColor(_themeMode, BasicTextPress)
-                                                    : NXThemeColor(_themeMode, BasicText));
+        painter->setPen((vopt->index == _pPressIndex) ? NXThemeColor(_themeMode, BasicTextPress)
+                                                      : NXThemeColor(_themeMode, BasicText));
       }
       QRect textRect;
       if (node->getAwesome() != NXIconType::None)
@@ -308,7 +306,7 @@ NXNavigationStyle::drawControl(ControlElement element,
             {
               if (node->getIsExpanded())
               {
-                // 展开
+                //展开
                 painter->rotate(-180);
               }
               else
@@ -319,7 +317,7 @@ NXNavigationStyle::drawControl(ControlElement element,
             }
             painter->translate(-expandIconRect.x() - (qreal) expandIconRect.width() / 2 + 1,
                                -expandIconRect.y() - (qreal) expandIconRect.height() / 2);
-            painter->drawText(expandIconRect, Qt::AlignVCenter, QChar(NXIconType::AngleDown));
+            painter->drawText(expandIconRect, Qt::AlignVCenter, QChar((unsigned short) NXIconType::AngleDown));
             painter->restore();
           }
           if (node->getIsChildHasKeyPoints())
@@ -403,9 +401,9 @@ NXNavigationStyle::sizeFromContents(ContentsType type,
 }
 
 void
-NXNavigationStyle::navigationNodeStateChange(const QVariantMap &data) noexcept
+NXNavigationStyle::navigationNodeStateChange(const QVariantMap &data)
 {
-  if (data.contains("Expand"))
+  if (data.contains(QStringLiteral("Expand")))
   {
     NXNavigationNode *lastExpandNode         = _expandAnimationTargetNode;
     _opacityAnimationTargetNode              = data.value(QStringLiteral("Expand")).value<NXNavigationNode *>();
@@ -498,8 +496,8 @@ NXNavigationStyle::navigationNodeStateChange(const QVariantMap &data) noexcept
     }
     else
     {
-      _lastSelectMarkTopAnimation->setStartValue(10.5);
-      _lastSelectMarkTopAnimation->setEndValue(0.0);
+      _lastSelectMarkBottomAnimation->setStartValue(10.5);
+      _lastSelectMarkBottomAnimation->setEndValue(0.0);
       _lastSelectMarkBottomAnimation->start();
       _lastSelectMarkTopAnimation->stop();
       _selectMarkBottomAnimation->stop();

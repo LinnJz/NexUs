@@ -4,22 +4,20 @@
 #include <QObject>
 
 #include "NXDef.h"
-#include "NXProperty.h"
 class NXToggleButton;
 
 class NXToggleButtonPrivate : public QObject
 {
   Q_OBJECT
   Q_D_CREATE(NXToggleButton)
-  Q_PROPERTY_CREATE_D(bool, IsIconVisible)
-  Q_PROPERTY_CREATE_D(NXIconType::IconName, Awesome)
-  Q_PROPERTY_CREATE_D(int, BorderRadius)
-  Q_PROPERTY_CREATE(int, ToggleAlpha)
   Q_PROPERTY_CREATE_D(QString, Text)
+  Q_PROPERTY_CREATE_D(NXIconType::IconName, NXIcon, NXIconType::None)
+  Q_PROPERTY_CREATE_D(int, BorderRadius, 3)
+  Q_PROPERTY_CREATE(int, ToggleAlpha, QS_DEFAULT_VALUE(0))
 
 public:
   explicit NXToggleButtonPrivate(QObject *parent = nullptr);
-  ~NXToggleButtonPrivate() override;
+  ~NXToggleButtonPrivate();
 
 private:
   bool _isAlphaAnimationFinished { true };

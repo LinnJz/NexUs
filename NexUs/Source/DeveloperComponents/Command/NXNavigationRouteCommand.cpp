@@ -1,4 +1,4 @@
-#include "NXNavigationRouteCommand.h"
+﻿#include "NXNavigationRouteCommand.h"
 
 #include "NXNavigationBar.h"
 

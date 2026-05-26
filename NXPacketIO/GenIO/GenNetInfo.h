@@ -1,4 +1,4 @@
-﻿#ifndef GEN_NETINFO_H
+#ifndef GEN_NETINFO_H
 #define GEN_NETINFO_H
 
 #include "NXPacketIO_Export.h"

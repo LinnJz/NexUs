@@ -3,8 +3,9 @@
 #include <QDebug>
 #include <QPainter>
 #include <QVBoxLayout>
-#include "NXRollerPickerPrivate.h"
+
 #include "NXTheme.h"
+#include "private/NXRollerPickerPrivate.h"
 
 Q_PROPERTY_CREATE_CPP(NXRollerPicker, int, BorderRadius)
 
@@ -48,7 +49,7 @@ NXRollerPicker::~NXRollerPicker()
 }
 
 void
-NXRollerPicker::addRoller(const QStringList &itemList, bool isEnableLoop) noexcept
+NXRollerPicker::addRoller(const QStringList &itemList, bool isEnableLoop)
 {
   Q_D(NXRollerPicker);
   if (itemList.isEmpty())
@@ -72,7 +73,7 @@ NXRollerPicker::addRoller(const QStringList &itemList, bool isEnableLoop) noexce
 }
 
 void
-NXRollerPicker::removeRoller(int index) noexcept
+NXRollerPicker::removeRoller(int index)
 {
   Q_D(NXRollerPicker);
   if (index >= d->_rollerPickerContainer->_rollerList.count())
@@ -87,7 +88,7 @@ NXRollerPicker::removeRoller(int index) noexcept
 }
 
 void
-NXRollerPicker::setRollerItemList(int index, const QStringList &itemList) noexcept
+NXRollerPicker::setRollerItemList(int index, const QStringList &itemList)
 {
   Q_D(NXRollerPicker);
   if (index >= d->_rollerPickerContainer->_rollerList.count())
@@ -99,7 +100,7 @@ NXRollerPicker::setRollerItemList(int index, const QStringList &itemList) noexce
 }
 
 void
-NXRollerPicker::setRollerWidth(int index, int width) noexcept
+NXRollerPicker::setRollerWidth(int index, int width)
 {
   Q_D(NXRollerPicker);
   if (index >= d->_rollerPickerContainer->_rollerList.count())
@@ -112,7 +113,7 @@ NXRollerPicker::setRollerWidth(int index, int width) noexcept
 }
 
 void
-NXRollerPicker::setCurrentData(int index, const QString &data) noexcept
+NXRollerPicker::setCurrentData(int index, const QString &data)
 {
   Q_D(NXRollerPicker);
   if (index >= d->_rollerPickerContainer->_rollerList.count())
@@ -123,7 +124,7 @@ NXRollerPicker::setCurrentData(int index, const QString &data) noexcept
 }
 
 void
-NXRollerPicker::setCurrentData(const QStringList &dataList) noexcept
+NXRollerPicker::setCurrentData(const QStringList &dataList)
 {
   Q_D(NXRollerPicker);
   for (int i = 0; i < d->_rollerPickerContainer->_rollerList.count(); i++)
@@ -138,7 +139,7 @@ NXRollerPicker::setCurrentData(const QStringList &dataList) noexcept
 }
 
 QString
-NXRollerPicker::getCurrentData(int index) const noexcept
+NXRollerPicker::getCurrentData(int index) const
 {
   Q_D(const NXRollerPicker);
   if (index >= d->_rollerPickerContainer->_rollerList.count())
@@ -149,7 +150,7 @@ NXRollerPicker::getCurrentData(int index) const noexcept
 }
 
 QStringList
-NXRollerPicker::getCurrentData() const noexcept
+NXRollerPicker::getCurrentData() const
 {
   Q_D(const NXRollerPicker);
   QStringList dataList;
@@ -161,7 +162,7 @@ NXRollerPicker::getCurrentData() const noexcept
 }
 
 void
-NXRollerPicker::setCurrentIndex(int rollerIndex, int index) noexcept
+NXRollerPicker::setCurrentIndex(int rollerIndex, int index)
 {
   Q_D(NXRollerPicker);
   if (rollerIndex >= d->_rollerPickerContainer->_rollerList.count())
@@ -172,7 +173,7 @@ NXRollerPicker::setCurrentIndex(int rollerIndex, int index) noexcept
 }
 
 void
-NXRollerPicker::setCurrentIndex(const QList<int> &indexList) noexcept
+NXRollerPicker::setCurrentIndex(const QList<int> &indexList)
 {
   Q_D(NXRollerPicker);
   for (int i = 0; i < d->_rollerPickerContainer->_rollerList.count(); i++)
@@ -187,7 +188,7 @@ NXRollerPicker::setCurrentIndex(const QList<int> &indexList) noexcept
 }
 
 int
-NXRollerPicker::getCurrentIndex(int rollerIndex) const noexcept
+NXRollerPicker::getCurrentIndex(int rollerIndex) const
 {
   Q_D(const NXRollerPicker);
   if (rollerIndex >= d->_rollerPickerContainer->_rollerList.count())
@@ -198,7 +199,7 @@ NXRollerPicker::getCurrentIndex(int rollerIndex) const noexcept
 }
 
 QList<int>
-NXRollerPicker::getCurrentIndex() const noexcept
+NXRollerPicker::getCurrentIndex() const
 {
   Q_D(const NXRollerPicker);
   QList<int> currentIndexList;

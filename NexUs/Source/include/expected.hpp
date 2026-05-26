@@ -140,7 +140,7 @@ template<class E>
 class unexpected
 {
 public:
-  static_assert(!std::is_same<E, void>::value, "E must not be void");
+  static_assert(!std::is_same<E, void>::value, QStringLiteral("E must not be void"));
 
   unexpected() = delete;
 
@@ -174,7 +174,7 @@ public:
 
   TL_EXPECTED_11_CONSTEXPR void swap(unexpected &other) noexcept(detail::is_nothrow_swappable<E>::value)
   {
-    static_assert(detail::is_swappable<E>::value, "E must be swappable");
+    static_assert(detail::is_swappable<E>::value, QStringLiteral("E must be swappable"));
     using std::swap;
     swap(m_val, other.m_val);
   }
@@ -1482,13 +1482,13 @@ public:
   {
   }
 
-  const char *what() const noexcept override { return "Bad expected access"; }
+  const char *what() const noexcept override { return QStringLiteral("Bad expected access"); }
 
-  const E &error() const & { return m_val; }
+  E error() const & { return m_val; }
 
   E &error() & { return m_val; }
 
-  const E &&error() const && { return std::move(m_val); }
+  E &error() const && { return std::move(m_val); }
 
   E &&error() && { return std::move(m_val); }
 
@@ -1510,11 +1510,12 @@ class expected
     , private detail::expected_delete_assign_base<T, E>
     , private detail::expected_default_ctor_base<T, E>
 {
-  static_assert(!std::is_reference<T>::value, "T must not be a reference");
-  static_assert(!std::is_same<T, std::remove_cv<in_place_t>::type>::value, "T must not be in_place_t");
-  static_assert(!std::is_same<T, std::remove_cv<unexpect_t>::type>::value, "T must not be unexpect_t");
-  static_assert(!std::is_same<T, typename std::remove_cv<unexpected<E>>::type>::value, "T must not be unexpected<E>");
-  static_assert(!std::is_reference<E>::value, "E must not be a reference");
+  static_assert(!std::is_reference<T>::value, QStringLiteral("T must not be a reference"));
+  static_assert(!std::is_same<T, std::remove_cv<in_place_t>::type>::value, QStringLiteral("T must not be in_place_t"));
+  static_assert(!std::is_same<T, std::remove_cv<unexpect_t>::type>::value, QStringLiteral("T must not be unexpect_t"));
+  static_assert(!std::is_same<T, typename std::remove_cv<unexpected<E>>::type>::value,
+                QStringLiteral("T must not be unexpected<E>"));
+  static_assert(!std::is_reference<E>::value, QStringLiteral("E must not be a reference"));
 
   T *valptr() { return std::addressof(this->m_val); }
 
@@ -2398,7 +2399,7 @@ public:
       std::is_nothrow_convertible<const T &, T>::value && std::is_nothrow_convertible<U, T>::value)
   {
     static_assert(std::is_copy_constructible<T>::value && std::is_convertible<U &&, T>::value,
-                  "T must be copy-constructible and convertible to from U&&");
+                  QStringLiteral("T must be copy-constructible and convertible to from U&&"));
     return bool(*this) ? **this : static_cast<T>(std::forward<U>(v));
   }
 
@@ -2407,7 +2408,7 @@ public:
   value_or(U &&v) && noexcept(std::is_nothrow_convertible<T, T>::value && std::is_nothrow_convertible<U, T>::value)
   {
     static_assert(std::is_move_constructible<T>::value && std::is_convertible<U &&, T>::value,
-                  "T must be move-constructible and convertible to from U&&");
+                  QStringLiteral("T must be move-constructible and convertible to from U&&"));
     return bool(*this) ? std::move(**this) : static_cast<T>(std::forward<U>(v));
   }
 
@@ -2416,7 +2417,7 @@ public:
       std::is_nothrow_copy_constructible<E>::value && std::is_nothrow_convertible<_Uty, E>::value)
   {
     static_assert(std::is_copy_constructible<E>::value && std::is_convertible<_Uty, E>::value,
-                  "E must be copy-constructible and convertible to from U&&");
+                  QStringLiteral("E must be copy-constructible and convertible to from U&&"));
     return bool(*this) ? static_cast<E>(std::forward<_Uty>(v)) : error();
   }
 
@@ -2425,7 +2426,7 @@ public:
       std::is_nothrow_move_constructible<E>::value && std::is_nothrow_convertible<_Uty, E>::value)
   {
     static_assert(std::is_move_constructible<E>::value && std::is_convertible<_Uty, E>::value,
-                  "E must be move-constructible and convertible to from U&&");
+                  QStringLiteral("E must be move-constructible and convertible to from U&&"));
     return bool(*this) ? static_cast<E>(std::forward<_Uty>(v)) : std::move(error());
   }
 };
@@ -2447,7 +2448,7 @@ template<class Exp,
 TL_EXPECTED_11_CONSTEXPR auto
 and_then_impl(Exp &&exp, F &&f)
 {
-  static_assert(detail::is_expected<Ret>::value, "F must return an expected");
+  static_assert(detail::is_expected<Ret>::value, QStringLiteral("F must return an expected"));
 
   return exp.has_value() ? detail::invoke(std::forward<F>(f), *std::forward<Exp>(exp))
                          : Ret(unexpect, std::forward<Exp>(exp).error());
@@ -2460,7 +2461,7 @@ template<class Exp,
 TL_EXPECTED_11_CONSTEXPR auto
 and_then_impl(Exp &&exp, F &&f)
 {
-  static_assert(detail::is_expected<Ret>::value, "F must return an expected");
+  static_assert(detail::is_expected<Ret>::value, QStringLiteral("F must return an expected"));
 
   return exp.has_value() ? detail::invoke(std::forward<F>(f)) : Ret(unexpect, std::forward<Exp>(exp).error());
 }
@@ -2475,7 +2476,7 @@ template<class Exp,
 auto
 and_then_impl(Exp &&exp, F &&f) -> Ret
 {
-  static_assert(detail::is_expected<Ret>::value, "F must return an expected");
+  static_assert(detail::is_expected<Ret>::value, QStringLiteral("F must return an expected"));
 
   return exp.has_value() ? detail::invoke(std::forward<F>(f), *std::forward<Exp>(exp))
                          : Ret(unexpect, std::forward<Exp>(exp).error());
@@ -2488,7 +2489,7 @@ template<class Exp,
 TL_EXPECTED_11_CONSTEXPR auto
 and_then_impl(Exp &&exp, F &&f) -> Ret
 {
-  static_assert(detail::is_expected<Ret>::value, "F must return an expected");
+  static_assert(detail::is_expected<Ret>::value, QStringLiteral("F must return an expected"));
 
   return exp.has_value() ? detail::invoke(std::forward<F>(f)) : Ret(unexpect, std::forward<Exp>(exp).error());
 }
@@ -2761,7 +2762,7 @@ template<class Exp,
 TL_EXPECTED_11_CONSTEXPR auto
 or_else_impl(Exp &&exp, F &&f)
 {
-  static_assert(detail::is_expected<Ret>::value, "F must return an expected");
+  static_assert(detail::is_expected<Ret>::value, QStringLiteral("F must return an expected"));
   return exp.has_value() ? std::forward<Exp>(exp) : detail::invoke(std::forward<F>(f), std::forward<Exp>(exp).error());
 }
 
@@ -2783,7 +2784,7 @@ template<class Exp,
 auto
 or_else_impl(Exp &&exp, F &&f) -> Ret
 {
-  static_assert(detail::is_expected<Ret>::value, "F must return an expected");
+  static_assert(detail::is_expected<Ret>::value, QStringLiteral("F must return an expected"));
   return exp.has_value() ? std::forward<Exp>(exp) : detail::invoke(std::forward<F>(f), std::forward<Exp>(exp).error());
 }
 

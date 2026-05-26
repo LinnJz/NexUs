@@ -1,6 +1,7 @@
 ﻿#include "NXRollerPickerPrivate.h"
 
 #include <QPropertyAnimation>
+
 #include "NXRollerPicker.h"
 
 NXRollerPickerPrivate::NXRollerPickerPrivate(QObject *parent)
@@ -13,7 +14,7 @@ NXRollerPickerPrivate::~NXRollerPickerPrivate()
 }
 
 void
-NXRollerPickerPrivate::onRollerPickerClicked() noexcept
+NXRollerPickerPrivate::onRollerPickerClicked()
 {
   Q_Q(NXRollerPicker);
   QPoint targetPos(q->mapToGlobal(QPoint(
@@ -26,19 +27,19 @@ NXRollerPickerPrivate::onRollerPickerClicked() noexcept
 }
 
 void
-NXRollerPickerPrivate::onOverButtonClicked() noexcept
+NXRollerPickerPrivate::onOverButtonClicked()
 {
   Q_Q(NXRollerPicker);
   Q_EMIT q->currentDataChanged(q->getCurrentData());
 }
 
 void
-NXRollerPickerPrivate::onCancelButtonClicked() noexcept
+NXRollerPickerPrivate::onCancelButtonClicked()
 {
 }
 
 int
-NXRollerPickerPrivate::_getRollerTotalWidth() const noexcept
+NXRollerPickerPrivate::_getRollerTotalWidth() const
 {
   int totalWidth = 0;
   for (auto rollerItem : _rollerPickerContainer->_rollerList)

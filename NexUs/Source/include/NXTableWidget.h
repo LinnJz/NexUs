@@ -1,4 +1,4 @@
-﻿#ifndef NXTABLEWIDGET_H
+#ifndef NXTABLEWIDGET_H
 #define NXTABLEWIDGET_H
 
 #include <QTableWidget>
@@ -19,20 +19,17 @@ public:
   explicit NXTableWidget(QWidget *parent = nullptr);
   ~NXTableWidget();
 
-  void insertRows(int row, int count) noexcept;
-  void removeRows(int row, int count) noexcept;
-  void insertColumns(int column, int count) noexcept;
-  void removeColumns(int column, int count) noexcept;
+  void insertRows(int row, int count);
+  void removeRows(int row, int count);
+  void insertColumns(int column, int count);
+  void removeColumns(int column, int count);
 
-  void setItemText(int row, int column, const QString &text) noexcept;
-  QString getItemText(int row, int column) const noexcept;
-  void setRowData(int row, const QStringList &data) noexcept;
-  QStringList getRowData(int row) const noexcept;
-
-Q_SIGNALS:
-  void tableWidgetShow();
-  void tableWidgetHide();
-  void hoverIndexChanged(const QModelIndex &index);
+  void setItemText(int row, int column, const QString &text);
+  QString getItemText(int row, int column) const;
+  void setRowData(int row, const QStringList &data);
+  QStringList getRowData(int row) const;
+  Q_SIGNAL void tableWidgetShow();
+  Q_SIGNAL void tableWidgetHide();
 
 protected:
   void showEvent(QShowEvent *event) override;

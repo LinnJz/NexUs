@@ -1,11 +1,11 @@
-﻿#ifndef GENNETIO_H
+#ifndef GENNETIO_H
 #define GENNETIO_H
 
 #include "NXPacketIO_Export.h"
 
 #include <string>
 
-#include "GenIO/GenIO.h"
+#include "GenIO.h"
 class GenBufOManaged;
 class GenBufIManaged;
 class GenUDP_IO;

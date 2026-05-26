@@ -12,7 +12,7 @@ class NXSpinBoxStyle : public QProxyStyle
 
 public:
   explicit NXSpinBoxStyle(QStyle *style = nullptr);
-  ~NXSpinBoxStyle() override;
+  ~NXSpinBoxStyle();
   void drawComplexControl(ComplexControl control,
                           const QStyleOptionComplex *option,
                           QPainter *painter,

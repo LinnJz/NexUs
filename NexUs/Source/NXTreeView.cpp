@@ -46,14 +46,14 @@ NXTreeView::~NXTreeView()
 }
 
 void
-NXTreeView::setNXIcon(NXIconType::IconName icon) noexcept
+NXTreeView::setNXIcon(NXIconType::IconName icon)
 {
   Q_D(NXTreeView);
   d->_treeViewStyle->setIconName(icon);
 }
 
 void
-NXTreeView::setItemHeight(int itemHeight) noexcept
+NXTreeView::setItemHeight(int itemHeight)
 {
   Q_D(NXTreeView);
   if (itemHeight > 0)
@@ -64,14 +64,14 @@ NXTreeView::setItemHeight(int itemHeight) noexcept
 }
 
 int
-NXTreeView::getItemHeight() const noexcept
+NXTreeView::getItemHeight() const
 {
   Q_D(const NXTreeView);
   return d->_treeViewStyle->getItemHeight();
 }
 
 void
-NXTreeView::setHeaderMargin(int headerMargin) noexcept
+NXTreeView::setHeaderMargin(int headerMargin)
 {
   Q_D(NXTreeView);
   if (headerMargin >= 0)
@@ -82,7 +82,7 @@ NXTreeView::setHeaderMargin(int headerMargin) noexcept
 }
 
 int
-NXTreeView::getHeaderMargin() const noexcept
+NXTreeView::getHeaderMargin() const
 {
   Q_D(const NXTreeView);
   return d->_treeViewStyle->getHeaderMargin();

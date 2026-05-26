@@ -1,9 +1,9 @@
-﻿#ifndef GEN_BUF_I_MANAGED_H
+#ifndef GEN_BUF_I_MANAGED_H
 #define GEN_BUF_I_MANAGED_H
 
 #include "NXPacketIO_Export.h"
 
-#include "GenIO/GenBufXferI.h"
+#include "GenBufXferI.h"
 
 // GenBufIManaged - This class is used to get data from a input buffer that this
 // class owns.

@@ -17,8 +17,8 @@ class NXCalendarPickerPrivate : public QObject
 public:
   explicit NXCalendarPickerPrivate(QObject *parent = nullptr);
   ~NXCalendarPickerPrivate();
-  Q_SLOT void onCalendarPickerClicked() noexcept;
-  Q_SLOT void onCalendarSelectedDateChanged() noexcept;
+  Q_SLOT void onCalendarPickerClicked();
+  Q_SLOT void onCalendarSelectedDateChanged();
 
 private:
   NXThemeType::ThemeMode _themeMode;

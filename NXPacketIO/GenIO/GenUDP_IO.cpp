@@ -1,13 +1,13 @@
-﻿#include "GenIO/GenUDP_IO.h"
+#include "GenUDP_IO.h"
 
 #include <iostream>
 
-#include "GenIO/GenBufIManaged.h"
-#include "GenIO/GenBufOManaged.h"
-#include "GenIO/GenHostName.h"
-#include "GenIO/GenInternetAddress.h"
-#include "GenIO/GenInternetSocketAddress.h"
-#include "GenIO/GenSocketIncludes.h"
+#include "GenBufIManaged.h"
+#include "GenBufOManaged.h"
+#include "GenHostName.h"
+#include "GenInternetAddress.h"
+#include "GenInternetSocketAddress.h"
+#include "GenSocketIncludes.h"
 
 GenUDP_IO::GenUDP_IO()
     : GenUDP_Connection(), GenNetIO("GenUDP_IO", "GenUDP_IO")

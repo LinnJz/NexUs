@@ -13,7 +13,7 @@ class NXToolBarStyle : public QProxyStyle
 
 public:
   explicit NXToolBarStyle(QStyle *style = nullptr);
-  ~NXToolBarStyle() override;
+  ~NXToolBarStyle();
   void drawPrimitive(PrimitiveElement element,
                      const QStyleOption *option,
                      QPainter *painter,
@@ -24,7 +24,6 @@ public:
                    const QWidget *widget = nullptr) const override;
   int
   pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr, const QWidget *widget = nullptr) const override;
-  
   QSize sizeFromContents(ContentsType type,
                          const QStyleOption *option,
                          const QSize &size,
@@ -32,12 +31,9 @@ public:
 
 private:
   NXThemeType::ThemeMode _themeMode;
-  void _drawIndicator(QPainter *painter, const QStyleOptionToolButton *bopt, const QWidget *widget) const noexcept;
-  void _drawIcon(QPainter *painter,
-                 QRectF iconRect,
-                 const QStyleOptionToolButton *bopt,
-                 const QWidget *widget) const noexcept;
-  void _drawText(QPainter *painter, QRect contentRect, const QStyleOptionToolButton *bopt) const noexcept;
+  void _drawIndicator(QPainter *painter, const QStyleOptionToolButton *bopt, const QWidget *widget) const;
+  void _drawIcon(QPainter *painter, QRectF iconRect, const QStyleOptionToolButton *bopt, const QWidget *widget) const;
+  void _drawText(QPainter *painter, QRect contentRect, const QStyleOptionToolButton *bopt) const;
 };
 
 #endif // NXTOOLBARSTYLE_H

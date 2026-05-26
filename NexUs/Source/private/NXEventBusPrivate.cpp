@@ -21,7 +21,7 @@ NXEventBusPrivate::~NXEventBusPrivate()
 }
 
 NXEventBusType::EventBusReturnType
-NXEventBusPrivate::registerEvent(NXEvent *event) noexcept
+NXEventBusPrivate::registerEvent(NXEvent *event)
 {
   if (!event)
   {
@@ -51,7 +51,7 @@ NXEventBusPrivate::registerEvent(NXEvent *event) noexcept
 }
 
 void
-NXEventBusPrivate::unRegisterEvent(NXEvent *event) noexcept
+NXEventBusPrivate::unRegisterEvent(NXEvent *event)
 {
   if (!event)
   {

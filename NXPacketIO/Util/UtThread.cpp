@@ -1,4 +1,4 @@
-﻿#include "Util/UtThread.h"
+#include "UtThread.h"
 
 UtThread::UtThread()
     : mThreadPtr(nullptr)
@@ -81,7 +81,7 @@ unsigned int UtThread::GetCoreCount()
 #include <iostream>
 #include <mutex>
 
-#include "Util/UtThread.hpp"
+#include "UtThread.hpp"
 
 std::recursive_mutex mutex;
 int sharedCount = 0;

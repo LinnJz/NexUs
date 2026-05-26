@@ -1,6 +1,6 @@
-﻿#include "Util/UtWallClock.h"
+#include "UtWallClock.h"
 
-#if _WIN32
+#if defined(_WIN32)
 #include <windows.h>
 
 #include <winbase.h>
@@ -96,7 +96,7 @@ void UtWallClock::ResetClock()
 // private
 double UtWallClock::GetRawClock() const
 {
-#if _WIN32
+#if defined(_WIN32)
     switch (mTimingMethod)
     {
     case cPERFORMANCE_COUNTER:
@@ -161,7 +161,7 @@ void UtWallClock::SetTimingMethod(TimingMethod aMethod)
 {
     mTimingMethod = aMethod;
 
-#if _WIN32
+#if defined(_WIN32)
     if (mTimingMethod == cDEFAULT || mTimingMethod == cPERFORMANCE_COUNTER)
     {
         // Attempt to use the high resolution counter if it is available.

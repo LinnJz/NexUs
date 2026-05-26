@@ -1,4 +1,4 @@
-﻿#include "PacketIO/PakDefaultHeader.h"
+#include "PakDefaultHeader.h"
 
 // virtual
 PakDefaultHeader::~PakDefaultHeader() {}

@@ -122,8 +122,7 @@
 #      define LINN_NARGS_II(...) LINN_NARGS_I(__VA_ARGS__)
 #      define LINN_NARGS(...)    LINN_NARGS_II(__VA_ARGS__, ##LINN_NARGS_SEQ())
 #    else
-#      error                                                                                                           \
-          "For MSVC, please use the standard preprocessor compilation option /Zc:preprocessor or /experimental:preprocessor. For details, see https://learn.microsoft.com/en-us/cpp/build/reference/zc-preprocessor?view=msvc-170"
+#      error QStringLiteral("For MSVC, please use the standard preprocessor compilation option /Zc:preprocessor or /experimental:preprocessor. For details, see https://learn.microsoft.com/en-us/cpp/build/reference/zc-preprocessor?view=msvc-170")
 #    endif
 #    pragma warning(pop)
 #  else

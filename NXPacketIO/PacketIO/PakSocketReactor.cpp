@@ -1,12 +1,12 @@
-﻿#include "PacketIO/PakSocketReactor.h"
+#include "PakSocketReactor.h"
 
 #include <iostream>
 #include <map>
 
-#include "GenIO/GenSocket.h"
-#include "GenIO/GenSocketSelector.h"
-#include "Util/UtBinder.h"
-#include "Util/UtWallClock.h"
+#include "GenSocket.h"
+#include "GenSocketSelector.h"
+#include "UtBinder.h"
+#include "UtWallClock.h"
 // Define this stuff here to avoid a bunch of includes in the header
 class PakSocketReactorImpl
 {

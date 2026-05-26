@@ -11,7 +11,7 @@ class NXRadioButtonStyle : public QProxyStyle
 
 public:
   explicit NXRadioButtonStyle(QStyle *style = nullptr);
-  ~NXRadioButtonStyle() override;
+  ~NXRadioButtonStyle();
   void drawPrimitive(PrimitiveElement element,
                      const QStyleOption *option,
                      QPainter *painter,

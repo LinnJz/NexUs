@@ -5,7 +5,7 @@
 #include <QVBoxLayout>
 
 #include "NXLog.h"
-#include "T_LogModel.h"
+#include "ModelView/T_LogModel.h"
 
 T_LogWidget::T_LogWidget(QWidget *parent)
     : QWidget { parent }
@@ -21,10 +21,10 @@ T_LogWidget::T_LogWidget(QWidget *parent)
   {
     _logModel->appendLogList(log);
   });
-  _logModel->appendLogList("测试条例11223344556677889900");
-  _logModel->appendLogList("测试条例11223344556677889900");
-  _logModel->appendLogList("测试条例11223344556677889900");
-  _logModel->appendLogList("测试条例11223344556677889900");
+  _logModel->appendLogList(QStringLiteral("测试条例11223344556677889900"));
+  _logModel->appendLogList(QStringLiteral("测试条例11223344556677889900"));
+  _logModel->appendLogList(QStringLiteral("测试条例11223344556677889900"));
+  _logModel->appendLogList(QStringLiteral("测试条例11223344556677889900"));
 }
 
 T_LogWidget::~T_LogWidget()

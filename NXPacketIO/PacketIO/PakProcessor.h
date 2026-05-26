@@ -1,4 +1,4 @@
-﻿#ifndef PAKPROCESSOR_H
+#ifndef PAKPROCESSOR_H
 #define PAKPROCESSOR_H
 
 #include "NXPacketIO_Export.h"
@@ -7,9 +7,9 @@
 #include <string>
 #include <vector>
 
-#include "PacketIO/PakI.h"
-#include "PacketIO/PakO.h"
-#include "Util/UtCallback.h"
+#include "PakI.h"
+#include "PakO.h"
+#include "UtCallback.h"
 class PakPacket;
 class PakSocketIO;
 class PakHeader;

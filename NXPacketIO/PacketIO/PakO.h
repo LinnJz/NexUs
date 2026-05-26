@@ -1,11 +1,11 @@
-﻿#ifndef PAKBUFO_ARCHIVE_H
+#ifndef PAKBUFO_ARCHIVE_H
 #define PAKBUFO_ARCHIVE_H
 
 #include "NXPacketIO_Export.h"
 
 #include <string>
 
-#include "GenIO/GenBuffer.h"
+#include "GenBuffer.h"
 class PakI;
 
 //! Serializes data to a GenO

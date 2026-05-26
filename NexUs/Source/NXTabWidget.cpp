@@ -5,8 +5,9 @@
 #include <QMimeData>
 #include <QMouseEvent>
 #include <QPainter>
+
 #include "NXTabBar.h"
-#include "NXTabWidgetPrivate.h"
+#include "private/NXTabWidgetPrivate.h"
 Q_PROPERTY_CREATE_CPP(NXTabWidget, bool, IsTabTransparent)
 Q_PROPERTY_CREATE_CPP(NXTabWidget, bool, IsContainerAcceptDrops)
 
@@ -36,21 +37,7 @@ NXTabWidget::~NXTabWidget()
 }
 
 void
-NXTabWidget::setTabSize(QSize tabSize) noexcept
-{
-  Q_D(NXTabWidget);
-  d->_tabBar->setTabSize(tabSize);
-}
-
-QSize
-NXTabWidget::getTabSize() const noexcept
-{
-  Q_D(const NXTabWidget);
-  return d->_tabBar->getTabSize();
-}
-
-void
-NXTabWidget::setTabBarStyle(NXTabBarType::TabBarStyle style) noexcept
+NXTabWidget::setTabBarStyle(NXTabBarType::TabBarStyle style)
 {
   Q_D(NXTabWidget);
   if (d->_tabBar)
@@ -64,14 +51,14 @@ NXTabWidget::setTabBarStyle(NXTabBarType::TabBarStyle style) noexcept
 }
 
 NXTabBarType::TabBarStyle
-NXTabWidget::getTabBarStyle() const noexcept
+NXTabWidget::getTabBarStyle() const
 {
   Q_D(const NXTabWidget);
   return d->_tabBar->getTabBarStyle();
 }
 
 void
-NXTabWidget::setTabCornerRadius(int radius) noexcept
+NXTabWidget::setTabCornerRadius(int radius)
 {
   Q_D(NXTabWidget);
   if (d->_tabBar)
@@ -85,14 +72,14 @@ NXTabWidget::setTabCornerRadius(int radius) noexcept
 }
 
 int
-NXTabWidget::getTabCornerRadius() const noexcept
+NXTabWidget::getTabCornerRadius() const
 {
   Q_D(const NXTabWidget);
   return d->_tabBar->getTabCornerRadius();
 }
 
 void
-NXTabWidget::setIsSelectedIndicatorVisible(bool isVisible) noexcept
+NXTabWidget::setIsSelectedIndicatorVisible(bool isVisible)
 {
   Q_D(NXTabWidget);
   if (d->_tabBar)
@@ -106,14 +93,28 @@ NXTabWidget::setIsSelectedIndicatorVisible(bool isVisible) noexcept
 }
 
 bool
-NXTabWidget::getIsSelectedIndicatorVisible() const noexcept
+NXTabWidget::getIsSelectedIndicatorVisible() const
 {
   Q_D(const NXTabWidget);
   return d->_tabBar->getIsSelectedIndicatorVisible();
 }
 
 void
-NXTabWidget::setTabPosition(TabPosition position) noexcept
+NXTabWidget::setTabSize(QSize tabSize)
+{
+  Q_D(NXTabWidget);
+  d->_tabBar->setTabSize(tabSize);
+}
+
+QSize
+NXTabWidget::getTabSize() const
+{
+  Q_D(const NXTabWidget);
+  return d->_tabBar->getTabSize();
+}
+
+void
+NXTabWidget::setTabPosition(TabPosition position)
 {
   if (position == QTabWidget::North || position == QTabWidget::South)
   {

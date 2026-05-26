@@ -1,9 +1,9 @@
 ﻿#include "NXDrawerContainer.h"
 
-#include "NXTheme.h"
-
 #include <QPainter>
 #include <QPropertyAnimation>
+
+#include "NXTheme.h"
 
 NXDrawerContainer::NXDrawerContainer(QWidget *parent)
     : QWidget(parent)
@@ -12,7 +12,7 @@ NXDrawerContainer::NXDrawerContainer(QWidget *parent)
   _pOpacity      = 0;
   _pContainerPix = QPixmap();
   setObjectName("NXDrawerContainer");
-  setStyleSheet("#NXDrawerContainer{background-color:transparent;}");
+  setStyleSheet(QStringLiteral("#NXDrawerContainer{background-color:transparent;}"));
 
   _mainLayout = new QVBoxLayout(this);
   _mainLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
@@ -20,7 +20,7 @@ NXDrawerContainer::NXDrawerContainer(QWidget *parent)
 
   _containerWidget = new QWidget(this);
   _containerWidget->setObjectName("NXDrawerContainerWidget");
-  _containerWidget->setStyleSheet("#NXDrawerContainerWidget{background-color:transparent;}");
+  _containerWidget->setStyleSheet(QStringLiteral("#NXDrawerContainerWidget{background-color:transparent;}"));
   _containerWidget->setVisible(false);
 
   _containerLayout = new QVBoxLayout(_containerWidget);
@@ -42,7 +42,7 @@ NXDrawerContainer::~NXDrawerContainer()
 }
 
 void
-NXDrawerContainer::addWidget(QWidget *widget) noexcept
+NXDrawerContainer::addWidget(QWidget *widget)
 {
   if (!widget || _drawerWidgetList.contains(widget))
   {
@@ -53,7 +53,7 @@ NXDrawerContainer::addWidget(QWidget *widget) noexcept
 }
 
 void
-NXDrawerContainer::removeWidget(QWidget *widget) noexcept
+NXDrawerContainer::removeWidget(QWidget *widget)
 {
   if (!widget)
   {

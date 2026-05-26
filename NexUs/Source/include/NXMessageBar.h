@@ -1,4 +1,4 @@
-﻿#ifndef NXMESSAGEBAR_H
+#ifndef NXMESSAGEBAR_H
 #define NXMESSAGEBAR_H
 
 #include <QWidget>
@@ -18,22 +18,22 @@ public:
                       const QString &title,
                       const QString &text,
                       int displayMsec,
-                      QWidget *parent = nullptr) noexcept;
+                      QWidget *parent = nullptr);
   static void warning(NXMessageBarType::PositionPolicy policy,
                       const QString &title,
                       const QString &text,
                       int displayMsec,
-                      QWidget *parent = nullptr) noexcept;
+                      QWidget *parent = nullptr);
   static void information(NXMessageBarType::PositionPolicy policy,
                           const QString &title,
                           const QString &text,
                           int displayMsec,
-                          QWidget *parent = nullptr) noexcept;
+                          QWidget *parent = nullptr);
   static void error(NXMessageBarType::PositionPolicy policy,
                     const QString &title,
                     const QString &text,
                     int displayMsec,
-                    QWidget *parent = nullptr) noexcept;
+                    QWidget *parent = nullptr);
 
 protected:
   void paintEvent(QPaintEvent *event) override;
@@ -46,7 +46,7 @@ private:
                         const QString &text,
                         int displayMsec,
                         QWidget *parent = nullptr);
-  ~NXMessageBar() override;
+  ~NXMessageBar();
 };
 
 #endif // NXMESSAGEBAR_H

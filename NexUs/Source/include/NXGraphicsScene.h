@@ -1,4 +1,4 @@
-﻿#ifndef NXGRAPHICSSCENE_H
+#ifndef NXGRAPHICSSCENE_H
 #define NXGRAPHICSSCENE_H
 
 #include <QDataStream>
@@ -18,46 +18,44 @@ class NX_EXPORT NXGraphicsScene : public QGraphicsScene
 {
   Q_OBJECT
   Q_Q_CREATE(NXGraphicsScene)
+  Q_PROPERTY_CREATE_H(QS_SET_CREF(QString), SerializePath)
   Q_PROPERTY_CREATE_H(bool, IsCheckLinkPort)
-  Q_PROPERTY_CREATE_2_H(const QString &, QString, SerializePath)
 
 public:
   explicit NXGraphicsScene(QObject *parent = nullptr);
   ~NXGraphicsScene();
-  void addItem(NXGraphicsItem *item) noexcept;
-  void removeItem(NXGraphicsItem *item) noexcept;
-  void removeSelectedItems() noexcept;
-  void clear() noexcept;
+  void addItem(NXGraphicsItem *item);
+  void removeItem(NXGraphicsItem *item);
+  void removeSelectedItems();
+  void clear();
 
-  QList<NXGraphicsItem *> createAndAddItem(int width, int height, int count = 1) noexcept;
-  QList<NXGraphicsItem *> getSelectedNXItems() const noexcept;
-  QList<NXGraphicsItem *> getNXItems() noexcept;
-  QList<NXGraphicsItem *> getNXItems(QPoint pos) noexcept;
-  QList<NXGraphicsItem *> getNXItems(QPointF pos) noexcept;
-  QList<NXGraphicsItem *> getNXItems(QRect rect) noexcept;
-  QList<NXGraphicsItem *> getNXItems(QRectF rect) noexcept;
+  QList<NXGraphicsItem *> createAndAddItem(int width, int height, int count = 1);
+  QList<NXGraphicsItem *> getSelectedNXItems() const;
+  QList<NXGraphicsItem *> getNXItems();
+  QList<NXGraphicsItem *> getNXItems(QPoint pos);
+  QList<NXGraphicsItem *> getNXItems(QPointF pos);
+  QList<NXGraphicsItem *> getNXItems(QRect rect);
+  QList<NXGraphicsItem *> getNXItems(QRectF rect);
 
-  void setSceneMode(NXGraphicsSceneType::SceneMode mode) noexcept;
-  NXGraphicsSceneType::SceneMode getSceneMode() const noexcept;
+  void setSceneMode(NXGraphicsSceneType::SceneMode mode);
+  NXGraphicsSceneType::SceneMode getSceneMode() const;
 
-  void selectAllItems() noexcept;
+  void selectAllItems();
 
-  QList<QVariantMap> getItemLinkList() const noexcept;
-  bool addItemLink(NXGraphicsItem *item1, NXGraphicsItem *item2, int port1 = 0, int port2 = 0) noexcept;
-  bool removeItemLink(NXGraphicsItem *item1) noexcept;
-  bool removeItemLink(NXGraphicsItem *item1, NXGraphicsItem *item2, int port1 = 0, int port2 = 0) noexcept;
+  QList<QVariantMap> getItemLinkList() const;
+  bool addItemLink(NXGraphicsItem *item1, NXGraphicsItem *item2, int port1 = 0, int port2 = 0);
+  bool removeItemLink(NXGraphicsItem *item1);
+  bool removeItemLink(NXGraphicsItem *item1, NXGraphicsItem *item2, int port1 = 0, int port2 = 0);
 
-  QList<QVariantMap> getItemsDataRoute() const noexcept;
+  QVector<QVariantMap> getItemsDataRoute() const;
 
   // 序列化 反序列化
-  void serialize() noexcept;
-  void deserialize() noexcept;
-
-Q_SIGNALS:
-  void showItemLink();
-  void mouseLeftClickedItem(NXGraphicsItem *item);
-  void mouseRightClickedItem(NXGraphicsItem *item);
-  void mouseDoubleClickedItem(NXGraphicsItem *item);
+  void serialize();
+  void deserialize();
+  Q_SIGNAL void showItemLink();
+  Q_SIGNAL void mouseLeftClickedItem(NXGraphicsItem *item);
+  Q_SIGNAL void mouseRightClickedItem(NXGraphicsItem *item);
+  Q_SIGNAL void mouseDoubleClickedItem(NXGraphicsItem *item);
 
 protected:
   void focusOutEvent(QFocusEvent *event) override;

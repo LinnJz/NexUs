@@ -1,4 +1,4 @@
-﻿#ifndef UTCALLBACKHOLDER_H
+#ifndef UTCALLBACKHOLDER_H
 #define UTCALLBACKHOLDER_H
 
 #include "NXPacketIO_Export.h"
@@ -6,7 +6,7 @@
 #include <memory>
 #include <vector>
 
-#include "Util/UtCallback.h"
+#include "UtCallback.h"
 class NX_PACKETIO_EXPORT UtCallbackHolder
 {
 public:

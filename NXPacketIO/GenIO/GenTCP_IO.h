@@ -1,12 +1,12 @@
-﻿#ifndef GENTCP_IO_H
+#ifndef GENTCP_IO_H
 #define GENTCP_IO_H
 
 #include "NXPacketIO_Export.h"
 
 #include <string>
 
-#include "GenIO/GenNetIO.h"
-#include "GenIO/GenTCP_Connection.h"
+#include "GenNetIO.h"
+#include "GenTCP_Connection.h"
 
 namespace GenSockets
 {

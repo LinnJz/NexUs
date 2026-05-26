@@ -17,7 +17,7 @@ class NX_EXPORT NXRadioButton : public QRadioButton
 public:
   explicit NXRadioButton(QWidget *parent = nullptr);
   explicit NXRadioButton(const QString &text, QWidget *parent = nullptr);
-  ~NXRadioButton() override;
+  ~NXRadioButton();
 
 protected:
   void paintEvent(QPaintEvent *event) override;

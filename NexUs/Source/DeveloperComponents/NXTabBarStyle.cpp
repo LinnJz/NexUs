@@ -27,14 +27,14 @@ NXTabBarStyle::~NXTabBarStyle()
 }
 
 void
-NXTabBarStyle::setTabBarStyle(NXTabBarType::TabBarStyle tabBarStyle) noexcept
+NXTabBarStyle::setTabBarStyle(NXTabBarType::TabBarStyle tabBarStyle)
 {
   _pTabBarStyle       = tabBarStyle;
   _closeIndicatorSize = tabBarStyle == NXTabBarType::Firefox ? 24 : 20;
 }
 
 NXTabBarType::TabBarStyle
-NXTabBarStyle::getTabBarStyle() const noexcept
+NXTabBarStyle::getTabBarStyle() const
 {
   return _pTabBarStyle;
 }

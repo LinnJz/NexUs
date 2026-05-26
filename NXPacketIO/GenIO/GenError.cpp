@@ -1,4 +1,4 @@
-﻿#include "GenIO/GenError.h"
+#include "GenError.h"
 
 unsigned int GenError::mSuppressErrorMask = 0;
 

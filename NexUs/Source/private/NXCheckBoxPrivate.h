@@ -2,6 +2,7 @@
 #define NXCHECKBOXPRIVATE_H
 
 #include <QObject>
+
 #include "NXDef.h"
 class NXCheckBox;
 class NXCheckBoxStyle;

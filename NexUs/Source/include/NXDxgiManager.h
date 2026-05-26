@@ -1,14 +1,13 @@
-﻿#ifndef NXDXGIMANAGER_H
+#ifndef NXDXGIMANAGER_H
 #define NXDXGIMANAGER_H
 
 #include <QWidget>
+#pragma push_macro("Q_DISABLE_COPY")
+#undef Q_DISABLE_COPY
+#define Q_DISABLE_COPY(CLASS)
 #ifdef Q_OS_WIN
 #  include "LinnSingleton.h"
 #  include "NXProperty.h"
-
-#  pragma push_macro("Q_DISABLE_COPY")
-#  undef Q_DISABLE_COPY
-#  define Q_DISABLE_COPY(Class)
 
 class NXDxgiManagerPrivate;
 
@@ -23,28 +22,25 @@ private:
   ~NXDxgiManager();
 
 public:
-  QStringList getDxDeviceList() const noexcept;
-  QStringList getOutputDeviceList() const noexcept;
-  QImage grabScreenToImage() const noexcept;
-  void startGrabScreen() noexcept;
-  void stopGrabScreen() noexcept;
-  bool getIsGrabScreen() const noexcept;
-  bool setDxDeviceID(int dxID) noexcept;
-  int getDxDeviceID() const noexcept;
-  bool setOutputDeviceID(int deviceID) noexcept;
-  int getOutputDeviceID() const noexcept;
-  void setGrabArea(int width, int height) noexcept; // 从屏幕中心向外延伸
-  void setGrabArea(int x, int y, int width, int height) noexcept;
-  QRect getGrabArea() const noexcept;
-  void setGrabFrameRate(int frameRateValue) noexcept;
-  int getGrabFrameRate() const noexcept;
-  void setTimeoutMsValue(int timeoutValue) noexcept;
-  int getTimeoutMsValue() const noexcept;
-Q_SIGNALS:
-  void grabImageUpdate(const QImage &img);
+  QStringList getDxDeviceList() const;
+  QStringList getOutputDeviceList() const;
+  QImage grabScreenToImage() const;
+  void startGrabScreen();
+  void stopGrabScreen();
+  bool getIsGrabScreen() const;
+  bool setDxDeviceID(int dxID);
+  int getDxDeviceID() const;
+  bool setOutputDeviceID(int deviceID);
+  int getOutputDeviceID() const;
+  void setGrabArea(int width, int height); //从屏幕中心向外延伸
+  void setGrabArea(int x, int y, int width, int height);
+  QRect getGrabArea() const;
+  void setGrabFrameRate(int frameRateValue);
+  int getGrabFrameRate() const;
+  void setTimeoutMsValue(int timeoutValue);
+  int getTimeoutMsValue() const;
+  Q_SIGNAL void grabImageUpdate(const QImage &img);
 };
-
-#  pragma pop_macro("Q_DISABLE_COPY")
 
 class NXDxgiScreenPrivate;
 
@@ -57,11 +53,12 @@ class NX_EXPORT NXDxgiScreen : public QWidget
 public:
   explicit NXDxgiScreen(QWidget *parent = nullptr);
   ~NXDxgiScreen();
-  void setIsSyncGrabSize(bool isSyncGrabSize) noexcept;
-  bool getIsSyncGrabSize() const noexcept;
+  void setIsSyncGrabSize(bool isSyncGrabSize);
+  bool getIsSyncGrabSize() const;
 
 protected:
   void paintEvent(QPaintEvent *event) override;
 };
 #endif
+#pragma pop_macro("Q_DISABLE_COPY")
 #endif // NXDXGIMANAGER_H

@@ -6,19 +6,19 @@
 
 #include "NXTableView.h"
 #include "NXText.h"
-#include "T_TableViewModel.h"
+#include "ModelView/T_TableViewModel.h"
 
 T_TableView::T_TableView(QWidget *parent)
     : T_BasePage(parent)
 {
   // 预览窗口标题
-  setWindowTitle("NXTableView");
+  setWindowTitle(QStringLiteral("NXTableView"));
 
   // 顶部元素
-  createCustomWidget("表格视图被放置于此，可在此界面体验其效果并按需添加进项目中");
+  createCustomWidget(QStringLiteral("表格视图被放置于此，可在此界面体验其效果并按需添加进项目中"));
 
-  // NXTableView
-  NXText *tableText = new NXText("NXTableView", this);
+  //NXTableView
+  NXText *tableText = new NXText(QStringLiteral("NXTableView"), this);
   tableText->setTextPixelSize(18);
   _tableView = new NXTableView(this);
   // NXScrollBar* tableViewFloatScrollBar = new NXScrollBar(_tableView->verticalScrollBar(), _tableView);
@@ -48,7 +48,7 @@ T_TableView::T_TableView(QWidget *parent)
   tableViewLayout->addWidget(_tableView);
 
   QWidget *centralWidget = new QWidget(this);
-  centralWidget->setWindowTitle("NXView");
+  centralWidget->setWindowTitle(QStringLiteral("NXView"));
   QVBoxLayout *centerVLayout = new QVBoxLayout(centralWidget);
   centerVLayout->setContentsMargins(0, 0, 0, 0);
   centerVLayout->addWidget(tableText);

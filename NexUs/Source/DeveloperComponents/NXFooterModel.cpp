@@ -34,15 +34,15 @@ NXFooterModel::data(const QModelIndex &index, int role) const
   return QVariant();
 }
 
-NXNodeOperateResult
+NXNodeResultExpected
 NXFooterModel::addFooterNode(const QString &footerTitle,
                              bool isHasFooterPage,
                              int keyPoints,
-                             NXIconType::IconName awesome) noexcept
+                             NXIconType::IconName awesome)
 {
   if (_footerNodeList.count() >= 3)
   {
-    return NXUnexpected<QString> { NXNavigationType::FooterUpperLimit };
+    return NXNodeResultUnexpected { NXNavigationType::FooterUpperLimit };
   }
   NXNavigationNode *node = new NXNavigationNode(footerTitle);
   node->setKeyPoints(keyPoints);
@@ -57,13 +57,13 @@ NXFooterModel::addFooterNode(const QString &footerTitle,
 }
 
 int
-NXFooterModel::getFooterNodeCount() const noexcept
+NXFooterModel::getFooterNodeCount() const
 {
   return _footerNodeList.count();
 }
 
 NXNavigationNode *
-NXFooterModel::getNavigationNode(const QString &footerKey) const noexcept
+NXFooterModel::getNavigationNode(const QString &footerKey) const
 {
   for (auto node : _footerNodeList)
   {
@@ -76,7 +76,7 @@ NXFooterModel::getNavigationNode(const QString &footerKey) const noexcept
 }
 
 void
-NXFooterModel::removeNavigationNode(const QString &footerKey) noexcept
+NXFooterModel::removeNavigationNode(const QString &footerKey)
 {
   for (auto node : _footerNodeList)
   {

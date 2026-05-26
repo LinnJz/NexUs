@@ -1,6 +1,5 @@
 ﻿#include "NXRadioButton.h"
 
-#include <optional>
 #include "DeveloperComponents/NXRadioButtonStyle.h"
 #include "NXTheme.h"
 #include "private/NXRadioButtonPrivate.h"
@@ -13,6 +12,9 @@ NXRadioButton::NXRadioButton(QWidget *parent)
   setMouseTracking(true);
   setCursor(Qt::PointingHandCursor);
   d->q_ptr = this;
+#ifdef Q_OS_MACOS
+  setAttribute(Qt::WA_Hover);
+#endif
   setFixedHeight(20);
   QFont font = this->font();
   font.setPixelSize(15);
@@ -34,7 +36,7 @@ NXRadioButton::~NXRadioButton()
 }
 
 void
-NXRadioButton::setTextPixelSize(int size) noexcept
+NXRadioButton::setTextPixelSize(int size)
 {
   QFont font = this->font();
   font.setPixelSize(size);
@@ -42,13 +44,13 @@ NXRadioButton::setTextPixelSize(int size) noexcept
 }
 
 int
-NXRadioButton::getTextPixelSize() const noexcept
+NXRadioButton::getTextPixelSize() const
 {
   return this->font().pixelSize();
 }
 
 void
-NXRadioButton::setTextPointSize(int size) noexcept
+NXRadioButton::setTextPointSize(int size)
 {
   QFont font = this->font();
   font.setPointSize(size);
@@ -56,13 +58,13 @@ NXRadioButton::setTextPointSize(int size) noexcept
 }
 
 int
-NXRadioButton::getTextPointSize() const noexcept
+NXRadioButton::getTextPointSize() const
 {
   return this->font().pointSize();
 }
 
 void
-NXRadioButton::setTextStyle(NXTextType::TextStyle textStyle) noexcept
+NXRadioButton::setTextStyle(NXTextType::TextStyle textStyle)
 {
   Q_D(NXRadioButton);
   QFont textFont = font();
@@ -122,7 +124,7 @@ NXRadioButton::setTextStyle(NXTextType::TextStyle textStyle) noexcept
 }
 
 NXTextType::TextStyle
-NXRadioButton::getTextStyle() const noexcept
+NXRadioButton::getTextStyle() const
 {
   Q_D(const NXRadioButton);
   return d->_textStyle;

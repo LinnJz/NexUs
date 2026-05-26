@@ -5,6 +5,7 @@
 #include <QObject>
 
 #include "NXDef.h"
+#include "NXProperty.h"
 class NXEvent;
 
 class NXEventPrivate : public QObject
@@ -30,8 +31,8 @@ class NXEventBusPrivate : public QObject
 public:
   explicit NXEventBusPrivate(QObject *parent = nullptr);
   ~NXEventBusPrivate();
-  NXEventBusType::EventBusReturnType registerEvent(NXEvent *event) noexcept;
-  void unRegisterEvent(NXEvent *event) noexcept;
+  NXEventBusType::EventBusReturnType registerEvent(NXEvent *event);
+  void unRegisterEvent(NXEvent *event);
 
 private:
   QMap<QString, QList<NXEvent *>> _eventMap;

@@ -16,11 +16,11 @@ class NXFlowLayoutPrivate : public QObject
 
 public:
   explicit NXFlowLayoutPrivate(QObject *parent = nullptr);
-  ~NXFlowLayoutPrivate() override;
+  ~NXFlowLayoutPrivate();
 
 private:
-  int _doLayout(const QRect &rect, bool testOnly) const;
-  int _smartSpacing(QStyle::PixelMetric pm) const noexcept;
+  int _doLayout(QRect rect, bool testOnly) const;
+  int _smartSpacing(QStyle::PixelMetric pm) const;
   mutable QMap<QLayoutItem *, QPoint> _lastGeometryMap;
   QList<QLayoutItem *> _itemList;
   bool _isAnimation { false };

@@ -1,4 +1,4 @@
-﻿// GenBufXferI - This class holds all the get logic for a GenIO Buffer.
+// GenBufXferI - This class holds all the get logic for a GenIO Buffer.
 //               Note the virtual inheritance for the multiple inheritance
 //               in GenBuf.
 //               This class is intended to be a base class for GenBufIUser,
@@ -12,9 +12,9 @@
 #include <string>
 #include <vector>
 
-#include "GenIO/GenBuf.h"
-#include "GenIO/GenIConvert.h"
-#include "GenIO/GenIODefs.h"
+#include "GenBuf.h"
+#include "GenIConvert.h"
+#include "GenIODefs.h"
 
 class NX_PACKETIO_EXPORT GenBufXferI : virtual public GenBuf
 {

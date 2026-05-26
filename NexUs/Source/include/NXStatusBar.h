@@ -1,4 +1,4 @@
-﻿#ifndef NXSTATUSBAR_H
+#ifndef NXSTATUSBAR_H
 #define NXSTATUSBAR_H
 
 #include <QStatusBar>
@@ -11,7 +11,7 @@ class NX_EXPORT NXStatusBar : public QStatusBar
 
 public:
   explicit NXStatusBar(QWidget *parent = nullptr);
-  ~NXStatusBar() override;
+  ~NXStatusBar();
 };
 
 #endif // NXSTATUSBAR_H

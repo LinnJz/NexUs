@@ -4,7 +4,9 @@
 #include <QHBoxLayout>
 #include <QPainter>
 #include <QScreen>
+#include <QTimer>
 #include <QVBoxLayout>
+
 #include "NXApplication.h"
 #include "NXTheme.h"
 #include "private/NXDialogPrivate.h"
@@ -58,33 +60,33 @@ NXDialog::~NXDialog()
 }
 
 void
-NXDialog::setIsStayTop(bool isStayTop) noexcept
+NXDialog::setIsStayTop(bool isStayTop)
 {
   Q_D(NXDialog);
   d->_appBar->setIsStayTop(isStayTop);
 }
 
 bool
-NXDialog::getIsStayTop() const noexcept
+NXDialog::getIsStayTop() const
 {
   return d_ptr->_appBar->getIsStayTop();
 }
 
 void
-NXDialog::setIsFixedSize(bool isFixedSize) noexcept
+NXDialog::setIsFixedSize(bool isFixedSize)
 {
   Q_D(NXDialog);
   d->_appBar->setIsFixedSize(isFixedSize);
 }
 
 bool
-NXDialog::getIsFixedSize() const noexcept
+NXDialog::getIsFixedSize() const
 {
   return d_ptr->_appBar->getIsFixedSize();
 }
 
 void
-NXDialog::setIsDefaultClosed(bool isDefaultClosed) noexcept
+NXDialog::setIsDefaultClosed(bool isDefaultClosed)
 {
   Q_D(NXDialog);
   d->_appBar->setIsDefaultClosed(isDefaultClosed);
@@ -92,14 +94,14 @@ NXDialog::setIsDefaultClosed(bool isDefaultClosed) noexcept
 }
 
 bool
-NXDialog::getIsDefaultClosed() const noexcept
+NXDialog::getIsDefaultClosed() const
 {
   Q_D(const NXDialog);
   return d->_appBar->getIsDefaultClosed();
 }
 
 void
-NXDialog::setAppBarHeight(int appBarHeight) noexcept
+NXDialog::setAppBarHeight(int appBarHeight)
 {
   Q_D(NXDialog);
   d->_appBar->setAppBarHeight(appBarHeight);
@@ -107,14 +109,14 @@ NXDialog::setAppBarHeight(int appBarHeight) noexcept
 }
 
 int
-NXDialog::getAppBarHeight() const noexcept
+NXDialog::getAppBarHeight() const
 {
   Q_D(const NXDialog);
   return d->_appBar->getAppBarHeight();
 }
 
 void
-NXDialog::moveToCenter() noexcept
+NXDialog::moveToCenter()
 {
   if (isMaximized() || isFullScreen())
   {
@@ -130,21 +132,21 @@ NXDialog::moveToCenter() noexcept
 }
 
 void
-NXDialog::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable) noexcept
+NXDialog::setWindowButtonFlag(NXAppBarType::ButtonType buttonFlag, bool isEnable)
 {
   Q_D(NXDialog);
   d->_appBar->setWindowButtonFlag(buttonFlag, isEnable);
 }
 
 void
-NXDialog::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags) noexcept
+NXDialog::setWindowButtonFlags(NXAppBarType::ButtonFlags buttonFlags)
 {
   Q_D(NXDialog);
   d->_appBar->setWindowButtonFlags(buttonFlags);
 }
 
 NXAppBarType::ButtonFlags
-NXDialog::getWindowButtonFlags() const noexcept
+NXDialog::getWindowButtonFlags() const
 {
   return d_ptr->_appBar->getWindowButtonFlags();
 }

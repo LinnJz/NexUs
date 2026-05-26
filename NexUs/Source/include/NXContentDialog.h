@@ -2,11 +2,9 @@
 #define NXCONTENTDIALOG_H
 #include <QAbstractNativeEventFilter>
 #include <QDialog>
-#include <QString>
 
 #include "NXAppBar.h"
 #include "NXProperty.h"
-
 class NXContentDialogPrivate;
 class NXPushButton;
 
@@ -18,24 +16,18 @@ class NX_EXPORT NXContentDialog : public QDialog
 
 public:
   explicit NXContentDialog(QWidget *parent);
-  ~NXContentDialog() override;
+  ~NXContentDialog();
 
-  void setLeftButtonText(const QString &text) noexcept;
-  void setMiddleButtonText(const QString &text) noexcept;
-  void setRightButtonText(const QString &text) noexcept;
+  void setCentralWidget(QWidget *widget);
 
-  void setLeftButtonVisible(bool visible) noexcept;
-  void setMiddleButtonVisible(bool visible) noexcept;
-  void setRightButtonVisible(bool visible) noexcept;
+  NXPushButton *addButton(const QString &text);
+  void removeButton(NXPushButton *button);
+  QList<NXPushButton *> buttons() const;
 
-  void setCentralWidget(QWidget *centralWidget);
+  void close();
 
-  NXAppBar *appBar() const noexcept;
-
-Q_SIGNALS:
-  void leftButtonClicked();
-  void middleButtonClicked();
-  void rightButtonClicked();
+  NXAppBar *appBar() const;
+  Q_SIGNAL void buttonClicked(NXPushButton *button);
 
 protected:
   void showEvent(QShowEvent *event) override;

@@ -4,9 +4,9 @@
 #include <QScroller>
 #include <QVBoxLayout>
 
-#include "DeveloperComponents/NXBaseListView.h"
 #include "DeveloperComponents/NXBreadcrumbBarDelegate.h"
 #include "DeveloperComponents/NXBreadcrumbBarModel.h"
+#include "DeveloperComponents/NXBaseListView.h"
 #include "private/NXBreadcrumbBarPrivate.h"
 Q_PROPERTY_CREATE_CPP(NXBreadcrumbBar, bool, IsAutoRemove)
 
@@ -40,10 +40,8 @@ NXBreadcrumbBar::NXBreadcrumbBar(QWidget *parent)
           index.row() != d->_listModel->getBreadcrumbListCount() * 2 - 2 &&
           index.data(Qt::DisplayRole).toString() != QStringLiteral(">"))
       {
-        auto breadcrumb         = index.data(Qt::DisplayRole).toString();
-        auto lastBreadcrumbList = d->_listModel->getBreadcrumbList();
+        Q_EMIT breadcrumbClicked(index.data(Qt::DisplayRole).toString(), d->_listModel->getBreadcrumbList());
         d->_listModel->removeBreadcrumb(index.row() / 2 + 1);
-        Q_EMIT breadcrumbClicked(breadcrumb, lastBreadcrumbList);
       }
     }
     else
@@ -89,7 +87,7 @@ NXBreadcrumbBar::~NXBreadcrumbBar()
 }
 
 void
-NXBreadcrumbBar::setTextPixelSize(int textPixelSize) noexcept
+NXBreadcrumbBar::setTextPixelSize(int textPixelSize)
 {
   Q_D(NXBreadcrumbBar);
   if (textPixelSize > 0)
@@ -104,21 +102,21 @@ NXBreadcrumbBar::setTextPixelSize(int textPixelSize) noexcept
 }
 
 int
-NXBreadcrumbBar::getTextPixelSize() const noexcept
+NXBreadcrumbBar::getTextPixelSize() const
 {
   Q_D(const NXBreadcrumbBar);
   return d->_pTextPixelSize;
 }
 
 void
-NXBreadcrumbBar::setBreadcrumbList(const QStringList &breadcrumbList) noexcept
+NXBreadcrumbBar::setBreadcrumbList(const QStringList &breadcrumbList)
 {
   Q_D(NXBreadcrumbBar);
   d->_listModel->setBreadcrumbList(breadcrumbList);
 }
 
 QStringList
-NXBreadcrumbBar::appendBreadcrumb(const QString &breadcrumb) noexcept
+NXBreadcrumbBar::appendBreadcrumb(const QString &breadcrumb)
 {
   Q_D(NXBreadcrumbBar);
   d->_listModel->appendBreadcrumb(breadcrumb);
@@ -126,7 +124,7 @@ NXBreadcrumbBar::appendBreadcrumb(const QString &breadcrumb) noexcept
 }
 
 QStringList
-NXBreadcrumbBar::removeBreadcrumb(const QString &breadcrumb) noexcept
+NXBreadcrumbBar::removeBreadcrumb(const QString &breadcrumb)
 {
   Q_D(NXBreadcrumbBar);
   d->_listModel->removeBreadcrumb(breadcrumb);
@@ -134,14 +132,14 @@ NXBreadcrumbBar::removeBreadcrumb(const QString &breadcrumb) noexcept
 }
 
 int
-NXBreadcrumbBar::getBreadcrumbListCount() const noexcept
+NXBreadcrumbBar::getBreadcrumbListCount() const
 {
   Q_D(const NXBreadcrumbBar);
   return d->_listModel->getBreadcrumbListCount();
 }
 
 QStringList
-NXBreadcrumbBar::getBreadcrumbList() const noexcept
+NXBreadcrumbBar::getBreadcrumbList() const
 {
   Q_D(const NXBreadcrumbBar);
   return d->_listModel->getBreadcrumbList();

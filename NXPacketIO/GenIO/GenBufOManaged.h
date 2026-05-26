@@ -1,4 +1,4 @@
-﻿// GenBufOManaged - This class is used to put data into a output buffer that this
+// GenBufOManaged - This class is used to put data into a output buffer that this
 //                  class owns.
 
 #ifndef GEN_BUF_O_MANAGED_H
@@ -6,7 +6,7 @@
 
 #include "NXPacketIO_Export.h"
 
-#include "GenIO/GenBufXferO.h"
+#include "GenBufXferO.h"
 
 class NX_PACKETIO_EXPORT GenBufOManaged : public GenBufXferO
 {

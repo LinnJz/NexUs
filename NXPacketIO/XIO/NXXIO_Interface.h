@@ -1,4 +1,4 @@
-﻿#ifndef NXXIO_INTERFACE_H
+#ifndef NXXIO_INTERFACE_H
 #define NXXIO_INTERFACE_H
 
 #include "NXPacketIO_Export.h"
@@ -9,15 +9,15 @@
 #include <string>
 #include <vector>
 
-#include "GenIO/GenUniqueId.h"
-#include "PacketIO/PakConnection.h"
-#include "PacketIO/PakProcessor.h"
+#include "GenUniqueId.h"
+#include "PakConnection.h"
+#include "PakProcessor.h"
 class PakTCP_Connector;
 class PakTCP_IO;
-#include "PacketIO/PakThreadedIO.h"
-#include "Util/UtCallback.h"
-#include "Util/UtCallbackHolder.h"
-#include "Util/UtWallClock.h"
+#include "PakThreadedIO.h"
+#include "UtCallback.h"
+#include "UtCallbackHolder.h"
+#include "UtWallClock.h"
 class NXXIO_Connection;
 class NXXIO_HeartbeatPkt;
 class NXXIO_InitializePkt;
@@ -121,7 +121,7 @@ private:
     GenUniqueId _applicationId; //!< The application's unique ID
     std::string _applicationName;
     NXXIO_UdpHeader* mUDP_HeaderPtr; //!< Header used for UDP messages
-    PakTCP_Connector* mConnectorPtr{ nullptr };
+    PakTCP_Connector* mConnectorPtr{nullptr};
     // The following variables are used for sending out the heartbeat pdu's
     UtWallClock mClock;
     double mCurrentTime;

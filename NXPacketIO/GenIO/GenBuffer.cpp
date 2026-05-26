@@ -1,6 +1,6 @@
-﻿#include "GenIO/GenBuffer.h"
+#include "GenBuffer.h"
 
-#include "GenIO/GenSwapEndian.h"
+#include "GenSwapEndian.h"
 
 //! Enables translation of calls to putValue() and getValue() to/from big endian
 void GenBuffer::SetBigEndian()

@@ -1,4 +1,4 @@
-﻿#ifndef NXGROUPBOX_H
+#ifndef NXGROUPBOX_H
 #define NXGROUPBOX_H
 
 #include <QGroupBox>
@@ -15,7 +15,7 @@ class NX_EXPORT NXGroupBox : public QGroupBox
 public:
   explicit NXGroupBox(QWidget *parent = nullptr);
   explicit NXGroupBox(const QString &title, QWidget *parent = nullptr);
-  ~NXGroupBox() override;
+  ~NXGroupBox();
 
 protected:
   void paintEvent(QPaintEvent *event) override;

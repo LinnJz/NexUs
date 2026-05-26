@@ -18,7 +18,32 @@ NXScrollPagePrivate::~NXScrollPagePrivate()
 }
 
 void
-NXScrollPagePrivate::_switchCentralStackIndex(int targetIndex, int lastIndex) noexcept
+NXScrollPagePrivate::onNavigationRoute(const QVariantMap &routeData)
+{
+  // 面包屑
+  Q_Q(NXScrollPage);
+  QString pageCheckSumKey = routeData.value(QStringLiteral("NXScrollPageCheckSumKey")).toString();
+  bool isRouteBack        = routeData.value(QStringLiteral("NXRouteBackMode")).toBool();
+  if (pageCheckSumKey == QStringLiteral("Navigation"))
+  {
+    QString pageTitle = isRouteBack ? routeData.value(QStringLiteral("NXBackPageTitle")).toString()
+                                    : routeData.value(QStringLiteral("NXForwardPageTitle")).toString();
+    q->navigation(_centralWidgetMap.value(pageTitle), false);
+  }
+  else if (pageCheckSumKey == QStringLiteral("BreadcrumbClicked"))
+  {
+    QStringList breadcrumbList = isRouteBack
+                                   ? routeData.value(QStringLiteral("NXBackBreadcrumbList")).toStringList()
+                                   : routeData.value(QStringLiteral("NXForwardBreadcrumbList")).toStringList();
+    int widgetIndex            = _centralWidgetMap.value(breadcrumbList.last());
+    _switchCentralStackIndex(widgetIndex, _navigationTargetIndex);
+    _navigationTargetIndex = widgetIndex;
+    _breadcrumbBar->setBreadcrumbList(breadcrumbList);
+  }
+}
+
+void
+NXScrollPagePrivate::_switchCentralStackIndex(int targetIndex, int lastIndex)
 {
   QWidget *currentWidget = _centralStackedWidget->widget(lastIndex);
   QWidget *targetWidget  = _centralStackedWidget->widget(targetIndex);
@@ -38,7 +63,7 @@ NXScrollPagePrivate::_switchCentralStackIndex(int targetIndex, int lastIndex) no
   targetWidgetAnimation->setDuration(300);
   if (targetIndex > lastIndex)
   {
-    // 左滑
+    //左滑
     currentWidgetAnimation->setStartValue(currentWidget->pos());
     currentWidgetAnimation->setEndValue(QPoint(-_centralStackedWidget->width(), 0));
     targetWidgetAnimation->setStartValue(QPoint(_centralStackedWidget->width(), 0));
@@ -46,7 +71,7 @@ NXScrollPagePrivate::_switchCentralStackIndex(int targetIndex, int lastIndex) no
   }
   else
   {
-    // 右滑
+    //右滑
     currentWidgetAnimation->setStartValue(currentWidget->pos());
     currentWidgetAnimation->setEndValue(QPoint(_centralStackedWidget->width(), 0));
     targetWidgetAnimation->setStartValue(QPoint(-_centralStackedWidget->width(), 0));

@@ -1,13 +1,13 @@
-﻿#ifndef GENTCP_CONNECTION_H
+#ifndef GENTCP_CONNECTION_H
 #define GENTCP_CONNECTION_H
 
 #include "NXPacketIO_Export.h"
 
 #include <string>
 
-#include "GenIO/GenBuffer.h"
-#include "GenIO/GenInternetSocketAddress.h"
-#include "GenIO/GenSocketConnection.h"
+#include "GenBuffer.h"
+#include "GenInternetSocketAddress.h"
+#include "GenSocketConnection.h"
 
 //! A TCP Connection
 class NX_PACKETIO_EXPORT GenTCP_Connection : public GenSocketConnection

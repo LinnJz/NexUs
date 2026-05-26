@@ -5,41 +5,33 @@
 #include <QWidget>
 
 #include "NXDef.h"
+#include "NXProperty.h"
 class NXMenuPrivate;
 
 class NX_EXPORT NXMenu : public QMenu
 {
   Q_OBJECT
   Q_Q_CREATE(NXMenu)
+  Q_PROPERTY_CREATE_H(int, BorderRadius)
+  Q_PROPERTY_CREATE_H(int, MenuItemHeight)
 
 public:
   explicit NXMenu(QWidget *parent = nullptr);
   explicit NXMenu(const QString &title, QWidget *parent = nullptr);
   ~NXMenu();
 
-  void setBorderRadius(int borderRadius) noexcept;
-  int getBorderRadius() const noexcept;
+  QAction *addMenu(QMenu *menu);
+  NXMenu *addMenu(const QString &title);
+  NXMenu *addMenu(const QIcon &icon, const QString &title);
+  NXMenu *addMenu(NXIconType::IconName icon, const QString &title);
 
-  void setMenuItemHeight(int menuItemHeight) noexcept;
-  int getMenuItemHeight() const noexcept;
+  QAction *addNXIconAction(NXIconType::IconName icon, const QString &text);
+  QAction *addNXIconAction(NXIconType::IconName icon, const QString &text, const QKeySequence &shortcut);
 
-  void setAlignParentMenuHeight(bool alignParentMenuHeight) noexcept;
-  bool getAlignParentMenuHeight() const noexcept;
-
-  QAction *addMenu(QMenu *menu) noexcept;
-  NXMenu *addMenu(const QString &title) noexcept;
-  NXMenu *addMenu(const QIcon &icon, const QString &title) noexcept;
-  NXMenu *addMenu(NXIconType::IconName icon, const QString &title) noexcept;
-
-  QAction *addNXIconAction(NXIconType::IconName icon, const QString &text) noexcept;
-  QAction *addNXIconAction(NXIconType::IconName icon, const QString &text, const QKeySequence &shortcut) noexcept;
-
-  bool isHasParentMenu() const noexcept;
-  bool isHasChildMenu() const noexcept;
-  bool isHasIcon() const noexcept;
-
-Q_SIGNALS:
-  void menuShow();
+  bool isHasParentMenu() const;
+  bool isHasChildMenu() const;
+  bool isHasIcon() const;
+  Q_SIGNAL void menuShow();
 
 protected:
   void showEvent(QShowEvent *event) override;

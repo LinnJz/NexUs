@@ -12,7 +12,7 @@ class NXPlainTextEditStyle : public QProxyStyle
 
 public:
   explicit NXPlainTextEditStyle(QStyle *style = nullptr);
-  ~NXPlainTextEditStyle() override;
+  ~NXPlainTextEditStyle();
   void drawControl(ControlElement element,
                    const QStyleOption *option,
                    QPainter *painter,

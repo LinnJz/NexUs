@@ -1,12 +1,12 @@
-﻿#include "PacketIO/PakTCP_Connector.h"
+#include "PakTCP_Connector.h"
 #include <iostream>
 
-#include "GenIO/GenInternetSocketAddress.h"
-#include "GenIO/GenSocket.h"
-#include "GenIO/GenTCP_IO.h"
-#include "GenIO/GenTCP_Server.h"
-#include "PacketIO/PakTCP_IO.h"
-#include "Util/UtWallClock.h"
+#include "GenInternetSocketAddress.h"
+#include "GenSocket.h"
+#include "GenTCP_IO.h"
+#include "GenTCP_Server.h"
+#include "PakTCP_IO.h"
+#include "UtWallClock.h"
 
 namespace PakTCP_ConnectorDetail
 {

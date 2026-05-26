@@ -3,6 +3,7 @@
 
 #include <QVBoxLayout>
 #include <QWidget>
+
 #include "NXDef.h"
 
 class NXDrawerHeader : public QWidget
@@ -14,13 +15,11 @@ class NXDrawerHeader : public QWidget
 
 public:
   explicit NXDrawerHeader(QWidget *parent = nullptr);
-  ~NXDrawerHeader() override;
+  ~NXDrawerHeader();
 
-  void setHeaderWidget(QWidget *widget) noexcept;
+  void setHeaderWidget(QWidget *widget);
   void doExpandOrCollapseAnimation();
-
-Q_SIGNALS:
-  void drawerHeaderClicked(bool isExpand);
+  Q_SIGNAL void drawerHeaderClicked(bool isExpand);
 
 protected:
   bool event(QEvent *event) override;
@@ -36,4 +35,4 @@ private:
   QVBoxLayout *_mainLayout { nullptr };
 };
 
-#endif // NXFRAMEWORK_NEXUS_DEVELOPERCOMPONENTS_NXDRAWERHEADER_H_
+#endif //NXFRAMEWORK_NEXUS_DEVELOPERCOMPONENTS_NXDRAWERHEADER_H_

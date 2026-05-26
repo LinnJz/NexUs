@@ -1,4 +1,4 @@
-﻿// GenI - This base class defines the interface for the input side of GenIO.
+// GenI - This base class defines the interface for the input side of GenIO.
 //        It also holds a pointer to the input buffer.
 
 #ifndef GENI_H
@@ -22,7 +22,7 @@
 ///
 /// The GenIHelper class can be used when receiving messages to correctly manage the receive buffer.
 
-#include "GenIO/GenBufXferI.h"
+#include "GenBufXferI.h"
 
 class NX_PACKETIO_EXPORT GenI
 {

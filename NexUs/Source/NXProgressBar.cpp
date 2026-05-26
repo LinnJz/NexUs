@@ -33,7 +33,7 @@ NXProgressBar::~NXProgressBar()
 }
 
 void
-NXProgressBar::setMinimum(int minimum) noexcept
+NXProgressBar::setMinimum(int minimum)
 {
   Q_D(NXProgressBar);
   if (d->_isBusyAnimation && !(maximum() == 0 && minimum == 0))
@@ -45,7 +45,7 @@ NXProgressBar::setMinimum(int minimum) noexcept
 }
 
 void
-NXProgressBar::setMaximum(int maximum) noexcept
+NXProgressBar::setMaximum(int maximum)
 {
   Q_D(NXProgressBar);
   if (d->_isBusyAnimation && !(minimum() == 0 && maximum == 0))

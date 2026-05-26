@@ -1,4 +1,4 @@
-﻿#ifndef GENSOCKETMANAGER_H
+#ifndef GENSOCKETMANAGER_H
 #define GENSOCKETMANAGER_H
 
 #include "NXPacketIO_Export.h"
@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "GenIO/GenIP.h"
+#include "GenIP.h"
 
 namespace GenSockets
 {

@@ -45,7 +45,7 @@ NXGraphicsLineItem::~NXGraphicsLineItem()
 }
 
 bool
-NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item) const noexcept
+NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item) const
 {
   Q_D(const NXGraphicsLineItem);
   if (d->_linkItemMap.contains(item))
@@ -56,7 +56,7 @@ NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item) const noexcept
 }
 
 bool
-NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item1, NXGraphicsItem *item2) const noexcept
+NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item1, NXGraphicsItem *item2) const
 {
   Q_D(const NXGraphicsLineItem);
   if (d->_linkItemMap.contains(item1) && d->_linkItemMap.contains(item2))
@@ -67,7 +67,7 @@ NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item1, NXGraphicsItem *item2) c
 }
 
 bool
-NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item1, NXGraphicsItem *item2, int port1, int port2) const noexcept
+NXGraphicsLineItem::isTargetLink(NXGraphicsItem *item1, NXGraphicsItem *item2, int port1, int port2) const
 {
   Q_D(const NXGraphicsLineItem);
   if (d->_linkItemMap.value(item1) == port1 && d->_linkItemMap.value(item2) == port2)

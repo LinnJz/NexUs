@@ -2,20 +2,21 @@
 #define NEXUS_SRC_DEVELOPERCOMPONENTS_NXKEYBINDERCONTAINER_H_
 
 #include <QWidget>
+
 #include "NXDef.h"
 class NXKeyBinder;
 
 class NXKeyBinderContainer : public QWidget
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE_2(const QString &, QString, BinderKeyText)
+  Q_PRIVATE_CREATE(QS_SET_CREF(QString), BinderKeyText)
   Q_PRIVATE_CREATE(quint32, NativeVirtualBinderKey)
 
 public:
   explicit NXKeyBinderContainer(QWidget *parent = nullptr);
-  ~NXKeyBinderContainer() override;
-  void logOrResetHistoryData(bool isLog) noexcept;
-  void saveBinderChanged() noexcept;
+  ~NXKeyBinderContainer();
+  void logOrResetHistoryData(bool isLog);
+  void saveBinderChanged();
 
 protected:
   bool event(QEvent *event) override;
@@ -24,10 +25,10 @@ protected:
   void paintEvent(QPaintEvent *event) override;
 
 private:
-  QString _historyBinderKeyText;
   quint32 _historyNativeVirtualBinderKey { 0 };
   NXThemeType::ThemeMode _themeMode;
+  QString _historyBinderKeyText;
   NXKeyBinder *_keyBinder { nullptr };
 };
 
-#endif // NEXUS_SRC_DEVELOPERCOMPONENTS_NXKEYBINDERCONTAINER_H_
+#endif //NEXUS_SRC_DEVELOPERCOMPONENTS_NXKEYBINDERCONTAINER_H_

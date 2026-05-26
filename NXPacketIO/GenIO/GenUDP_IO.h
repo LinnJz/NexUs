@@ -1,4 +1,4 @@
-﻿#ifndef GENUDP_IO_H
+#ifndef GENUDP_IO_H
 #define GENUDP_IO_H
 
 #include "NXPacketIO_Export.h"
@@ -6,9 +6,9 @@
 #include <string>
 #include <vector>
 
-#include "GenIO/GenIP.h"
-#include "GenIO/GenNetIO.h"
-#include "GenIO/GenUDP_Connection.h"
+#include "GenIP.h"
+#include "GenNetIO.h"
+#include "GenUDP_Connection.h"
 
 namespace GenSockets
 {

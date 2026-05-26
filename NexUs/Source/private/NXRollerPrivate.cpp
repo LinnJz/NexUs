@@ -1,5 +1,6 @@
-﻿#include <QPropertyAnimation>
 #include "NXRollerPrivate.h"
+
+#include <QPropertyAnimation>
 
 NXRollerPrivate::NXRollerPrivate(QObject *parent)
     : QObject(parent)
@@ -11,7 +12,7 @@ NXRollerPrivate::~NXRollerPrivate()
 }
 
 void
-NXRollerPrivate::_scroll(int delta) noexcept
+NXRollerPrivate::_scroll(int delta)
 {
   int steps = delta / 120;
   _targetScrollOffset -= steps * _pItemHeight;

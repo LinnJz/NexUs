@@ -11,7 +11,6 @@ class QGraphicsOpacityEffect;
 
 class NXPopularCardFloater : public QWidget
 {
-  friend class NXPopularCard;
   Q_OBJECT
   Q_PROPERTY_CREATE(qreal, HoverYOffset)
   Q_PROPERTY_CREATE(qreal, HoverOpacity)
@@ -27,15 +26,14 @@ protected:
   void paintEvent(QPaintEvent *event) override;
 
 private:
-  int _floatGeometryOffset { 25 };
-  NXThemeType::ThemeMode _themeMode;
+  friend class NXPopularCard;
   bool _isHideAnimationFinished { true };
-
+  NXThemeType::ThemeMode _themeMode;
+  int _floatGeometryOffset { 25 };
   NXPushButton *_overButton { nullptr };
   QGraphicsOpacityEffect *_opacityEffect { nullptr };
   NXPopularCard *_card { nullptr };
   NXPopularCardPrivate *_cardPrivate { nullptr };
-
   QRect _calculateTargetGeometry(QRect cardGeometry);
 };
 

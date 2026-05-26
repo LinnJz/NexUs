@@ -37,7 +37,7 @@ NXColorPicker::~NXColorPicker()
 }
 
 void
-NXColorPicker::setSelectedColor(const QColor &color) noexcept
+NXColorPicker::setSelectedColor(const QColor &color)
 {
   _selectedColor = std::move(color);
   _selectedPoint =
@@ -46,7 +46,7 @@ NXColorPicker::setSelectedColor(const QColor &color) noexcept
 }
 
 QColor
-NXColorPicker::getSelectedColor() const noexcept
+NXColorPicker::getSelectedColor() const
 {
   return _selectedColor;
 }

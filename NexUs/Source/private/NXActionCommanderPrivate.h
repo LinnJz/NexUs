@@ -1,4 +1,4 @@
-#ifndef NXACTIONCOMMANDERPRIVATE_H
+﻿#ifndef NXACTIONCOMMANDERPRIVATE_H
 #define NXACTIONCOMMANDERPRIVATE_H
 #include <QMap>
 #include <QObject>
@@ -24,7 +24,7 @@ public:
   };
 
   explicit NXActionCommanderPrivate(QObject *parent = nullptr);
-  ~NXActionCommanderPrivate() override;
+  ~NXActionCommanderPrivate();
 
 private:
   QMap<QString, NXActionCommandDomainData> _commandDomainMap;

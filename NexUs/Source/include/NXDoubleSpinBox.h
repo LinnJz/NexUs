@@ -1,4 +1,4 @@
-﻿#ifndef NXDOUBLESPINBOX_H
+#ifndef NXDOUBLESPINBOX_H
 #define NXDOUBLESPINBOX_H
 
 #include <QDoubleSpinBox>
@@ -15,7 +15,7 @@ class NX_EXPORT NXDoubleSpinBox : public QDoubleSpinBox
 
 public:
   explicit NXDoubleSpinBox(QWidget *parent = nullptr);
-  ~NXDoubleSpinBox() override;
+  ~NXDoubleSpinBox();
 
 protected:
   void focusInEvent(QFocusEvent *event) override;

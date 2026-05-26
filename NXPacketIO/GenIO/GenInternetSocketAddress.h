@@ -1,4 +1,4 @@
-﻿#ifndef GENINTERNETSOCKETADDRESS_H
+#ifndef GENINTERNETSOCKETADDRESS_H
 #define GENINTERNETSOCKETADDRESS_H
 
 #include <string>
@@ -6,7 +6,7 @@ struct sockaddr_in;
 
 #include "NXPacketIO_Export.h"
 
-#include "GenIO/GenInternetAddress.h"
+#include "GenInternetAddress.h"
 
 namespace GenSockets
 {

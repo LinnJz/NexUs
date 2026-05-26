@@ -53,7 +53,7 @@ NXDockWidgetTitleBar::NXDockWidgetTitleBar(QWidget *parent)
   mainLayout->addWidget(_floatButton);
   mainLayout->addWidget(_closeButton);
 
-  // 主题变更
+  //主题变更
   _themeMode = nxTheme->getThemeMode();
   connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
@@ -66,13 +66,13 @@ NXDockWidgetTitleBar::~NXDockWidgetTitleBar()
 }
 
 void
-NXDockWidgetTitleBar::onFloatButtonClicked() noexcept
+NXDockWidgetTitleBar::onFloatButtonClicked()
 {
   _dockWidget->setFloating(_dockWidget->isFloating() ? false : true);
 }
 
 void
-NXDockWidgetTitleBar::onCloseButtonClicked() noexcept
+NXDockWidgetTitleBar::onCloseButtonClicked()
 {
   _dockWidget->close();
 }

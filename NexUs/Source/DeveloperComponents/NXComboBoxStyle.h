@@ -13,7 +13,7 @@ class NXComboBoxStyle : public QProxyStyle
 
 public:
   explicit NXComboBoxStyle(QStyle *style = nullptr);
-  ~NXComboBoxStyle() override;
+  ~NXComboBoxStyle();
   void drawPrimitive(PrimitiveElement element,
                      const QStyleOption *option,
                      QPainter *painter,

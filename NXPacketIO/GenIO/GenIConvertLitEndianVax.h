@@ -1,11 +1,11 @@
-﻿#ifndef GENI_CONVERT_LIT_ENDIAN_VAX_H
+#ifndef GENI_CONVERT_LIT_ENDIAN_VAX_H
 #define GENI_CONVERT_LIT_ENDIAN_VAX_H
 
 #include "NXPacketIO_Export.h"
 
 // This gets data out of a little Endian buffer
 
-#include "GenIO/GenIConvertLitEndianInt.h"
+#include "GenIConvertLitEndianInt.h"
 
 #if defined(sgi) && (_COMPILER_VERSION >= 720)
 #pragma set woff 1681, 1682

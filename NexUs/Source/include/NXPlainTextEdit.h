@@ -1,4 +1,4 @@
-﻿#ifndef NXPLAINTEXTEDIT_H
+#ifndef NXPLAINTEXTEDIT_H
 #define NXPLAINTEXTEDIT_H
 
 #include <QPlainTextEdit>
@@ -15,13 +15,14 @@ class NX_EXPORT NXPlainTextEdit : public QPlainTextEdit
 public:
   explicit NXPlainTextEdit(QWidget *parent = nullptr);
   explicit NXPlainTextEdit(const QString &text, QWidget *parent = nullptr);
-  ~NXPlainTextEdit() override;
+  ~NXPlainTextEdit();
 
 protected:
   void focusInEvent(QFocusEvent *event) override;
   void focusOutEvent(QFocusEvent *event) override;
   void contextMenuEvent(QContextMenuEvent *event) override;
   void paintEvent(QPaintEvent *event) override;
+  void resizeEvent(QResizeEvent *event) override;
 };
 
 #endif // NXPLAINTEXTEDIT_H

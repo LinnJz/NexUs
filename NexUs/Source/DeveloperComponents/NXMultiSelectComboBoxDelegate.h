@@ -13,7 +13,7 @@ public:
   explicit NXMultiSelectComboBoxDelegate(QObject *parent = nullptr);
   ~NXMultiSelectComboBoxDelegate();
 
-  void setItemSelection(const QList<bool> &selection) noexcept;
+  void setItemSelection(const QVector<bool> &selection);
 
 protected:
   void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
@@ -21,7 +21,7 @@ protected:
 
 private:
   NXThemeType::ThemeMode _themeMode;
-  QList<bool> _itemSelection;
+  QVector<bool> _itemSelection;
 };
 
 #endif // NXMULTISELECTCOMBOBOXDELEGATE_H

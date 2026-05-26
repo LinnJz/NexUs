@@ -1,11 +1,11 @@
-﻿#include "GenIO/GenInternetSocketAddress.h"
+#include "GenInternetSocketAddress.h"
 
 #include <cstring>
 #include <sstream>
 
-#include "GenIO/GenHostName.h"
-#include "GenIO/GenIP.h"
-#include "GenIO/GenSocketIncludes.h"
+#include "GenHostName.h"
+#include "GenIP.h"
+#include "GenSocketIncludes.h"
 
 namespace GenSockets
 {

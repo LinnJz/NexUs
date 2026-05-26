@@ -13,13 +13,13 @@ T_TableWidget::T_TableWidget(QWidget *parent)
     : T_BasePage(parent)
 {
   // 预览窗口标题
-  setWindowTitle("NXTableWidget");
+  setWindowTitle(QStringLiteral("NXTableWidget"));
 
   // 顶部元素
-  createCustomWidget("表格部件被放置于此，可在此界面体验其效果并按需添加进项目中");
+  createCustomWidget(QStringLiteral("表格部件被放置于此，可在此界面体验其效果并按需添加进项目中"));
 
   // NXTableWidget
-  NXText *tableText = new NXText("NXTableWidget", this);
+  NXText *tableText = new NXText(QStringLiteral("NXTableWidget"), this);
   tableText->setTextPixelSize(18);
 
   _tableWidget = new NXTableWidget(this);
@@ -31,11 +31,8 @@ T_TableWidget::T_TableWidget(QWidget *parent)
 
   // 设置表头
   QStringList headers;
-  headers << "预览"
-          << "歌名"
-          << "歌手"
-          << "专辑"
-          << "时长";
+  headers << QStringLiteral("预览") << QStringLiteral("歌名") << QStringLiteral("歌手") << QStringLiteral("专辑")
+          << QStringLiteral("时长");
   _tableWidget->setHorizontalHeaderLabels(headers);
 
   // 配置表头外观
@@ -56,26 +53,32 @@ T_TableWidget::T_TableWidget(QWidget *parent)
 
   // 添加示例数据
   QStringList songData[9] = {
-    { "夜航星(Night Voyager)",          "不才/三体宇宙",         "我的三体之章北海传",  "05:03" },
-    { "玫瑰少年",                       "五月天",                "玫瑰少年",            "03:55" },
-    { "Collapsing World(Original Mix)", "Lightscape",            "Collapsing World",    "03:10" },
-    { "RAIN MAN (雨人)",                "AKIHIDE (佐藤彰秀)",    "RAIN STORY",          "05:37" },
-    { "黑暗森林",                       "雲翼星辰",              "黑暗森林",            "05:47" },
-    { "轻(我的三体第四季主题曲)",       "刘雪茗",                "我的三体第四季",      "01:59" },
-    { "STYX HELIX",                     "MYTH & ROID",           "STYX HELIX",          "04:51" },
-    { "LAST STARDUST",                  "Aimer",                 "DAWN",                "05:18" },
-    { "Running In The Dark",            "MONKEY MAJIK/塞壬唱片", "Running In The Dark", "03:40" }
+    { QStringLiteral("夜航星(Night Voyager)"),          QStringLiteral("不才/三体宇宙"),         QStringLiteral("我的三体之章北海传"),
+     QStringLiteral("05:03")                                                                                                                                   },
+    { QStringLiteral("玫瑰少年"),                       QStringLiteral("五月天"),                QStringLiteral("玫瑰少年"),           QStringLiteral("03:55") },
+    { QStringLiteral("Collapsing World(Original Mix)"), QStringLiteral("Lightscape"),
+     QStringLiteral("Collapsing World"),                                                                                               QStringLiteral("03:10") },
+    { QStringLiteral("RAIN MAN (雨人)"),                QStringLiteral("AKIHIDE (佐藤彰秀)"),    QStringLiteral("RAIN STORY"),
+     QStringLiteral("05:37")                                                                                                                                   },
+    { QStringLiteral("黑暗森林"),                       QStringLiteral("雲翼星辰"),              QStringLiteral("黑暗森林"),           QStringLiteral("05:47") },
+    { QStringLiteral("轻(我的三体第四季主题曲)"),       QStringLiteral("刘雪茗"),                QStringLiteral("我的三体第四季"),
+     QStringLiteral("01:59")                                                                                                                                   },
+    { QStringLiteral("STYX HELIX"),                     QStringLiteral("MYTH & ROID"),           QStringLiteral("STYX HELIX"),
+     QStringLiteral("04:51")                                                                                                                                   },
+    { QStringLiteral("LAST STARDUST"),                  QStringLiteral("Aimer"),                 QStringLiteral("DAWN"),               QStringLiteral("05:18") },
+    { QStringLiteral("Running In The Dark"),            QStringLiteral("MONKEY MAJIK/塞壬唱片"),
+     QStringLiteral("Running In The Dark"),                                                                                            QStringLiteral("03:40") }
   };
 
-  QString iconPaths[9] = { ":/Resource/Image/Model/NaightNavigationStar.jpg",
-                           ":/Resource/Image/Model/MaVieEnRose.jpg",
-                           ":/Resource/Image/Model/CollapsingWorld.jpg",
-                           ":/Resource/Image/Model/RainMan.jpg",
-                           ":/Resource/Image/Model/DarkForest.jpg",
-                           ":/Resource/Image/Model/Light.jpg",
-                           ":/Resource/Image/Model/STYXHELIX.jpg",
-                           ":/Resource/Image/Model/LASTSTARDUST.jpg",
-                           ":/Resource/Image/Model/RunningInTheDark.jpg" };
+  QString iconPaths[9] = { QStringLiteral(":/Resource/Image/Model/NaightNavigationStar.jpg"),
+                           QStringLiteral(":/Resource/Image/Model/MaVieEnRose.jpg"),
+                           QStringLiteral(":/Resource/Image/Model/CollapsingWorld.jpg"),
+                           QStringLiteral(":/Resource/Image/Model/RainMan.jpg"),
+                           QStringLiteral(":/Resource/Image/Model/DarkForest.jpg"),
+                           QStringLiteral(":/Resource/Image/Model/Light.jpg"),
+                           QStringLiteral(":/Resource/Image/Model/STYXHELIX.jpg"),
+                           QStringLiteral(":/Resource/Image/Model/LASTSTARDUST.jpg"),
+                           QStringLiteral(":/Resource/Image/Model/RunningInTheDark.jpg") };
 
   for (int row = 0; row < 9; ++row)
   {
@@ -145,7 +148,7 @@ T_TableWidget::T_TableWidget(QWidget *parent)
   tableWidgetLayout->addWidget(_tableWidget);
 
   QWidget *centralWidget = new QWidget(this);
-  centralWidget->setWindowTitle("NXTableWidget");
+  centralWidget->setWindowTitle(QStringLiteral("NXTableWidget"));
   QVBoxLayout *centerVLayout = new QVBoxLayout(centralWidget);
   centerVLayout->setContentsMargins(0, 0, 0, 0);
   centerVLayout->addWidget(tableText);

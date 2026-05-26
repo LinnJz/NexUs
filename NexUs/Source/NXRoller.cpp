@@ -1,11 +1,14 @@
-﻿#include <QDebug>
+﻿#include "NXRoller.h"
+
+#include <utility>
+
+#include <QDebug>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPropertyAnimation>
 #include <QWheelEvent>
 #include <QtMath>
-#include <utility>
-#include "NXRoller.h"
+
 #include "NXTheme.h"
 #include "private/NXRollerPrivate.h"
 Q_PROPERTY_CREATE_CPP(NXRoller, int, BorderRadius)
@@ -104,7 +107,7 @@ NXRoller::~NXRoller()
 }
 
 void
-NXRoller::setCurrentData(const QString &data) noexcept
+NXRoller::setCurrentData(const QString &data)
 {
   Q_D(NXRoller);
   if (d->_pItemList.contains(data))
@@ -114,7 +117,7 @@ NXRoller::setCurrentData(const QString &data) noexcept
 }
 
 QString
-NXRoller::getCurrentData() const noexcept
+NXRoller::getCurrentData() const
 {
   Q_D(const NXRoller);
   if (d->_pCurrentIndex >= d->_pItemList.count())
@@ -125,7 +128,7 @@ NXRoller::getCurrentData() const noexcept
 }
 
 void
-NXRoller::setItemList(const QStringList &itemList) noexcept
+NXRoller::setItemList(const QStringList &itemList)
 {
   Q_D(NXRoller);
   d->_pItemList = std::move(itemList);
@@ -134,14 +137,14 @@ NXRoller::setItemList(const QStringList &itemList) noexcept
 }
 
 QStringList
-NXRoller::getItemList() const noexcept
+NXRoller::getItemList() const
 {
   Q_D(const NXRoller);
   return d->_pItemList;
 }
 
 void
-NXRoller::setItemHeight(int itemHeight) noexcept
+NXRoller::setItemHeight(int itemHeight)
 {
   Q_D(NXRoller);
   d->_pItemHeight = itemHeight;
@@ -151,14 +154,14 @@ NXRoller::setItemHeight(int itemHeight) noexcept
 }
 
 int
-NXRoller::getItemHeight() const noexcept
+NXRoller::getItemHeight() const
 {
   Q_D(const NXRoller);
   return d->_pItemHeight;
 }
 
 void
-NXRoller::setMaxVisibleItems(int maxVisibleItems) noexcept
+NXRoller::setMaxVisibleItems(int maxVisibleItems)
 {
   Q_D(NXRoller);
   d->_pMaxVisibleItems = maxVisibleItems;
@@ -168,14 +171,14 @@ NXRoller::setMaxVisibleItems(int maxVisibleItems) noexcept
 }
 
 int
-NXRoller::getMaxVisibleItems() const noexcept
+NXRoller::getMaxVisibleItems() const
 {
   Q_D(const NXRoller);
   return d->_pMaxVisibleItems;
 }
 
 void
-NXRoller::setCurrentIndex(int currentIndex) noexcept
+NXRoller::setCurrentIndex(int currentIndex)
 {
   Q_D(NXRoller);
   if (currentIndex >= d->_pItemList.count())
@@ -189,7 +192,7 @@ NXRoller::setCurrentIndex(int currentIndex) noexcept
 }
 
 int
-NXRoller::getCurrentIndex() const noexcept
+NXRoller::getCurrentIndex() const
 {
   Q_D(const NXRoller);
   return d->_pCurrentIndex;

@@ -32,7 +32,7 @@ NXScrollBarStyle::drawComplexControl(ComplexControl control,
                                      QPainter *painter,
                                      const QWidget *widget) const
 {
-  // QStyle::SC_ScrollBarGroove QStyle::SC_ScrollBarAddLine   QStyle::SC_ScrollBarSubLine上指示器
+  //QStyle::SC_ScrollBarGroove QStyle::SC_ScrollBarAddLine   QStyle::SC_ScrollBarSubLine上指示器
   switch (control)
   {
   case QStyle::CC_ScrollBar :
@@ -50,7 +50,7 @@ NXScrollBarStyle::drawComplexControl(ComplexControl control,
         painter->setPen(Qt::NoPen);
         painter->setBrush(NXThemeColor(_themeMode, BasicBase));
         painter->drawRoundedRect(scrollBarRect, 6, 6);
-        // 指示器绘制 center()在此处不适用 存在外围边距宽度 需手动计算
+        //指示器绘制 center()在此处不适用 存在外围边距宽度 需手动计算
         int sideLength = 8;
         painter->setBrush(NXThemeColor(_themeMode, ScrollBarHandle));
         if (sopt->orientation == Qt::Horizontal)
@@ -103,7 +103,7 @@ NXScrollBarStyle::drawComplexControl(ComplexControl control,
         }
       }
       painter->setOpacity(1);
-      // 滑块绘制
+      //滑块绘制
       QRectF sliderRect = subControlRect(control, sopt, QStyle::SC_ScrollBarSlider, widget);
       painter->setBrush(NXThemeColor(_themeMode, ScrollBarHandle));
       if (sopt->orientation == Qt::Horizontal)
@@ -161,7 +161,7 @@ NXScrollBarStyle::styleHint(StyleHint hint,
 }
 
 void
-NXScrollBarStyle::startExpandAnimation(bool isExpand) noexcept
+NXScrollBarStyle::startExpandAnimation(bool isExpand)
 {
   if (isExpand)
   {

@@ -1,4 +1,4 @@
-﻿#ifndef GEN_BUF_H
+#ifndef GEN_BUF_H
 #define GEN_BUF_H
 
 #include "NXPacketIO_Export.h"

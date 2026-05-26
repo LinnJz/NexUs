@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>Resource/Font/NXAwesome.ttf</file>
-        <file>Resource/Font/segoe_slboot.ttf</file>
         <file>Resource/Image/MicaBase.png</file>
         <file>Resource/Image/Cirno.jpg</file>
         <file>Resource/Image/Moon.jpg</file>

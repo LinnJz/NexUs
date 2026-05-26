@@ -1,10 +1,10 @@
-﻿#ifndef NXXIO_UDPHEADER_H
+#ifndef NXXIO_UDPHEADER_H
 #define NXXIO_UDPHEADER_H
 
 #include "NXPacketIO_Export.h"
 
-#include "PacketIO/PakHeader.h"
-#include "PacketIO/PakIntTypes.h"
+#include "PakHeader.h"
+#include "PakIntTypes.h"
 
 class NX_PACKETIO_EXPORT NXXIO_UdpHeader : public PakHeader
 {

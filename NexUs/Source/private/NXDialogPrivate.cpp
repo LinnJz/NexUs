@@ -1,4 +1,4 @@
-﻿#include "NXDialogPrivate.h"
+#include "NXDialogPrivate.h"
 
 NXDialogPrivate::NXDialogPrivate(QObject *parent)
     : QObject(parent)

@@ -84,8 +84,8 @@ NXTreeViewStyle::drawPrimitive(PrimitiveElement element,
         painter->setFont(iconFont);
         painter->setPen(NXThemeColor(_themeMode, BasicText));
         painter->drawText(indicatorRect, Qt::AlignVCenter | Qt::AlignRight,
-                          vopt->state.testFlag(QStyle::State_Open) ? QChar(NXIconType::AngleDown)
-                                                                   : QChar(NXIconType::AngleRight));
+                          vopt->state.testFlag(QStyle::State_Open) ? QChar((unsigned short) NXIconType::AngleDown)
+                                                                   : QChar((unsigned short) NXIconType::AngleRight));
         painter->restore();
       }
     }
@@ -185,15 +185,16 @@ NXTreeViewStyle::drawControl(ControlElement element,
       // 背景绘制
       this->drawPrimitive(QStyle::PE_PanelItemViewItem, option, painter, widget);
 
-      // 内容绘制;
+      // 内容绘制
       painter->save();
       painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
+
       // 复选框绘制
       if (vopt->features & QStyleOptionViewItem::HasCheckIndicator)
       {
         QRect checkRect = proxy()->subElementRect(SE_ItemViewItemCheckIndicator, vopt, widget);
         painter->save();
-        // 图标绘制
+        //图标绘制
         if (vopt->checkState == Qt::Checked)
         {
           painter->setPen(Qt::NoPen);
@@ -203,7 +204,7 @@ NXTreeViewStyle::drawControl(ControlElement element,
           iconFont.setPixelSize(checkRect.width() * 0.85);
           painter->setFont(iconFont);
           painter->setPen(NXThemeColor(NXThemeType::Dark, BasicText));
-          painter->drawText(checkRect, Qt::AlignCenter, QChar(NXIconType::Check));
+          painter->drawText(checkRect, Qt::AlignCenter, QChar((unsigned short) NXIconType::Check));
         }
         else if (vopt->checkState == Qt::PartiallyChecked)
         {
@@ -230,6 +231,7 @@ NXTreeViewStyle::drawControl(ControlElement element,
         QIcon::State state = vopt->state & QStyle::State_Open ? QIcon::On : QIcon::Off;
         vopt->icon.paint(painter, iconRect, vopt->decorationAlignment, mode, state);
       }
+
       QRect itemRect = option->rect;
       bool isFirst =
           vopt->state.testFlag(QStyle::State_Selected) && (vopt->viewItemPosition == QStyleOptionViewItem::Beginning ||

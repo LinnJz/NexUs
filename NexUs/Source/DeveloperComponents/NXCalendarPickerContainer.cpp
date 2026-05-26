@@ -1,5 +1,6 @@
-﻿#include <QPainter>
-#include "NXCalendarPickerContainer.h"
+﻿#include "NXCalendarPickerContainer.h"
+
+#include <QPainter>
 
 #include "NXTheme.h"
 
@@ -26,9 +27,11 @@ NXCalendarPickerContainer::~NXCalendarPickerContainer()
 void
 NXCalendarPickerContainer::paintEvent(QPaintEvent *event)
 {
+#if !(defined(Q_OS_WIN) && QT_VERSION == QT_VERSION_CHECK(6, 11, 0))
   QPainter painter(this);
   painter.save();
   painter.setRenderHints(QPainter::Antialiasing);
   nxTheme->drawEffectShadow(&painter, rect(), 6, 5);
   painter.restore();
+#endif
 }

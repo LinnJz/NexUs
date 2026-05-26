@@ -1,4 +1,4 @@
-﻿#include "T_IconDelegate.h"
+#include "T_IconDelegate.h"
 
 #include <QPainter>
 
@@ -40,7 +40,7 @@ T_IconDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, con
   painter->save();
   painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
   painter->save();
-  QFont iconFont = QFont("NXAwesome");
+  QFont iconFont = QFont(QStringLiteral("NXAwesome"));
   iconFont.setPixelSize(22);
   painter->setFont(iconFont);
   painter->setPen(NXThemeColor(_themeMode, BasicText));
@@ -60,9 +60,9 @@ T_IconDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, con
     for (int i = 0; i < subTitleRow + 1; i++)
     {
       QString text = painter->fontMetrics().elidedText(subTitleText, Qt::ElideRight, rowTextWidth);
-      if (text.right(3).contains("…"))
+      if (text.right(3).contains(QStringLiteral("…")))
       {
-        text = text.replace("…", subTitleText.mid(text.length() - 1, 1));
+        text = text.replace(QStringLiteral("…"), subTitleText.mid(text.length() - 1, 1));
       }
       subTitleText.remove(0, text.length());
       painter->drawText(option.rect.x() + option.rect.width() / 2 - painter->fontMetrics().horizontalAdvance(text) / 2,

@@ -9,7 +9,7 @@
 class NXBreadcrumbBarDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE_2(const QModelIndex &, QModelIndex, PressIndex)
+  Q_PRIVATE_CREATE(QS_SET_CREF(QModelIndex), PressIndex)
 
 public:
   explicit NXBreadcrumbBarDelegate(QObject *parent = nullptr);

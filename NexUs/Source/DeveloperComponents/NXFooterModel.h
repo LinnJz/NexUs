@@ -14,13 +14,13 @@ class NXFooterModel : public QAbstractListModel
 public:
   explicit NXFooterModel(QObject *parent = nullptr);
   ~NXFooterModel();
-  NXNodeOperateResult addFooterNode(const QString &footerTitle,
-                                    bool isHasFooterPage,
-                                    int keyPoints                = 0,
-                                    NXIconType::IconName awesome = NXIconType::None) noexcept;
-  int getFooterNodeCount() const noexcept;
-  NXNavigationNode *getNavigationNode(const QString &footerKey) const noexcept;
-  void removeNavigationNode(const QString &footerKey) noexcept;
+  NXNodeResultExpected addFooterNode(const QString &footerTitle,
+                                     bool isHasFooterPage,
+                                     int keyPoints                = 0,
+                                     NXIconType::IconName awesome = NXIconType::None);
+  int getFooterNodeCount() const;
+  NXNavigationNode *getNavigationNode(const QString &footerKey) const;
+  void removeNavigationNode(const QString &footerKey);
 
 protected:
   int rowCount(const QModelIndex &parent = QModelIndex()) const override;

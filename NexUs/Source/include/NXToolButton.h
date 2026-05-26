@@ -1,4 +1,4 @@
-﻿#ifndef NXTOOLBUTTON_H
+#ifndef NXTOOLBUTTON_H
 #define NXTOOLBUTTON_H
 
 #include <QToolButton>
@@ -16,14 +16,14 @@ class NX_EXPORT NXToolButton : public QToolButton
 
 public:
   explicit NXToolButton(QWidget *parent = nullptr);
-  ~NXToolButton() override;
+  ~NXToolButton();
 
-  void setIsTransparent(bool isTransparent) noexcept;
-  bool getIsTransparent() const noexcept;
+  void setIsTransparent(bool isTransparent);
+  bool getIsTransparent() const;
 
-  void setMenu(NXMenu *menu) noexcept;
-  void setNXIcon(NXIconType::IconName icon) noexcept;
-  void setNXIcon(NXIconType::IconName icon, int rotate) noexcept;
+  void setMenu(NXMenu *menu);
+  void setNXIcon(NXIconType::IconName icon);
+  void setNXIcon(NXIconType::IconName icon, int rotate);
 
 protected:
   bool eventFilter(QObject *watched, QEvent *event) override;

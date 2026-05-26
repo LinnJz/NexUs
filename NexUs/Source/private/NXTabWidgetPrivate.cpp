@@ -6,7 +6,8 @@
 #include <QMouseEvent>
 #include <QTimer>
 #include <QWindow>
-#include "NXCustomTabWidget.h"
+
+#include "DeveloperComponents/NXCustomTabWidget.h"
 #include "NXTabBar.h"
 #include "NXTabWidget.h"
 
@@ -30,7 +31,7 @@ NXTabWidgetPrivate::~NXTabWidgetPrivate()
 }
 
 void
-NXTabWidgetPrivate::onTabDragCreate(QMimeData *mimeData) noexcept
+NXTabWidgetPrivate::onTabDragCreate(QMimeData *mimeData)
 {
   Q_Q(NXTabWidget);
   if (NXDragMonitor::getInstance()->getIsInDrag())
@@ -81,7 +82,7 @@ NXTabWidgetPrivate::onTabDragCreate(QMimeData *mimeData) noexcept
     q->removeTab(index);
     // 创建新窗口
     NXTabBar *originCustomTabBar = tabBarObject;
-    if (originCustomTabBar && originCustomTabBar->objectName() == "NXCustomTabBar")
+    if (originCustomTabBar && originCustomTabBar->objectName() == QStringLiteral("NXCustomTabBar"))
     {
       originCustomTabBar->removeTab(index);
     }
@@ -165,7 +166,7 @@ NXTabWidgetPrivate::onTabDragCreate(QMimeData *mimeData) noexcept
 }
 
 void
-NXTabWidgetPrivate::onTabDragEnter(QMimeData *mimeData) noexcept
+NXTabWidgetPrivate::onTabDragEnter(QMimeData *mimeData)
 {
   Q_Q(NXTabWidget);
   mimeData->setProperty("NXTabBarObject", QVariant::fromValue<NXTabBar *>(dynamic_cast<NXTabBar *>(q->tabBar())));
@@ -173,7 +174,7 @@ NXTabWidgetPrivate::onTabDragEnter(QMimeData *mimeData) noexcept
 }
 
 void
-NXTabWidgetPrivate::onTabDragLeave(QMimeData *mimeData) noexcept
+NXTabWidgetPrivate::onTabDragLeave(QMimeData *mimeData)
 {
   Q_Q(NXTabWidget);
   QWidget *dragWidget = mimeData->property("DragWidget").value<QWidget *>();
@@ -236,7 +237,7 @@ NXTabWidgetPrivate::onTabDragLeave(QMimeData *mimeData) noexcept
 }
 
 void
-NXTabWidgetPrivate::onTabDragDrop(QMimeData *mimeData) noexcept
+NXTabWidgetPrivate::onTabDragDrop(QMimeData *mimeData)
 {
   Q_Q(NXTabWidget);
   QWidget *dragWidget = mimeData->property("DragWidget").value<QWidget *>();
@@ -258,7 +259,7 @@ NXTabWidgetPrivate::onTabDragDrop(QMimeData *mimeData) noexcept
 }
 
 void
-NXTabWidgetPrivate::onTabCloseRequested(int index) noexcept
+NXTabWidgetPrivate::onTabCloseRequested(int index)
 {
   Q_Q(NXTabWidget);
   QWidget *closeWidget         = q->widget(index);
@@ -276,7 +277,7 @@ NXTabWidgetPrivate::onTabCloseRequested(int index) noexcept
   }
   else
   {
-    if (!originTabWidget && q->objectName() == "NXCustomTabWidget")
+    if (!originTabWidget && q->objectName() == QStringLiteral("NXCustomTabWidget"))
     {
       _customTabBar->removeTab(index);
     }
@@ -290,7 +291,7 @@ NXTabWidgetPrivate::onTabCloseRequested(int index) noexcept
 }
 
 void
-NXTabWidgetPrivate::_clearAllTabWidgetList() noexcept
+NXTabWidgetPrivate::_clearAllTabWidgetList()
 {
   Q_Q(NXTabWidget);
   for (auto widget : _allTabWidgetList)

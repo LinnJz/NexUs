@@ -5,7 +5,6 @@
 
 #include "NXProperty.h"
 
-class QAbstractItemModel;
 class NXTableViewPrivate;
 
 class NX_EXPORT NXTableView : public QTableView
@@ -15,24 +14,19 @@ class NX_EXPORT NXTableView : public QTableView
   Q_PROPERTY_CREATE_H(int, HeaderMargin)
   Q_PROPERTY_CREATE_H(int, BorderRadius)
   Q_PROPERTY_CREATE_H(int, CheckIndicatorWidth)
-  Q_PROPERTY_CREATE_H(bool, IsSelectionEffectsEnabled)
-  Q_PROPERTY_CREATE_H(bool, IsHoverEffectsEnabled)
+  Q_PROPERTY_CREATE_H(int, DefaultPadding)
+  Q_PROPERTY_CREATE_H(bool, IsHoverRowEffectEnable)
 
 public:
   explicit NXTableView(QWidget *parent = nullptr);
   ~NXTableView();
 
-  void setModel(QAbstractItemModel *model) override;
-  void setHorizontalPadding(int column, int padding) noexcept;
-  int getHorizontalPadding(int column) const noexcept;
-
-  QRect headerCheckIndicatorRect(int section) const noexcept;
-  QRect cellCheckIndicatorRect(int row, int column) const noexcept;
-
-Q_SIGNALS:
-  void tableViewShow();
-  void tableViewHide();
-  void hoverIndexChanged(const QModelIndex &index);
+  void setColumnPadding(int column, int padding);
+  int columnPadding(int column) const;
+  void clearColumnPadding(int column);
+  Q_SIGNAL void tableViewShow();
+  Q_SIGNAL void tableViewHide();
+  Q_SIGNAL void hoverIndexChanged(const QModelIndex &index);
 
 protected:
   void showEvent(QShowEvent *event) override;

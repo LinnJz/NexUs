@@ -1,13 +1,13 @@
-﻿#include "GenIO/GenUDP_Connection.h"
+#include "GenUDP_Connection.h"
 
 #include <iostream>
 
-#include "GenIO/GenHostName.h"
-#include "GenIO/GenIP.h"
-#include "GenIO/GenInternetAddress.h"
-#include "GenIO/GenInternetSocketAddress.h"
-#include "GenIO/GenSocket.h"
-#include "GenIO/GenSocketIncludes.h"
+#include "GenHostName.h"
+#include "GenIP.h"
+#include "GenInternetAddress.h"
+#include "GenInternetSocketAddress.h"
+#include "GenSocket.h"
+#include "GenSocketIncludes.h"
 GenUDP_Connection::GenUDP_Connection()
     : GenSocketConnection(new GenSockets::GenSocket(GenSockets::GenSocket::cUDP_SOCKET)), mSendAddress(nullptr), mLastSender(new GenSockets::GenInternetSocketAddress), mSaveSenderInfo(false), mIsBroadcast(false), mIgnoreLocalBroadcastPackets(false), mHasSentMessages(false)
 {

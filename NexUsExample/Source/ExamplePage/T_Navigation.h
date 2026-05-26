@@ -1,4 +1,4 @@
-﻿#ifndef T_NAVIGATION_H
+#ifndef T_NAVIGATION_H
 #define T_NAVIGATION_H
 
 #include "T_BasePage.h"

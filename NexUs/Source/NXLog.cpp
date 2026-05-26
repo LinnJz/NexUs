@@ -4,9 +4,9 @@
 
 #include "private/NXLogPrivate.h"
 
+Q_PROPERTY_CREATE_CPP(NXLog, QS_SET_CREF(QString), LogSavePath)
+Q_PROPERTY_CREATE_CPP(NXLog, QS_SET_CREF(QString), LogFileName)
 Q_PROPERTY_CREATE_CPP(NXLog, bool, IsLogFileNameWithTime)
-Q_PROPERTY_CREATE_2_CPP(NXLog, const QString &, QString, LogSavePath)
-Q_PROPERTY_CREATE_2_CPP(NXLog, const QString &, QString, LogFileName)
 
 NXLog::NXLog(QObject *parent)
     : QObject { parent }
@@ -28,7 +28,7 @@ NXLog::~NXLog()
 }
 
 void
-NXLog::initMessageLog(bool isEnable) noexcept
+NXLog::initMessageLog(bool isEnable)
 {
   Q_D(NXLog);
   qInstallMessageHandler(isEnable ? d->_messageLogHander : 0);

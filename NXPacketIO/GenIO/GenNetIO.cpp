@@ -1,11 +1,11 @@
-﻿#include "GenIO/GenNetIO.h"
+#include "GenNetIO.h"
 
 #include <cstdio>
 #include <iostream>
 
-#include "GenIO/GenHostName.h"
-#include "GenIO/GenTCP_IO.h"
-#include "GenIO/GenUDP_IO.h"
+#include "GenHostName.h"
+#include "GenTCP_IO.h"
+#include "GenUDP_IO.h"
 
 GenNetIO::GenNetIO(const char* aRecvBufName, const char* aSendBufName)
     : GenIO(aRecvBufName, aSendBufName)

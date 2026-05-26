@@ -1,4 +1,4 @@
-﻿#include "PacketIO/PakConnection.h"
+#include "PakConnection.h"
 
 // virtual
 PakConnection::~PakConnection() {}

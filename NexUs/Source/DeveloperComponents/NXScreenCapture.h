@@ -1,4 +1,4 @@
-﻿#ifndef NXSCREENCAPTURE_H
+#ifndef NXSCREENCAPTURE_H
 #define NXSCREENCAPTURE_H
 
 #include <QObject>
@@ -11,9 +11,9 @@
 class NXScreenCapture : public QObject
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE_2(const QStringList &, QStringList, DisplayList)
-  Q_PRIVATE_CREATE_2(const QString &, QString, LastError)
   Q_PRIVATE_CREATE(QRect, GrabArea)
+  Q_PRIVATE_CREATE(QS_SET_CREF(QStringList), DisplayList)
+  Q_PRIVATE_CREATE(QS_SET_CREF(QString), LastError)
   Q_PRIVATE_CREATE(int, DisplayID)
   Q_PRIVATE_CREATE(int, GrabFrameRate)
   Q_PRIVATE_CREATE(bool, IsGrabActive)
@@ -23,23 +23,18 @@ class NXScreenCapture : public QObject
 
 public:
   explicit NXScreenCapture(QObject *parent = nullptr);
-  ~NXScreenCapture() override;
+  ~NXScreenCapture();
   bool initialize(int displayID);
-  QImage getGrabImage() const noexcept;
-  Q_SLOT void onGrabScreen() noexcept;
-  Q_SIGNAL void grabScreenOver(QImage img);
+  QImage getGrabImage() const;
+  Q_SLOT void onGrabScreen();
+  Q_SIGNAL void grabScreenOver(const QImage &img);
 
 private:
-  class Private;
-  Private *d { nullptr };
-  QElapsedTimer _grabTimer;
+  int _displayWidth { 0 };
+  int _displayHeight { 0 };
   qint64 _lastGrabTime { 0 };
   qint64 _cpuSleepTime { 0 };
   QImage _lastImage;
-  int _displayWidth { 0 };
-  int _displayHeight { 0 };
-  void releaseInterface();
-  void cpuSleep(qint64 usec);
-};
+  Private *d { nullptr };
 #endif
 #endif // NXSCREENCAPTURE_H

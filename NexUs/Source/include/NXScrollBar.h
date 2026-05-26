@@ -1,4 +1,4 @@
-﻿#ifndef NXSCROLLBAR_H
+#ifndef NXSCROLLBAR_H
 #define NXSCROLLBAR_H
 
 #include <QAbstractScrollArea>
@@ -12,17 +12,15 @@ class NX_EXPORT NXScrollBar : public QScrollBar
 {
   Q_OBJECT
   Q_Q_CREATE(NXScrollBar)
-  Q_PROPERTY_CREATE_H(bool, IsAnimation)
   Q_PROPERTY_CREATE_H(qreal, SpeedLimit)
+  Q_PROPERTY_CREATE_H(bool, IsAnimation)
 
 public:
   explicit NXScrollBar(QWidget *parent = nullptr);
   explicit NXScrollBar(Qt::Orientation orientation, QWidget *parent = nullptr);
   explicit NXScrollBar(QScrollBar *originScrollBar, QAbstractScrollArea *parent = nullptr);
-  ~NXScrollBar() override;
-
-Q_SIGNALS:
-  void rangeAnimationFinished();
+  ~NXScrollBar();
+  Q_SIGNAL void rangeAnimationFinished();
 
 protected:
   bool event(QEvent *event) override;

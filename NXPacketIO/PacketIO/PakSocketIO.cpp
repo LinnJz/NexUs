@@ -1,6 +1,6 @@
-﻿#include "PacketIO/PakSocketIO.h"
+#include "PakSocketIO.h"
 
-#include "PacketIO/PakHeader.h"
+#include "PakHeader.h"
 
 PakSocketIO::~PakSocketIO()
 {

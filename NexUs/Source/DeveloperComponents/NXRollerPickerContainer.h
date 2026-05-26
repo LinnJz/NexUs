@@ -3,26 +3,23 @@
 
 #include <QPropertyAnimation>
 #include <QWidget>
+
 #include "NXDef.h"
 class NXRoller;
 
 class NXRollerPickerContainer : public QWidget
 {
-  friend class NXRollerPicker;
-  friend class NXRollerPickerPrivate;
   Q_OBJECT
   Q_PROPERTY_CREATE(int, AnimationPixOffsetY)
   Q_PRIVATE_CREATE(int, ButtonAreaHeight)
 
 public:
   explicit NXRollerPickerContainer(QWidget *parent = nullptr);
-  ~NXRollerPickerContainer() override;
+  ~NXRollerPickerContainer();
 
-  void doPickerAnimation() noexcept;
-
-Q_SIGNALS:
-  void overButtonClicked();
-  void cancelButtonClicked();
+  void doPickerAnimation();
+  Q_SIGNAL void overButtonClicked();
+  Q_SIGNAL void cancelButtonClicked();
 
 protected:
   void mouseMoveEvent(QMouseEvent *event) override;
@@ -32,19 +29,20 @@ protected:
   void paintEvent(QPaintEvent *event) override;
 
 private:
-  int _buttonMargin { 5 };
-  int _buttonSpacing { 5 };
+  friend class NXRollerPicker;
+  friend class NXRollerPickerPrivate;
   bool _isOverButtonHover { false };
   bool _isCancelButtonHover { false };
   bool _isOverButtonClicked { false };
+  int _buttonMargin { 5 };
+  int _buttonSpacing { 5 };
   NXThemeType::ThemeMode _themeMode;
-
-  QPixmap _animationPix;
   QRect _overButtonRect;
   QRect _cancelButtonRect;
+  QPixmap _animationPix;
   QList<NXRoller *> _rollerList;
   QList<int> _historyIndexList;
   void _handleSaveOrReset(bool isSave);
 };
 
-#endif // NXFRAMEWORK_NXROLLERPICKERCONTAINER_H
+#endif //NXFRAMEWORK_NXROLLERPICKERCONTAINER_H

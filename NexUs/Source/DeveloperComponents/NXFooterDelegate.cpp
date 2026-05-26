@@ -82,7 +82,7 @@ NXFooterDelegate::~NXFooterDelegate()
 }
 
 void
-NXFooterDelegate::navigationNodeStateChange(const QVariantMap &data) noexcept
+NXFooterDelegate::navigationNodeStateChange(const QVariantMap &data)
 {
   if (data.contains(QStringLiteral("SelectMarkChanged")))
   {
@@ -119,7 +119,6 @@ NXFooterDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, c
 {
   NXFooterModel *model   = dynamic_cast<NXFooterModel *>(const_cast<QAbstractItemModel *>(index.model()));
   NXNavigationNode *node = index.data(Qt::UserRole).value<NXNavigationNode *>();
-
   // 背景绘制
   QRect itemRect = option.rect;
   painter->save();
@@ -171,7 +170,7 @@ NXFooterDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, c
   painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
   itemRect = option.rect;
 
-  // 顶边线绘制
+  //顶边线绘制
   if (index.row() == 0)
   {
     painter->setPen(NXThemeColor(_themeMode, BasicBaseLine));
@@ -187,7 +186,7 @@ NXFooterDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, c
     iconFont.setPixelSize(17);
     painter->setFont(iconFont);
     painter->drawText(QRect(itemRect.x(), itemRect.y(), _iconAreaWidth, itemRect.height()), Qt::AlignCenter,
-                      QChar(node->getAwesome()));
+                      QChar((unsigned short) node->getAwesome()));
     painter->restore();
   }
 

@@ -7,9 +7,9 @@
 #include "NXTheme.h"
 #include "private/NXImageCardPrivate.h"
 
+Q_PROPERTY_CREATE_CPP(NXImageCard, QS_SET_CREF(QImage), CardImage)
 Q_PROPERTY_CREATE_CPP(NXImageCard, int, BorderRadius)
 Q_PROPERTY_CREATE_CPP(NXImageCard, bool, IsPreserveAspectCrop)
-Q_PROPERTY_CREATE_2_CPP(NXImageCard, const QImage &, QImage, CardImage)
 
 NXImageCard::NXImageCard(QWidget *parent)
     : QWidget(parent)

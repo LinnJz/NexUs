@@ -1,9 +1,9 @@
-﻿#ifndef GENSOCKETSELECTOR_H
+#ifndef GENSOCKETSELECTOR_H
 #define GENSOCKETSELECTOR_H
 
 #include "NXPacketIO_Export.h"
 
-#include "GenIO/GenSocketSet.h"
+#include "GenSocketSet.h"
 
 namespace GenSockets
 {

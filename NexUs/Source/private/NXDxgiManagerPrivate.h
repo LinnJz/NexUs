@@ -1,4 +1,4 @@
-﻿#ifndef NXDXGIMANAGERPRIVATE_H
+#ifndef NXDXGIMANAGERPRIVATE_H
 #define NXDXGIMANAGERPRIVATE_H
 #include <QObject>
 #ifdef Q_OS_WIN
@@ -37,8 +37,8 @@ public:
 
 private:
   bool _isSyncGrabSize { false };
-  NXDxgiManager *_dxgiManager { nullptr };
   QImage _img;
+  NXDxgiManager *_dxgiManager { nullptr };
 };
 #endif
 #endif // NXDXGIMANAGERPRIVATE_H

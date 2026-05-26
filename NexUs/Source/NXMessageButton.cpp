@@ -7,13 +7,13 @@
 #include "NXMessageBar.h"
 #include "NXTheme.h"
 #include "private/NXMessageButtonPrivate.h"
+Q_PROPERTY_CREATE_CPP(NXMessageButton, QS_SET_CREF(QString), BarTitle)
+Q_PROPERTY_CREATE_CPP(NXMessageButton, QS_SET_CREF(QString), BarText)
+Q_PROPERTY_CREATE_CPP(NXMessageButton, QWidget *, MessageTargetWidget)
 Q_PROPERTY_CREATE_CPP(NXMessageButton, int, BorderRadius)
 Q_PROPERTY_CREATE_CPP(NXMessageButton, int, DisplayMsec)
-Q_PROPERTY_CREATE_CPP(NXMessageButton, QWidget *, MessageTargetWidget)
 Q_PROPERTY_CREATE_CPP(NXMessageButton, NXMessageBarType::MessageMode, MessageMode)
 Q_PROPERTY_CREATE_CPP(NXMessageButton, NXMessageBarType::PositionPolicy, PositionPolicy)
-Q_PROPERTY_CREATE_2_CPP(NXMessageButton, const QString &, QString, BarTitle)
-Q_PROPERTY_CREATE_2_CPP(NXMessageButton, const QString &, QString, BarText)
 
 NXMessageButton::NXMessageButton(QWidget *parent)
     : QPushButton(parent)
@@ -34,13 +34,40 @@ NXMessageButton::NXMessageButton(QWidget *parent)
   d->_pMessageMode         = NXMessageBarType::Success;
   d->_pPositionPolicy      = NXMessageBarType::TopRight;
   d->_themeMode            = nxTheme->getThemeMode();
-  d->_pMessageTargetWidget = parent;
+  d->_pMessageTargetWidget = nullptr;
   connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
     d->_themeMode = themeMode;
   });
-  connect(this, &NXMessageButton::clicked, d, &NXMessageButtonPrivate::_showMessage);
-  connect(this, &NXMessageButton::showMessage, d, &NXMessageButtonPrivate::_showMessage);
+  connect(this, &NXMessageButton::clicked, this, [=]()
+  {
+    switch (d->_pMessageMode)
+    {
+    case NXMessageBarType::Success :
+    {
+      NXMessageBar::success(d->_pPositionPolicy, d->_pBarTitle, d->_pBarText, d->_pDisplayMsec,
+                            d->_pMessageTargetWidget);
+      break;
+    }
+    case NXMessageBarType::Warning :
+    {
+      NXMessageBar::warning(d->_pPositionPolicy, d->_pBarTitle, d->_pBarText, d->_pDisplayMsec,
+                            d->_pMessageTargetWidget);
+      break;
+    }
+    case NXMessageBarType::Information :
+    {
+      NXMessageBar::information(d->_pPositionPolicy, d->_pBarTitle, d->_pBarText, d->_pDisplayMsec,
+                                d->_pMessageTargetWidget);
+      break;
+    }
+    case NXMessageBarType::Error :
+    {
+      NXMessageBar::error(d->_pPositionPolicy, d->_pBarTitle, d->_pBarText, d->_pDisplayMsec, d->_pMessageTargetWidget);
+      break;
+    }
+    }
+  });
 }
 
 NXMessageButton::NXMessageButton(const QString &text, QWidget *parent)
@@ -51,13 +78,6 @@ NXMessageButton::NXMessageButton(const QString &text, QWidget *parent)
 
 NXMessageButton::~NXMessageButton()
 {
-}
-
-void
-NXMessageButton::disconnectInternalSignalOfClicked() noexcept
-{
-  Q_D(NXMessageButton);
-  disconnect(this, &NXMessageButton::clicked, d, &NXMessageButtonPrivate::_showMessage);
 }
 
 void
@@ -99,7 +119,7 @@ NXMessageButton::paintEvent(QPaintEvent *event)
                        : NXThemeColor(d->_themeMode, BasicDisable));
   painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
 
-  // 文字绘制
+  //文字绘制
   painter.setPen(isEnabled() ? d->_isLeftButtonPress ? NXThemeColor(d->_themeMode, BasicTextPress)
                                                      : NXThemeColor(d->_themeMode, BasicText)
                              : NXThemeColor(d->_themeMode, BasicTextDisable));

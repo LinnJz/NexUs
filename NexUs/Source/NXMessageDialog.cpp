@@ -8,11 +8,11 @@
 #include "NXTheme.h"
 #include "private/NXMessageDialogPrivate.h"
 
+Q_PROPERTY_CREATE_CPP(NXMessageDialog, QS_SET_CREF(QString), Title)
+Q_PROPERTY_CREATE_CPP(NXMessageDialog, QS_SET_CREF(QString), Content)
 Q_PROPERTY_CREATE_CPP(NXMessageDialog, int, BorderRadius)
 Q_PROPERTY_CREATE_CPP(NXMessageDialog, int, TitlePixelSize)
 Q_PROPERTY_CREATE_CPP(NXMessageDialog, int, ContentPixelSize)
-Q_PROPERTY_CREATE_2_CPP(NXMessageDialog, const QString &, QString, Title)
-Q_PROPERTY_CREATE_2_CPP(NXMessageDialog, const QString &, QString, Content)
 
 NXMessageDialog::NXMessageDialog(QWidget *parent)
     : QWidget(parent)
@@ -23,7 +23,7 @@ NXMessageDialog::NXMessageDialog(QWidget *parent)
 
   d->_pBorderRadius     = 8;
   d->_pTitle            = QStringLiteral("标题");
-  d->_pContent          = {};
+  d->_pContent          = QStringLiteral("");
   d->_pTitlePixelSize   = 15;
   d->_pContentPixelSize = 13;
 

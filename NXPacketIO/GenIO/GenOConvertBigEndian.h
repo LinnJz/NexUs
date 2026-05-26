@@ -1,11 +1,11 @@
-﻿// GenOConvert - An abstract base class for the GenO byte swapping routines
+// GenOConvert - An abstract base class for the GenO byte swapping routines
 
 #ifndef GENO_CONVERT_BIG_ENDIAN_H
 #define GENO_CONVERT_BIG_ENDIAN_H
 
 #include "NXPacketIO_Export.h"
 
-#include "GenIO/GenOConvert.h"
+#include "GenOConvert.h"
 
 class NX_PACKETIO_EXPORT GenOConvertBigEndian : public GenOConvert
 {

@@ -6,34 +6,35 @@
 #include <QTimer>
 
 #include "NXDef.h"
-class QVBoxLayout;
 class NXToolTip;
+class QVBoxLayout;
 class NXText;
 
 class NXToolTipPrivate : public QObject
 {
   Q_OBJECT
   Q_D_CREATE(NXToolTip)
-  Q_PROPERTY_CREATE_D(bool, IsMoveEnabled)
-  Q_PROPERTY_CREATE_D(int, OffSetX)
-  Q_PROPERTY_CREATE_D(int, OffSetY)
+  Q_PROPERTY_CREATE_D(QWidget *, CustomWidget)
+  Q_PROPERTY_CREATE(qreal, Opacity)
   Q_PROPERTY_CREATE_D(int, BorderRadius)
   Q_PROPERTY_CREATE_D(int, DisplayMsec)
   Q_PROPERTY_CREATE_D(int, ShowDelayMsec)
   Q_PROPERTY_CREATE_D(int, HideDelayMsec)
-  Q_PROPERTY_CREATE_D(QWidget *, CustomWidget)
+  Q_PROPERTY_CREATE_D(int, OffSetX)
+  Q_PROPERTY_CREATE_D(int, OffSetY)
+  Q_PROPERTY_CREATE_D(bool, IsMoveEnable)
 
 public:
   explicit NXToolTipPrivate(QObject *parent = nullptr);
-  ~NXToolTipPrivate() override;
+  ~NXToolTipPrivate();
 
 protected:
   bool eventFilter(QObject *watched, QEvent *event) override;
 
 private Q_SLOTS:
-  void onShowTimeout() noexcept;
-  void onHideTimeout() noexcept;
-  void onAutoHideTimeout() noexcept;
+  void onShowTimeout();
+  void onHideTimeout();
+  void onAutoHideTimeout();
 
 private:
   NXThemeType::ThemeMode _themeMode;
@@ -45,9 +46,9 @@ private:
   QTimer *_hideTimer;
   QTimer *_autoHideTimer;
 
-  void _doShowAnimation() noexcept;
-  void _updatePos() noexcept;
-  void _stopAllTimers() noexcept;
+  void _doShowAnimation();
+  void _updatePos();
+  void _stopAllTimers();
 };
 
 #endif // NXTOOLTIPPRIVATE_H

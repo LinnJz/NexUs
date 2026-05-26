@@ -4,12 +4,13 @@
 #include <QPainterPath>
 #include <QPropertyAnimation>
 #include <QtMath>
+
 #include "NXTheme.h"
 #include "private/NXProgressRingPrivate.h"
-Q_PROPERTY_CREATE_CPP(NXProgressRing, bool, IsTransparent)
-Q_PROPERTY_CREATE_CPP(NXProgressRing, bool, IsDisplayValue)
 Q_PROPERTY_CREATE_CPP(NXProgressRing, NXProgressRingType::ValueDisplayMode, ValueDisplayMode)
 Q_PROPERTY_CREATE_CPP(NXProgressRing, int, ValuePixelSize)
+Q_PROPERTY_CREATE_CPP(NXProgressRing, bool, IsTransparent)
+Q_PROPERTY_CREATE_CPP(NXProgressRing, bool, IsDisplayValue)
 
 NXProgressRing::NXProgressRing(QWidget *parent)
     : QWidget(parent)
@@ -32,7 +33,7 @@ NXProgressRing::NXProgressRing(QWidget *parent)
   d->_pIsTransparent       = false;
   setFixedSize(70, 70);
   setObjectName("NXProgressRing");
-  setStyleSheet(QStringLiteral("#NXProgressRing{background-color:transparent;}"));
+  setStyleSheet("#NXProgressRing{background-color:transparent;}");
 
   d->_busyStartDegAnimation = new QPropertyAnimation(d, "pBusyStartDeg");
   connect(d->_busyStartDegAnimation, &QPropertyAnimation::valueChanged, this, [=]()
@@ -66,7 +67,7 @@ NXProgressRing::~NXProgressRing()
 }
 
 void
-NXProgressRing::setIsBusying(bool isBusying) noexcept
+NXProgressRing::setIsBusying(bool isBusying)
 {
   Q_D(NXProgressRing);
   d->_pIsBusying = isBusying;
@@ -85,14 +86,14 @@ NXProgressRing::setIsBusying(bool isBusying) noexcept
 }
 
 bool
-NXProgressRing::getIsBusying() const noexcept
+NXProgressRing::getIsBusying() const
 {
   Q_D(const NXProgressRing);
   return d->_pIsBusying;
 }
 
 void
-NXProgressRing::setBusyingWidth(int width) noexcept
+NXProgressRing::setBusyingWidth(int width)
 {
   Q_D(NXProgressRing);
   d->_pBusyingWidth = width;
@@ -101,14 +102,14 @@ NXProgressRing::setBusyingWidth(int width) noexcept
 }
 
 int
-NXProgressRing::getBusyingWidth() const noexcept
+NXProgressRing::getBusyingWidth() const
 {
   Q_D(const NXProgressRing);
   return d->_pBusyingWidth;
 }
 
 void
-NXProgressRing::setBusyingDurationTime(int busyingDurationTime) noexcept
+NXProgressRing::setBusyingDurationTime(int busyingDurationTime)
 {
   Q_D(NXProgressRing);
   d->_pBusyingDurationTime = busyingDurationTime;
@@ -117,14 +118,14 @@ NXProgressRing::setBusyingDurationTime(int busyingDurationTime) noexcept
 }
 
 int
-NXProgressRing::getBusyingDurationTime() const noexcept
+NXProgressRing::getBusyingDurationTime() const
 {
   Q_D(const NXProgressRing);
   return d->_pBusyingDurationTime;
 }
 
 void
-NXProgressRing::setMinimum(int minimum) noexcept
+NXProgressRing::setMinimum(int minimum)
 {
   Q_D(NXProgressRing);
   d->_pMinimum = minimum;
@@ -134,14 +135,14 @@ NXProgressRing::setMinimum(int minimum) noexcept
 }
 
 int
-NXProgressRing::getMinimum() const noexcept
+NXProgressRing::getMinimum() const
 {
   Q_D(const NXProgressRing);
   return d->_pMinimum;
 }
 
 void
-NXProgressRing::setMaximum(int maximum) noexcept
+NXProgressRing::setMaximum(int maximum)
 {
   Q_D(NXProgressRing);
   d->_pMaximum = maximum;
@@ -151,14 +152,14 @@ NXProgressRing::setMaximum(int maximum) noexcept
 }
 
 int
-NXProgressRing::getMaximum() const noexcept
+NXProgressRing::getMaximum() const
 {
   Q_D(const NXProgressRing);
   return d->_pMaximum;
 }
 
 void
-NXProgressRing::setValue(int value) noexcept
+NXProgressRing::setValue(int value)
 {
   Q_D(NXProgressRing);
   if (value < d->_pMinimum || value > d->_pMaximum)
@@ -171,14 +172,14 @@ NXProgressRing::setValue(int value) noexcept
 }
 
 int
-NXProgressRing::getValue() const noexcept
+NXProgressRing::getValue() const
 {
   Q_D(const NXProgressRing);
   return d->_pValue;
 }
 
 void
-NXProgressRing::setRange(int min, int max) noexcept
+NXProgressRing::setRange(int min, int max)
 {
   Q_D(NXProgressRing);
   if (min < 0 || max < 0 || min > max)
@@ -211,7 +212,7 @@ NXProgressRing::paintEvent(QPaintEvent *event)
     }
     else
     {
-      valueText = QString::number(d->_pValue / (qreal) (d->_pMaximum - d->_pMinimum) * 100) + QStringLiteral("%");
+      valueText = QString::number(d->_pValue / (qreal) (d->_pMaximum - d->_pMinimum) * 100) + "%";
     }
     painter.drawText(rect(), Qt::AlignCenter | Qt::TextSingleLine, valueText);
   }

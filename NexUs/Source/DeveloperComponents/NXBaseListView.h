@@ -1,4 +1,4 @@
-﻿#ifndef NXBASELISTVIEW_H
+#ifndef NXBASELISTVIEW_H
 #define NXBASELISTVIEW_H
 
 #include <QListView>
@@ -13,10 +13,9 @@ class NXBaseListView : public QListView
 public:
   explicit NXBaseListView(QWidget *parent = nullptr);
   ~NXBaseListView();
-Q_SIGNALS:
-  void mousePress(const QModelIndex &index);
-  void mouseRelease(const QModelIndex &index);
-  void mouseDoubleClick(const QModelIndex &index);
+  Q_SIGNAL void mousePress(const QModelIndex &index);
+  Q_SIGNAL void mouseRelease(const QModelIndex &index);
+  Q_SIGNAL void mouseDoubleClick(const QModelIndex &index);
 
 protected:
   void wheelEvent(QWheelEvent *event) override;

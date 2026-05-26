@@ -1,4 +1,4 @@
-﻿#ifndef UTCALLBACK_H
+#ifndef UTCALLBACK_H
 #define UTCALLBACK_H
 
 #include "NXPacketIO_Export.h"
@@ -7,7 +7,7 @@
 #include <functional>
 #include <list>
 
-#include "Util/UtBinder.h"
+#include "UtBinder.h"
 class UtCallback;
 class UtCallbackList;
 
@@ -94,6 +94,6 @@ private:
     UtCallbackList& operator=(const UtCallbackList&) = delete;
 };
 
-#include "Util/UtCallbackN.h"
+#include "UtCallbackN.h"
 
 #endif

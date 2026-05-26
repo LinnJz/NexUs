@@ -9,21 +9,21 @@
 
 #include "NXTheme.h"
 #include "private/NXPromotionCardPrivate.h"
+Q_PROPERTY_CREATE_CPP(NXPromotionCard, QS_SET_CREF(QPixmap), CardPixmap)
+Q_PROPERTY_CREATE_CPP(NXPromotionCard, QS_SET_CREF(QString), CardTitle)
+Q_PROPERTY_CREATE_CPP(NXPromotionCard, QS_SET_CREF(QString), PromotionTitle)
+Q_PROPERTY_CREATE_CPP(NXPromotionCard, QS_SET_CREF(QString), Title)
+Q_PROPERTY_CREATE_CPP(NXPromotionCard, QS_SET_CREF(QString), SubTitle)
+Q_PROPERTY_CREATE_CPP(NXPromotionCard, QS_SET_CREF(QColor), CardTitleColor)
+Q_PROPERTY_CREATE_CPP(NXPromotionCard, QS_SET_CREF(QColor), PromotionTitleColor)
+Q_PROPERTY_CREATE_CPP(NXPromotionCard, QS_SET_CREF(QColor), PromotionTitleBaseColor)
+Q_PROPERTY_CREATE_CPP(NXPromotionCard, QS_SET_CREF(QColor), TitleColor)
+Q_PROPERTY_CREATE_CPP(NXPromotionCard, QS_SET_CREF(QColor), SubTitleColor)
 Q_PROPERTY_CREATE_CPP(NXPromotionCard, int, BorderRadius)
 Q_PROPERTY_CREATE_CPP(NXPromotionCard, int, CardTitlePixelSize)
 Q_PROPERTY_CREATE_CPP(NXPromotionCard, int, PromotionTitlePixelSize)
 Q_PROPERTY_CREATE_CPP(NXPromotionCard, int, TitlePixelSize)
 Q_PROPERTY_CREATE_CPP(NXPromotionCard, int, SubTitlePixelSize)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QPixmap &, QPixmap, CardPixmap)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QString &, QString, CardTitle)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QString &, QString, PromotionTitle)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QString &, QString, Title)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QString &, QString, SubTitle)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QColor &, QColor, CardTitleColor)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QColor &, QColor, PromotionTitleColor)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QColor &, QColor, PromotionTitleBaseColor)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QColor &, QColor, TitleColor)
-Q_PROPERTY_CREATE_2_CPP(NXPromotionCard, const QColor &, QColor, SubTitleColor)
 
 NXPromotionCard::NXPromotionCard(QWidget *parent)
     : QWidget { parent }
@@ -36,10 +36,10 @@ NXPromotionCard::NXPromotionCard(QWidget *parent)
   d->_pHoverOpacity              = 0;
   d->_pHorizontalCardPixmapRatio = 1;
   d->_pVerticalCardPixmapRatio   = 1;
-  d->_pCardTitle                 = {};
-  d->_pPromotionTitle            = {};
-  d->_pTitle                     = {};
-  d->_pSubTitle                  = {};
+  d->_pCardTitle                 = QStringLiteral("");
+  d->_pPromotionTitle            = QStringLiteral("");
+  d->_pTitle                     = QStringLiteral("");
+  d->_pSubTitle                  = QStringLiteral("");
   d->_pCardTitleColor            = Qt::white;
   d->_pPromotionTitleColor       = Qt::white;
   d->_pTitleColor                = Qt::white;
@@ -71,7 +71,7 @@ NXPromotionCard::~NXPromotionCard()
 }
 
 void
-NXPromotionCard::setHorizontalCardPixmapRatio(qreal pixmapRatio) noexcept
+NXPromotionCard::setHorizontalCardPixmapRatio(qreal pixmapRatio)
 {
   Q_D(NXPromotionCard);
   if (pixmapRatio > 0 && pixmapRatio <= 1)
@@ -82,14 +82,14 @@ NXPromotionCard::setHorizontalCardPixmapRatio(qreal pixmapRatio) noexcept
 }
 
 qreal
-NXPromotionCard::getHorizontalCardPixmapRatio() const noexcept
+NXPromotionCard::getHorizontalCardPixmapRatio() const
 {
   Q_D(const NXPromotionCard);
   return d->_pHorizontalCardPixmapRatio;
 }
 
 void
-NXPromotionCard::setVerticalCardPixmapRatio(qreal pixmapRatio) noexcept
+NXPromotionCard::setVerticalCardPixmapRatio(qreal pixmapRatio)
 {
   Q_D(NXPromotionCard);
   if (pixmapRatio > 0 && pixmapRatio <= 1)
@@ -100,7 +100,7 @@ NXPromotionCard::setVerticalCardPixmapRatio(qreal pixmapRatio) noexcept
 }
 
 qreal
-NXPromotionCard::getVerticalCardPixmapRatio() const noexcept
+NXPromotionCard::getVerticalCardPixmapRatio() const
 {
   Q_D(const NXPromotionCard);
   return d->_pVerticalCardPixmapRatio;
@@ -143,7 +143,7 @@ NXPromotionCard::event(QEvent *event)
     d->_isPressAnimationFinished = false;
     d->_pressGradient->setFocalPoint(mouseEvent->pos());
     d->_pressGradient->setCenter(mouseEvent->pos());
-    // 点击后隐藏Hover效果
+    //点击后隐藏Hover效果
     d->_startHoverOpacityAnimation(false);
     break;
   }
@@ -193,34 +193,34 @@ NXPromotionCard::paintEvent(QPaintEvent *event)
   painter.save();
   painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
   painter.setPen(Qt::NoPen);
-  // 阴影绘制
+  //阴影绘制
   nxTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
   QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * d->_shadowBorderWidth,
                        height() - 2 * d->_shadowBorderWidth);
   QPainterPath path;
   path.addRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
   painter.setClipPath(path);
-  // 背景图片绘制
+  //背景图片绘制
   if (!d->_pCardPixmap.isNull())
   {
-    // 源区域计算
+    //源区域计算
     QRect pixSourceRect    = d->_pCardPixmap.rect();
     qreal horizontalOffset = d->_pCardPixmap.width() * (1 - d->_pHorizontalCardPixmapRatio) / 2;
     qreal verticalOffset   = d->_pCardPixmap.height() * (1 - d->_pVerticalCardPixmapRatio) / 2;
     pixSourceRect.adjust(horizontalOffset, verticalOffset, -horizontalOffset, -verticalOffset);
     painter.drawPixmap(foregroundRect, d->_pCardPixmap, pixSourceRect);
   }
-  // 文字绘制
+  //文字绘制
   painter.save();
   QFont font = painter.font();
-  // 卡片标题
+  //卡片标题
   font.setWeight(QFont::Bold);
   font.setPixelSize(d->_pCardTitlePixelSize);
   painter.setFont(font);
   painter.setPen(d->_pCardTitleColor);
   painter.drawText(QRect(25, 25, foregroundRect.width() - 25, foregroundRect.height()),
                    Qt::AlignLeft | Qt::AlignTop | Qt::TextSingleLine, d->_pCardTitle);
-  // 标题
+  //标题
   font.setWeight(QFont::Bold);
   font.setPixelSize(d->_pTitlePixelSize);
   painter.setFont(font);
@@ -228,7 +228,7 @@ NXPromotionCard::paintEvent(QPaintEvent *event)
   int titleTextHeight = painter.fontMetrics().height();
   QRect titleRect(25, (height() - titleTextHeight) / 2, foregroundRect.width() - 25, titleTextHeight);
   painter.drawText(titleRect, Qt::AlignLeft | Qt::AlignBottom | Qt::TextSingleLine, d->_pTitle);
-  // 推广标题
+  //推广标题
   if (!d->_pPromotionTitle.isEmpty())
   {
     font.setWeight(QFont::Normal);
@@ -238,16 +238,16 @@ NXPromotionCard::paintEvent(QPaintEvent *event)
     int promotionTitleTextHeight = painter.fontMetrics().height();
     QRect promotionTitleTextRect(32, titleRect.top() - promotionTitleTextHeight - 5, foregroundRect.width() / 2 - 25,
                                  promotionTitleTextHeight);
-    // 背景绘制
+    //背景绘制
     painter.setPen(Qt::NoPen);
     painter.setBrush(d->_pPromotionTitleBaseColor);
     painter.drawRoundedRect(
         QRect(25, promotionTitleTextRect.top() - 2, promotionTitleTextWidth + 14, promotionTitleTextHeight + 4), 8, 8);
-    // 文字绘制
+    //文字绘制
     painter.setPen(d->_pPromotionTitleColor);
     painter.drawText(promotionTitleTextRect, Qt::AlignLeft | Qt::AlignBottom | Qt::TextSingleLine, d->_pPromotionTitle);
   }
-  // 副标题
+  //副标题
   font.setWeight(QFont::Medium);
   font.setPixelSize(d->_pSubTitlePixelSize);
   painter.setFont(font);
@@ -256,17 +256,17 @@ NXPromotionCard::paintEvent(QPaintEvent *event)
                    Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, d->_pSubTitle);
 
   painter.restore();
-  // 效果阴影绘制
+  //效果阴影绘制
   if (d->_isPressAnimationFinished)
   {
-    // 覆盖阴影绘制
+    //覆盖阴影绘制
     painter.setOpacity(d->_pHoverOpacity);
     painter.setBrush(*d->_hoverGradient);
     painter.drawEllipse(d->_hoverGradient->center(), d->_hoverGradient->radius(), d->_hoverGradient->radius());
   }
   else
   {
-    // 点击阴影绘制
+    //点击阴影绘制
     painter.setOpacity(d->_pPressOpacity);
     painter.setBrush(*d->_pressGradient);
     painter.drawEllipse(d->_pressGradient->center(), d->_pPressRadius, d->_pPressRadius / 1.1);

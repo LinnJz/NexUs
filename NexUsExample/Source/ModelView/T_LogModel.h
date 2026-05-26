@@ -10,8 +10,8 @@ class T_LogModel : public QAbstractListModel
 public:
   explicit T_LogModel(QObject *parent = nullptr);
   ~T_LogModel();
-  void setLogList(QStringList list);
-  void appendLogList(QString log);
+  void setLogList(const QStringList &list);
+  void appendLogList(const QString &log);
   QStringList getLogList() const;
 
 protected:

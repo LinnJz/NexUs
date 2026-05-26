@@ -11,7 +11,7 @@ class NXSliderStyle : public QProxyStyle
 
 public:
   explicit NXSliderStyle(QStyle *style = nullptr);
-  ~NXSliderStyle() override;
+  ~NXSliderStyle();
   void drawComplexControl(ComplexControl control,
                           const QStyleOptionComplex *option,
                           QPainter *painter,

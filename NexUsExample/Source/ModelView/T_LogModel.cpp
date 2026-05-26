@@ -26,7 +26,7 @@ T_LogModel::data(const QModelIndex &index, int role) const
 }
 
 void
-T_LogModel::setLogList(QStringList list)
+T_LogModel::setLogList(const QStringList &list)
 {
   beginResetModel();
   this->_logList = list;
@@ -34,7 +34,7 @@ T_LogModel::setLogList(QStringList list)
 }
 
 void
-T_LogModel::appendLogList(QString log)
+T_LogModel::appendLogList(const QString &log)
 {
   beginResetModel();
   this->_logList.append(log);

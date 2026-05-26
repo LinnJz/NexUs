@@ -1,16 +1,16 @@
-﻿#include "GenIO/GenTCP_IO.h"
+#include "GenTCP_IO.h"
 
 #include <cstddef> // for size_t
 #include <cstring>
 #include <iostream>
 
-#include "GenIO/GenBufIManaged.h"
-#include "GenIO/GenBufOManaged.h"
-#include "GenIO/GenHostName.h"
-#include "GenIO/GenIP.h"
-#include "GenIO/GenInternetAddress.h"
-#include "GenIO/GenInternetSocketAddress.h"
-#include "GenIO/GenSocket.h"
+#include "GenBufIManaged.h"
+#include "GenBufOManaged.h"
+#include "GenHostName.h"
+#include "GenIP.h"
+#include "GenInternetAddress.h"
+#include "GenInternetSocketAddress.h"
+#include "GenSocket.h"
 
 GenTCP_IO::GenTCP_IO(int aSendBufferSize /*=100000*/, int aRecvBufferSize /*=100000*/)
     : GenTCP_Connection(), GenNetIO("GenTCP_IO", "GenTCP_IO"), mBufferBytesSent(0)

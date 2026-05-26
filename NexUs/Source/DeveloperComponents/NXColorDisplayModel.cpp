@@ -1,4 +1,4 @@
-﻿#include "NXColorDisplayModel.h"
+#include "NXColorDisplayModel.h"
 
 NXColorDisplayModel::NXColorDisplayModel(QObject *parent)
     : QAbstractListModel { parent }
@@ -10,7 +10,7 @@ NXColorDisplayModel::~NXColorDisplayModel()
 }
 
 void
-NXColorDisplayModel::appendDisplayColor(const QList<QColor> &colorList) noexcept
+NXColorDisplayModel::appendDisplayColor(const QList<QColor> &colorList)
 {
   beginResetModel();
   _displayColorList.append(colorList);
@@ -18,7 +18,7 @@ NXColorDisplayModel::appendDisplayColor(const QList<QColor> &colorList) noexcept
 }
 
 void
-NXColorDisplayModel::appendDisplayColor(const QColor &color) noexcept
+NXColorDisplayModel::appendDisplayColor(const QColor &color)
 {
   beginResetModel();
   _displayColorList.append(color);
@@ -26,7 +26,7 @@ NXColorDisplayModel::appendDisplayColor(const QColor &color) noexcept
 }
 
 void
-NXColorDisplayModel::removeDisplayColor(int index) noexcept
+NXColorDisplayModel::removeDisplayColor(int index)
 {
   if (index < 0 || index >= _displayColorList.count())
   {
@@ -38,7 +38,7 @@ NXColorDisplayModel::removeDisplayColor(int index) noexcept
 }
 
 void
-NXColorDisplayModel::replaceDisplayColor(const QColor &color, int index) noexcept
+NXColorDisplayModel::replaceDisplayColor(const QColor &color, int index)
 {
   if (index < 0 || index >= _displayColorList.count())
   {
@@ -50,13 +50,13 @@ NXColorDisplayModel::replaceDisplayColor(const QColor &color, int index) noexcep
 }
 
 QList<QColor>
-NXColorDisplayModel::getDisplayColorList() const noexcept
+NXColorDisplayModel::getDisplayColorList() const
 {
   return _displayColorList;
 }
 
 QColor
-NXColorDisplayModel::getDisplayColor(int index) const noexcept
+NXColorDisplayModel::getDisplayColor(int index) const
 {
   if (index < 0 || index >= _displayColorList.count())
   {

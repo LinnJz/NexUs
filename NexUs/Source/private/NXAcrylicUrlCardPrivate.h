@@ -1,23 +1,23 @@
 ﻿#ifndef NXACRYLICURLCARDPRIVATE_H
 #define NXACRYLICURLCARDPRIVATE_H
 
+#include <QMap>
 #include <QObject>
 #include <QPixmap>
 
 #include "NXDef.h"
-#include "NXProperty.h"
 class NXAcrylicUrlCard;
 
 class NXAcrylicUrlCardPrivate : public QObject
 {
   Q_OBJECT
   Q_D_CREATE(NXAcrylicUrlCard)
-  Q_PROPERTY_CREATE_D(qreal, MainOpacity)
-  Q_PROPERTY_CREATE_D(qreal, NoiseOpacity)
   Q_PROPERTY_CREATE_D(QString, Title)
   Q_PROPERTY_CREATE_D(QString, SubTitle)
   Q_PROPERTY_CREATE_D(QString, Url)
   Q_PROPERTY_CREATE_D(QPixmap, CardPixmap)
+  Q_PROPERTY_CREATE_D(qreal, MainOpacity)
+  Q_PROPERTY_CREATE_D(qreal, NoiseOpacity)
   Q_PROPERTY_CREATE_D(QSize, CardPixmapSize)
   Q_PROPERTY_CREATE_D(int, BorderRadius)
   Q_PROPERTY_CREATE_D(int, BrushAlpha)

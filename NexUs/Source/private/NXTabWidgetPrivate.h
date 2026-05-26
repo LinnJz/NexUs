@@ -4,18 +4,19 @@
 #include <QDrag>
 #include <QObject>
 #include <QPixmap>
+
 #include "LinnSingleton.h"
-#include "NXDef.h"
+#include "NXProperty.h"
 
 class NXDragMonitor : public QObject
 {
   Q_OBJECT
-  Q_PRIVATE_CREATE(bool, IsInDrag)
   Q_SINGLETON_CREATE(QS_S_UNIQUE(NXDragMonitor))
+  Q_PRIVATE_CREATE(bool, IsInDrag)
 
 private:
   explicit NXDragMonitor(QObject *parent = nullptr);
-  ~NXDragMonitor() override;
+  ~NXDragMonitor();
 };
 
 class NXTabWidget;
@@ -25,25 +26,25 @@ class NXTabWidgetPrivate : public QObject
 {
   Q_OBJECT
   Q_D_CREATE(NXTabWidget)
+  Q_PROPERTY_CREATE_D(QSize, TabSize)
   Q_PROPERTY_CREATE_D(bool, IsTabTransparent)
   Q_PROPERTY_CREATE_D(bool, IsContainerAcceptDrops)
-  Q_PROPERTY_CREATE_D(QSize, TabSize)
 
 public:
   explicit NXTabWidgetPrivate(QObject *parent = nullptr);
-  ~NXTabWidgetPrivate() override;
-  Q_SLOT void onTabDragCreate(QMimeData *mimeData) noexcept;
-  Q_SLOT void onTabDragEnter(QMimeData *mimeData) noexcept;
-  Q_SLOT void onTabDragLeave(QMimeData *mimeData) noexcept;
-  Q_SLOT void onTabDragDrop(QMimeData *mimeData) noexcept;
-  Q_SLOT void onTabCloseRequested(int index) noexcept;
+  ~NXTabWidgetPrivate();
+  Q_SLOT void onTabDragCreate(QMimeData *mimeData);
+  Q_SLOT void onTabDragEnter(QMimeData *mimeData);
+  Q_SLOT void onTabDragLeave(QMimeData *mimeData);
+  Q_SLOT void onTabDragDrop(QMimeData *mimeData);
+  Q_SLOT void onTabCloseRequested(int index);
 
 private:
   friend class NXCustomTabWidget;
+  QList<QWidget *> _allTabWidgetList;
   NXTabBar *_tabBar { nullptr };
   NXTabBar *_customTabBar { nullptr };
-  QList<QWidget *> _allTabWidgetList;
-  void _clearAllTabWidgetList() noexcept;
+  void _clearAllTabWidgetList();
 };
 
 #endif // NXTABWIDGETPRIVATE_H

@@ -139,7 +139,7 @@ NXPlainTextEdit::contextMenuEvent(QContextMenuEvent *event)
   {
     menu->addSeparator();
   }
-  action = menu->addAction("全选");
+  action = menu->addAction(QStringLiteral("全选"));
   action->setShortcut(QKeySequence::SelectAll);
   action->setEnabled(!toPlainText().isEmpty() && !(textCursor().selectedText() == toPlainText()));
   connect(action, &QAction::triggered, this, &NXPlainTextEdit::selectAll);
@@ -156,4 +156,16 @@ NXPlainTextEdit::paintEvent(QPaintEvent *event)
     d->onThemeChanged(d->_themeMode);
   }
   QPlainTextEdit::paintEvent(event);
+}
+
+void
+NXPlainTextEdit::resizeEvent(QResizeEvent *event)
+{
+  Q_D(NXPlainTextEdit);
+  QPlainTextEdit::resizeEvent(event);
+  if (d->_style->getExpandMarkWidth() > 0)
+  {
+    d->_style->setExpandMarkWidth(width() / 2 - 3);
+    update();
+  }
 }

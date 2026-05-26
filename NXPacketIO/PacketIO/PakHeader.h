@@ -1,9 +1,9 @@
-﻿#ifndef PakHeader_H
+#ifndef PakHeader_H
 #define PakHeader_H
 
 #include "NXPacketIO_Export.h"
 
-#include "GenIO/GenBuffer.h"
+#include "GenBuffer.h"
 
 class NX_PACKETIO_EXPORT PakHeader
 {

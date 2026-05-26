@@ -6,16 +6,16 @@
 
 #include "NXTheme.h"
 #include "private/NXReminderCardPrivate.h"
+Q_PROPERTY_CREATE_CPP(NXReminderCard, QS_SET_CREF(QString), Title)
+Q_PROPERTY_CREATE_CPP(NXReminderCard, QS_SET_CREF(QString), SubTitle)
+Q_PROPERTY_CREATE_CPP(NXReminderCard, QS_SET_CREF(QPixmap), CardPixmap)
+Q_PROPERTY_CREATE_CPP(NXReminderCard, QSize, CardPixmapSize)
 Q_PROPERTY_CREATE_CPP(NXReminderCard, int, BorderRadius)
 Q_PROPERTY_CREATE_CPP(NXReminderCard, int, TitlePixelSize)
 Q_PROPERTY_CREATE_CPP(NXReminderCard, int, SubTitlePixelSize)
 Q_PROPERTY_CREATE_CPP(NXReminderCard, int, TitleSpacing)
 Q_PROPERTY_CREATE_CPP(NXReminderCard, int, CardPixmapBorderRadius)
 Q_PROPERTY_CREATE_CPP(NXReminderCard, NXCardPixType::PixMode, CardPixMode)
-Q_PROPERTY_CREATE_CPP(NXReminderCard, QSize, CardPixmapSize)
-Q_PROPERTY_CREATE_2_CPP(NXReminderCard, const QPixmap &, QPixmap, CardPixmap)
-Q_PROPERTY_CREATE_2_CPP(NXReminderCard, const QString &, QString, Title)
-Q_PROPERTY_CREATE_2_CPP(NXReminderCard, const QString &, QString, SubTitle)
 
 NXReminderCard::NXReminderCard(QWidget *parent)
     : QPushButton { parent }
@@ -44,7 +44,7 @@ NXReminderCard::~NXReminderCard()
 }
 
 void
-NXReminderCard::setCardPixmapSize(int width, int height) noexcept
+NXReminderCard::setCardPixmapSize(int width, int height)
 {
   Q_D(NXReminderCard);
   d->_pCardPixmapSize = QSize(width, height);

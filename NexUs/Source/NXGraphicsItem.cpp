@@ -7,12 +7,12 @@
 #include "NXGraphicsScene.h"
 #include "private/NXGraphicsItemPrivate.h"
 #include "private/NXGraphicsScenePrivate.h"
+Q_PROPERTY_CREATE_CPP(NXGraphicsItem, QS_SET_CREF(QImage), ItemImage)
+Q_PROPERTY_CREATE_CPP(NXGraphicsItem, QS_SET_CREF(QImage), ItemSelectedImage)
+Q_PROPERTY_CREATE_CPP(NXGraphicsItem, QS_SET_CREF(QString), ItemName)
+Q_PROPERTY_CREATE_CPP(NXGraphicsItem, QS_SET_CREF(QVariantMap), DataRoutes)
 Q_PROPERTY_CREATE_CPP(NXGraphicsItem, int, Width)
 Q_PROPERTY_CREATE_CPP(NXGraphicsItem, int, Height)
-Q_PROPERTY_CREATE_2_CPP(NXGraphicsItem, const QImage &, QImage, ItemImage)
-Q_PROPERTY_CREATE_2_CPP(NXGraphicsItem, const QImage &, QImage, ItemSelectedImage)
-Q_PROPERTY_CREATE_2_CPP(NXGraphicsItem, const QString &, QString, ItemName)
-Q_PROPERTY_CREATE_2_CPP(NXGraphicsItem, const QVariantMap &, QVariantMap, DataRoutes)
 
 NXGraphicsItem::NXGraphicsItem(QGraphicsItem *parent)
     : QGraphicsObject(parent)
@@ -33,7 +33,7 @@ NXGraphicsItem::NXGraphicsItem(QGraphicsItem *parent)
                     .remove(QStringLiteral("-"));
   d->_pItemImage         = QImage(QStringLiteral(":/Resource/Image/Moon.jpg"));
   d->_pItemSelectedImage = QImage(QStringLiteral(":/Resource/Image/Cirno.jpg"));
-  d->_pItemName          = {};
+  d->_pItemName          = QStringLiteral("");
   d->_pMaxLinkPortCount  = 1;
   d->_currentLinkPortState.resize(1);
   d->_currentLinkPortState.fill(false);
@@ -52,7 +52,7 @@ NXGraphicsItem::~NXGraphicsItem()
 }
 
 void
-NXGraphicsItem::setMaxLinkPortCount(int maxLinkPortCount) noexcept
+NXGraphicsItem::setMaxLinkPortCount(int maxLinkPortCount)
 {
   Q_D(NXGraphicsItem);
   if (maxLinkPortCount < 0)
@@ -77,27 +77,27 @@ NXGraphicsItem::setMaxLinkPortCount(int maxLinkPortCount) noexcept
 }
 
 int
-NXGraphicsItem::getMaxLinkPortCount() const noexcept
+NXGraphicsItem::getMaxLinkPortCount() const
 {
   Q_D(const NXGraphicsItem);
   return d->_pMaxLinkPortCount;
 }
 
 QString
-NXGraphicsItem::getItemUID() const noexcept
+NXGraphicsItem::getItemUID() const
 {
   return d_ptr->_itemUID;
 }
 
 void
-NXGraphicsItem::setLinkPortState(bool isFullLink) noexcept
+NXGraphicsItem::setLinkPortState(bool isFullLink)
 {
   Q_D(NXGraphicsItem);
   d->_currentLinkPortState.fill(isFullLink);
 }
 
 void
-NXGraphicsItem::setLinkPortState(bool isLink, int portIndex) noexcept
+NXGraphicsItem::setLinkPortState(bool isLink, int portIndex)
 {
   Q_D(NXGraphicsItem);
   if (portIndex >= 0 && portIndex < d->_pMaxLinkPortCount)
@@ -106,15 +106,15 @@ NXGraphicsItem::setLinkPortState(bool isLink, int portIndex) noexcept
   }
 }
 
-QList<bool>
-NXGraphicsItem::getLinkPortState() const noexcept
+QVector<bool>
+NXGraphicsItem::getLinkPortState() const
 {
   Q_D(const NXGraphicsItem);
   return d->_currentLinkPortState;
 }
 
 bool
-NXGraphicsItem::getLinkPortState(int portIndex) const noexcept
+NXGraphicsItem::getLinkPortState(int portIndex) const
 {
   Q_D(const NXGraphicsItem);
   if (portIndex >= 0 && portIndex < d->_pMaxLinkPortCount)
@@ -125,7 +125,7 @@ NXGraphicsItem::getLinkPortState(int portIndex) const noexcept
 }
 
 int
-NXGraphicsItem::getUsedLinkPortCount() const noexcept
+NXGraphicsItem::getUsedLinkPortCount() const
 {
   Q_D(const NXGraphicsItem);
   int currentLinkPortCount = 0;
@@ -139,11 +139,11 @@ NXGraphicsItem::getUsedLinkPortCount() const noexcept
   return currentLinkPortCount;
 }
 
-QList<int>
-NXGraphicsItem::getUsedLinkPort() const noexcept
+QVector<int>
+NXGraphicsItem::getUsedLinkPort() const
 {
   Q_D(const NXGraphicsItem);
-  QList<int> usedPortVector;
+  QVector<int> usedPortVector;
   for (int i = 0; i < d->_pMaxLinkPortCount; i++)
   {
     if (d->_currentLinkPortState[i])
@@ -155,17 +155,17 @@ NXGraphicsItem::getUsedLinkPort() const noexcept
 }
 
 int
-NXGraphicsItem::getUnusedLinkPortCount() const noexcept
+NXGraphicsItem::getUnusedLinkPortCount() const
 {
   Q_D(const NXGraphicsItem);
   return d->_pMaxLinkPortCount - getUsedLinkPortCount();
 }
 
-QList<int>
-NXGraphicsItem::getUnusedLinkPort() const noexcept
+QVector<int>
+NXGraphicsItem::getUnusedLinkPort() const
 {
   Q_D(const NXGraphicsItem);
-  QList<int> unusedPortVector;
+  QVector<int> unusedPortVector;
   for (int i = 0; i < d->_pMaxLinkPortCount; i++)
   {
     if (!(d->_currentLinkPortState[i]))

@@ -1,10 +1,10 @@
-﻿#ifndef PakUDP_IO_H
+#ifndef PakUDP_IO_H
 #define PakUDP_IO_H
 
 #include "NXPacketIO_Export.h"
 
-#include "PacketIO/PakDefaultHeader.h"
-#include "PacketIO/PakSocketIO.h"
+#include "PakDefaultHeader.h"
+#include "PakSocketIO.h"
 class GenUDP_Connection;
 class PakPacket;
 class PakProcessor;

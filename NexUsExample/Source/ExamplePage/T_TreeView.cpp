@@ -9,16 +9,16 @@
 #include "NXSlider.h"
 #include "NXText.h"
 #include "NXTreeView.h"
-#include "T_TreeViewModel.h"
+#include "ModelView/T_TreeViewModel.h"
 
 T_TreeView::T_TreeView(QWidget *parent)
     : T_BasePage(parent)
 {
   // 预览窗口标题
-  setWindowTitle("NXTreeView");
+  setWindowTitle(QStringLiteral("NXTreeView"));
 
   // 顶部元素
-  createCustomWidget("树型视图被放置于此，可在此界面体验其效果并按需添加进项目中");
+  createCustomWidget(QStringLiteral("树型视图被放置于此，可在此界面体验其效果并按需添加进项目中"));
 
   // NXTreeView
   T_TreeViewModel *treeModel = new T_TreeViewModel(this);
@@ -30,16 +30,16 @@ T_TreeView::T_TreeView(QWidget *parent)
   treeSettingWidgetLayout->setSpacing(15);
 
   // 数据统计
-  NXText *dataText = new NXText(QString("树模型总数据条数：%1").arg(treeModel->getItemCount()), this);
+  NXText *dataText = new NXText(QString(QStringLiteral("树模型总数据条数：%1")).arg(treeModel->getItemCount()), this);
   dataText->setTextPixelSize(15);
 
   // ItemHeight
-  NXText *itemHeightText = new NXText("ItemHeight", this);
+  NXText *itemHeightText = new NXText(QStringLiteral("ItemHeight"), this);
   itemHeightText->setTextPixelSize(15);
   NXSlider *itemHeightSlider = new NXSlider(this);
   itemHeightSlider->setRange(200, 600);
   itemHeightSlider->setValue(350);
-  NXText *itemHeightValueText = new NXText("35", this);
+  NXText *itemHeightValueText = new NXText(QStringLiteral("35"), this);
   itemHeightValueText->setTextPixelSize(15);
   connect(itemHeightSlider, &NXSlider::valueChanged, this, [=](int value)
   {
@@ -53,12 +53,12 @@ T_TreeView::T_TreeView(QWidget *parent)
   itemHeightLayout->addWidget(itemHeightValueText);
 
   // HeaderMargin
-  NXText *headerMarginText = new NXText("HeaderMargin", this);
+  NXText *headerMarginText = new NXText(QStringLiteral("HeaderMargin"), this);
   headerMarginText->setTextPixelSize(15);
   NXSlider *headerMarginSlider = new NXSlider(this);
   headerMarginSlider->setRange(0, 200);
   headerMarginSlider->setValue(50);
-  NXText *headerMarginValueText = new NXText("5", this);
+  NXText *headerMarginValueText = new NXText(QStringLiteral("5"), this);
   headerMarginValueText->setTextPixelSize(15);
   connect(headerMarginSlider, &NXSlider::valueChanged, this, [=](int value)
   {
@@ -72,12 +72,12 @@ T_TreeView::T_TreeView(QWidget *parent)
   headerMarginLayout->addWidget(headerMarginValueText);
 
   // Indentation
-  NXText *indentationText = new NXText("Indentation", this);
+  NXText *indentationText = new NXText(QStringLiteral("Indentation"), this);
   indentationText->setTextPixelSize(15);
   NXSlider *indentationSlider = new NXSlider(this);
   indentationSlider->setRange(200, 1000);
   indentationSlider->setValue(200);
-  NXText *indentationValueText = new NXText("20", this);
+  NXText *indentationValueText = new NXText(QStringLiteral("20"), this);
   indentationValueText->setTextPixelSize(15);
   connect(indentationSlider, &NXSlider::valueChanged, this, [=](int value)
   {
@@ -90,18 +90,18 @@ T_TreeView::T_TreeView(QWidget *parent)
   indentationLayout->addWidget(indentationSlider);
   indentationLayout->addWidget(indentationValueText);
 
-  // 展开全部
+  //展开全部
   QHBoxLayout *expandCollapseLayout = new QHBoxLayout();
   expandCollapseLayout->setContentsMargins(0, 0, 0, 0);
-  NXPushButton *expandButton = new NXPushButton("展开全部", this);
+  NXPushButton *expandButton = new NXPushButton(QStringLiteral("展开全部"), this);
   expandButton->setFixedWidth(80);
   connect(expandButton, &NXPushButton::clicked, this, [=]()
   {
     _treeView->expandAll();
   });
 
-  // 收起全部
-  NXPushButton *collapseButton = new NXPushButton("收起全部", this);
+  //收起全部
+  NXPushButton *collapseButton = new NXPushButton(QStringLiteral("收起全部"), this);
   collapseButton->setFixedWidth(80);
   connect(collapseButton, &NXPushButton::clicked, this, [=]()
   {
@@ -119,7 +119,7 @@ T_TreeView::T_TreeView(QWidget *parent)
   treeSettingWidgetLayout->addStretch();
 
   // TreeView
-  NXText *treeText = new NXText("NXTreeView", this);
+  NXText *treeText = new NXText(QStringLiteral("NXTreeView"), this);
   treeText->setTextPixelSize(18);
   _treeView                           = new NXTreeView(this);
   NXScrollBar *treeViewFloatScrollBar = new NXScrollBar(_treeView->verticalScrollBar(), _treeView);
@@ -137,7 +137,7 @@ T_TreeView::T_TreeView(QWidget *parent)
   treeLayout->addLayout(treeViewLayout);
 
   QWidget *centralWidget = new QWidget(this);
-  centralWidget->setWindowTitle("NXView");
+  centralWidget->setWindowTitle(QStringLiteral("NXView"));
   QVBoxLayout *centerVLayout = new QVBoxLayout(centralWidget);
   centerVLayout->setContentsMargins(0, 0, 0, 0);
   centerVLayout->addWidget(treeText);

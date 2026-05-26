@@ -1,4 +1,4 @@
-﻿#ifndef NXBREADCRUMBBAR_H
+#ifndef NXBREADCRUMBBAR_H
 #define NXBREADCRUMBBAR_H
 #include <QWidget>
 
@@ -15,16 +15,14 @@ class NX_EXPORT NXBreadcrumbBar : public QWidget
 
 public:
   explicit NXBreadcrumbBar(QWidget *parent = nullptr);
-  ~NXBreadcrumbBar() override;
-  void setBreadcrumbList(const QStringList &breadcrumbList) noexcept;
-  QStringList appendBreadcrumb(const QString &breadcrumb) noexcept;
-  QStringList removeBreadcrumb(const QString &breadcrumb) noexcept;
+  ~NXBreadcrumbBar();
+  void setBreadcrumbList(const QStringList &breadcrumbList);
+  QStringList appendBreadcrumb(const QString &breadcrumb);
+  QStringList removeBreadcrumb(const QString &breadcrumb);
 
-  int getBreadcrumbListCount() const noexcept;
-  QStringList getBreadcrumbList() const noexcept;
-
-Q_SIGNALS:
-  void breadcrumbClicked(const QString &breadcrumb, const QStringList &lastBreadcrumbList);
+  int getBreadcrumbListCount() const;
+  QStringList getBreadcrumbList() const;
+  Q_SIGNAL void breadcrumbClicked(const QString &breadcrumb, const QStringList &lastBreadcrumbList);
 };
 
 #endif // NXBREADCRUMBBAR_H

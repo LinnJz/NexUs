@@ -24,7 +24,7 @@ NXApplicationPrivate::~NXApplicationPrivate()
 }
 
 void
-NXApplicationPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode) noexcept
+NXApplicationPrivate::onThemeModeChanged(NXThemeType::ThemeMode themeMode)
 {
   _themeMode = themeMode;
   switch (_pWindowDisplayMode)
@@ -100,6 +100,11 @@ NXApplicationPrivate::eventFilter(QObject *watched, QEvent *event)
     }
     break;
   }
+  case QEvent::ApplicationPaletteChange :
+  {
+    onSystemPaletteChanged();
+    break;
+  }
   default :
   {
     break;
@@ -134,7 +139,7 @@ NXApplicationPrivate::_initMicaBaseImage(const QImage &img)
 }
 
 QRect
-NXApplicationPrivate::_calculateWindowVirtualGeometry(QWidget *widget) noexcept
+NXApplicationPrivate::_calculateWindowVirtualGeometry(QWidget *widget)
 {
   QRect geometry    = widget->geometry();
   qreal xImageRatio = 1, yImageRatio = 1;
@@ -163,7 +168,7 @@ NXApplicationPrivate::_calculateWindowVirtualGeometry(QWidget *widget) noexcept
 }
 
 void
-NXApplicationPrivate::_updateMica(QWidget *widget, bool isProcessEvent) noexcept
+NXApplicationPrivate::_updateMica(QWidget *widget, bool isProcessEvent)
 {
   if (widget->isVisible())
   {
@@ -187,7 +192,7 @@ NXApplicationPrivate::_updateMica(QWidget *widget, bool isProcessEvent) noexcept
 }
 
 void
-NXApplicationPrivate::_updateAllMicaWidget() noexcept
+NXApplicationPrivate::_updateAllMicaWidget()
 {
   if (_pWindowDisplayMode == NXApplicationType::WindowDisplayMode::NXMica)
   {
@@ -199,7 +204,7 @@ NXApplicationPrivate::_updateAllMicaWidget() noexcept
 }
 
 void
-NXApplicationPrivate::_resetAllMicaWidget() noexcept
+NXApplicationPrivate::_resetAllMicaWidget()
 {
   for (auto widget : _micaWidgetList)
   {
@@ -207,4 +212,36 @@ NXApplicationPrivate::_resetAllMicaWidget() noexcept
     palette.setBrush(QPalette::Window, Qt::transparent);
     widget->setPalette(palette);
   }
+}
+
+void
+NXApplicationPrivate::onSystemPaletteChanged()
+{
+  syncSystemTheme();
+}
+
+void
+NXApplicationPrivate::syncSystemTheme()
+{
+  bool systemIsDark                  = _isSystemDarkMode();
+  NXThemeType::ThemeMode currentMode = nxTheme->getThemeMode();
+  NXThemeType::ThemeMode targetMode  = systemIsDark ? NXThemeType::Dark : NXThemeType::Light;
+
+  if (currentMode != targetMode)
+  {
+    nxTheme->setThemeMode(targetMode);
+  }
+}
+
+bool
+NXApplicationPrivate::_isSystemDarkMode() const
+{
+  QPalette palette   = qApp->palette();
+  QColor windowColor = palette.color(QPalette::Window);
+  QColor textColor   = palette.color(QPalette::WindowText);
+
+  qreal windowLuminance = 0.299 * windowColor.red() + 0.587 * windowColor.green() + 0.114 * windowColor.blue();
+
+  qreal textLuminance = 0.299 * textColor.red() + 0.587 * textColor.green() + 0.114 * textColor.blue();
+  return windowLuminance < textLuminance;
 }

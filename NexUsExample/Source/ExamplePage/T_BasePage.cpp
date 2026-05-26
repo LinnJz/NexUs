@@ -28,12 +28,12 @@ T_BasePage::~T_BasePage()
 }
 
 void
-T_BasePage::createCustomWidget(QString desText)
+T_BasePage::createCustomWidget(const QString &desText)
 {
   // 顶部元素
   QWidget *customWidget = new QWidget(this);
   NXText *subTitleText  = new NXText(this);
-  subTitleText->setText("https://github.com/RainbowCandyX/NXWidgetTools");
+  subTitleText->setText(QStringLiteral("https://github.com/RainbowCandyX/NexUs"));
   subTitleText->setTextInteractionFlags(Qt::TextSelectableByMouse);
   subTitleText->setTextPixelSize(11);
 
@@ -42,22 +42,22 @@ T_BasePage::createCustomWidget(QString desText)
   documentationButton->setIsTransparent(false);
   documentationButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
   //_toolButton->setPopupMode(QToolButton::MenuButtonPopup);
-  documentationButton->setText("Documentation");
+  documentationButton->setText(QStringLiteral("Documentation"));
   documentationButton->setNXIcon(NXIconType::FileDoc);
   NXMenu *documentationMenu = new NXMenu(this);
-  documentationMenu->addNXIconAction(NXIconType::CardsBlank, "CardsBlank");
-  documentationMenu->addNXIconAction(NXIconType::EarthAmericas, "EarthAmericas");
+  documentationMenu->addNXIconAction(NXIconType::CardsBlank, QStringLiteral("CardsBlank"));
+  documentationMenu->addNXIconAction(NXIconType::EarthAmericas, QStringLiteral("EarthAmericas"));
   documentationButton->setMenu(documentationMenu);
 
   NXToolButton *sourceButton = new NXToolButton(this);
   sourceButton->setFixedHeight(35);
   sourceButton->setIsTransparent(false);
   sourceButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-  sourceButton->setText("Source");
+  sourceButton->setText(QStringLiteral("Source"));
   sourceButton->setNXIcon(NXIconType::NfcSymbol);
   NXMenu *sourceMenu = new NXMenu(this);
-  sourceMenu->addNXIconAction(NXIconType::FireBurner, "FireBurner");
-  sourceMenu->addNXIconAction(NXIconType::Galaxy, "Galaxy~~~~");
+  sourceMenu->addNXIconAction(NXIconType::FireBurner, QStringLiteral("FireBurner"));
+  sourceMenu->addNXIconAction(NXIconType::Galaxy, QStringLiteral("Galaxy~~~~"));
   sourceButton->setMenu(sourceMenu);
 
   NXToolButton *themeButton = new NXToolButton(this);
@@ -82,8 +82,9 @@ T_BasePage::createCustomWidget(QString desText)
     }
   });
 
-  NXPushButton *iconButton = new NXPushButton("带图标按钮", this);
+  NXPushButton *iconButton = new NXPushButton(QStringLiteral("带图标按钮"), this);
   iconButton->setNXIcon(NXIconType::Heart, 16);
+  iconButton->setIsHoverEnable(false);
   iconButton->setFixedSize(130, 38);
 
   QHBoxLayout *buttonLayout = new QHBoxLayout();

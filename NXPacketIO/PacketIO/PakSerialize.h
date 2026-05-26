@@ -1,5 +1,5 @@
-﻿#include "PacketIO/PakSerializeFwd.h"
-#include "PacketIO/PakSerializeTraits.h"
+#include "PakSerializeFwd.h"
+#include "PakSerializeTraits.h"
 #ifndef PAKSERIALIZE_H
 #define PAKSERIALIZE_H
 #include "NXPacketIO_Export.h"
@@ -100,7 +100,7 @@ inline void Save(PakO& aAr, PakSerialization::PakSerializePtr<T>& aPtr)
 }
 } // End Namespace PakSerialization
 
-#include "PacketIO/PakSerializeTypes.h"
+#include "PakSerializeTypes.h"
 
 namespace PakSerialization
 {

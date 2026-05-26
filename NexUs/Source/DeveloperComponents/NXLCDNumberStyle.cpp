@@ -1,9 +1,10 @@
 ﻿#include "NXLCDNumberStyle.h"
-#include "NXTheme.h"
 
 #include <QDebug>
 #include <QPainter>
 #include <QStyleOption>
+
+#include "NXTheme.h"
 
 NXLCDNumberStyle::NXLCDNumberStyle(QStyle *style)
 {

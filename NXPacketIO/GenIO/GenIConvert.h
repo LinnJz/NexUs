@@ -1,9 +1,9 @@
-﻿#ifndef GENI_CONVERT_H
+#ifndef GENI_CONVERT_H
 #define GENI_CONVERT_H
 
 #include "NXPacketIO_Export.h"
 
-#include "GenIO/GenIODefs.h"
+#include "GenIODefs.h"
 
 class NX_PACKETIO_EXPORT GenIConvert
 {

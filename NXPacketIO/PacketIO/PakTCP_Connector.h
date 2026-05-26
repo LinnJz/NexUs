@@ -1,4 +1,4 @@
-﻿#ifndef PAKTCP_CONNECTOR_H
+#ifndef PAKTCP_CONNECTOR_H
 #define PAKTCP_CONNECTOR_H
 
 #include "NXPacketIO_Export.h"
@@ -6,7 +6,7 @@
 #include <memory>
 #include <vector>
 
-#include "PacketIO/PakDefaultHeader.h"
+#include "PakDefaultHeader.h"
 
 class GenTCP_Server;
 class PakHeader;

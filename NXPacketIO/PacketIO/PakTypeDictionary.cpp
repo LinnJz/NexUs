@@ -1,10 +1,10 @@
-﻿#include "PacketIO/PakTypeDictionary.h"
+#include "PakTypeDictionary.h"
 
-#include "PacketIO/PakI.h"
-#include "PacketIO/PakO.h"
+#include "PakI.h"
+#include "PakO.h"
 
 // Keep as last include
-#include "PacketIO/PakSerializeImpl.h"
+#include "PakSerializeImpl.h"
 
 void PakTypeDictionary::Register(const std::type_index& aType, int aId, void* aData)
 {

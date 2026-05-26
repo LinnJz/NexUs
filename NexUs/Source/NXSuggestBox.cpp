@@ -72,12 +72,12 @@ NXSuggestBox::NXSuggestBox(QWidget *parent)
 
   connect(d->_lightSearchAction, &QAction::triggered, this, [=](bool checked)
   {
-    // qDebug() << "Search";
+    //qDebug() << "Search";
   });
 
   connect(d->_darkSearchAction, &QAction::triggered, this, [=](bool checked)
   {
-    // qDebug() << "Search";
+    //qDebug() << "Search";
   });
   QVBoxLayout *mainLayout = new QVBoxLayout(this);
   mainLayout->setSpacing(0);
@@ -115,14 +115,14 @@ NXSuggestBox::~NXSuggestBox()
 }
 
 void
-NXSuggestBox::setPlaceholderText(const QString &placeholderText) noexcept
+NXSuggestBox::setPlaceholderText(const QString &placeholderText)
 {
   Q_D(NXSuggestBox);
   d->_searchEdit->setPlaceholderText(placeholderText);
 }
 
 void
-NXSuggestBox::setFixedSize(const QSize &size) noexcept
+NXSuggestBox::setFixedSize(QSize size)
 {
   Q_D(NXSuggestBox);
   d->_searchEdit->setFixedHeight(size.height());
@@ -130,7 +130,7 @@ NXSuggestBox::setFixedSize(const QSize &size) noexcept
 }
 
 void
-NXSuggestBox::setFixedSize(int w, int h) noexcept
+NXSuggestBox::setFixedSize(int w, int h)
 {
   Q_D(NXSuggestBox);
   d->_searchEdit->setFixedHeight(h);
@@ -138,7 +138,7 @@ NXSuggestBox::setFixedSize(int w, int h) noexcept
 }
 
 void
-NXSuggestBox::setFixedHeight(int h) noexcept
+NXSuggestBox::setFixedHeight(int h)
 {
   Q_D(NXSuggestBox);
   d->_searchEdit->setFixedHeight(h);
@@ -146,7 +146,7 @@ NXSuggestBox::setFixedHeight(int h) noexcept
 }
 
 QString
-NXSuggestBox::addSuggestion(const QString &suggestText, const QVariantMap &suggestData) noexcept
+NXSuggestBox::addSuggestion(const QString &suggestText, const QVariantMap &suggestData)
 {
   Q_D(NXSuggestBox);
   NXSuggestion *suggest = new NXSuggestion(this);
@@ -157,9 +157,7 @@ NXSuggestBox::addSuggestion(const QString &suggestText, const QVariantMap &sugge
 }
 
 QString
-NXSuggestBox::addSuggestion(NXIconType::IconName icon,
-                            const QString &suggestText,
-                            const QVariantMap &suggestData) noexcept
+NXSuggestBox::addSuggestion(NXIconType::IconName icon, const QString &suggestText, const QVariantMap &suggestData)
 {
   Q_D(NXSuggestBox);
   NXSuggestion *suggest = new NXSuggestion(this);
@@ -171,7 +169,7 @@ NXSuggestBox::addSuggestion(NXIconType::IconName icon,
 }
 
 QString
-NXSuggestBox::addSuggestion(const NXSuggestBox::SuggestData &suggestData) noexcept
+NXSuggestBox::addSuggestion(const NXSuggestBox::SuggestData &suggestData)
 {
   Q_D(NXSuggestBox);
   NXSuggestion *suggest = new NXSuggestion(this);
@@ -183,7 +181,7 @@ NXSuggestBox::addSuggestion(const NXSuggestBox::SuggestData &suggestData) noexce
 }
 
 QStringList
-NXSuggestBox::addSuggestion(const QList<NXSuggestBox::SuggestData> &suggestDataList) noexcept
+NXSuggestBox::addSuggestion(const QList<NXSuggestBox::SuggestData> &suggestDataList)
 {
   Q_D(NXSuggestBox);
   QStringList suggestKeyList;
@@ -200,7 +198,7 @@ NXSuggestBox::addSuggestion(const QList<NXSuggestBox::SuggestData> &suggestDataL
 }
 
 void
-NXSuggestBox::removeSuggestion(const QString &suggestKey) noexcept
+NXSuggestBox::removeSuggestion(const QString &suggestKey)
 {
   Q_D(NXSuggestBox);
   foreach(auto suggest, d->_suggestionVector)
@@ -214,7 +212,7 @@ NXSuggestBox::removeSuggestion(const QString &suggestKey) noexcept
 }
 
 void
-NXSuggestBox::removeSuggestion(int index) noexcept
+NXSuggestBox::removeSuggestion(int index)
 {
   Q_D(NXSuggestBox);
   if (index >= d->_suggestionVector.count())
@@ -227,7 +225,7 @@ NXSuggestBox::removeSuggestion(int index) noexcept
 }
 
 void
-NXSuggestBox::clearSuggestion() noexcept
+NXSuggestBox::clearSuggestion()
 {
   Q_D(NXSuggestBox);
   foreach(auto suggest, d->_suggestionVector)
