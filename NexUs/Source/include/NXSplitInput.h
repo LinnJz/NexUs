@@ -6,6 +6,7 @@
 #include "NXProperty.h"
 
 class NXSplitInputPrivate;
+class QValidator;
 
 class NX_EXPORT NXSplitInput : public QWidget
 {
@@ -31,6 +32,10 @@ public:
   void setSegmentMaxLength(int index, int maxLength);
   int getSegmentMaxLength(int index) const;
   void setMaxLength(int maxLength);
+  void setSegmentPlaceholderText(int index, const QString &text);
+  QString getSegmentPlaceholderText(int index) const;
+  void setSegmentValidator(int index, QValidator *validator);
+  const QValidator *getSegmentValidator(int index) const;
 
   Q_SIGNAL void segmentTextChanged(int segmentIndex, const QString &text);
   Q_SIGNAL void textChanged(const QString &fullText);

@@ -22,7 +22,7 @@ public:
   explicit NXTableViewStyle(QStyle *style = nullptr);
   ~NXTableViewStyle();
   void setColumnPadding(int column, int padding);
-  int columnPadding(int column) const;
+  int getColumnPadding(int column) const;
   void clearColumnPadding(int column);
 
   void drawPrimitive(PrimitiveElement element,

@@ -22,8 +22,12 @@ public:
   ~NXTableView();
 
   void setColumnPadding(int column, int padding);
-  int columnPadding(int column) const;
+  int getColumnPadding(int column) const;
   void clearColumnPadding(int column);
+
+  QRect headerCheckIndicatorRect(int section) const;
+  QRect checkIndicatorRect(int row, int column) const;
+
   Q_SIGNAL void tableViewShow();
   Q_SIGNAL void tableViewHide();
   Q_SIGNAL void hoverIndexChanged(const QModelIndex &index);

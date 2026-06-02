@@ -60,13 +60,13 @@ NXCentralStackedWidget::~NXCentralStackedWidget()
 }
 
 NXLazyStackedWidget *
-NXCentralStackedWidget::getContainerStackedWidget() const noexcept
+NXCentralStackedWidget::getContainerStackedWidget() const
 {
   return d_ptr->_containerStackedWidget;
 }
 
 void
-NXCentralStackedWidget::setCustomWidget(QWidget *widget) noexcept
+NXCentralStackedWidget::setCustomWidget(QWidget *widget)
 {
   Q_D(NXCentralStackedWidget);
   if (!widget)
@@ -82,26 +82,26 @@ NXCentralStackedWidget::setCustomWidget(QWidget *widget) noexcept
 }
 
 QWidget *
-NXCentralStackedWidget::getCustomWidget() const noexcept
+NXCentralStackedWidget::getCustomWidget() const
 {
   return d_ptr->_customWidget;
 }
 
 void
-NXCentralStackedWidget::setIsTransparent(bool isTransparent) noexcept
+NXCentralStackedWidget::setIsTransparent(bool isTransparent)
 {
   d_ptr->_isTransparent = isTransparent;
   update();
 }
 
 bool
-NXCentralStackedWidget::getIsTransparent() const noexcept
+NXCentralStackedWidget::getIsTransparent() const
 {
   return d_ptr->_isTransparent;
 }
 
 void
-NXCentralStackedWidget::setIsHasRadius(bool isHasRadius) noexcept
+NXCentralStackedWidget::setIsHasRadius(bool isHasRadius)
 {
   d_ptr->_isHasRadius = isHasRadius;
   update();
@@ -110,7 +110,7 @@ NXCentralStackedWidget::setIsHasRadius(bool isHasRadius) noexcept
 void
 NXCentralStackedWidget::doWindowStackSwitch(NXWindowType::StackSwitchMode stackSwitchMode,
                                             int nodeIndex,
-                                            bool isRouteBack) noexcept
+                                            bool isRouteBack)
 {
   Q_D(NXCentralStackedWidget);
   if (d->_pLastTargetIndex == nodeIndex)

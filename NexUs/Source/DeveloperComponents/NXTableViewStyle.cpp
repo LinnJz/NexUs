@@ -213,7 +213,7 @@ NXTableViewStyle::drawControl(ControlElement element,
           Qt::CheckState checkState = value.value<Qt::CheckState>();
           QRect checkRect           = option->rect;
           checkRect.setSize(QSize(_pCheckIndicatorWidth, _pCheckIndicatorWidth));
-          int padding = columnPadding(hopt->section);
+          int padding = getColumnPadding(hopt->section);
           checkRect.moveLeft(option->rect.left() + padding + 3);
           checkRect.moveTop(option->rect.center().y() - _pCheckIndicatorWidth / 2 + 1);
           _drawCheckIndicator(painter, checkRect, checkState);
@@ -254,7 +254,7 @@ NXTableViewStyle::drawControl(ControlElement element,
       if (vopt->features & QStyleOptionViewItem::HasCheckIndicator)
       {
         QRect checkRect = proxy()->subElementRect(SE_ItemViewItemCheckIndicator, vopt, widget);
-        int padding     = columnPadding(vopt->index.column());
+        int padding     = getColumnPadding(vopt->index.column());
         checkRect.adjust(padding, 0, padding, 0);
         _drawCheckIndicator(painter, checkRect, vopt->checkState);
       }
@@ -262,7 +262,7 @@ NXTableViewStyle::drawControl(ControlElement element,
       if (!vopt->icon.isNull())
       {
         QRect iconRect = proxy()->subElementRect(SE_ItemViewItemDecoration, vopt, widget);
-        int padding    = columnPadding(vopt->index.column());
+        int padding    = getColumnPadding(vopt->index.column());
         iconRect.adjust(padding, 0, padding, 0);
         QIcon::Mode mode = QIcon::Normal;
         // if (!(vopt->state.testFlag(QStyle::State_Enabled)))
@@ -280,7 +280,7 @@ NXTableViewStyle::drawControl(ControlElement element,
       if (!vopt->text.isEmpty())
       {
         QRect textRect = proxy()->subElementRect(SE_ItemViewItemText, vopt, widget);
-        int padding    = columnPadding(vopt->index.column());
+        int padding    = getColumnPadding(vopt->index.column());
         textRect.adjust(padding, 0, 0, 0);
         painter->setPen(NXThemeColor(_themeMode, BasicText));
         painter->drawText(textRect, vopt->displayAlignment, vopt->text);
@@ -346,7 +346,7 @@ NXTableViewStyle::setColumnPadding(int column, int padding)
 }
 
 int
-NXTableViewStyle::columnPadding(int column) const
+NXTableViewStyle::getColumnPadding(int column) const
 {
   return _columnPaddingMap.value(column, _pDefaultPadding);
 }

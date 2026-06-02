@@ -114,6 +114,38 @@ NXSplitInput::setMaxLength(int maxLength)
 }
 
 void
+NXSplitInput::setSegmentPlaceholderText(int index, const QString &text)
+{
+  Q_D(NXSplitInput);
+  if (index < 0 || index >= d->_segmentCount) { return; }
+  d->_lineEdits[index]->setPlaceholderText(text);
+}
+
+QString
+NXSplitInput::getSegmentPlaceholderText(int index) const
+{
+  Q_D(const NXSplitInput);
+  if (index < 0 || index >= d->_segmentCount) { return {}; }
+  return d->_lineEdits[index]->placeholderText();
+}
+
+void
+NXSplitInput::setSegmentValidator(int index, QValidator *validator)
+{
+  Q_D(NXSplitInput);
+  if (index < 0 || index >= d->_segmentCount) { return; }
+  d->_lineEdits[index]->setValidator(validator);
+}
+
+const QValidator *
+NXSplitInput::getSegmentValidator(int index) const
+{
+  Q_D(const NXSplitInput);
+  if (index < 0 || index >= d->_segmentCount) { return nullptr; }
+  return d->_lineEdits[index]->validator();
+}
+
+void
 NXSplitInput::setText(const QString &Text)
 {
   Q_D(NXSplitInput);
