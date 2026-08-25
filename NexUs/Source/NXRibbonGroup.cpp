@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QVBoxLayout>
 
+#include "NXApplication.h"
 #include "NXIcon.h"
 #include "NXTheme.h"
 #include "NXToolButton.h"
@@ -68,22 +69,26 @@ NXRibbonGroup::addToolButton(NXIconType::IconName icon, const QString &text, But
   NXToolButton *button = new NXToolButton(this);
   button->setNXIcon(icon);
   button->setText(text);
-  if (size == Large)
+  if (const int fs = nxApp->getFontPixelSize(); size == Large)
   {
     button->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    button->setIconSize(QSize(24, 24));
-    button->setFixedSize(52, 52);
+    button->setIconSize(QSize(fs * 2 - 2, fs * 2 - 2));
+    button->setFixedSize(fs * 4, fs * 4);
     QFont f = button->font();
-    f.setPixelSize(11);
+    f.setPixelSize(fs - 2);
     button->setFont(f);
   }
   else
   {
     button->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    button->setIconSize(QSize(18, 18));
-    button->setFixedSize(30, 30);
+    button->setIconSize(QSize(fs + 5, fs + 5));
+    button->setFixedSize(fs * 2 + 4, fs * 2 + 4);
   }
   d->_contentLayout->insertWidget(d->_contentLayout->count() - 1, button);
+  connect(button, &NXToolButton::clicked, this, [this, button]
+  {
+    Q_EMIT ribbonButtonTriggered(button);
+  });
   return button;
 }
 
@@ -92,6 +97,33 @@ NXRibbonGroup::addWidget(QWidget *widget)
 {
   Q_D(NXRibbonGroup);
   d->_contentLayout->insertWidget(d->_contentLayout->count() - 1, widget);
+}
+
+void
+NXRibbonGroup::removeButton(NXToolButton *button)
+{
+  Q_D(NXRibbonGroup);
+  if (!button || button->parentWidget() != this)
+  {
+    return;
+  }
+  d->_contentLayout->removeWidget(button);
+  button->deleteLater();
+}
+
+QList<NXToolButton *>
+NXRibbonGroup::getButtons() const
+{
+  Q_D(const NXRibbonGroup);
+  QList<NXToolButton *> buttons;
+  for (int i = 0; i < d->_contentLayout->count(); ++i)
+  {
+    if (auto *button = qobject_cast<NXToolButton *>(d->_contentLayout->itemAt(i)->widget()))
+    {
+      buttons.append(button);
+    }
+  }
+  return buttons;
 }
 
 void
@@ -104,8 +136,9 @@ NXRibbonGroup::paintEvent(QPaintEvent *event)
 
   if (!d->_title.isEmpty())
   {
+    const int fs    = nxApp->getFontPixelSize();
     QFont titleFont = font();
-    titleFont.setPixelSize(11);
+    titleFont.setPixelSize(fs - 2);
     painter.setFont(titleFont);
     QFontMetrics fm(titleFont);
     const int textW = fm.horizontalAdvance(d->_title);
@@ -146,18 +179,19 @@ QSize
 NXRibbonGroup::sizeHint() const
 {
   Q_D(const NXRibbonGroup);
-  QSize hint = QWidget::sizeHint();
-  QFont f    = font();
-  f.setPixelSize(11);
+  QSize hint   = QWidget::sizeHint();
+  const int fs = nxApp->getFontPixelSize();
+  QFont f      = font();
+  f.setPixelSize(fs - 2);
   QFontMetrics fm(f);
-  int titleW = fm.horizontalAdvance(d->_title) + 20;
+  int titleW = fm.horizontalAdvance(d->_title) + fs + 7;
   if (hint.width() < titleW)
   {
     hint.setWidth(titleW);
   }
-  if (hint.height() < 80)
+  if (hint.height() < fs * 6 + 2)
   {
-    hint.setHeight(80);
+    hint.setHeight(fs * 6 + 2);
   }
   return hint;
 }

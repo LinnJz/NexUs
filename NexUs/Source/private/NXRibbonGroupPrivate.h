@@ -8,6 +8,7 @@
 
 class QHBoxLayout;
 class NXRibbonGroup;
+class NXToolButton;
 
 class NXRibbonGroupPrivate : public QObject
 {
@@ -19,10 +20,9 @@ public:
   ~NXRibbonGroupPrivate();
 
 private:
-  friend class NXRibbonGroup;
-  QString _title;
-  QHBoxLayout *_contentLayout { nullptr };
   NXThemeType::ThemeMode _themeMode;
+  QHBoxLayout *_contentLayout { nullptr };
+  QString _title;
 };
 
 #endif // NXRIBBONGROUPPRIVATE_H

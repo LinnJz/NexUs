@@ -24,10 +24,10 @@ public:
   int tabAt(QPoint pos) const;
 
 private:
-  friend class NXRibbonTabBar;
   int _hoveredIndex { -1 };
   NXThemeType::ThemeMode _themeMode;
   QStringList _tabTitles;
+  QList<bool> _tabEnableds;
 };
 
 #endif // NXRIBBONTABBARPRIVATE_H

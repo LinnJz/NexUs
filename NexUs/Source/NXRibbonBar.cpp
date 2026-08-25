@@ -6,16 +6,29 @@
 #include <QEvent>
 #include <QHBoxLayout>
 #include <QPainter>
+#include <QScrollArea>
 #include <QStackedWidget>
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QVariantAnimation>
 
+#include "NXApplication.h"
 #include "NXMenu.h"
 #include "NXRibbonGroup.h"
 #include "NXRibbonTabBar.h"
 #include "NXTheme.h"
+#include "NXToolButton.h"
 #include "private/NXRibbonBarPrivate.h"
+
+namespace
+{
+// 内容区高度随全局字号推导 基线fs=13时为88
+int
+ribbonContentHeight()
+{
+  return nxApp->getFontPixelSize() * 6 + 10;
+}
+} // namespace
 
 NXRibbonBar::NXRibbonBar(QWidget *parent)
     : QWidget { parent }
@@ -37,7 +50,14 @@ NXRibbonBar::NXRibbonBar(QWidget *parent)
 
   d->_stack = new QStackedWidget(this);
   d->_stack->setContentsMargins(0, 0, 0, 0);
-  mainLayout->addWidget(d->_stack, 1);
+  // 页签内容超出宽度时整体横向滚动
+  QScrollArea *pageScrollArea = new QScrollArea(this);
+  pageScrollArea->setWidgetResizable(true);
+  pageScrollArea->setFrameShape(QFrame::NoFrame);
+  pageScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+  pageScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  pageScrollArea->setWidget(d->_stack);
+  mainLayout->addWidget(pageScrollArea, 1);
 
   connect(d->_internalTabBar, &NXRibbonTabBar::pCurrentIndexChanged, this, [=]()
   {
@@ -72,7 +92,7 @@ NXRibbonBar::NXRibbonBar(QWidget *parent)
     }
   });
 
-  setFixedHeight(d->_internalTabBar->height() + 88);
+  setFixedHeight(d->_internalTabBar->height() + ribbonContentHeight());
 
   d->_autoHideTimer = new QTimer(this);
   d->_autoHideTimer->setSingleShot(true);
@@ -146,7 +166,7 @@ NXRibbonBar::bindTabBar(NXRibbonTabBar *tabBar)
   if (tabBar)
   {
     d->_internalTabBar->hide();
-    setFixedHeight(88);
+    setFixedHeight(ribbonContentHeight());
 
     tabBar->clear();
     for (int i = 0; i < d->_internalTabBar->tabCount(); ++i)
@@ -198,7 +218,7 @@ NXRibbonBar::bindTabBar(NXRibbonTabBar *tabBar)
   else
   {
     d->_internalTabBar->show();
-    setFixedHeight(d->_internalTabBar->height() + 88);
+    setFixedHeight(d->_internalTabBar->height() + ribbonContentHeight());
   }
 }
 
@@ -249,7 +269,115 @@ NXRibbonBar::addGroup(QWidget *page, const QString &title)
   }
   NXRibbonGroup *group = new NXRibbonGroup(title, page);
   layout->insertWidget(layout->count() - 1, group);
+  // 框架级命令总线 统一解析页标题上下文
+  connect(group, &NXRibbonGroup::ribbonButtonTriggered, this, [this, group](NXToolButton *button)
+  {
+    QString pageTitle;
+    if (NXRibbonTabBar *active = d_func()->activeTabBar())
+    {
+      pageTitle = active->tabText(d_func()->_pCurrentIndex);
+    }
+    Q_EMIT ribbonActionTriggered(pageTitle, group, button ? button->defaultAction() : nullptr);
+  });
   return group;
+}
+
+void
+NXRibbonBar::removePage(int index)
+{
+  Q_D(NXRibbonBar);
+  if (index < 0 || index >= d->_stack->count())
+  {
+    return;
+  }
+  QWidget *page = d->_stack->widget(index);
+  d->_stack->removeWidget(page);
+  page->deleteLater();
+  if (NXRibbonTabBar *active = d->activeTabBar())
+  {
+    active->removeTab(index);
+  }
+}
+
+void
+NXRibbonBar::removePage(QWidget *page)
+{
+  Q_D(NXRibbonBar);
+  if (!page)
+  {
+    return;
+  }
+  removePage(d->_stack->indexOf(page));
+}
+
+void
+NXRibbonBar::removeGroup(QWidget *page, NXRibbonGroup *group)
+{
+  if (!page || !group || group->parentWidget() != page)
+  {
+    return;
+  }
+  if (QHBoxLayout *layout = qobject_cast<QHBoxLayout *>(page->layout()))
+  {
+    layout->removeWidget(group);
+  }
+  group->deleteLater();
+}
+
+QList<NXRibbonGroup *>
+NXRibbonBar::getGroups(QWidget *page) const
+{
+  QList<NXRibbonGroup *> groups;
+  const QHBoxLayout *layout = page ? qobject_cast<const QHBoxLayout *>(page->layout()) : nullptr;
+  if (!layout)
+  {
+    return groups;
+  }
+  for (int i = 0; i < layout->count(); ++i)
+  {
+    if (auto *group = qobject_cast<NXRibbonGroup *>(layout->itemAt(i)->widget()))
+    {
+      groups.append(group);
+    }
+  }
+  return groups;
+}
+
+void
+NXRibbonBar::setRibbonPageEnable(int index, bool isEnable)
+{
+  Q_D(NXRibbonBar);
+  if (index < 0 || index >= d->_stack->count())
+  {
+    return;
+  }
+  d->_stack->widget(index)->setEnabled(isEnable);
+  if (NXRibbonTabBar *active = d->activeTabBar())
+  {
+    active->setTabEnabled(index, isEnable);
+  }
+}
+
+void
+NXRibbonBar::setRibbonPageEnable(QWidget *page, bool isEnable)
+{
+  Q_D(NXRibbonBar);
+  if (!page)
+  {
+    return;
+  }
+  setRibbonPageEnable(d->_stack->indexOf(page), isEnable);
+}
+
+bool
+NXRibbonBar::isRibbonPageEnable(int index) const
+{
+  Q_D(const NXRibbonBar);
+  if (index < 0 || index >= d->_stack->count())
+  {
+    return false;
+  }
+  return d->_stack->widget(index)->isEnabled();
 }
 
 int
@@ -305,7 +433,7 @@ NXRibbonBar::setCollapsed(bool collapsed)
   }
   d->_isCollapsed = collapsed;
 
-  const int normalH    = d->_externalTabBar ? 88 : ((d->_internalTabBar ? d->_internalTabBar->height() : 0) + 88);
+  const int normalH    = d->_externalTabBar ? ribbonContentHeight() : ((d->_internalTabBar ? d->_internalTabBar->height() : 0) + ribbonContentHeight());
   const int collapsedH = d->_externalTabBar ? 0 : (d->_internalTabBar ? d->_internalTabBar->height() : 0);
   const int targetH    = collapsed ? collapsedH : normalH;
 
@@ -458,7 +586,7 @@ NXRibbonBar::sizeHint() const
   }
   else
   {
-    h = d->_externalTabBar ? 88 : (tabH + 88);
+    h = d->_externalTabBar ? ribbonContentHeight() : (tabH + ribbonContentHeight());
   }
   return QSize(800, h);
 }

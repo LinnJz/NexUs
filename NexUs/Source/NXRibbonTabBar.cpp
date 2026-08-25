@@ -4,6 +4,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 
+#include "NXApplication.h"
 #include "NXTheme.h"
 #include "private/NXRibbonTabBarPrivate.h"
 
@@ -18,7 +19,9 @@ NXRibbonTabBar::NXRibbonTabBar(QWidget *parent)
   setObjectName("NXRibbonTabBar");
   setMouseTracking(true);
   setAttribute(Qt::WA_StyledBackground, false);
-  setFixedHeight(32);
+  // 高度随全局字号推导 基线fs=13时为32
+  const int fontPixelSize = nxApp->getFontPixelSize();
+  setFixedHeight(fontPixelSize * 2 + 6);
 
   d->_themeMode = nxTheme->getThemeMode();
   connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
@@ -37,6 +40,7 @@ NXRibbonTabBar::appendTab(const QString &title)
 {
   Q_D(NXRibbonTabBar);
   d->_tabTitles.append(title);
+  d->_tabEnableds.append(true);
   update();
   updateGeometry();
   return d->_tabTitles.size() - 1;
@@ -51,6 +55,7 @@ NXRibbonTabBar::removeTab(int index)
     return;
   }
   d->_tabTitles.removeAt(index);
+  d->_tabEnableds.removeAt(index);
   if (d->_pCurrentIndex >= d->_tabTitles.size())
   {
     d->_pCurrentIndex = qMax(0, d->_tabTitles.size() - 1);
@@ -65,6 +70,7 @@ NXRibbonTabBar::clear()
 {
   Q_D(NXRibbonTabBar);
   d->_tabTitles.clear();
+  d->_tabEnableds.clear();
   d->_pCurrentIndex = 0;
   d->_hoveredIndex  = -1;
   update();
@@ -103,6 +109,33 @@ NXRibbonTabBar::setTabText(int index, const QString &title)
 }
 
 void
+NXRibbonTabBar::setTabEnabled(int index, bool isEnable)
+{
+  Q_D(NXRibbonTabBar);
+  if (index < 0 || index >= d->_tabEnableds.size())
+  {
+    return;
+  }
+  d->_tabEnableds[index] = isEnable;
+  if (!isEnable && d->_hoveredIndex == index)
+  {
+    d->_hoveredIndex = -1;
+  }
+  update();
+}
+
+bool
+NXRibbonTabBar::isTabEnabled(int index) const
+{
+  Q_D(const NXRibbonTabBar);
+  if (index < 0 || index >= d->_tabEnableds.size())
+  {
+    return false;
+  }
+  return d->_tabEnableds.at(index);
+}
+
+void
 NXRibbonTabBar::setCurrentIndex(int currentIndex)
 {
   Q_D(NXRibbonTabBar);
@@ -134,8 +167,9 @@ NXRibbonTabBar::paintEvent(QPaintEvent *event)
   QPainter painter(this);
   painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-  QFont tabFont = font();
-  tabFont.setPixelSize(14);
+  const int fontPixelSize = nxApp->getFontPixelSize();
+  QFont tabFont           = font();
+  tabFont.setPixelSize(fontPixelSize + 1);
   painter.setFont(tabFont);
 
   QList<QRect> rects = d->tabRects();
@@ -144,15 +178,15 @@ NXRibbonTabBar::paintEvent(QPaintEvent *event)
     const QRect &r       = rects.at(i);
     const QString &title = d->_tabTitles.at(i);
     bool isSelected      = (i == d->_pCurrentIndex);
-    bool isHovered       = (i == d->_hoveredIndex);
+    bool isHovered       = (i == d->_hoveredIndex) && isTabEnabled(i);
+    bool isEnabled       = isTabEnabled(i);
 
     if (isSelected)
     {
       painter.setPen(Qt::NoPen);
       painter.setBrush(NXThemeColor(d->_themeMode, PrimaryNormal));
-      QRect markRect(r.x() + 8, r.bottom() - 2, r.width() - 16, 2);
-      painter.drawRect(markRect);
-      painter.setPen(NXThemeColor(d->_themeMode, BasicText));
+      painter.drawRect(r.x() + 8, r.bottom() - 2, r.width() - 16, 2);
+      painter.setPen(isEnabled ? NXThemeColor(d->_themeMode, BasicText) : NXThemeColor(d->_themeMode, BasicTextDisable));
     }
     else if (isHovered)
     {
@@ -163,7 +197,7 @@ NXRibbonTabBar::paintEvent(QPaintEvent *event)
     }
     else
     {
-      painter.setPen(NXThemeColor(d->_themeMode, BasicTextNoFocus));
+      painter.setPen(isEnabled ? NXThemeColor(d->_themeMode, BasicTextNoFocus) : NXThemeColor(d->_themeMode, BasicTextDisable));
     }
     painter.drawText(r, Qt::AlignCenter, title);
   }
@@ -174,6 +208,10 @@ NXRibbonTabBar::mouseMoveEvent(QMouseEvent *event)
 {
   Q_D(NXRibbonTabBar);
   int idx = d->tabAt(event->pos());
+  if (!isTabEnabled(idx))
+  {
+    idx = -1;
+  }
   if (idx != d->_hoveredIndex)
   {
     d->_hoveredIndex = idx;
@@ -191,6 +229,10 @@ NXRibbonTabBar::mousePressEvent(QMouseEvent *event)
     int idx = d->tabAt(event->pos());
     if (idx >= 0)
     {
+      if (!isTabEnabled(idx))
+      {
+        return;
+      }
       const bool isReclick = (idx == d->_pCurrentIndex);
       if (!isReclick)
       {
@@ -224,15 +266,16 @@ QSize
 NXRibbonTabBar::sizeHint() const
 {
   Q_D(const NXRibbonTabBar);
-  QFont tabFont = font();
-  tabFont.setPixelSize(14);
+  const int fontPixelSize = nxApp->getFontPixelSize();
+  QFont tabFont           = font();
+  tabFont.setPixelSize(fontPixelSize + 1);
   QFontMetrics fm(tabFont);
-  int total = 16;
+  int total = fontPixelSize + 3;
   for (const QString &t : d->_tabTitles)
   {
-    total += fm.horizontalAdvance(t) + 28;
+    total += fm.horizontalAdvance(t) + fontPixelSize * 2 + 2;
   }
-  return QSize(qMax(total, 80), 32);
+  return QSize(qMax(total, 80), height());
 }
 
 NXRibbonTabBarPrivate::NXRibbonTabBarPrivate(QObject *parent)
@@ -252,13 +295,14 @@ NXRibbonTabBarPrivate::tabRects() const
   {
     return rects;
   }
-  QFont tabFont = q_ptr->font();
-  tabFont.setPixelSize(14);
+  const int fontPixelSize = nxApp->getFontPixelSize();
+  QFont tabFont           = q_ptr->font();
+  tabFont.setPixelSize(fontPixelSize + 1);
   QFontMetrics fm(tabFont);
-  int x = 16;
+  int x = fontPixelSize + 3;
   for (const QString &t : _tabTitles)
   {
-    int w = fm.horizontalAdvance(t) + 28;
+    int w = fm.horizontalAdvance(t) + fontPixelSize * 2 + 2;
     rects.append(QRect(x, 0, w, q_ptr->height()));
     x += w;
   }

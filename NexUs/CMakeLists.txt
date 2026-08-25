@@ -3,12 +3,12 @@
 project(NexUs VERSION 1.0.0 LANGUAGES CXX)
 
 #include(Dependencies.cmake)
-FILE(GLOB ORIGIN Source/include/*.h Source/*.cpp)
-FILE(GLOB PRIVATE Source/private/*.h Source/private/*.cpp)
-FILE(GLOB DEVELOPER Source/DeveloperComponents/*.h Source/DeveloperComponents/*.cpp)
-FILE(GLOB DEVELOPER_COMMAND Source/DeveloperComponents/Command/*.h Source/DeveloperComponents/Command/*.cpp)
+FILE(GLOB ORIGIN CONFIGURE_DEPENDS Source/include/*.h Source/*.cpp)
+FILE(GLOB PRIVATE CONFIGURE_DEPENDS Source/private/*.h Source/private/*.cpp)
+FILE(GLOB DEVELOPER CONFIGURE_DEPENDS Source/DeveloperComponents/*.h Source/DeveloperComponents/*.cpp)
+FILE(GLOB DEVELOPER_COMMAND CONFIGURE_DEPENDS Source/DeveloperComponents/Command/*.h Source/DeveloperComponents/Command/*.cpp)
 
-FILE(GLOB EXPORT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/Source/include/*.h)
+FILE(GLOB EXPORT_HEADERS CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/Source/include/*.h)
 
 source_group(include FILES ${ORIGIN})
 source_group(private FILES ${PRIVATE})

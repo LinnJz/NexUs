@@ -26,7 +26,6 @@ public:
   NXRibbonTabBar *activeTabBar() const;
 
 private:
-  friend class NXRibbonBar;
   bool _isCollapsed { false };
   bool _isPinned { false };
   NXThemeType::ThemeMode _themeMode;
