@@ -219,7 +219,9 @@ NXToolButtonStyle::_drawIcon(QPainter *painter,
         {
         case Qt::ToolButtonIconOnly :
         {
-          painter->drawPixmap(QRect(QPoint(iconRect.x(), iconRect.center().y() - iconSize.height() / 2), iconSize),
+          painter->drawPixmap(QRect(QPoint(iconRect.center().x() - iconSize.width() / 2.0,
+                                           iconRect.center().y() - iconSize.height() / 2.0),
+                                    iconSize),
                               iconPix);
           break;
         }

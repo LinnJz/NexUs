@@ -6,6 +6,7 @@
 #include <QPropertyAnimation>
 #include <QStyleOption>
 
+#include "NXApplication.h"
 #include "NXNavigationModel.h"
 #include "NXNavigationNode.h"
 #include "NXNavigationView.h"
@@ -195,6 +196,7 @@ NXNavigationStyle::drawControl(ControlElement element,
                                QPainter *painter,
                                const QWidget *widget) const
 {
+  int fontPixelSize = nxApp->getFontPixelSize();
   switch (element)
   {
   case QStyle::CE_ShapedFrame :
@@ -247,7 +249,7 @@ NXNavigationStyle::drawControl(ControlElement element,
       {
         painter->save();
         QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-        iconFont.setPixelSize(17);
+        iconFont.setPixelSize(fontPixelSize + 4);
         painter->setFont(iconFont);
         painter->drawText(QRect(itemRect.x(), itemRect.y(), _iconAreaWidth, itemRect.height()), Qt::AlignCenter,
                           QChar((unsigned short) node->getAwesome()));
@@ -294,7 +296,7 @@ NXNavigationStyle::drawControl(ControlElement element,
             QRectF expandIconRect(itemRect.right() - _indicatorIconAreaWidth, itemRect.y(), 17, itemRect.height());
             painter->save();
             QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-            iconFont.setPixelSize(17);
+            iconFont.setPixelSize(fontPixelSize + 4);
             painter->setFont(iconFont);
             painter->translate(expandIconRect.x() + (qreal) expandIconRect.width() / 2,
                                expandIconRect.y() + (qreal) expandIconRect.height() / 2);
@@ -350,11 +352,11 @@ NXNavigationStyle::drawControl(ControlElement element,
             }
             if (keyPoints > 9)
             {
-              font.setPixelSize(10);
+              font.setPixelSize(fontPixelSize - 3);
             }
             else
             {
-              font.setPixelSize(11);
+              font.setPixelSize(fontPixelSize - 2);
             }
             painter->setFont(font);
             painter->drawText(QRect(QPoint(itemRect.right() - 26 - keyPointRadius,

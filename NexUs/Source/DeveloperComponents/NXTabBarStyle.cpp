@@ -6,6 +6,7 @@
 #include <QStyleOption>
 #include <QTabBar>
 
+#include "NXApplication.h"
 #include "NXTheme.h"
 
 NXTabBarStyle::NXTabBarStyle(QStyle *style)
@@ -144,7 +145,7 @@ NXTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, QPain
       }
     }
     QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-    iconFont.setPixelSize(16);
+    iconFont.setPixelSize(nxApp->getFontPixelSize() + 3);
     p->setFont(iconFont);
     p->setPen(NXThemeColor(_themeMode, BasicText));
     p->drawText(opt->rect, Qt::AlignCenter, QChar(NXIconType::Xmark));

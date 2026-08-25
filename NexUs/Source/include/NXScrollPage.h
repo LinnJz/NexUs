@@ -13,16 +13,21 @@ class NX_EXPORT NXScrollPage : public QWidget
 {
   Q_OBJECT
   Q_Q_CREATE(NXScrollPage)
-  Q_PROPERTY_CREATE_H(QWidget *, CustomWidget)
 
 public:
   explicit NXScrollPage(QWidget *parent = nullptr);
   ~NXScrollPage();
 
+  void setTopCustomWidget(QWidget *customWidget);
+  QWidget *getTopCustomWidget() const;
+
+  void setBottomCustomWidget(QWidget *customWidget);
+  QWidget *getBottomCustomWidget() const;
+
   void addCentralWidget(QWidget *centralWidget,
                         bool isWidgetResizeable              = true,
                         bool isVerticalGrabGesture           = true,
-                        qreal mousePressEventDNXy            = 0.5,
+                        qreal mousePressEventDelay           = 0.5,
                         Qt::ScrollBarPolicy vScrollBarPolicy = Qt::ScrollBarAsNeeded,
                         Qt::ScrollBarPolicy hScrollBarPolicy = Qt::ScrollBarAlwaysOff);
 
@@ -33,6 +38,9 @@ public:
   void setPageTitleSpacing(int spacing);
   int getPageTitleSpacing() const;
   void setTitleVisible(bool isVisible);
+
+  void setPageTitlePixelSize(int pixelSize);
+  int getPageTitlePixelSize() const;
 };
 
 #endif // NXSCROLLPAGE_H

@@ -57,10 +57,9 @@ public:
   bool hasHeightForWidth() const override;
   int heightForWidth(int width) const override;
 
-Q_SIGNALS:
-  void widgetRemoved(int index);
-  void currentChanged(int index);
-  void widgetCreated(int index, QWidget *widget);
+  Q_SIGNAL void widgetRemoved(int index);
+  Q_SIGNAL void currentChanged(int index);
+  Q_SIGNAL void widgetCreated(int index, QWidget *widget);
 
 public Q_SLOTS:
   void setCurrentIndex(int index);

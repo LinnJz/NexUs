@@ -240,7 +240,7 @@ NXMultiSelectComboBox::paintEvent(QPaintEvent *e)
   if (count() > 0)
   {
     QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-    iconFont.setPixelSize(17);
+    iconFont.setPixelSize(nxApp->getFontPixelSize() + 4);
     painter.setFont(iconFont);
     painter.setPen(isEnabled() ? NXThemeColor(d->_themeMode, BasicText)
                                : NXThemeColor(d->_themeMode, BasicTextDisable));

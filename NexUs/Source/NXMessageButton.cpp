@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QPainterPath>
 
+#include "NXApplication.h"
 #include "NXMessageBar.h"
 #include "NXTheme.h"
 #include "private/NXMessageButtonPrivate.h"
@@ -25,7 +26,7 @@ NXMessageButton::NXMessageButton(QWidget *parent)
   setMouseTracking(true);
   setFixedSize(80, 38);
   QFont font = this->font();
-  font.setPixelSize(15);
+  font.setPixelSize(nxApp->getFontPixelSize() + 2);
   setFont(font);
   setText(QStringLiteral("Message"));
   setObjectName("NXMessageButton");

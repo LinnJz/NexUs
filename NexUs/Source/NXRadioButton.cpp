@@ -1,5 +1,6 @@
 ﻿#include "NXRadioButton.h"
 
+#include "NXApplication.h"
 #include "DeveloperComponents/NXRadioButtonStyle.h"
 #include "NXTheme.h"
 #include "private/NXRadioButtonPrivate.h"
@@ -17,7 +18,7 @@ NXRadioButton::NXRadioButton(QWidget *parent)
 #endif
   setFixedHeight(20);
   QFont font = this->font();
-  font.setPixelSize(15);
+  font.setPixelSize(nxApp->getFontPixelSize() + 2);
   setFont(font);
   setStyle(new NXRadioButtonStyle(style()));
   d->onThemeChanged(nxTheme->getThemeMode());

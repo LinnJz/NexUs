@@ -7,7 +7,7 @@
 #include <QPainterPath>
 #include <QPropertyAnimation>
 #include <QTimer>
-#include <QVboxLayout>
+#include <QVBoxLayout>
 #include <cmath>
 #include "NXTheme.h"
 
@@ -159,6 +159,7 @@ NXCentralStackedWidget::doWindowStackSwitch(NXWindowType::StackSwitchMode stackS
     QWidget *targetWidget = d->_containerStackedWidget->widget(nodeIndex);
     d->_getCurrentStackPix();
     d->_containerStackedWidget->setCurrentIndex(nodeIndex);
+    targetWidget->setVisible(true);
     d->_getTargetStackPix();
     targetWidget->setVisible(false);
     d->_isDrawNewPix                            = false;

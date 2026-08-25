@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QtMath>
 
+#include "NXApplication.h"
 #include "NXKeyBinderFnMonitor.h"
 #include "NXKeyBinder.h"
 #include "NXTheme.h"
@@ -19,7 +20,7 @@ NXKeyBinderContainer::NXKeyBinderContainer(QWidget *parent)
   setFixedHeight(140);
   QFont textFont = font();
   textFont.setLetterSpacing(QFont::AbsoluteSpacing, 0.5);
-  textFont.setPixelSize(16);
+  textFont.setPixelSize(nxApp->getFontPixelSize() + 3);
   setFont(textFont);
   _themeMode = nxTheme->getThemeMode();
   connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)

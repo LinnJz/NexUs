@@ -9,6 +9,7 @@
 #include <QWheelEvent>
 #include <QtMath>
 
+#include "NXApplication.h"
 #include "NXTheme.h"
 #include "private/NXRollerPrivate.h"
 Q_PROPERTY_CREATE_CPP(NXRoller, int, BorderRadius)
@@ -34,7 +35,7 @@ NXRoller::NXRoller(QWidget *parent)
   setObjectName("NXRoller");
   setStyleSheet(QStringLiteral("#NXRoller{background-color:transparent;}"));
   QFont font = this->font();
-  font.setPixelSize(16);
+  font.setPixelSize(nxApp->getFontPixelSize() + 3);
   setFont(font);
 
   d->_scrollAnimation = new QPropertyAnimation(d, "pScrollOffset");

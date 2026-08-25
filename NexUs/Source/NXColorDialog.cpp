@@ -40,11 +40,6 @@ NXColorDialog::NXColorDialog(QWidget *parent)
   d->_appBar->setIsFixedSize(true);
   d->_appBar->setIsStayTop(true);
   d->_appBar->setWindowButtonFlags(NXAppBarType::CloseButtonHint);
-  d->_appBar->setIsDefaultClosed(false);
-  connect(d->_appBar, &NXAppBar::closeButtonClicked, this, [=]()
-  {
-    close();
-  });
 
   // 颜色选择器
   NXText *colorPickerText = new NXText(QStringLiteral("编辑颜色"), this);

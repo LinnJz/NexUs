@@ -37,14 +37,13 @@ public:
   QWidget *widget(int index) const;
   int count() const;
 
+  Q_SIGNAL void currentChanged(int index);
+  Q_SIGNAL void widgetRemoved(int index);
+  Q_SIGNAL void widgetCreated(int index, QWidget *widget);
+
 public Q_SLOTS:
   void setCurrentIndex(int index);
   void setCurrentWidget(QWidget *widget);
-
-Q_SIGNALS:
-  void currentChanged(int index);
-  void widgetRemoved(int index);
-  void widgetCreated(int index, QWidget *widget);
 
 protected:
   bool event(QEvent *event) override;

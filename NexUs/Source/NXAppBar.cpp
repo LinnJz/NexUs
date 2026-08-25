@@ -1,4 +1,4 @@
-#include "NXAppBar.h"
+﻿#include "NXAppBar.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -39,6 +39,7 @@ NXAppBar::NXAppBar(QWidget *parent)
                     NXAppBarType::MinimizeButtonHint | NXAppBarType::MaximizeButtonHint | NXAppBarType::CloseButtonHint;
   window()->setAttribute(Qt::WA_Mapped);
   d->_pAppBarHeight = 45;
+  d->_pRibbonHeight = 0;
   setFixedHeight(d->_pAppBarHeight);
   window()->setContentsMargins(0, this->height(), 0, 0);
   d->q_ptr                    = this;
@@ -252,7 +253,7 @@ NXAppBar::setAppBarHeight(int height)
   Q_D(NXAppBar);
   d->_pAppBarHeight = height;
   setFixedHeight(d->_pAppBarHeight);
-  window()->setContentsMargins(0, this->height(), 0, 0);
+  window()->setContentsMargins(0, d->_pAppBarHeight + d->_pRibbonHeight, 0, 0);
   Q_EMIT pAppBarHeightChanged();
 }
 
@@ -261,6 +262,22 @@ NXAppBar::getAppBarHeight() const
 {
   Q_D(const NXAppBar);
   return d->_pAppBarHeight;
+}
+
+void
+NXAppBar::setRibbonHeight(int height)
+{
+  Q_D(NXAppBar);
+  d->_pRibbonHeight = height;
+  window()->setContentsMargins(0, d->_pAppBarHeight + d->_pRibbonHeight, 0, 0);
+  Q_EMIT pAppBarHeightChanged();
+}
+
+int
+NXAppBar::getRibbonHeight() const
+{
+  Q_D(const NXAppBar);
+  return d->_pRibbonHeight;
 }
 
 void
@@ -513,12 +530,12 @@ NXAppBar::takeOverNativeEvent(const QByteArray &eventType, void *message, long *
     if (::IsZoomed(hwnd))
     {
       this->move(7, 7);
-      window()->setContentsMargins(8, 8 + height(), 8, 8);
+      window()->setContentsMargins(8, 8 + height() + d->_pRibbonHeight, 8, 8);
     }
     else
     {
       this->move(0, 0);
-      window()->setContentsMargins(0, height(), 0, 0);
+      window()->setContentsMargins(0, height() + d->_pRibbonHeight, 0, 0);
     }
     *result = 0;
     return 1;

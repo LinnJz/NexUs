@@ -10,6 +10,7 @@
 #include "private/NXTabWidgetPrivate.h"
 Q_PROPERTY_CREATE_CPP(NXTabWidget, bool, IsTabTransparent)
 Q_PROPERTY_CREATE_CPP(NXTabWidget, bool, IsContainerAcceptDrops)
+Q_PROPERTY_CREATE_CPP(NXTabWidget, QSize, FloatWidgetSize)
 
 NXTabWidget::NXTabWidget(QWidget *parent)
     : QTabWidget(parent)
@@ -19,6 +20,7 @@ NXTabWidget::NXTabWidget(QWidget *parent)
   d->q_ptr                    = this;
   d->_pIsContainerAcceptDrops = false;
   d->_pIsTabTransparent       = false;
+  d->_pFloatWidgetSize        = QSize(700, 500);
   setObjectName("NXTabWidget");
   setAcceptDrops(true);
   d->_tabBar = new NXTabBar(this);
@@ -28,6 +30,14 @@ NXTabWidget::NXTabWidget(QWidget *parent)
   connect(d->_tabBar, &NXTabBar::tabDragLeave, d, &NXTabWidgetPrivate::onTabDragLeave);
   connect(d->_tabBar, &NXTabBar::tabDragDrop, d, &NXTabWidgetPrivate::onTabDragDrop);
   connect(d->_tabBar, &NXTabBar::tabCloseRequested, d, &NXTabWidgetPrivate::onTabCloseRequested);
+  connect(d->_tabBar, &NXTabBar::currentChanged, this, [=](int index)
+  {
+    if (index < 0)
+    {
+      return;
+    }
+    Q_EMIT currentWidgetChanged(widget(index));
+  });
 }
 
 NXTabWidget::~NXTabWidget()

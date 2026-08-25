@@ -13,6 +13,7 @@ class NX_EXPORT NXWindow : public QMainWindow
   Q_OBJECT
   Q_Q_CREATE(NXWindow)
   Q_PROPERTY_CREATE_H(int, AppBarHeight)
+  Q_PROPERTY_CREATE_H(int, RibbonHeight)
   Q_PROPERTY_CREATE_H(int, ThemeChangeTime)
   Q_PROPERTY_CREATE_H(int, NavigationBarWidth)
   Q_PROPERTY_CREATE_H(int, CurrentStackIndex)

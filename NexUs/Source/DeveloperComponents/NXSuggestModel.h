@@ -15,7 +15,7 @@ public:
   ~NXSuggestModel();
   int rowCount(const QModelIndex &parent) const;
   QVariant data(const QModelIndex &index, int role) const;
-  void setSearchSuggestion(QVector<NXSuggestion *> suggestionVector);
+  void setSearchSuggestion(const QVector<NXSuggestion *> &suggestionVector);
   void clearSearchNode();
   NXSuggestion *getSearchSuggestion(int row);
 

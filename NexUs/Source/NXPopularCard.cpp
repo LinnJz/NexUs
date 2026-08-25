@@ -7,6 +7,7 @@
 #include <QTimer>
 
 #include "DeveloperComponents/NXPopularCardFloater.h"
+#include "NXApplication.h"
 #include "NXPushButton.h"
 #include "NXTheme.h"
 #include "private/NXPopularCardPrivate.h"
@@ -148,6 +149,7 @@ NXPopularCard::event(QEvent *event)
 void
 NXPopularCard::paintEvent(QPaintEvent *event)
 {
+  int fontPixelSize = nxApp->getFontPixelSize();
   Q_D(NXPopularCard);
   if (d->_isFloating)
   {
@@ -200,7 +202,7 @@ NXPopularCard::paintEvent(QPaintEvent *event)
   painter.setPen(NXThemeColor(d->_themeMode, BasicText));
   QFont font = painter.font();
   font.setWeight(QFont::Bold);
-  font.setPixelSize(15);
+  font.setPixelSize(fontPixelSize + 2);
   painter.setFont(font);
   int titleHeight = painter.fontMetrics().height();
   QRectF titleRect(pixRect.right() + d->_textHSpacing, pixRect.y(),
@@ -212,7 +214,7 @@ NXPopularCard::paintEvent(QPaintEvent *event)
 
   // SubTitle
   font.setWeight(QFont::DemiBold);
-  font.setPixelSize(13);
+  font.setPixelSize(fontPixelSize);
   painter.setFont(font);
   int subTitleHeight = painter.fontMetrics().height();
   QRectF subTitleRect(pixRect.right() + d->_textHSpacing, titleRect.bottom() + d->_textVSpacing,
@@ -228,7 +230,7 @@ NXPopularCard::paintEvent(QPaintEvent *event)
   if (!d->_pInteractiveTips.isEmpty())
   {
     font.setWeight(QFont::DemiBold);
-    font.setPixelSize(12);
+    font.setPixelSize(fontPixelSize - 1);
     painter.setFont(font);
     //覆盖背景绘制
     QRectF tipRect(foregroundRect.right() - d->_textHSpacing - tipWidth,

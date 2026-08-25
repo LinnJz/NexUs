@@ -6,7 +6,7 @@
 #  include "T_BasePage.h"
 
 #  ifdef Q_OS_WIN
-class NXDxgiScreen;
+class NXImageCard;
 #  endif
 #  ifdef Q_OS_MAC
 class NXScreenCaptureScreen;
@@ -27,7 +27,7 @@ public:
 
 private:
 #  ifdef Q_OS_WIN
-  NXDxgiScreen *_dxgiScreen { nullptr };
+  NXImageCard *_dxgiScreen { nullptr };
   NXComboBox *_dxComboBox { nullptr };
   NXComboBox *_outputComboBox { nullptr };
 #  endif

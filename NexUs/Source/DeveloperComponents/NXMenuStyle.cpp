@@ -5,6 +5,7 @@
 #include <QPainterPath>
 #include <QStyleOption>
 
+#include "NXApplication.h"
 #include "NXMenu.h"
 #include "NXTheme.h"
 
@@ -201,7 +202,7 @@ NXMenuStyle::drawControl(ControlElement element,
                           : _themeMode == NXThemeType::Light           ? Qt::black
                                                                        : Qt::white);
           QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-          iconFont.setPixelSize(18);
+          iconFont.setPixelSize(nxApp->getFontPixelSize() + 5);
           painter->setFont(iconFont);
           painter->drawText(QRect(menuRect.right() - 25, menuRect.y(), 25, menuRect.height()), Qt::AlignVCenter,
                             QChar((unsigned short) NXIconType::AngleRight));

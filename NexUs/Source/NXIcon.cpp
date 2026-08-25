@@ -1,7 +1,9 @@
-#include "NXIcon.h"
+﻿#include "NXIcon.h"
 
 #include <QPainter>
 #include <QPixmap>
+
+#include "NXApplication.h"
 
 NXIcon::NXIcon()
 {
@@ -22,7 +24,7 @@ NXIcon::getNXIcon(NXIconType::IconName awesome)
   painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
   // painter.setPen(QColor("#1570A5"));
   // painter.setBrush(QColor("#1570A5"));
-  iconFont.setPixelSize(25);
+  iconFont.setPixelSize(nxApp->getFontPixelSize() + 12);
   painter.setFont(iconFont);
   painter.drawText(pix.rect(), Qt::AlignCenter, QChar((unsigned short) awesome));
   painter.end();
@@ -40,7 +42,7 @@ NXIcon::getNXIcon(NXIconType::IconName awesome, const QColor &iconColor)
   painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
   painter.setPen(iconColor);
   // painter.setBrush(QColor("#1570A5"));
-  iconFont.setPixelSize(25);
+  iconFont.setPixelSize(nxApp->getFontPixelSize() + 12);
   painter.setFont(iconFont);
   painter.drawText(pix.rect(), Qt::AlignCenter, QChar((unsigned short) awesome));
   painter.end();

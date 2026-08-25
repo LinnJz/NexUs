@@ -6,6 +6,7 @@
 
 #include <QPainter>
 
+#include "NXApplication.h"
 #include "DeveloperComponents/NXKeyBinderContainer.h"
 #include "NXContentDialog.h"
 #include "NXTheme.h"
@@ -24,7 +25,7 @@ NXKeyBinder::NXKeyBinder(QWidget *parent)
   setStyleSheet(QStringLiteral("#NXKeyBinder{background-color:transparent;}"));
   QFont textFont = font();
   textFont.setLetterSpacing(QFont::AbsoluteSpacing, 0.5);
-  textFont.setPixelSize(15);
+  textFont.setPixelSize(nxApp->getFontPixelSize() + 2);
   setFont(textFont);
   d->_binderContainer = new NXKeyBinderContainer(this);
   setText(QStringLiteral("  按键: 未绑定      "));
@@ -141,7 +142,7 @@ NXKeyBinder::paintEvent(QPaintEvent *event)
   painter.drawRoundedRect(borderRect, d->_pBorderRadius, d->_pBorderRadius);
   // 图标绘制
   QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-  iconFont.setPixelSize(16);
+  iconFont.setPixelSize(nxApp->getFontPixelSize() + 3);
   painter.setFont(iconFont);
   painter.setPen(NXThemeColor(d->_themeMode, BasicText));
   QRect iconRect = rect();

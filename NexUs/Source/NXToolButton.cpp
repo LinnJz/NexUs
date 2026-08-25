@@ -17,6 +17,8 @@ NXToolButton::NXToolButton(QWidget *parent)
 {
   Q_D(NXToolButton);
   d->q_ptr = this;
+  setObjectName("NXToolButton");
+  setStyleSheet("#NXToolButton{background-color:transparent;}");
 #ifdef Q_OS_MACOS
   setAttribute(Qt::WA_Hover);
 #endif

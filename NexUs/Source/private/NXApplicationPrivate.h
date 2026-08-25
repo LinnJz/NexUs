@@ -14,6 +14,7 @@ class NXApplicationPrivate : public QObject
   Q_D_CREATE(NXApplication)
   Q_PROPERTY_CREATE_D(QString, NXMicaImagePath)
   Q_PROPERTY_CREATE_D(NXApplicationType::WindowDisplayMode, WindowDisplayMode)
+  Q_PROPERTY_CREATE_D(int, FontPixelSize)
 
 public:
   explicit NXApplicationPrivate(QObject *parent = nullptr);

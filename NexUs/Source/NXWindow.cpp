@@ -200,6 +200,21 @@ NXWindow::getAppBarHeight() const
 }
 
 void
+NXWindow::setRibbonHeight(int ribbonHeight)
+{
+  Q_D(NXWindow);
+  d->_appBar->setRibbonHeight(ribbonHeight);
+  Q_EMIT pRibbonHeightChanged();
+}
+
+int
+NXWindow::getRibbonHeight() const
+{
+  Q_D(const NXWindow);
+  return d->_appBar->getRibbonHeight();
+}
+
+void
 NXWindow::setCustomWidget(NXAppBarType::CustomArea customArea,
                           QWidget *widget,
                           QObject *hitTestObject,

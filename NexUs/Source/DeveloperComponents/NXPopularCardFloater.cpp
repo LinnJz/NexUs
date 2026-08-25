@@ -6,6 +6,7 @@
 #include <QPainterPath>
 #include <QPropertyAnimation>
 
+#include "NXApplication.h"
 #include "NXPopularCard.h"
 #include "NXPushButton.h"
 #include "NXTheme.h"
@@ -172,6 +173,7 @@ NXPopularCardFloater::event(QEvent *event)
 void
 NXPopularCardFloater::paintEvent(QPaintEvent *event)
 {
+  const int fontPixelSize = nxApp->getFontPixelSize();
   QPainter painter(this);
   painter.save();
   painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
@@ -210,7 +212,7 @@ NXPopularCardFloater::paintEvent(QPaintEvent *event)
   painter.setPen(NXThemeColor(_themeMode, BasicText));
   QFont font = painter.font();
   font.setWeight(QFont::Bold);
-  font.setPixelSize(15);
+  font.setPixelSize(fontPixelSize + 2);
   painter.setFont(font);
   int titleHeight = painter.fontMetrics().height();
   QRectF titleRect(pixRect.right() + _cardPrivate->_textHSpacing, pixRect.y(),
@@ -223,7 +225,7 @@ NXPopularCardFloater::paintEvent(QPaintEvent *event)
 
   //SubTitle
   font.setWeight(QFont::DemiBold);
-  font.setPixelSize(13);
+  font.setPixelSize(fontPixelSize);
   painter.setFont(font);
   int subTitleHeight = painter.fontMetrics().height();
   QRectF subTitleRect(pixRect.right() + _cardPrivate->_textHSpacing, titleRect.bottom() + _cardPrivate->_textVSpacing,

@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QVBoxLayout>
 
+#include "NXApplication.h"
 #include "NXTheme.h"
 #include "private/NXRollerPickerPrivate.h"
 
@@ -21,7 +22,7 @@ NXRollerPicker::NXRollerPicker(QWidget *parent)
   setObjectName("NXRollerPicker");
   setStyleSheet(QStringLiteral("#NXRollerPicker{background-color:transparent;}"));
   QFont font = this->font();
-  font.setPixelSize(16);
+  font.setPixelSize(nxApp->getFontPixelSize() + 3);
   setFont(font);
 
   d->_rollerPickerContainer = new NXRollerPickerContainer(this);

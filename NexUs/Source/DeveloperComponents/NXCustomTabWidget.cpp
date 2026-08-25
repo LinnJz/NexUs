@@ -49,7 +49,10 @@ NXCustomTabWidget::NXCustomTabWidget(QWidget *parent)
     }
   });
   connect(_customTabBar, &NXTabBar::tabCloseRequested, originTabBar, &QTabBar::tabCloseRequested);
-
+  connect(_customTabBar, &NXTabBar::tabBarTextChanged, originTabBar, [=](int tabIndex, const QString &tabText)
+  {
+    originTabBar->setTabText(tabIndex, tabText);
+  });
   _customTabWidget->d_ptr->_customTabBar = _customTabBar;
   connect(_customTabBar, &NXTabBar::tabDragCreate, _customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragCreate);
   connect(_customTabBar, &NXTabBar::tabDragDrop, _customTabWidget->d_func(), &NXTabWidgetPrivate::onTabDragDrop);

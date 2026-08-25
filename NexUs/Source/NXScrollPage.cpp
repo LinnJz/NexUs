@@ -22,7 +22,6 @@ NXScrollPage::NXScrollPage(QWidget *parent)
   Q_D(NXScrollPage);
   setProperty("NXBaseClassName", "NXScrollPage");
   d->q_ptr          = this;
-  d->_pCustomWidget = nullptr;
   d->_breadcrumbBar = new NXBreadcrumbBar(this);
   d->_breadcrumbBar->setTextPixelSize(28);
   connect(d->_breadcrumbBar, &NXBreadcrumbBar::breadcrumbClicked, this,
@@ -51,12 +50,64 @@ NXScrollPage::NXScrollPage(QWidget *parent)
   d->_mainLayout->setSpacing(0);
   d->_mainLayout->setContentsMargins(0, 0, 0, 0);
   d->_mainLayout->addLayout(d->_pageTitleLayout);
+  d->_topCustomWidget = new QWidget(this);
+  d->_topCustomWidget->setVisible(false);
+  d->_mainLayout->addWidget(d->_topCustomWidget);
   d->_mainLayout->addWidget(d->_centralStackedWidget);
+  d->_bottomCustomWidget = new QWidget(this);
+  d->_bottomCustomWidget->setVisible(false);
+  d->_mainLayout->addWidget(d->_bottomCustomWidget);
   setContentsMargins(20, 20, 0, 0);
 }
 
 NXScrollPage::~NXScrollPage()
 {
+}
+
+void
+NXScrollPage::setTopCustomWidget(QWidget *customWidget)
+{
+  Q_D(NXScrollPage);
+  if (!customWidget || customWidget == this)
+  {
+    return;
+  }
+  if (d->_topCustomWidget)
+  {
+    d->_mainLayout->removeWidget(d->_topCustomWidget);
+  }
+  d->_mainLayout->insertWidget(1, customWidget);
+  d->_topCustomWidget = customWidget;
+}
+
+QWidget *
+NXScrollPage::getTopCustomWidget() const
+{
+  Q_D(const NXScrollPage);
+  return d->_topCustomWidget;
+}
+
+void
+NXScrollPage::setBottomCustomWidget(QWidget *customWidget)
+{
+  Q_D(NXScrollPage);
+  if (!customWidget || customWidget == this)
+  {
+    return;
+  }
+  if (d->_bottomCustomWidget)
+  {
+    d->_mainLayout->removeWidget(d->_bottomCustomWidget);
+  }
+  d->_mainLayout->insertWidget(3, customWidget);
+  d->_bottomCustomWidget = customWidget;
+}
+
+QWidget *
+NXScrollPage::getBottomCustomWidget() const
+{
+  Q_D(const NXScrollPage);
+  return d->_bottomCustomWidget;
 }
 
 void
@@ -122,30 +173,6 @@ NXScrollPage::setPageTitle(const QString &title)
 }
 
 void
-NXScrollPage::setCustomWidget(QWidget *widget)
-{
-  Q_D(NXScrollPage);
-  if (!widget || widget == this)
-  {
-    return;
-  }
-  if (d->_pCustomWidget)
-  {
-    d->_mainLayout->removeWidget(d->_pCustomWidget);
-  }
-  d->_mainLayout->insertWidget(1, widget);
-  d->_pCustomWidget = widget;
-  Q_EMIT pCustomWidgetChanged();
-}
-
-QWidget *
-NXScrollPage::getCustomWidget() const
-{
-  Q_D(const NXScrollPage);
-  return d->_pCustomWidget;
-}
-
-void
 NXScrollPage::navigation(int widgetIndex, bool isLogRoute)
 {
   Q_D(NXScrollPage);
@@ -188,4 +215,18 @@ NXScrollPage::setTitleVisible(bool isVisible)
 {
   Q_D(NXScrollPage);
   d->_breadcrumbBar->setVisible(isVisible);
+}
+
+void
+NXScrollPage::setPageTitlePixelSize(int pixelSize)
+{
+  Q_D(NXScrollPage);
+  d->_breadcrumbBar->setTextPixelSize(pixelSize);
+}
+
+int
+NXScrollPage::getPageTitlePixelSize() const
+{
+  Q_D(const NXScrollPage);
+  return d->_breadcrumbBar->getTextPixelSize();
 }

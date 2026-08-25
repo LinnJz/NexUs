@@ -1,18 +1,18 @@
-﻿#include "NXTreeViewStyle.h"
+﻿#include "NXActionCommanderViewStyle.h"
 
 #include <QDebug>
 #include <QPainter>
 #include <QPainterPath>
 #include <QStyleOption>
 
+#include "DeveloperComponents/NXActionCommanderNode.h"
 #include "NXApplication.h"
 #include "NXTheme.h"
 
-NXTreeViewStyle::NXTreeViewStyle(QStyle *style)
+NXActionCommanderViewStyle::NXActionCommanderViewStyle(QStyle *style)
 {
-  _pItemHeight   = 35;
+  _pItemHeight   = 40;
   _pHeaderMargin = 5;
-  _pIconName     = NXIconType::None;
   _themeMode     = nxTheme->getThemeMode();
   connect(nxTheme, &NXTheme::themeModeChanged, this, [=](NXThemeType::ThemeMode themeMode)
   {
@@ -20,15 +20,15 @@ NXTreeViewStyle::NXTreeViewStyle(QStyle *style)
   });
 }
 
-NXTreeViewStyle::~NXTreeViewStyle()
+NXActionCommanderViewStyle::~NXActionCommanderViewStyle()
 {
 }
 
 void
-NXTreeViewStyle::drawPrimitive(PrimitiveElement element,
-                               const QStyleOption *option,
-                               QPainter *painter,
-                               const QWidget *widget) const
+NXActionCommanderViewStyle::drawPrimitive(PrimitiveElement element,
+                                          const QStyleOption *option,
+                                          QPainter *painter,
+                                          const QWidget *widget) const
 {
   switch (element)
   {
@@ -41,20 +41,19 @@ NXTreeViewStyle::drawPrimitive(PrimitiveElement element,
       painter->setRenderHint(QPainter::Antialiasing);
       QRect itemRect = vopt->rect;
       itemRect.adjust(0, 2, 0, -2);
-      QPainterPath path;
-      path.addRoundedRect(itemRect, 4, 4);
+      painter->setPen(Qt::NoPen);
       bool isEnable = vopt->state.testFlag(QStyle::State_Enabled);
       if (vopt->state & QStyle::State_Selected)
       {
         if (vopt->state & QStyle::State_MouseOver && isEnable)
         {
           // 选中时覆盖
-          painter->fillPath(path, NXThemeColor(_themeMode, BasicSelectedHoverAlpha));
+          painter->setBrush(NXThemeColor(_themeMode, BasicSelectedHoverAlpha));
         }
         else
         {
           // 选中
-          painter->fillPath(path, NXThemeColor(_themeMode, BasicSelectedAlpha));
+          painter->setBrush(NXThemeColor(_themeMode, BasicSelectedAlpha));
         }
       }
       else
@@ -62,9 +61,10 @@ NXTreeViewStyle::drawPrimitive(PrimitiveElement element,
         if (vopt->state & QStyle::State_MouseOver && isEnable)
         {
           // 覆盖时颜色
-          painter->fillPath(path, NXThemeColor(_themeMode, BasicHoverAlpha));
+          painter->setBrush(NXThemeColor(_themeMode, BasicHoverAlpha));
         }
       }
+      painter->drawRoundedRect(itemRect, 4, 4);
       painter->restore();
     }
     return;
@@ -77,7 +77,6 @@ NXTreeViewStyle::drawPrimitive(PrimitiveElement element,
       if (vopt->state.testFlag(QStyle::State_Children))
       {
         painter->save();
-        painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
         QRect indicatorRect = option->rect;
         indicatorRect.adjust(0, 0, -2, 0);
         QFont iconFont = QFont(QStringLiteral("NXAwesome"));
@@ -85,8 +84,8 @@ NXTreeViewStyle::drawPrimitive(PrimitiveElement element,
         painter->setFont(iconFont);
         painter->setPen(NXThemeColor(_themeMode, BasicText));
         painter->drawText(indicatorRect, Qt::AlignVCenter | Qt::AlignRight,
-                          vopt->state.testFlag(QStyle::State_Open) ? QChar((unsigned short) NXIconType::AngleDown)
-                                                                   : QChar((unsigned short) NXIconType::AngleRight));
+                          vopt->state.testFlag(QStyle::State_Open) ? QChar(NXIconType::AngleDown)
+                                                                   : QChar(NXIconType::AngleRight));
         painter->restore();
       }
     }
@@ -131,11 +130,12 @@ NXTreeViewStyle::drawPrimitive(PrimitiveElement element,
 }
 
 void
-NXTreeViewStyle::drawControl(ControlElement element,
-                             const QStyleOption *option,
-                             QPainter *painter,
-                             const QWidget *widget) const
+NXActionCommanderViewStyle::drawControl(ControlElement element,
+                                        const QStyleOption *option,
+                                        QPainter *painter,
+                                        const QWidget *widget) const
 {
+  int fontPixelSize = nxApp->getFontPixelSize();
   switch (element)
   {
   case QStyle::CE_ShapedFrame :
@@ -185,15 +185,16 @@ NXTreeViewStyle::drawControl(ControlElement element,
     {
       // 背景绘制
       this->drawPrimitive(QStyle::PE_PanelItemViewItem, option, painter, widget);
-
       // 内容绘制
+      QRect itemRect = option->rect;
       painter->save();
       painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
-
+      QRect checkRect = proxy()->subElementRect(SE_ItemViewItemCheckIndicator, vopt, widget);
+      QRect iconRect  = proxy()->subElementRect(SE_ItemViewItemDecoration, vopt, widget);
+      QRect textRect  = proxy()->subElementRect(SE_ItemViewItemText, vopt, widget);
       // 复选框绘制
-      if (vopt->features & QStyleOptionViewItem::HasCheckIndicator)
+      if (checkRect.isValid())
       {
-        QRect checkRect = proxy()->subElementRect(SE_ItemViewItemCheckIndicator, vopt, widget);
         painter->save();
         //图标绘制
         if (vopt->checkState == Qt::Checked)
@@ -205,7 +206,7 @@ NXTreeViewStyle::drawControl(ControlElement element,
           iconFont.setPixelSize(checkRect.width() * 0.85);
           painter->setFont(iconFont);
           painter->setPen(NXThemeColor(NXThemeType::Dark, BasicText));
-          painter->drawText(checkRect, Qt::AlignCenter, QChar((unsigned short) NXIconType::Check));
+          painter->drawText(checkRect, Qt::AlignCenter, QChar(NXIconType::Check));
         }
         else if (vopt->checkState == Qt::PartiallyChecked)
         {
@@ -227,65 +228,92 @@ NXTreeViewStyle::drawControl(ControlElement element,
       // 图标绘制
       if (!vopt->icon.isNull())
       {
-        QRect iconRect     = proxy()->subElementRect(SE_ItemViewItemDecoration, vopt, widget);
         QIcon::Mode mode   = QIcon::Normal;
         QIcon::State state = vopt->state & QStyle::State_Open ? QIcon::On : QIcon::Off;
         vopt->icon.paint(painter, iconRect, vopt->decorationAlignment, mode, state);
       }
-
-      QRect itemRect = option->rect;
-      bool isFirst =
-          vopt->state.testFlag(QStyle::State_Selected) && (vopt->viewItemPosition == QStyleOptionViewItem::Beginning ||
-                                                           vopt->viewItemPosition == QStyleOptionViewItem::OnlyOne);
+      // 消息类型绘制
+      auto modelIndex      = vopt->index;
+      const auto indexNode = static_cast<NXActionCommanderNode *>(modelIndex.internalPointer());
+      if (indexNode && indexNode->getIsCommandNode())
+      {
+        painter->save();
+        switch (indexNode->getMessageMode())
+        {
+        case NXMessageBarType::Success :
+        {
+          painter->setPen(Qt::NoPen);
+          painter->setBrush(QColor(0x01, 0xE5, 0x7B));
+          painter->drawEllipse(QPoint(textRect.x(), textRect.y() + textRect.height() / 2), 10, 10);
+          QFont iconFont = QFont(QStringLiteral("NXAwesome"));
+          iconFont.setPixelSize(fontPixelSize - 1);
+          painter->setFont(iconFont);
+          painter->setPen(Qt::black);
+          painter->drawText(textRect.x() - 5, textRect.y(), textRect.width(), textRect.height(),
+                            Qt::AlignVCenter | Qt::AlignLeft, QChar(NXIconType::Check));
+          break;
+        }
+        case NXMessageBarType::Information :
+        {
+          painter->setPen(Qt::NoPen);
+          painter->setBrush(QColor(0xF4, 0xF4, 0xF4));
+          painter->drawEllipse(QPoint(textRect.x(), textRect.y() + textRect.height() / 2), 10, 10);
+          QFont iconFont = painter->font();
+          iconFont.setPixelSize(fontPixelSize);
+          iconFont.setBold(true);
+          painter->setFont(iconFont);
+          painter->setPen(Qt::black);
+          painter->drawText(textRect.x() - 2, textRect.y(), textRect.width(), textRect.height(),
+                            Qt::AlignVCenter | Qt::AlignLeft, QStringLiteral("i"));
+          break;
+        }
+        case NXMessageBarType::Warning :
+        {
+          painter->setPen(Qt::NoPen);
+          painter->setBrush(QColor(0xFA, 0xB6, 0x00));
+          painter->drawEllipse(QPoint(textRect.x(), textRect.y() + textRect.height() / 2), 10, 10);
+          QFont iconFont = painter->font();
+          iconFont.setPixelSize(fontPixelSize);
+          iconFont.setBold(true);
+          painter->setFont(iconFont);
+          painter->setPen(Qt::black);
+          painter->drawText(textRect.x() - 3, textRect.y(), textRect.width(), textRect.height(),
+                            Qt::AlignVCenter | Qt::AlignLeft, QStringLiteral("!"));
+          break;
+        }
+        case NXMessageBarType::Error :
+        {
+          painter->setPen(Qt::NoPen);
+          painter->setBrush(NXThemeColor(_themeMode, StatusDanger));
+          painter->drawEllipse(QPoint(textRect.x(), textRect.y() + textRect.height() / 2), 10, 10);
+          QFont iconFont = QFont(QStringLiteral("NXAwesome"));
+          iconFont.setPixelSize(fontPixelSize);
+          painter->setFont(iconFont);
+          painter->setPen(Qt::white);
+          painter->drawText(textRect.x() - 5, textRect.y(), textRect.width(), textRect.height(),
+                            Qt::AlignVCenter | Qt::AlignLeft, QChar(NXIconType::Xmark));
+          break;
+        }
+        default :
+        {
+          break;
+        }
+        }
+        painter->restore();
+      }
       // 文字绘制
+      bool isEnable = vopt->state.testFlag(QStyle::State_Enabled);
       if (!vopt->text.isEmpty())
       {
-        QRect textRect = proxy()->subElementRect(SE_ItemViewItemText, vopt, widget);
-        if (_pIconName != NXIconType::None)
-        {
-          const int lineHeight = textRect.height();
-          const int iconSize   = qMax(16, static_cast<int>(lineHeight * 0.55));
-          QRect iconRect(vopt->icon.isNull() ? itemRect.left() + 10 : textRect.left(),
-                         textRect.top() + (lineHeight - iconSize) / 2, // 垂直居中
-                         iconSize, iconSize);
-          QRect adjustedTextRect = vopt->icon.isNull() ? itemRect.adjusted(iconSize + 13, 0, 0, 0)
-                                                       : textRect.adjusted(iconSize + 3, 0, 0, 0);
-          if (vopt->state.testFlag(QStyle::State_Enabled))
-          {
-            painter->setPen(isFirst ? NXThemeColor(_themeMode, PrimaryNormal) : NXThemeColor(_themeMode, BasicText));
-          }
-          else
-          {
-            painter->setPen(NXThemeColor(_themeMode, BasicTextDisable));
-          }
-          painter->setFont(vopt->font);
-          painter->drawText(adjustedTextRect, vopt->displayAlignment | Qt::TextSingleLine,
-                            vopt->text.mid(0, 50)); // 防止长文本溢出
-
-          QFont iconFont(QStringLiteral("NXAwesome"));
-          iconFont.setPixelSize(iconSize * 0.8);
-          painter->setFont(iconFont);
-          painter->drawText(iconRect, Qt::AlignCenter, QChar(_pIconName));
-        }
-        else
-        {
-          if (vopt->state.testFlag(QStyle::State_Enabled))
-          {
-            painter->setPen(isFirst ? NXThemeColor(_themeMode, PrimaryNormal) : NXThemeColor(_themeMode, BasicText));
-          }
-          else
-          {
-            painter->setPen(NXThemeColor(_themeMode, BasicTextDisable));
-          }
-          painter->drawText(vopt->icon.isNull() ? itemRect.adjusted(15, 0, 0, 0) : textRect,
-                            vopt->displayAlignment | Qt::TextSingleLine, vopt->text.mid(0, 50));
-        }
+        painter->setPen(isEnable ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));
+        painter->drawText(textRect, vopt->displayAlignment, vopt->text);
       }
       // 选中特效
       int heightOffset = itemRect.height() / 4;
       painter->setPen(Qt::NoPen);
       painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
-      if (isFirst)
+      if (vopt->state.testFlag(QStyle::State_Selected) && (vopt->viewItemPosition == QStyleOptionViewItem::Beginning ||
+                                                           vopt->viewItemPosition == QStyleOptionViewItem::OnlyOne))
       {
         painter->drawRoundedRect(
             QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
@@ -303,10 +331,10 @@ NXTreeViewStyle::drawControl(ControlElement element,
 }
 
 QSize
-NXTreeViewStyle::sizeFromContents(ContentsType type,
-                                  const QStyleOption *option,
-                                  const QSize &size,
-                                  const QWidget *widget) const
+NXActionCommanderViewStyle::sizeFromContents(ContentsType type,
+                                             const QStyleOption *option,
+                                             const QSize &size,
+                                             const QWidget *widget) const
 {
   switch (type)
   {
@@ -325,7 +353,7 @@ NXTreeViewStyle::sizeFromContents(ContentsType type,
 }
 
 int
-NXTreeViewStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
+NXActionCommanderViewStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
   switch (metric)
   {
@@ -342,7 +370,7 @@ NXTreeViewStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
 }
 
 QRect
-NXTreeViewStyle::subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const
+NXActionCommanderViewStyle::subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const
 {
   switch (element)
   {
@@ -392,3 +420,7 @@ NXTreeViewStyle::subElementRect(SubElement element, const QStyleOption *option, 
   }
   return QProxyStyle::subElementRect(element, option, widget);
 }
+
+NXThemeType::ThemeMode
+NXActionCommanderViewStyle::getThemeMode() const
+{ return _themeMode; }

@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QStyleOption>
 
+#include "NXApplication.h"
 #include "NXMenuBar.h"
 #include "NXTheme.h"
 
@@ -63,7 +64,7 @@ NXMenuBarStyle::drawControl(ControlElement element,
       //展开图标
       painter->setPen(!topt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : NXThemeColor(_themeMode, BasicText));
       QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-      iconFont.setPixelSize(18);
+      iconFont.setPixelSize(nxApp->getFontPixelSize() + 5);
       painter->setFont(iconFont);
       painter->drawText(topt->rect, Qt::AlignCenter, QChar((unsigned short) NXIconType::AngleRight));
       painter->restore();

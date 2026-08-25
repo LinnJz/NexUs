@@ -1,4 +1,4 @@
-#include "NXSuggestModel.h"
+﻿#include "NXSuggestModel.h"
 
 NXSuggestModel::NXSuggestModel(QObject *parent)
     : QAbstractListModel { parent }
@@ -23,7 +23,7 @@ NXSuggestModel::data(const QModelIndex &index, int role) const
 }
 
 void
-NXSuggestModel::setSearchSuggestion(QVector<NXSuggestion *> suggestionVector)
+NXSuggestModel::setSearchSuggestion(const QVector<NXSuggestion *> &suggestionVector)
 {
   if (suggestionVector.count() == 0)
   {

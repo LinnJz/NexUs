@@ -19,6 +19,7 @@ class NX_EXPORT NXApplication : public QObject
   Q_SINGLETON_CREATE(QS_S_UNIQUE(NXApplication))
   Q_PROPERTY_CREATE_H(QS_SET_CREF(QString), NXMicaImagePath)
   Q_PROPERTY_CREATE_H(NXApplicationType::WindowDisplayMode, WindowDisplayMode)
+  Q_PROPERTY_CREATE_H(int, FontPixelSize)
 
 private:
   explicit NXApplication(QObject *parent = nullptr);

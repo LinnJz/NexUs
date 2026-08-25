@@ -27,6 +27,7 @@ class NXTabWidgetPrivate : public QObject
   Q_OBJECT
   Q_D_CREATE(NXTabWidget)
   Q_PROPERTY_CREATE_D(QSize, TabSize)
+  Q_PROPERTY_CREATE_D(QSize, FloatWidgetSize)
   Q_PROPERTY_CREATE_D(bool, IsTabTransparent)
   Q_PROPERTY_CREATE_D(bool, IsContainerAcceptDrops)
 

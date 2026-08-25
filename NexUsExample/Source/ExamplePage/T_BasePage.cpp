@@ -110,5 +110,5 @@ T_BasePage::createCustomWidget(const QString &desText)
   topLayout->addLayout(buttonLayout);
   topLayout->addSpacing(5);
   topLayout->addWidget(descText);
-  setCustomWidget(customWidget);
+  setTopCustomWidget(customWidget);
 }

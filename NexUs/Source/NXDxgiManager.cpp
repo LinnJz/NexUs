@@ -1,4 +1,4 @@
-#include "NXDxgiManager.h"
+﻿#include "NXDxgiManager.h"
 #ifdef Q_OS_WIN
 #  include <d3d11.h>
 #  include <dxgi1_6.h>
@@ -44,6 +44,7 @@ NXDxgiManager::NXDxgiManager(QObject *parent)
   d->_dxgiThread->start();
   connect(d, &NXDxgiManagerPrivate::grabScreen, d->_dxgi, &NXDxgi::onGrabScreen);
   connect(d->_dxgi, &NXDxgi::grabScreenOver, this, &NXDxgiManager::grabImageUpdate);
+  connect(d->_dxgiThread, &QThread::finished, d->_dxgi, &NXDxgi::deleteLater);
 }
 
 NXDxgiManager::~NXDxgiManager()
@@ -58,7 +59,7 @@ NXDxgiManager::~NXDxgiManager()
     d->_dxgiThread->quit();
     d->_dxgiThread->wait();
   }
-  delete d->_dxgi;
+  delete d->_dxgiThread;
 }
 
 QStringList
@@ -257,61 +258,4 @@ NXDxgiManager::getTimeoutMsValue() const
   return d->_dxgi->getTimeoutMsValue();
 }
 
-Q_PROPERTY_CREATE_CPP(NXDxgiScreen, int, BorderRadius)
-
-NXDxgiScreen::NXDxgiScreen(QWidget *parent)
-    : QWidget(parent)
-    , d_ptr(new NXDxgiScreenPrivate())
-{
-  Q_D(NXDxgiScreen);
-  d->q_ptr          = this;
-  d->_pBorderRadius = 5;
-  d->_dxgiManager   = NXDxgiManager::getInstance();
-  setFixedSize(700, 500);
-  connect(d->_dxgiManager, &NXDxgiManager::grabImageUpdate, this, [=](QImage img)
-  {
-    if (isVisible())
-    {
-      d->_img = std::move(img);
-      update();
-    }
-  });
-}
-
-NXDxgiScreen::~NXDxgiScreen()
-{
-}
-
-void
-NXDxgiScreen::paintEvent(QPaintEvent *event)
-{
-  Q_D(NXDxgiScreen);
-  if (d->_dxgiManager->getIsGrabScreen())
-  {
-    QPainter painter(this);
-    painter.save();
-    painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
-    QPainterPath path;
-    path.addRoundedRect(rect(), d->_pBorderRadius, d->_pBorderRadius);
-    painter.drawImage(rect(), d->_img);
-    painter.restore();
-  }
-}
-
-void
-NXDxgiScreen::setIsSyncGrabSize(bool isSyncGrabSize)
-{
-  Q_D(NXDxgiScreen);
-  if (isSyncGrabSize)
-  {
-    setFixedSize(d->_dxgiManager->getGrabArea().size());
-  }
-}
-
-bool
-NXDxgiScreen::getIsSyncGrabSize() const
-{
-  Q_D(const NXDxgiScreen);
-  return d->_isSyncGrabSize;
-}
 #endif

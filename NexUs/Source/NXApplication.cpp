@@ -19,6 +19,7 @@ NXApplication::NXApplication(QObject *parent)
 {
   Q_D(NXApplication);
   d->q_ptr               = this;
+  d->_pFontPixelSize     = 13;
   d->_pNXMicaImagePath   = QStringLiteral(":/Resource/Image/MicaBase.png");
   d->_pWindowDisplayMode = NXApplicationType::Normal;
   d->_themeMode          = nxTheme->getThemeMode();
@@ -97,6 +98,24 @@ NXApplication::getNXMicaImagePath() const
 }
 
 void
+NXApplication::setFontPixelSize(int fontPixelSize)
+{
+  Q_D(NXApplication);
+  d->_pFontPixelSize = fontPixelSize;
+  QFont font         = qApp->font();
+  font.setPixelSize(fontPixelSize);
+  qApp->setFont(font);
+  Q_EMIT pFontPixelSizeChanged();
+}
+
+int
+NXApplication::getFontPixelSize() const
+{
+  Q_D(const NXApplication);
+  return d->_pFontPixelSize;
+}
+
+void
 NXApplication::init()
 {
   Q_D(NXApplication);
@@ -105,7 +124,7 @@ NXApplication::init()
   QFontDatabase::addApplicationFont(QStringLiteral(":/Resource/Font/NXAwesome.ttf"));
   //默认字体 - 根据平台设置
   QFont font = qApp->font();
-  font.setPixelSize(13);
+  font.setPixelSize(d->_pFontPixelSize);
 
   QStringList fontFamilies;
 #ifdef Q_OS_WIN

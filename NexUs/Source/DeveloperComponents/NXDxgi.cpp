@@ -1,4 +1,4 @@
-#include "NXDxgi.h"
+﻿#include "NXDxgi.h"
 #ifdef Q_OS_WIN
 #  include <QDateTime>
 #  include <QDebug>
@@ -7,11 +7,12 @@ NXDxgi::NXDxgi(QObject *parent)
     : QObject(parent)
 {
   _pIsInitSuccess  = false;
-  _pIsGrabActive   = false;
   _pGrabFrameRate  = 120;
   _pTimeoutMsValue = 50;
   _pIsGrabStoped   = true;
   _pIsGrabCenter   = false;
+  _pDxDeviceID     = 0;
+  _pOutputDeviceID = 0;
 }
 
 NXDxgi::~NXDxgi()
@@ -156,19 +157,25 @@ NXDxgi::initialize(int dxID, int outputID)
   return true;
 }
 
+void
+NXDxgi::setIsGrabActive(bool isGrabActive)
+{ _isGrabActive = isGrabActive; }
+
+bool
+NXDxgi::getIsGrabActive() const
+{ return _isGrabActive; }
+
 QImage
-NXDxgi::getGrabImage() const
+NXDxgi::getGrabImage()
 {
+  QMutexLocker grabLocker(&_grabMutex);
   QImage grabImage(_imageBits, _descWidth, _descHeight, QImage::Format_ARGB32);
   if (_pIsGrabCenter)
   {
     return grabImage.copy(QRect((_descWidth - _pGrabArea.width()) / 2, (_descHeight - _pGrabArea.height()) / 2,
                                 _pGrabArea.width(), _pGrabArea.height()));
   }
-  else
-  {
-    return grabImage.copy(_pGrabArea);
-  }
+  return grabImage.copy(_pGrabArea);
 }
 
 void
@@ -180,13 +187,13 @@ NXDxgi::onGrabScreen()
     return;
   }
   _pIsGrabStoped = false;
-  while (_pIsGrabActive)
+  while (_isGrabActive)
   {
     IDXGIResource *desktopRes = nullptr;
     DXGI_OUTDUPL_FRAME_INFO frameInfo;
     while (true)
     {
-      if (!_pIsGrabActive)
+      if (!_isGrabActive)
       {
         setIsGrabStoped(true);
         return;
@@ -224,15 +231,15 @@ NXDxgi::onGrabScreen()
       }
     }
     D3D11_TEXTURE2D_DESC desc;
-    ID3D11Texture2D *textrueRes = nullptr;
-    HRESULT hr = desktopRes->QueryInterface(__uuidof(ID3D11Texture2D), reinterpret_cast<void **>(&textrueRes));
+    ID3D11Texture2D *textureRes = nullptr;
+    HRESULT hr = desktopRes->QueryInterface(__uuidof(ID3D11Texture2D), reinterpret_cast<void **>(&textureRes));
     desktopRes->Release();
     if (FAILED(hr))
     {
       qDebug() << "Failed to ID3D11Texture2D result =" << QString::number(uint(hr), 16);
       continue;
     }
-    textrueRes->GetDesc(&desc);
+    textureRes->GetDesc(&desc);
     D3D11_TEXTURE2D_DESC texDesc;
     ZeroMemory(&texDesc, sizeof(texDesc));
     texDesc.Width              = desc.Width;
@@ -247,7 +254,7 @@ NXDxgi::onGrabScreen()
     texDesc.CPUAccessFlags     = D3D11_CPU_ACCESS_READ;
     texDesc.MiscFlags          = 0;
     _device->CreateTexture2D(&texDesc, nullptr, &_texture);
-    _context->CopyResource(_texture, textrueRes);
+    _context->CopyResource(_texture, textureRes);
     IDXGISurface1 *surface = nullptr;
     hr                     = _texture->QueryInterface(__uuidof(IDXGISurface1), reinterpret_cast<void **>(&surface));
     if (FAILED(hr))
@@ -257,9 +264,11 @@ NXDxgi::onGrabScreen()
     }
     DXGI_MAPPED_RECT map;
     surface->Map(&map, DXGI_MAP_READ);
+    _grabMutex.lock();
     _imageBits  = static_cast<uchar *>(map.pBits);
-    _descWidth  = desc.Width;
-    _descHeight = desc.Height;
+    _descWidth  = static_cast<int>(desc.Width);
+    _descHeight = static_cast<int>(desc.Height);
+    _grabMutex.unlock();
     surface->Unmap();
     surface->Release();
     _texture->Release();
@@ -267,23 +276,23 @@ NXDxgi::onGrabScreen()
     if (_pIsGrabCenter)
     {
       Q_EMIT grabScreenOver(
-          std::move(grabImage.copy(QRect((_descWidth - _pGrabArea.width()) / 2, (_descHeight - _pGrabArea.height()) / 2,
-                                         _pGrabArea.width(), _pGrabArea.height()))));
+          grabImage.copy(QRect((_descWidth - _pGrabArea.width()) / 2, (_descHeight - _pGrabArea.height()) / 2,
+                               _pGrabArea.width(), _pGrabArea.height())));
     }
     else
     {
-      Q_EMIT grabScreenOver(std::move(grabImage.copy(_pGrabArea)));
+      Q_EMIT grabScreenOver(grabImage.copy(_pGrabArea));
     }
     if (_lastGrabTime == 0)
     {
-      _lastGrabTime = _grabTimer.elapsed(); // 毫秒
+      _lastGrabTime = static_cast<qreal>(_grabTimer.elapsed()); // 毫秒
     }
     else
     {
-      _lastGrabTime = (_grabTimer.elapsed() + _lastGrabTime) / 2;
+      _lastGrabTime = (static_cast<qreal>(_grabTimer.elapsed()) + _lastGrabTime) / 2;
     }
     _cpuSleepTime = (1000 - _lastGrabTime * _pGrabFrameRate) / _pGrabFrameRate;
-    cpuSleep(_cpuSleepTime * 1000);
+    waitElapsedTime(_cpuSleepTime * 1000);
     // qDebug() << _cpuSleepTime << _lastGrabTime;
   }
   setIsGrabStoped(true);
@@ -310,24 +319,14 @@ NXDxgi::releaseInterface()
 }
 
 void
-NXDxgi::cpuSleep(qint64 usec)
+NXDxgi::waitElapsedTime(qreal usec)
 {
   if (usec <= 0)
   {
     return;
   }
-  LARGE_INTEGER cpuFerq;
-  LARGE_INTEGER startTime;
-  LARGE_INTEGER endTime;
-  QueryPerformanceFrequency(&cpuFerq);
-  QueryPerformanceCounter(&startTime);
-  while (true)
-  {
-    QueryPerformanceCounter(&endTime);
-    if (((endTime.QuadPart - startTime.QuadPart) * 1000000) / cpuFerq.QuadPart > usec)
-    {
-      break;
-    }
-  }
+  static QElapsedTimer timer;
+  timer.start();
+  while (static_cast<qreal>(timer.nsecsElapsed()) / 1000.0 < usec) { }
 }
 #endif

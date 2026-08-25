@@ -12,6 +12,7 @@ class NX_EXPORT NXTabWidget : public QTabWidget
   Q_OBJECT
   Q_Q_CREATE(NXTabWidget)
   Q_PROPERTY_CREATE_H(QSize, TabSize)
+  Q_PROPERTY_CREATE_H(QSize, FloatWidgetSize)
   Q_PROPERTY_CREATE_H(NXTabBarType::TabBarStyle, TabBarStyle)
   Q_PROPERTY_CREATE_H(int, TabCornerRadius)
   Q_PROPERTY_CREATE_H(bool, IsTabTransparent)
@@ -23,11 +24,13 @@ public:
   ~NXTabWidget();
   void setTabPosition(TabPosition position);
 
+  Q_SIGNAL void currentWidgetChanged(QWidget *widget);
+
 protected:
   void paintEvent(QPaintEvent *event) override;
   void dragEnterEvent(QDragEnterEvent *event) override;
   void dropEvent(QDropEvent *event) override;
-  virtual void tabInserted(int index);
+  void tabInserted(int index) override;
 
 private:
   friend class NXCustomTabWidget;

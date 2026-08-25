@@ -4,6 +4,7 @@
 #include <QPainterPath>
 #include <QStyleOption>
 
+#include "NXApplication.h"
 #include "NXTheme.h"
 
 NXCalendarDelegate::NXCalendarDelegate(NXCalendarModel *calendarModel, QObject *parent)
@@ -123,7 +124,7 @@ NXCalendarDelegate::_drawYearOrMonth(QPainter *painter,
   {
     itemRect.adjust(0, 10, 0, 0);
     QFont font = painter->font();
-    font.setPixelSize(9);
+    font.setPixelSize(nxApp->getFontPixelSize() - 4);
     painter->setFont(font);
     painter->drawText(itemRect, Qt::AlignTop | Qt::AlignHCenter, desText);
   }
@@ -195,7 +196,7 @@ NXCalendarDelegate::_drawDays(QPainter *painter, const QStyleOptionViewItem &opt
     {
       itemRect.adjust(0, 2 * penWidth, 0, 0);
       QFont font = painter->font();
-      font.setPixelSize(9);
+      font.setPixelSize(nxApp->getFontPixelSize() - 4);
       painter->setFont(font);
       painter->drawText(itemRect, Qt::AlignTop | Qt::AlignHCenter, desText);
     }

@@ -7,6 +7,7 @@
 #include <QPainterPath>
 #include <QStyleOptionSpinBox>
 
+#include "NXApplication.h"
 #include "NXTheme.h"
 
 NXSpinBoxStyle::NXSpinBoxStyle(QStyle *style)
@@ -115,7 +116,7 @@ NXSpinBoxStyle::drawComplexControl(ComplexControl control,
 
     //添加图标
     QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-    iconFont.setPixelSize(17);
+    iconFont.setPixelSize(nxApp->getFontPixelSize() + 4);
     painter->setFont(iconFont);
     painter->setPen(isEnable ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));
     painter->drawText(addLineRect, Qt::AlignCenter,

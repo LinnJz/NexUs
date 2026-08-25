@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QPainterPath>
 
+#include "NXApplication.h"
 #include "NXIcon.h"
 #include "NXTheme.h"
 #include "private/NXPushButtonPrivate.h"
@@ -37,7 +38,7 @@ NXPushButton::NXPushButton(QWidget *parent)
   setMouseTracking(true);
   setFixedHeight(38);
   QFont font = this->font();
-  font.setPixelSize(15);
+  font.setPixelSize(nxApp->getFontPixelSize() + 2);
   setFont(font);
   setObjectName("NXPushButton");
   setStyleSheet(QStringLiteral("#NXPushButton{background-color:transparent;}"));

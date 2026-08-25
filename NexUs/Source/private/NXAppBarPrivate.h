@@ -20,6 +20,7 @@ class NXAppBarPrivate : public QObject
   Q_D_CREATE(NXAppBar)
   Q_PRIVATE_CREATE_D(QMenu *, CustomMenu)
   Q_PROPERTY_CREATE_D(int, AppBarHeight)
+  Q_PROPERTY_CREATE_D(int, RibbonHeight)
   Q_PROPERTY_CREATE_D(bool, IsStayTop)
   Q_PROPERTY_CREATE_D(bool, IsFixedSize)
   Q_PROPERTY_CREATE_D(bool, IsDefaultClosed)

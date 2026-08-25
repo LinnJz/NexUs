@@ -91,8 +91,17 @@ NXTabWidgetPrivate::onTabDragCreate(QMimeData *mimeData)
     customTabBar->setTabCornerRadius(tabCornerRadius);
     customTabBar->setTabBarStyle(tabBarStyle);
     customTabBar->setTabSize(tabSize);
+    floatWidget->getCustomTabWidget()->setFloatWidgetSize(_pFloatWidgetSize);
     dragWidget->setProperty("CurrentCustomBar", QVariant::fromValue<NXTabBar *>(customTabBar));
     floatWidget->addTab(dragWidget, tabIcon, tabText);
+    connect(customTabBar, &NXTabBar::currentChanged, this, [=](int currentIndex)
+    {
+      if (currentIndex < 0)
+      {
+        return;
+      }
+      Q_EMIT q->currentWidgetChanged(floatWidget->getCustomTabWidget()->widget(currentIndex));
+    });
   }
   QPoint dragPos    = mimeData->property("DragPos").toPoint();
   QTimer *dragTimer = new QTimer(this);
@@ -135,7 +144,7 @@ NXTabWidgetPrivate::onTabDragCreate(QMimeData *mimeData)
     }
     if (!isFloatWidget)
     {
-      floatWidget->resize(700, 500);
+      floatWidget->resize(_pFloatWidgetSize);
     }
   });
   auto ret = drag->exec();
@@ -143,24 +152,24 @@ NXTabWidgetPrivate::onTabDragCreate(QMimeData *mimeData)
   NXCustomTabWidget *tempFloatWidget = mimeData->property("TempFloatWidget").value<NXCustomTabWidget *>();
   if (tempFloatWidget)
   {
-    if (ret == Qt::IgnoreAction)
+    if (tempFloatWidget->windowHandle())
     {
-      if (tempFloatWidget->windowHandle())
-      {
-        tempFloatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, false);
-      }
-    }
-    else
-    {
-      tempFloatWidget->deleteLater();
+      tempFloatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, false);
     }
     floatWidget->deleteLater();
   }
   else
   {
-    if (floatWidget->windowHandle())
+    if (floatWidget->isVisible())
     {
-      floatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, false);
+      if (floatWidget->windowHandle())
+      {
+        floatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, false);
+      }
+    }
+    else
+    {
+      floatWidget->deleteLater();
     }
   }
 }
@@ -207,10 +216,19 @@ NXTabWidgetPrivate::onTabDragLeave(QMimeData *mimeData)
   customTabBar->setTabCornerRadius(tabCornerRadius);
   customTabBar->setTabBarStyle(tabBarStyle);
   customTabBar->setTabSize(tabSize);
+  floatWidget->getCustomTabWidget()->setFloatWidgetSize(_pFloatWidgetSize);
   dragWidget->setProperty("CurrentCustomBar", QVariant::fromValue<NXTabBar *>(customTabBar));
   floatWidget->addTab(dragWidget, tabIcon, tabText);
+  connect(customTabBar, &NXTabBar::currentChanged, this, [=](int currentIndex)
+  {
+    if (currentIndex < 0)
+    {
+      return;
+    }
+    Q_EMIT q->currentWidgetChanged(floatWidget->getCustomTabWidget()->widget(currentIndex));
+  });
   floatWidget->show();
-  floatWidget->resize(700, 500);
+  floatWidget->resize(_pFloatWidgetSize);
   if (floatWidget->windowHandle())
   {
     floatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, true);
@@ -228,11 +246,6 @@ NXTabWidgetPrivate::onTabDragLeave(QMimeData *mimeData)
   {
     dragTimer->deleteLater();
   });
-  NXCustomTabWidget *tempFloatWidget = mimeData->property("TempFloatWidget").value<NXCustomTabWidget *>();
-  if (tempFloatWidget)
-  {
-    tempFloatWidget->deleteLater();
-  }
   mimeData->setProperty("TempFloatWidget", QVariant::fromValue<NXCustomTabWidget *>(floatWidget));
 }
 
@@ -255,6 +268,11 @@ NXTabWidgetPrivate::onTabDragDrop(QMimeData *mimeData)
     dragWidget->setProperty("CurrentCustomBar", QVariant::fromValue<NXTabBar *>(_customTabBar));
     _customTabBar->insertTab(dropIndex, tabIcon, tabText);
     _customTabBar->setCurrentIndex(dropIndex);
+  }
+  if (const auto tempFloatWidget = mimeData->property("TempFloatWidget").value<NXCustomTabWidget *>())
+  {
+    tempFloatWidget->deleteLater();
+    mimeData->setProperty("TempFloatWidget", {});
   }
 }
 

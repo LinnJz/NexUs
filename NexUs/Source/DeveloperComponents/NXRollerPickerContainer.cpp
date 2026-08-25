@@ -3,6 +3,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 
+#include "NXApplication.h"
 #include "NXRoller.h"
 #include "NXTheme.h"
 
@@ -186,7 +187,7 @@ NXRollerPickerContainer::paintEvent(QPaintEvent *event)
       painter.drawRoundedRect(_cancelButtonRect, 5, 5);
     }
     QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-    iconFont.setPixelSize(17);
+    iconFont.setPixelSize(nxApp->getFontPixelSize() + 4);
     painter.setFont(iconFont);
     painter.setPen(NXThemeColor(_themeMode, BasicText));
     // 确定

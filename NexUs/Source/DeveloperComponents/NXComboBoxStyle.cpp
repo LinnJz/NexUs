@@ -5,6 +5,7 @@
 #include <QPainterPath>
 #include <QStyleOption>
 
+#include "NXApplication.h"
 #include "NXTheme.h"
 
 NXComboBoxStyle::NXComboBoxStyle(QStyle *style)
@@ -199,7 +200,7 @@ NXComboBoxStyle::drawComplexControl(ComplexControl control,
       if (expandIconRect.isValid())
       {
         QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-        iconFont.setPixelSize(17);
+        iconFont.setPixelSize(nxApp->getFontPixelSize() + 4);
         painter->setFont(iconFont);
         painter->setPen(isEnabled ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));
         painter->translate(expandIconRect.x() + (qreal) expandIconRect.width() / 2,

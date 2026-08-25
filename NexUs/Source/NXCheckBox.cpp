@@ -1,5 +1,6 @@
 ﻿#include "NXCheckBox.h"
 
+#include "NXApplication.h"
 #include "DeveloperComponents/NXCheckBoxStyle.h"
 #include "private/NXCheckBoxPrivate.h"
 
@@ -17,7 +18,7 @@ NXCheckBox::NXCheckBox(QWidget *parent)
   d->_checkBoxStyle = new NXCheckBoxStyle(style());
   setStyle(d->_checkBoxStyle);
   QFont font = this->font();
-  font.setPixelSize(15);
+  font.setPixelSize(nxApp->getFontPixelSize() + 2);
   setFont(font);
 }
 

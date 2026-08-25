@@ -7,6 +7,7 @@
 #include <QPropertyAnimation>
 #include <QResizeEvent>
 
+#include "NXApplication.h"
 #include "NXIconButton.h"
 #include "NXTheme.h"
 #include "private/NXMessageBarPrivate.h"
@@ -196,6 +197,7 @@ void
 NXMessageBar::paintEvent(QPaintEvent *event)
 {
   Q_D(NXMessageBar);
+  const int fontPixelSize = nxApp->getFontPixelSize();
   QPainter painter(this);
   painter.setOpacity(d->_pOpacity);
   painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
@@ -232,7 +234,7 @@ NXMessageBar::paintEvent(QPaintEvent *event)
   // 标题
   QFont font = this->font();
   font.setWeight(QFont::Bold);
-  font.setPixelSize(16);
+  font.setPixelSize(fontPixelSize + 3);
   painter.setFont(font);
   int titleTextWidth = painter.fontMetrics().horizontalAdvance(d->_title) + 1;
   if (titleTextWidth > 100)
@@ -243,7 +245,7 @@ NXMessageBar::paintEvent(QPaintEvent *event)
   painter.drawText(QRect(d->_leftPadding + d->_titleLeftSpacing, -1, titleTextWidth, height()), textFlags, d->_title);
   // 正文
   font.setWeight(QFont::Light);
-  font.setPixelSize(15);
+  font.setPixelSize(fontPixelSize + 2);
   painter.setFont(font);
   painter.drawText(QRect(d->_leftPadding + d->_titleLeftSpacing + titleTextWidth + d->_textLeftSpacing, 0,
                          width() - (d->_leftPadding + d->_titleLeftSpacing + titleTextWidth + d->_textLeftSpacing +

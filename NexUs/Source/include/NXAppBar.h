@@ -1,4 +1,4 @@
-#ifndef NXAPPBAR_H
+﻿#ifndef NXAPPBAR_H
 #define NXAPPBAR_H
 
 #include <QWidget>
@@ -57,6 +57,7 @@ class NX_EXPORT NXAppBar : public QWidget
   Q_OBJECT
   Q_Q_CREATE(NXAppBar)
   Q_PROPERTY_CREATE_H(int, AppBarHeight)
+  Q_PROPERTY_CREATE_H(int, RibbonHeight)
   Q_PROPERTY_CREATE_H(bool, IsStayTop)
   Q_PROPERTY_CREATE_H(bool, IsFixedSize)
   Q_PROPERTY_CREATE_H(bool, IsDefaultClosed)

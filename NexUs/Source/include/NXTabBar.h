@@ -16,16 +16,24 @@ class NX_EXPORT NXTabBar : public QTabBar
   Q_PROPERTY_CREATE_H(int, TabCornerRadius)
   Q_PROPERTY_CREATE_H(bool, IsSelectedIndicatorVisible)
 
+  void setTabText(int index, const QString &text);
+
 public:
   explicit NXTabBar(QWidget *parent = nullptr);
   ~NXTabBar();
+
+  Q_SIGNAL void tabBarTextChanged(int tabIndex, const QString &tabText);
   Q_SIGNAL void tabDragCreate(QMimeData *mimeData);
   Q_SIGNAL void tabDragEnter(QMimeData *mimeData);
   Q_SIGNAL void tabDragLeave(QMimeData *mimeData);
   Q_SIGNAL void tabDragDrop(QMimeData *mimeData);
 
 protected:
-  QSize sizeHint() const;
+  QSize sizeHint() const override;
+  QSize minimumSizeHint() const override;
+  void tabInserted(int index) override;
+  void tabRemoved(int index) override;
+  void resizeEvent(QResizeEvent *event) override;
   void mousePressEvent(QMouseEvent *event) override;
   void mouseMoveEvent(QMouseEvent *event) override;
   void dragEnterEvent(QDragEnterEvent *event) override;

@@ -28,6 +28,7 @@ NXScrollPageRouteCommand::undo()
   {
     _pScrollPagePrivate->q_ptr->navigation(_pUndoPageIndex, false);
   }
+  setCommandDesc(QStringLiteral("撤销页面切换操作"));
 }
 
 void
@@ -44,4 +45,5 @@ NXScrollPageRouteCommand::redo()
   {
     _pScrollPagePrivate->q_ptr->navigation(_pRedoPageIndex, false);
   }
+  setCommandDesc(QStringLiteral("执行页面切换操作"));
 }

@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QVBoxLayout>
 
+#include "NXApplication.h"
 #include "DeveloperComponents/NXCalendarPickerContainer.h"
 #include "NXCalendar.h"
 #include "NXTheme.h"
@@ -92,7 +93,7 @@ NXCalendarPicker::paintEvent(QPaintEvent *event)
 
   // 图标绘制
   QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-  iconFont.setPixelSize(17);
+  iconFont.setPixelSize(nxApp->getFontPixelSize() + 4);
   painter.setFont(iconFont);
   painter.drawText(QRect(baseRect.right() - 25, 0, 15, height()), Qt::AlignVCenter | Qt::AlignRight,
                    QChar((unsigned short) NXIconType::CalendarRange));

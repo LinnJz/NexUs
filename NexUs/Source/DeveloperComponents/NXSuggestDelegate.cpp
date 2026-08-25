@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QPainterPath>
 
+#include "NXApplication.h"
 #include "NXSuggestModel.h"
 #include "NXSuggestBox.h"
 #include "NXTheme.h"
@@ -70,7 +71,7 @@ NXSuggestDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
   if (suggest->getNXIcon() != NXIconType::None)
   {
     QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-    iconFont.setPixelSize(17);
+    iconFont.setPixelSize(nxApp->getFontPixelSize() + 4);
     painter->setFont(iconFont);
     painter->drawText(option.rect.x() + 11, option.rect.y() + 26, QChar((unsigned short) suggest->getNXIcon()));
   }

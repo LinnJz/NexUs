@@ -8,6 +8,7 @@
 #include <QPropertyAnimation>
 #include <QTimer>
 
+#include "NXApplication.h"
 #include "NXIconButton.h"
 #include "NXMessageBar.h"
 
@@ -102,14 +103,15 @@ NXMessageBarPrivate::onThemeChanged(NXThemeType::ThemeMode themeMode)
 void
 NXMessageBarPrivate::_messageBarCreate(int displayMsec)
 {
+  const int fontPixelSize = nxApp->getFontPixelSize();
   Q_Q(NXMessageBar);
   q->show();
   QFont font = q->font();
-  font.setPixelSize(16);
+  font.setPixelSize(fontPixelSize + 3);
   font.setWeight(QFont::Bold);
   q->setFont(font);
   int titleWidth = q->fontMetrics().horizontalAdvance(_title);
-  font.setPixelSize(14);
+  font.setPixelSize(fontPixelSize + 1);
   font.setWeight(QFont::Medium);
   q->setFont(font);
   int textWidth  = q->fontMetrics().horizontalAdvance(_text);
@@ -397,7 +399,7 @@ NXMessageBarPrivate::_drawSuccess(QPainter *painter)
   painter->setClipPath(textPath);
   painter->fillPath(textPath, _themeMode == NXThemeType::Light ? QColor(0x11, 0x77, 0x10) : QColor(0x4C, 0xAF, 0x50));
   QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-  iconFont.setPixelSize(12);
+  iconFont.setPixelSize(nxApp->getFontPixelSize() - 1);
   painter->setFont(iconFont);
   painter->drawText(QRect(_leftPadding + 6 - 9, q->height() / 2 - 9, 18, 18), Qt::AlignCenter,
                     QChar((unsigned short) NXIconType::Check));
@@ -492,7 +494,7 @@ NXMessageBarPrivate::_drawError(QPainter *painter)
   painter->setClipPath(textPath);
   painter->fillPath(textPath, _themeMode == NXThemeType::Light ? QColor(0xBA, 0x2D, 0x20) : QColor(0xEF, 0x53, 0x50));
   QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-  iconFont.setPixelSize(13);
+  iconFont.setPixelSize(nxApp->getFontPixelSize());
   painter->setFont(iconFont);
   painter->drawText(QRect(_leftPadding + 6 - 9, q->height() / 2 - 9, 18, 18), Qt::AlignCenter,
                     QChar((unsigned short) NXIconType::Xmark));

@@ -6,6 +6,7 @@
 #include <QPainterPath>
 #include <QPropertyAnimation>
 
+#include "NXApplication.h"
 #include "NXTheme.h"
 #include "private/NXIconButtonPrivate.h"
 Q_PROPERTY_CREATE_CPP(NXIconButton, QS_SET_CREF(QColor), LightHoverColor)
@@ -64,7 +65,7 @@ NXIconButton::NXIconButton(NXIconType::IconName awesome, QWidget *parent)
   d->_pBorderRadius        = 0;
   d->_themeMode            = nxTheme->getThemeMode();
   QFont iconFont           = QFont(QStringLiteral("NXAwesome"));
-  iconFont.setPixelSize(15);
+  iconFont.setPixelSize(nxApp->getFontPixelSize() + 2);
   this->setFont(iconFont);
   d->_pAwesome = awesome;
   this->setText(QChar((unsigned short) awesome));

@@ -5,6 +5,7 @@
 #include <QPainterPath>
 #include <QPropertyAnimation>
 
+#include "NXApplication.h"
 #include "NXTheme.h"
 #include "private/NXToggleButtonPrivate.h"
 Q_PROPERTY_CREATE_CPP(NXToggleButton, QS_SET_CREF(QString), Text)
@@ -20,7 +21,7 @@ NXToggleButton::NXToggleButton(QWidget *parent)
   setMouseTracking(true);
   setFixedSize(80, 32);
   QFont font = this->font();
-  font.setPixelSize(15);
+  font.setPixelSize(nxApp->getFontPixelSize() + 2);
   setFont(font);
   setObjectName("NXToggleButton");
   setStyleSheet(QStringLiteral("#NXToggleButton{background-color:transparent;}"));

@@ -1,4 +1,4 @@
-#ifndef NXDXGIMANAGER_H
+﻿#ifndef NXDXGIMANAGER_H
 #define NXDXGIMANAGER_H
 
 #include <QWidget>
@@ -42,23 +42,6 @@ public:
   Q_SIGNAL void grabImageUpdate(const QImage &img);
 };
 
-class NXDxgiScreenPrivate;
-
-class NX_EXPORT NXDxgiScreen : public QWidget
-{
-  Q_OBJECT
-  Q_Q_CREATE(NXDxgiScreen)
-  Q_PROPERTY_CREATE_H(int, BorderRadius)
-
-public:
-  explicit NXDxgiScreen(QWidget *parent = nullptr);
-  ~NXDxgiScreen();
-  void setIsSyncGrabSize(bool isSyncGrabSize);
-  bool getIsSyncGrabSize() const;
-
-protected:
-  void paintEvent(QPaintEvent *event) override;
-};
-#endif
-#pragma pop_macro("Q_DISABLE_COPY")
+#  pragma pop_macro("Q_DISABLE_COPY")
+#endif // Q_OS_WIN
 #endif // NXDXGIMANAGER_H

@@ -4,6 +4,7 @@
 #include <QPainterPath>
 #include <QPropertyAnimation>
 
+#include "NXApplication.h"
 #include "NXBaseListView.h"
 #include "NXFooterModel.h"
 #include "NXNavigationNode.h"
@@ -117,6 +118,7 @@ NXFooterDelegate::navigationNodeStateChange(const QVariantMap &data)
 void
 NXFooterDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+  const int fontPixelSize      = nxApp->getFontPixelSize();
   NXFooterModel *model   = dynamic_cast<NXFooterModel *>(const_cast<QAbstractItemModel *>(index.model()));
   NXNavigationNode *node = index.data(Qt::UserRole).value<NXNavigationNode *>();
   // 背景绘制
@@ -183,7 +185,7 @@ NXFooterDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, c
   {
     painter->save();
     QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-    iconFont.setPixelSize(17);
+    iconFont.setPixelSize(fontPixelSize + 4);
     painter->setFont(iconFont);
     painter->drawText(QRect(itemRect.x(), itemRect.y(), _iconAreaWidth, itemRect.height()), Qt::AlignCenter,
                       QChar((unsigned short) node->getAwesome()));
@@ -208,11 +210,11 @@ NXFooterDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, c
     }
     if (keyPoints > 9)
     {
-      font.setPixelSize(11);
+      font.setPixelSize(fontPixelSize - 2);
     }
     else
     {
-      font.setPixelSize(12);
+      font.setPixelSize(fontPixelSize - 1);
     }
     painter->setFont(font);
     painter->drawText(keyPoints > 9 ? 248 : 251, itemRect.y() + itemRect.height() / 2 + 4, QString::number(keyPoints));

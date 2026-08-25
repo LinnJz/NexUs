@@ -5,6 +5,7 @@
 #include <QPainterPath>
 #include <QUrl>
 
+#include "NXApplication.h"
 #include "NXTheme.h"
 #include "private/NXAcrylicUrlCardPrivate.h"
 Q_PROPERTY_CREATE_CPP(NXAcrylicUrlCard, QS_SET_CREF(QString), Title)
@@ -137,7 +138,7 @@ NXAcrylicUrlCard::paintEvent(QPaintEvent *event)
   // 图标绘制
   painter.save();
   QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-  iconFont.setPixelSize(13);
+  iconFont.setPixelSize(nxApp->getFontPixelSize());
   painter.setFont(iconFont);
   painter.setPen(NXThemeColor(d->_themeMode, BasicText));
   painter.drawText(width - 1.5 * iconFont.pixelSize(), height() - iconFont.pixelSize(),

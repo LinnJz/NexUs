@@ -11,6 +11,7 @@
 
 #  ifdef Q_OS_WIN
 #    include "NXDxgiManager.h"
+#    include "NXImageCard.h"
 #    include "NXLineEdit.h"
 #    include "T_NXPacketIO.h"
 #    include "T_RecvScreen.h"
@@ -34,9 +35,13 @@ T_NXScreen::T_NXScreen(QWidget *parent)
   NXScrollPageArea *dxgiScreenArea = new NXScrollPageArea(this);
   dxgiScreenArea->setFixedHeight(700);
   QHBoxLayout *dxgiScreenLayout = new QHBoxLayout(dxgiScreenArea);
-  _dxgiScreen                   = new NXDxgiScreen(this);
-  _dxgiScreen->setFixedSize(1200, 678);
+  _dxgiScreen = new NXImageCard(this);
+  _dxgiScreen->setFixedHeight(678);
   dxgiScreenLayout->addWidget(_dxgiScreen);
+  connect(dxgiManager, &NXDxgiManager::grabImageUpdate, this, [=](const QImage &img)
+  {
+    _dxgiScreen->setCardImage(img);
+  });
 
   NXText *dxText = new NXText(QStringLiteral("显卡选择"), this);
   dxText->setTextPixelSize(15);
@@ -76,6 +81,7 @@ T_NXScreen::T_NXScreen(QWidget *parent)
     else
     {
       dxgiManager->stopGrabScreen();
+      _dxgiScreen->setCardImage({});
       _dxgiScreen->update();
     }
   });

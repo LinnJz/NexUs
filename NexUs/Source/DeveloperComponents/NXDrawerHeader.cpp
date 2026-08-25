@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QPropertyAnimation>
 
+#include "NXApplication.h"
 #include "NXTheme.h"
 
 NXDrawerHeader::NXDrawerHeader(QWidget *parent)
@@ -151,7 +152,7 @@ NXDrawerHeader::paintEvent(QPaintEvent *event)
 
   // 展开图标绘制
   QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-  iconFont.setPixelSize(17);
+  iconFont.setPixelSize(nxApp->getFontPixelSize() + 4);
   painter.setFont(iconFont);
   painter.setPen(isEnabled() ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));
   QRectF expandIconRect(width() - 25, 0, 20, height());

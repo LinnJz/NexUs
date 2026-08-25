@@ -7,6 +7,7 @@
 #include <QToolButton>
 #include <QtMath>
 
+#include "NXApplication.h"
 #include "NXTheme.h"
 #include "NXToolBar.h"
 
@@ -124,7 +125,7 @@ NXToolBarStyle::drawControl(ControlElement element,
         painter->setPen(!bopt->state.testFlag(QStyle::State_Enabled) ? NXThemeColor(_themeMode, BasicTextDisable)
                                                                      : NXThemeColor(_themeMode, BasicText));
         QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-        iconFont.setPixelSize(18);
+        iconFont.setPixelSize(nxApp->getFontPixelSize() + 5);
         painter->setFont(iconFont);
         painter->drawText(bopt->rect, Qt::AlignCenter, QChar((unsigned short) NXIconType::AngleRight));
       }

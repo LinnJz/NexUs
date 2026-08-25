@@ -18,7 +18,6 @@ class NXScrollPagePrivate : public QObject
   friend class NXScrollPageRouteCommand;
   Q_OBJECT
   Q_D_CREATE(NXScrollPage)
-  Q_PROPERTY_CREATE_D(QWidget *, CustomWidget)
 
 public:
   explicit NXScrollPagePrivate(QObject *parent = nullptr);
@@ -30,6 +29,8 @@ private:
   int _navigationTargetIndex { 0 };
   int _pageTitleSpacing { 0 };
   QMap<QString, int> _centralWidgetMap;
+  QWidget *_topCustomWidget { nullptr };
+  QWidget *_bottomCustomWidget { nullptr };
   QHBoxLayout *_pageTitleLayout { nullptr };
   QVBoxLayout *_mainLayout { nullptr };
   QStackedWidget *_centralStackedWidget { nullptr };
