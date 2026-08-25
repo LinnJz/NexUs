@@ -40,11 +40,13 @@ if(COMPILER_MSVC_LIKE)
         /Gm-                  # 禁用最小重建
         /arch:AVX2            # 启用 AVX2 指令集
         /wd5103               # 禁用特定警告
+        /wd4819
         /bigobj               # 支持大量段的目标文件
         # /ifcOutput ${CMAKE_BINARY_DIR}/  # 模块接口输出目录（按需启用）
         # /await:strict        # 协程支持（VS 2026 及以后）
     )
-
+    string(REPLACE "/showIncludes" "" CMAKE_DEPFILE_FLAGS_C "${CMAKE_DEPFILE_FLAGS_C}")
+    string(REPLACE "/showIncludes" "" CMAKE_DEPFILE_FLAGS_CXX "${CMAKE_DEPFILE_FLAGS_CXX}")
     # 必须传播给使用者的选项（PUBLIC / INTERFACE）
     set(PUBLIC_MSVC_COMPILE_OPTIONS
         /std:c++latest

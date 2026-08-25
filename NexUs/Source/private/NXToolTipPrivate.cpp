@@ -30,7 +30,7 @@ bool
 NXToolTipPrivate::eventFilter(QObject *watched, QEvent *event)
 {
   Q_Q(NXToolTip);
-  if (_toolTipText && !_toolTipText->text().isEmpty())
+  if (_toolTipText && (!_toolTipText->text().isEmpty() || _pCustomWidget))
   {
     switch (event->type())
     {

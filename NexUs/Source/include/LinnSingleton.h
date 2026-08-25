@@ -81,6 +81,8 @@
 #define LINN_SINGLETON_PP_EQ_21    0
 #define LINN_SINGLETON_PP_EQ_22    1
 
+// friend std::default_delete<CLASS>;可以没有，利用LinnSingletonMakeHelper UB行为，建议CLASS的析构使用virtual，其实没有也可以
+// 标准写法定义friend std::default_delete<CLASS>;， 直接eturn std::make_unique<CLASS>(std::forward<Args>(args)...)不用helper
 #define LINN_SINGLETON_CREATE_BODY_UNIQUE_NO_DESTROY(CLASS)                                                            \
                                                                                                                        \
 public:                                                                                                                \

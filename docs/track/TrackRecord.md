@@ -910,7 +910,7 @@ NXWidgetToolsExample/ExamplePage/T_TableWidget.h
 
 13. **问题修复**：同步修复若干已知问题，提升整体稳定性。
 
-### Track Record 6：2026年04月30日提交
+### Track Record 6：2026年06月15日提交
 
 #### Modify Optize1
 

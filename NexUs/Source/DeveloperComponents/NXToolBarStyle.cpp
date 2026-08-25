@@ -288,8 +288,7 @@ NXToolBarStyle::_drawIcon(QPainter *painter,
         }
         case Qt::ToolButtonTextUnderIcon :
         {
-          painter->drawPixmap(QRect(QPoint(iconRect.center().x() - iconSize.width() / 2, iconRect.y()), iconSize),
-                              iconPix);
+          painter->drawPixmap(QRect(QPoint(iconRect.center().x() - iconSize.width() / 2.0, iconRect.center().y() - iconSize.height() / 2.0), iconSize), iconPix);
           break;
         }
         case Qt::ToolButtonFollowStyle :

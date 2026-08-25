@@ -34,7 +34,7 @@ NXLineEdit::NXLineEdit(QWidget *parent)
   setFont(textFont);
   d->_lineEditStyle = new NXLineEditStyle(style());
   setStyle(d->_lineEditStyle);
-  setStyleSheet(QStringLiteral("#NXLineEdit{background-color:transparent;padding-left: 10px;}"));
+  setStyleSheet(QStringLiteral("#NXLineEdit{background-color:transparent;}"));
   d->onThemeChanged(nxTheme->getThemeMode());
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXLineEditPrivate::onThemeChanged);
   setVisible(true);
@@ -51,6 +51,23 @@ NXLineEdit::~NXLineEdit()
 {
   delete this->style();
 }
+
+void
+NXLineEdit::setContentsMargins(QMargins margins)
+{
+  Q_D(NXLineEdit);
+  d->_lineEditStyle->setContentsMargins(margins);
+  update();
+  Q_EMIT pContentsMarginsChanged();
+}
+
+QMargins
+NXLineEdit::getContentsMargins() const
+{
+  Q_D(const NXLineEdit);
+  return d->_lineEditStyle->getContentsMargins();
+}
+
 
 void
 NXLineEdit::setIsClearButtonEnable(bool isClearButtonEnable)

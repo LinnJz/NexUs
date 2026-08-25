@@ -14,7 +14,6 @@ class NXLineEditPrivate : public QObject
 {
   Q_OBJECT
   Q_D_CREATE(NXLineEdit)
-  Q_PROPERTY_CREATE_D(QMargins, ContentMargins)
   Q_PROPERTY_CREATE(qreal, ExpandMarkWidth)
   Q_PROPERTY_CREATE_D(bool, IsClearButtonEnable)
 

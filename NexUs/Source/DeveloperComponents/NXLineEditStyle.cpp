@@ -9,6 +9,7 @@
 
 NXLineEditStyle::NXLineEditStyle(QStyle *style)
 {
+  _pContentsMargins = { 10, 0, 0, 0 };
   _pIconMargin   = 10;
   _pBorderRadius = 6;
   _themeMode     = nxTheme->getThemeMode();
@@ -79,6 +80,18 @@ NXLineEditStyle::drawPrimitive(PrimitiveElement element,
   }
   }
   QProxyStyle::drawPrimitive(element, option, painter, widget);
+}
+
+QRect
+NXLineEditStyle::subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const
+{
+  if (element == SE_LineEditContents)
+  {
+    QRect r = QProxyStyle::subElementRect(element, option, widget);
+    r.adjust(_pContentsMargins.left(), _pContentsMargins.top(), -_pContentsMargins.right(), -_pContentsMargins.bottom());
+    return r;
+  }
+  return QProxyStyle::subElementRect(element, option, widget);
 }
 
 int

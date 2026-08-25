@@ -63,8 +63,11 @@ if(COMPILER_MSVC_LIKE)
         # https://learn.microsoft.com/zh-cn/cpp/build/reference/arch-x64?view=msvc-170
         /arch:AVX2            # Enable AVX2 instruction set
         /wd5103
+        /wd4819
         /bigobj
     )
+    string(REPLACE "/showIncludes" "" CMAKE_DEPFILE_FLAGS_C "${CMAKE_DEPFILE_FLAGS_C}")
+    string(REPLACE "/showIncludes" "" CMAKE_DEPFILE_FLAGS_CXX "${CMAKE_DEPFILE_FLAGS_CXX}")
     if(COMPILER_CLANG_CL)
         list(REMOVE_ITEM MSVC_COMPILE_GENERAL_OPTIONS
             /std:c++latest

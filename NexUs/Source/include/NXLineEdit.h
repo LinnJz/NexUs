@@ -11,6 +11,7 @@ class NX_EXPORT NXLineEdit : public QLineEdit
 {
   Q_OBJECT
   Q_Q_CREATE(NXLineEdit)
+  Q_PROPERTY_CREATE_H(QMargins, ContentsMargins)
   Q_PROPERTY_CREATE_H(int, BorderRadius)
   Q_PROPERTY_CREATE_H(int, IconMargin)
   Q_PROPERTY_CREATE_H(bool, IsClearButtonEnable)
