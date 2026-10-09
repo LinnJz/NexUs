@@ -36,6 +36,8 @@ public:
                          const QSize &size,
                          const QWidget *widget) const override;
 
+  int getShadowBorderWidth() const;
+
 private:
   NXThemeType::ThemeMode _themeMode;
   int _shadowBorderWidth { 6 };

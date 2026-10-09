@@ -29,12 +29,13 @@ NXMessageBar::NXMessageBar(NXMessageBarType::PositionPolicy policy,
   d->_policy       = policy;
   d->_messageMode  = messageMode;
   d->_themeMode    = nxTheme->getThemeMode();
-  setFixedHeight(60);
   setMouseTracking(true);
   d->_pOpacity = 1;
   setFont(qApp->font());
   parent->installEventFilter(this);
-  d->_closeButton = new NXIconButton(NXIconType::Xmark, 17, d->_closeButtonWidth, 30, this);
+  int fontPixelSize = nxApp->getFontPixelSize();
+  setFont(QFont("微软雅黑"));
+  d->_closeButton = new NXIconButton(NXIconType::Xmark, fontPixelSize + 3, d->_closeButtonWidth, 30, this);
   switch (d->_messageMode)
   {
   case NXMessageBarType::Success :
@@ -47,11 +48,10 @@ NXMessageBar::NXMessageBar(NXMessageBarType::PositionPolicy policy,
   }
   case NXMessageBarType::Warning :
   {
-    d->_closeButton->setLightHoverColor(QColor(0x5E, 0x4C, 0x22));
-    d->_closeButton->setDarkHoverColor(QColor(0x5E, 0x4C, 0x22));
-    d->_closeButton->setLightIconColor(Qt::white);
-    d->_closeButton->setDarkIconColor(Qt::white);
-    d->_closeButton->setLightHoverIconColor(Qt::white);
+    d->_closeButton->setLightHoverColor(QColor(0xE8, 0xDE, 0xBB));
+    d->_closeButton->setDarkHoverColor(QColor(0xE8, 0xDE, 0xBB));
+    d->_closeButton->setDarkIconColor(Qt::black);
+    d->_closeButton->setDarkHoverIconColor(Qt::black);
     break;
   }
   case NXMessageBarType::Information :
@@ -234,7 +234,7 @@ NXMessageBar::paintEvent(QPaintEvent *event)
   // 标题
   QFont font = this->font();
   font.setWeight(QFont::Bold);
-  font.setPixelSize(fontPixelSize + 3);
+  font.setPixelSize(fontPixelSize);
   painter.setFont(font);
   int titleTextWidth = painter.fontMetrics().horizontalAdvance(d->_title) + 1;
   if (titleTextWidth > 100)
@@ -245,25 +245,12 @@ NXMessageBar::paintEvent(QPaintEvent *event)
   painter.drawText(QRect(d->_leftPadding + d->_titleLeftSpacing, -1, titleTextWidth, height()), textFlags, d->_title);
   // 正文
   font.setWeight(QFont::Light);
-  font.setPixelSize(fontPixelSize + 2);
   painter.setFont(font);
   painter.drawText(QRect(d->_leftPadding + d->_titleLeftSpacing + titleTextWidth + d->_textLeftSpacing, 0,
                          width() - (d->_leftPadding + d->_titleLeftSpacing + titleTextWidth + d->_textLeftSpacing +
                                     d->_closeButtonWidth + d->_closeButtonLeftRightMargin / 2),
                          height() - d->_timePercentHeight),
                    textFlags, d->_text);
-  int textHeight =
-      painter.fontMetrics()
-          .boundingRect(QRect(d->_leftPadding + d->_titleLeftSpacing + titleTextWidth + d->_textLeftSpacing, 0,
-                              width() - (d->_leftPadding + d->_titleLeftSpacing + titleTextWidth + d->_textLeftSpacing +
-                                         d->_closeButtonWidth + d->_closeButtonLeftRightMargin),
-                              height()),
-                        textFlags, d->_text)
-          .height();
-  if (textHeight >= minimumHeight() - 20)
-  {
-    setMinimumHeight(textHeight + 20);
-  }
   painter.restore();
 }
 

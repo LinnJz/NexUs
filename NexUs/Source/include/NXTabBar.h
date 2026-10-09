@@ -22,6 +22,9 @@ public:
   explicit NXTabBar(QWidget *parent = nullptr);
   ~NXTabBar();
 
+  // 将内部滚动平滑定位到当前选中Tab 使其位于最左侧
+  void locateCurrentTab();
+
   Q_SIGNAL void tabBarTextChanged(int tabIndex, const QString &tabText);
   Q_SIGNAL void tabDragCreate(QMimeData *mimeData);
   Q_SIGNAL void tabDragEnter(QMimeData *mimeData);

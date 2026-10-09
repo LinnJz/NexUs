@@ -66,6 +66,7 @@ NXAppBar::NXAppBar(QWidget *parent)
   setObjectName("NXAppBar");
   setStyleSheet(QStringLiteral("#NXAppBar{background-color:transparent;}"));
   d->_routeBackButton = new NXToolButton(this);
+  d->_routeBackButton->setBorderRadius(0);
   d->_routeBackButton->setNXIcon(NXIconType::ArrowLeft);
   d->_routeBackButton->setFixedSize(35, 30);
   d->_routeBackButton->setEnabled(false);
@@ -73,6 +74,7 @@ NXAppBar::NXAppBar(QWidget *parent)
   connect(d->_routeBackButton, &NXIconButton::clicked, this, &NXAppBar::routeBackButtonClicked);
 
   d->_routeForwardButton = new NXToolButton(this);
+  d->_routeForwardButton->setBorderRadius(0);
   d->_routeForwardButton->setNXIcon(NXIconType::ArrowRight);
   d->_routeForwardButton->setFixedSize(35, 30);
   d->_routeForwardButton->setEnabled(false);
@@ -80,6 +82,7 @@ NXAppBar::NXAppBar(QWidget *parent)
 
   // 导航栏展开按钮
   d->_navigationButton = new NXToolButton(this);
+  d->_navigationButton->setBorderRadius(0);
   d->_navigationButton->setNXIcon(NXIconType::Bars);
   d->_navigationButton->setFixedSize(40, 30);
   d->_navigationButton->setObjectName("NavigationButton");
@@ -89,6 +92,7 @@ NXAppBar::NXAppBar(QWidget *parent)
 
   // 设置置顶
   d->_stayTopButton = new NXToolButton(this);
+  d->_stayTopButton->setBorderRadius(0);
   d->_stayTopButton->setNXIcon(NXIconType::Thumbtack, 45);
   d->_stayTopButton->setFixedSize(40, 30);
   connect(d->_stayTopButton, &NXToolButton::clicked, this, [=]()
@@ -139,6 +143,7 @@ NXAppBar::NXAppBar(QWidget *parent)
 
   // 主题变更
   d->_themeChangeButton = new NXToolButton(this);
+  d->_themeChangeButton->setBorderRadius(0);
   d->_themeChangeButton->setNXIcon(NXIconType::MoonStars);
   d->_themeChangeButton->setFixedSize(40, 30);
   connect(d->_themeChangeButton, &NXToolButton::clicked, this, &NXAppBar::themeChangeButtonClicked);
@@ -148,10 +153,12 @@ NXAppBar::NXAppBar(QWidget *parent)
   });
 
   d->_minButton = new NXToolButton(this);
+  d->_minButton->setBorderRadius(0);
   d->_minButton->setNXIcon(NXIconType::Dash);
   d->_minButton->setFixedSize(40, 30);
   connect(d->_minButton, &NXToolButton::clicked, d, &NXAppBarPrivate::onMinButtonClicked);
   d->_maxButton = new NXToolButton(this);
+  d->_maxButton->setBorderRadius(0);
   d->_maxButton->setIconSize(QSize(18, 18));
   d->_maxButton->setNXIcon(NXIconType::Square);
   d->_maxButton->setFixedSize(40, 30);

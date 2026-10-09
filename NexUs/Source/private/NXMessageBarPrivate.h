@@ -1,6 +1,8 @@
 ﻿#ifndef NXMESSAGEBARPRIVATE_H
 #define NXMESSAGEBARPRIVATE_H
 
+#include <atomic>
+
 #include <QMap>
 #include <QObject>
 
@@ -25,6 +27,8 @@ public:
   Q_SLOT void onThemeChanged(NXThemeType::ThemeMode themeMode);
 
 private:
+  inline static std::atomic<quint64> _nextCreateSerial { 0 };
+
   bool _isClosing { false };
   bool _isNormalDisplay { false };
   bool _isOtherMessageBarEnd { false };
@@ -42,7 +46,7 @@ private:
   int _messageBarVerticalTopMargin { 25 };
   int _messageBarSpacing { 15 };
   int _shadowBorderWidth { 6 };
-  qreal _createTime { 0 };
+  quint64 _createSerial { 0 };
   qreal _timePercentHeight { 2 };
   QString _title { QStringLiteral("") };
   QString _text { QStringLiteral("") };
@@ -70,6 +74,9 @@ private:
   void _drawWarning(QPainter *painter);
   void _drawInformation(QPainter *painter);
   void _drawError(QPainter *painter);
+
+  // 计算文本高度
+  int _getTextHeight();
 };
 
 #endif // NXMESSAGEBARPRIVATE_H

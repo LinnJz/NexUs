@@ -554,3 +554,7 @@ connect(btn, &NXPushButton::clicked, ...);
 ### 5.4 `NXPivot*`文件不打补丁
 
 `NXPivot*`相关文件修改过多，不以补丁形式记录
+
+### 5.5 `NXRibbon*`文件设计与上游偏离
+
+`NXRibbon*`设计使用[GitHub - RainbowCandyX/ElaWidgetTools: Add support for Qt 6.10 and macOS](https://github.com/RainbowCandyX/ElaWidgetTools)的设计，不是上游原作者https://github.com/Liniyous/ElaWidgetTools/commits/main/的设计

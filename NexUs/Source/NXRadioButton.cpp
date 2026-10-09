@@ -13,12 +13,10 @@ NXRadioButton::NXRadioButton(QWidget *parent)
   setMouseTracking(true);
   setCursor(Qt::PointingHandCursor);
   d->q_ptr = this;
-#ifdef Q_OS_MACOS
   setAttribute(Qt::WA_Hover);
-#endif
-  setFixedHeight(20);
+  setMouseTracking(true);
   QFont font = this->font();
-  font.setPixelSize(nxApp->getFontPixelSize() + 2);
+  font.setPixelSize(nxApp->getFontPixelSize());
   setFont(font);
   setStyle(new NXRadioButtonStyle(style()));
   d->onThemeChanged(nxTheme->getThemeMode());

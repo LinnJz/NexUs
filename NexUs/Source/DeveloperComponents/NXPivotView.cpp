@@ -13,12 +13,13 @@
 NXPivotView::NXPivotView(QWidget *parent)
     : QListView(parent)
 {
-  _pIndicatorX     = 0;
-  _pIndicatorWidth = 40;
-  _pPressIndex     = {};
-  _pHoverIndex     = {};
-  _pCommittedIndex = {};
-  _pItemCursor     = Qt::PointingHandCursor;
+  _pIndicatorX              = 0;
+  _pIndicatorWidth          = 40;
+  _pIndicatorAnimationWidth = 0;
+  _pPressIndex              = {};
+  _pHoverIndex              = {};
+  _pCommittedIndex          = {};
+  _pItemCursor              = Qt::PointingHandCursor;
   setObjectName("NXPivotView");
   setStyleSheet(QStringLiteral("#NXPivotView{background-color:transparent;}"));
   setMouseTracking(true);
@@ -32,73 +33,124 @@ NXPivotView::~NXPivotView()
 {
 }
 
-void
-NXPivotView::doCurrentIndexChangedAnimation(const QModelIndex &index)
+bool
+NXPivotView::doCurrentIndexChangedAnimation(QModelIndex const &index)
 {
+  QListView::setCurrentIndex(index);
+  QModelIndex const previousIndex = _pCommittedIndex;
+  setCommittedIndexAndUpdate(index);
+  // 当前项相同且指示器已显示时跳过；初次选中但宽度仍为 0 时仍需播放生长动画
+  if (previousIndex == index && previousIndex.isValid() && _pIndicatorAnimationWidth > 0)
+  {
+    return false;
+  }
   if (!this->isVisible() ||
       !(_pPivotStyle->getIndicatorTypeFlags() & (NXPivotType::IndicatorTop | NXPivotType::IndicatorBottom)))
   {
-    return;
+    if (index.isValid())
+    {
+      _committedIndexRect = visualRect(index);
+    }
+    else
+    {
+      _committedIndexRect = QRect {};
+    }
+    return previousIndex != index;
   }
-  _isAnimationFinished = false;
-
-  QRect oldRect = visualRect(_pCommittedIndex);
-  QRect newRect = visualRect(index);
-  int left      = std::min(oldRect.isValid() ? oldRect.x() : newRect.x(), newRect.x()) - 2;
-  int right     = std::max(oldRect.isValid() ? oldRect.right() : newRect.right(), newRect.right()) + 2;
-  QRect indicatorRect(left, 0, right - left, viewport()->height());
-  QPropertyAnimation *markAnimation = new QPropertyAnimation(this, "pIndicatorX");
-  connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=]()
+  QRect const previousIndexRect = _committedIndexRect;
+  qreal indicatorXStart         = 0;
+  qreal indicatorXEnd           = 0;
+  int indicatorWidthEnd         = 0;
+  if (index.isValid())
   {
-    _updateIndicatorRegion(indicatorRect);
-  });
-  connect(markAnimation, &QPropertyAnimation::finished, this, [=]()
-  {
-    _isAnimationFinished = true;
-    _updateIndicatorRegion(indicatorRect);
-  });
-  markAnimation->setDuration(300);
-  markAnimation->setEasingCurve(QEasingCurve::InOutSine);
-  if (int centerX = visualRect(index).center().x(); _pCommittedIndex.row() >= 0)
-  {
-    markAnimation->setStartValue(_pIndicatorX);
-    markAnimation->setEndValue(centerX - _pIndicatorWidth / 2);
+    _committedIndexRect = visualRect(index);
+    indicatorXEnd       = _committedIndexRect.center().x() - _pIndicatorWidth / 2;
+    if (previousIndex.isValid())
+    {
+      // 以快照矩形为基准补偿布局位移；静止时位移为 0，不会叠加目标位移
+      int const layoutShift =
+          previousIndexRect.isValid() ? visualRect(previousIndex).center().x() - previousIndexRect.center().x() : 0;
+      indicatorXStart = _pIndicatorX + layoutShift;
+    }
+    else
+    {
+      indicatorXStart = _committedIndexRect.center().x();
+    }
+    indicatorWidthEnd = _pIndicatorWidth;
   }
   else
   {
-    markAnimation->setStartValue(centerX);
-    markAnimation->setEndValue(centerX - _pIndicatorWidth / 2);
-
-    QPropertyAnimation *markWidthAnimation = new QPropertyAnimation(this, "pIndicatorWidth");
-    markWidthAnimation->setDuration(300);
-    markWidthAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    markWidthAnimation->setStartValue(0);
-    markWidthAnimation->setEndValue(_pIndicatorWidth);
-    markWidthAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    if (!previousIndex.isValid())
+    {
+      return false;
+    }
+    _committedIndexRect = visualRect(previousIndex);
+    indicatorXStart     = _committedIndexRect.center().x() - _pIndicatorWidth / 2;
+    indicatorXEnd       = _committedIndexRect.center().x();
+    indicatorWidthEnd   = 0;
   }
-  markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+  QRect const newRect = _committedIndexRect;
+  int const left      = std::min(previousIndexRect.isValid() ? previousIndexRect.x() : newRect.x(), newRect.x()) - 2;
+  int const right =
+      std::max(previousIndexRect.isValid() ? previousIndexRect.right() : newRect.right(), newRect.right()) + 2;
+  QRect const dirtyRect(left, 0, right - left, viewport()->height());
+  _isAnimationFinished = false;
+  _startIndicatorAnimation(indicatorXStart, indicatorXEnd, _pIndicatorAnimationWidth, indicatorWidthEnd, dirtyRect);
+  return true;
 }
 
 void
-NXPivotView::setPressIndexAndUpdate(const QModelIndex &index)
+NXPivotView::_startIndicatorAnimation(
+    qreal indicatorXStart, qreal indicatorXEnd, int indicatorWidthStart, int indicatorWidthEnd, QRect const &dirtyRect)
+{
+  QPropertyAnimation *indicatorXAnimation = new QPropertyAnimation(this, "pIndicatorX");
+  connect(indicatorXAnimation, &QPropertyAnimation::valueChanged, this, [=]()
+  {
+    _updateIndicatorRegion(dirtyRect);
+  });
+  connect(indicatorXAnimation, &QPropertyAnimation::finished, this, [=]()
+  {
+    _isAnimationFinished = true;
+    _updateIndicatorRegion(dirtyRect);
+  });
+  indicatorXAnimation->setDuration(300);
+  indicatorXAnimation->setEasingCurve(QEasingCurve::InOutSine);
+  indicatorXAnimation->setStartValue(indicatorXStart);
+  indicatorXAnimation->setEndValue(indicatorXEnd);
+  indicatorXAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+
+  QPropertyAnimation *indicatorWidthAnimation = new QPropertyAnimation(this, "pIndicatorAnimationWidth");
+  connect(indicatorWidthAnimation, &QPropertyAnimation::valueChanged, this, [=]()
+  {
+    _updateIndicatorRegion(dirtyRect);
+  });
+  indicatorWidthAnimation->setDuration(300);
+  indicatorWidthAnimation->setEasingCurve(QEasingCurve::InOutSine);
+  indicatorWidthAnimation->setStartValue(indicatorWidthStart);
+  indicatorWidthAnimation->setEndValue(indicatorWidthEnd);
+  indicatorWidthAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+}
+
+void
+NXPivotView::setPressIndexAndUpdate(QModelIndex const &index)
 {
   if (_pPressIndex == index)
   {
     return;
   }
-  const QModelIndex oldIndex = _pPressIndex;
+  QModelIndex const oldIndex = _pPressIndex;
   _pPressIndex               = index;
   _updateIndexPair(oldIndex, index);
 }
 
 void
-NXPivotView::setCommittedIndexAndUpdate(const QModelIndex &index)
+NXPivotView::setCommittedIndexAndUpdate(QModelIndex const &index)
 {
   if (_pCommittedIndex == index)
   {
     return;
   }
-  const QModelIndex oldIndex = _pCommittedIndex;
+  QModelIndex const oldIndex = _pCommittedIndex;
   _pCommittedIndex           = index;
   _updateIndexPair(oldIndex, index);
 }
@@ -106,8 +158,8 @@ NXPivotView::setCommittedIndexAndUpdate(const QModelIndex &index)
 void
 NXPivotView::refreshHoverState()
 {
-  const QPoint viewportPos         = viewport()->mapFromGlobal(QCursor::pos());
-  const QModelIndex nextHoverIndex = viewport()->rect().contains(viewportPos) ? indexAt(viewportPos) : QModelIndex {};
+  QPoint const viewportPos         = viewport()->mapFromGlobal(QCursor::pos());
+  QModelIndex const nextHoverIndex = viewport()->rect().contains(viewportPos) ? indexAt(viewportPos) : QModelIndex {};
   _setHoverIndexInternal(nextHoverIndex);
   _syncHoverCursor();
 }
@@ -184,8 +236,9 @@ NXPivotView::paintEvent(QPaintEvent *event)
     painter.setBrush(_pPivotStyle->getIndicatorColor());
 
     QRect currentIndexRect = visualRect(_pCommittedIndex);
-    qreal halfWidth        = _pIndicatorWidth / 2.0;
-    qreal centerX          = _isAnimationFinished ? currentIndexRect.center().x() : _pIndicatorX + halfWidth;
+    qreal halfWidth        = _pIndicatorAnimationWidth / 2.0;
+    int const layoutShift  = _committedIndexRect.isValid() ? currentIndexRect.x() - _committedIndexRect.x() : 0;
+    qreal centerX = _isAnimationFinished ? currentIndexRect.center().x() : _pIndicatorX + layoutShift + halfWidth;
 
     QPainterPath path;
     QPolygonF polygon;
@@ -223,19 +276,19 @@ NXPivotView::paintEvent(QPaintEvent *event)
 }
 
 void
-NXPivotView::_setHoverIndexInternal(const QModelIndex &index)
+NXPivotView::_setHoverIndexInternal(QModelIndex const &index)
 {
   if (_pHoverIndex == index)
   {
     return;
   }
-  const QModelIndex oldIndex = _pHoverIndex;
+  QModelIndex const oldIndex = _pHoverIndex;
   _pHoverIndex               = index;
   _updateIndexPair(oldIndex, index);
 }
 
 void
-NXPivotView::_updateIndexPair(const QModelIndex &first, const QModelIndex &second)
+NXPivotView::_updateIndexPair(QModelIndex const &first, QModelIndex const &second)
 {
   _updateIndexRect(first);
   if (second != first)
@@ -245,13 +298,13 @@ NXPivotView::_updateIndexPair(const QModelIndex &first, const QModelIndex &secon
 }
 
 void
-NXPivotView::_updateIndexRect(const QModelIndex &index)
+NXPivotView::_updateIndexRect(QModelIndex const &index)
 {
   if (!index.isValid())
   {
     return;
   }
-  const QRect itemRect = visualRect(index);
+  QRect const itemRect = visualRect(index);
   if (!itemRect.isValid())
   {
     return;

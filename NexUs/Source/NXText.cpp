@@ -23,6 +23,7 @@ NXText::NXText(QWidget *parent)
   QFont textFont = font();
   textFont.setLetterSpacing(QFont::AbsoluteSpacing, 0.5);
   textFont.setPixelSize(28);
+  textFont.setBold(false);
   setFont(textFont);
   setWordWrap(true);
   d->_themeMode = nxTheme->getThemeMode();
@@ -47,6 +48,19 @@ NXText::NXText(QString text, int pixelSize, QWidget *parent)
 NXText::~NXText()
 {
 }
+
+void
+NXText::setIsBold(bool isBold)
+{
+  QFont textFont = font();
+  textFont.setBold(isBold);
+  setFont(textFont);
+  Q_EMIT pIsBoldChanged();
+}
+
+bool
+NXText::getIsBold() const
+{ return font().bold(); }
 
 void
 NXText::setIsWrapAnywhere(bool isWrapAnywhere)

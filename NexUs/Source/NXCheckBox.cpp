@@ -18,7 +18,7 @@ NXCheckBox::NXCheckBox(QWidget *parent)
   d->_checkBoxStyle = new NXCheckBoxStyle(style());
   setStyle(d->_checkBoxStyle);
   QFont font = this->font();
-  font.setPixelSize(nxApp->getFontPixelSize() + 2);
+  font.setPixelSize(nxApp->getFontPixelSize());
   setFont(font);
 }
 

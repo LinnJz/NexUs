@@ -37,9 +37,7 @@ NXCheckBoxStyle::drawControl(ControlElement element,
       bool isEnabled = bopt->state.testFlag(QStyle::State_Enabled);
       painter->save();
       painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-      QRect checkBoxRect = bopt->rect;
-      int yOffset        = (checkBoxRect.height() - _pCheckIndicatorWidth) / 2;
-      QRect checkRect(checkBoxRect.x(), checkBoxRect.y() + yOffset, _pCheckIndicatorWidth, _pCheckIndicatorWidth);
+      QRect checkRect = subElementRect(SE_CheckBoxIndicator, bopt, widget);
       checkRect.adjust(1, 1, -1, -1);
       //复选框绘制
       painter->setPen(Qt::NoPen);
@@ -101,8 +99,7 @@ NXCheckBoxStyle::drawControl(ControlElement element,
       }
       //文字绘制
       painter->setPen(isEnabled ? NXThemeColor(_themeMode, BasicText) : NXThemeColor(_themeMode, BasicTextDisable));
-      QRect textRect(checkRect.right() + 10, checkBoxRect.y() + yOffset, checkBoxRect.width() - checkRect.right() - 10,
-                     _pCheckIndicatorWidth);
+      QRect textRect = subElementRect(SE_CheckBoxContents, bopt, widget);
       painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, bopt->text);
       painter->restore();
     }
@@ -120,20 +117,16 @@ NXCheckBoxStyle::drawControl(ControlElement element,
 int
 NXCheckBoxStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
-  // qDebug() << metric << QProxyStyle::pixelMetric(metric, option, widget);
   switch (metric)
   {
   case QStyle::PM_IndicatorWidth :
-  {
-    return _pCheckIndicatorWidth;
-  }
   case QStyle::PM_IndicatorHeight :
   {
     return _pCheckIndicatorWidth;
   }
   case QStyle::PM_CheckBoxLabelSpacing :
   {
-    return 10;
+    return _labelSpacing;
   }
   default :
   {
@@ -141,4 +134,24 @@ NXCheckBoxStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, con
   }
   }
   return QProxyStyle::pixelMetric(metric, option, widget);
+}
+
+QRect
+NXCheckBoxStyle::subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const
+{
+  QRect subRect = QProxyStyle::subElementRect(element, option, widget);
+  if (!widget)
+  {
+    return subRect;
+  }
+  if (element == SE_CheckBoxIndicator)
+  {
+    subRect.setSize(QSize(_pCheckIndicatorWidth, _pCheckIndicatorWidth));
+  }
+  else if (element == SE_CheckBoxContents)
+  {
+    const QRect indicatorRect = subElementRect(SE_CheckBoxIndicator, option, widget);
+    subRect.setLeft(indicatorRect.right() + _labelSpacing);
+  }
+  return subRect;
 }

@@ -50,6 +50,21 @@ NXTabBar::~NXTabBar()
 }
 
 void
+NXTabBar::locateCurrentTab()
+{
+  Q_D(NXTabBar);
+  const int index = currentIndex();
+  if (index < 0)
+  {
+    return;
+  }
+  const int tabWidth  = d->_style->getTabSize().width();
+  const int maxOffset = qMax(0, d->_tabBarPrivate->tabList.size() * tabWidth - width());
+  d->setTargetScrollOffset(qBound(0.0, static_cast<qreal>(index * tabWidth), static_cast<qreal>(maxOffset)));
+  d->startScrollAnimation();
+}
+
+void
 NXTabBar::setTabText(int index, const QString &text)
 {
   QTabBar::setTabText(index, text);
@@ -188,31 +203,36 @@ NXTabBar::mouseMoveEvent(QMouseEvent *event)
         d->_mimeData = nullptr;
       }
     }
-    else if (d->_tabBarPrivate->dragInProgress)
+    else
     {
-      auto &pressTabData = d->_tabBarPrivate->tabList[d->_tabBarPrivate->pressedIndex];
-      QRect firstTabRect = tabRect(0);
+      if (d->_tabBarPrivate->dragInProgress)
+      {
+        auto &pressTabData   = d->_tabBarPrivate->tabList[d->_tabBarPrivate->pressedIndex];
+        QRect firstTabRect   = tabRect(0);
+        const int leftBound  = -firstTabRect.x();
+        const int rightBound = width() - firstTabRect.x();
 #if (QT_VERSION > QT_VERSION_CHECK(6, 0, 0))
-      QRect pressTabRect = pressTabData->rect;
-      if (pressTabRect.right() + pressTabData->dragOffset > width() - firstTabRect.x())
-      {
-        pressTabData->dragOffset = width() - pressTabRect.right() - firstTabRect.x();
-      }
-      if (pressTabRect.x() + pressTabData->dragOffset < -firstTabRect.x())
-      {
-        pressTabData->dragOffset = -pressTabRect.x() - firstTabRect.x();
-      }
+        QRect pressTabRect = pressTabData->rect;
+        if (pressTabData->dragOffset > 0 && pressTabRect.right() + pressTabData->dragOffset > rightBound)
+        {
+          pressTabData->dragOffset = qMax(0, rightBound - pressTabRect.right());
+        }
+        if (pressTabData->dragOffset < 0 && pressTabRect.x() + pressTabData->dragOffset < leftBound)
+        {
+          pressTabData->dragOffset = qMin(0, leftBound - pressTabRect.x());
+        }
 #else
-      QRect pressTabRect = pressTabData.rect;
-      if (pressTabRect.right() + pressTabData.dragOffset > width() - firstTabRect.x())
-      {
-        pressTabData.dragOffset = width() - pressTabRect.right() - firstTabRect.x();
-      }
-      if (pressTabRect.x() + pressTabData.dragOffset < -firstTabRect.x())
-      {
-        pressTabData.dragOffset = -pressTabRect.x() - firstTabRect.x();
-      }
+        QRect pressTabRect = pressTabData.rect;
+        if (pressTabData.dragOffset > 0 && pressTabRect.right() + pressTabData.dragOffset > rightBound)
+        {
+          pressTabData.dragOffset = qMax(0, rightBound - pressTabRect.right());
+        }
+        if (pressTabData.dragOffset < 0 && pressTabRect.x() + pressTabData.dragOffset < leftBound)
+        {
+          pressTabData.dragOffset = qMin(0, leftBound - pressTabRect.x());
+        }
 #endif
+      }
 
       QRect moveRect = rect();
       moveRect.adjust(0, -height(), 0, height());
@@ -340,7 +360,7 @@ NXTabBar::wheelEvent(QWheelEvent *event)
   int maxOffset = qMax(0, d->_tabBarPrivate->tabList.size() * d->_style->getTabSize().width() - width());
   int step      = qMax(1, d->_style->getTabSize().width() / 4);
   d->setTargetScrollOffset(
-      qBound(0.0, d->getTargetScrollOffset() - event->angleDelta().y() / 120.0 * step, qreal(maxOffset)));
+      qBound(0.0, d->getTargetScrollOffset() - event->angleDelta().y() / 120.0 * step, static_cast<qreal>(maxOffset)));
   d->startScrollAnimation();
   event->accept();
 }
@@ -361,8 +381,6 @@ void
 NXTabBar::paintEvent(QPaintEvent *event)
 {
   Q_D(NXTabBar);
-  // 兜底同步: Qt 内部(moveTab/makeVisible 等)可能已修改 scrollOffset
-  d->setScrollOffset(d->_tabBarPrivate->scrollOffset);
   QSize tabSize = d->_style->getTabSize();
   for (int i = 0; i < d->_tabBarPrivate->tabList.size(); i++)
   {

@@ -23,6 +23,11 @@ NXComboBoxStyle::~NXComboBoxStyle()
 {
 }
 
+
+int
+NXComboBoxStyle::getShadowBorderWidth() const
+{ return _shadowBorderWidth; }
+
 void
 NXComboBoxStyle::drawPrimitive(PrimitiveElement element,
                                const QStyleOption *option,
@@ -123,7 +128,7 @@ NXComboBoxStyle::drawControl(ControlElement element,
         painter->setBrush(NXThemeColor(_themeMode, PrimaryNormal));
         painter->drawRoundedRect(QRectF(optionRect.x() + 3, optionRect.y() + optionRect.height() * 0.2, 3,
                                         optionRect.height() - +optionRect.height() * 0.4),
-                                 2, 2);
+                                 1.5, 1.5);
       }
       else
       {
@@ -175,7 +180,7 @@ NXComboBoxStyle::drawComplexControl(ComplexControl control,
                                                                                   : NXThemeColor(_themeMode, BasicBase)
                                   : NXThemeColor(_themeMode, BasicDisable));
       QRect comboBoxRect = copt->rect;
-      comboBoxRect.adjust(_shadowBorderWidth, 1, -_shadowBorderWidth, -1);
+      comboBoxRect.adjust(1, 1, -1, -1);
       painter->drawRoundedRect(comboBoxRect, 3, 3);
       // 底边线绘制
       painter->setPen(NXThemeColor(_themeMode, BasicBaseLine));
@@ -238,7 +243,7 @@ NXComboBoxStyle::subControlRect(ComplexControl cc,
     {
       //文字区域
       QRect textRect = QProxyStyle::subControlRect(cc, opt, sc, widget);
-      textRect.setLeft(16);
+      textRect.setLeft(10);
       textRect.setRight(textRect.right() - 15);
       return textRect;
     }

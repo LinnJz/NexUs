@@ -14,11 +14,11 @@ namespace
 constexpr qreal RADIUS = 3.8;
 
 QSize
-LogicalPixmapSize(const QPixmap &pixmap)
+LogicalPixmapSize(QPixmap const &pixmap)
 {
-  const qreal dpr  = qMax(1.0, pixmap.devicePixelRatioF());
-  const int width  = qMax(1, qRound(static_cast<qreal>(pixmap.width()) / dpr));
-  const int height = qMax(1, qRound(static_cast<qreal>(pixmap.height()) / dpr));
+  qreal const dpr  = qMax(1.0, pixmap.devicePixelRatioF());
+  int const width  = qMax(1, qRound(static_cast<qreal>(pixmap.width()) / dpr));
+  int const height = qMax(1, qRound(static_cast<qreal>(pixmap.height()) / dpr));
   return QSize(width, height);
 }
 } // namespace
@@ -43,9 +43,9 @@ NXPivotStyle::~NXPivotStyle()
 
 void
 NXPivotStyle::drawPrimitive(PrimitiveElement element,
-                            const QStyleOption *option,
+                            QStyleOption const *option,
                             QPainter *painter,
-                            const QWidget *widget) const
+                            QWidget const *widget) const
 {
   switch (element)
   {
@@ -67,9 +67,9 @@ NXPivotStyle::drawPrimitive(PrimitiveElement element,
 
 void
 NXPivotStyle::drawControl(ControlElement element,
-                          const QStyleOption *option,
+                          QStyleOption const *option,
                           QPainter *painter,
-                          const QWidget *widget) const
+                          QWidget const *widget) const
 {
   switch (element)
   {
@@ -80,18 +80,18 @@ NXPivotStyle::drawControl(ControlElement element,
   }
   case QStyle::CE_ItemViewItem :
   {
-    if (const QStyleOptionViewItem *vopt = qstyleoption_cast<const QStyleOptionViewItem *>(option))
+    if (QStyleOptionViewItem const *vopt = qstyleoption_cast<QStyleOptionViewItem const *>(option))
     {
-      const auto *pivotView = qobject_cast<const NXPivotView *>(widget);
+      auto const *pivotView = qobject_cast<NXPivotView const *>(widget);
       if (!pivotView)
       {
         break;
       }
-      const QModelIndex &pressIndex   = pivotView->getPressIndex();
-      const QModelIndex &currentIndex = pivotView->getCommittedIndex();
-      const auto pivotItem            = vopt->index.data(Qt::UserRole).value<NXPivotModel::PivotItem>();
-      const bool isHover              = vopt->state.testFlag(QStyle::State_MouseOver);
-      const bool isSelected           = currentIndex.row() == vopt->index.row();
+      QModelIndex const &pressIndex   = pivotView->getPressIndex();
+      QModelIndex const &currentIndex = pivotView->getCommittedIndex();
+      auto const pivotItem            = vopt->index.data(Qt::UserRole).value<NXPivotModel::PivotItem>();
+      bool const isHover              = vopt->state.testFlag(QStyle::State_MouseOver);
+      bool const isSelected           = currentIndex.row() == vopt->index.row();
 
       painter->save();
       painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
@@ -138,7 +138,7 @@ NXPivotStyle::drawControl(ControlElement element,
 }
 
 int
-NXPivotStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
+NXPivotStyle::pixelMetric(PixelMetric metric, QStyleOption const *option, QWidget const *widget) const
 {
   //switch (metric)
   //{
@@ -156,7 +156,7 @@ NXPivotStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const 
 }
 
 QRect
-NXPivotStyle::subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const
+NXPivotStyle::subElementRect(SubElement element, QStyleOption const *option, QWidget const *widget) const
 {
   if (element == SE_ItemViewItemFocusRect)
   {
@@ -169,11 +169,11 @@ NXPivotStyle::subElementRect(SubElement element, const QStyleOption *option, con
 
 QSize
 NXPivotStyle::sizeFromContents(ContentsType type,
-                               const QStyleOption *option,
-                               const QSize &size,
-                               const QWidget *widget) const
+                               QStyleOption const *option,
+                               QSize const &size,
+                               QWidget const *widget) const
 {
-  auto pivotView = qobject_cast<const NXPivotView *>(widget);
+  auto pivotView = qobject_cast<NXPivotView const *>(widget);
   if (!pivotView || type != QStyle::CT_ItemViewItem)
   {
     return QProxyStyle::sizeFromContents(type, option, size, widget);
@@ -186,19 +186,19 @@ NXPivotStyle::sizeFromContents(ContentsType type,
     return _pItemFixedSize;
   }
 
-  const auto *vopt = qstyleoption_cast<const QStyleOptionViewItem *>(option);
+  auto const *vopt = qstyleoption_cast<QStyleOptionViewItem const *>(option);
   if (!vopt)
   {
     return QProxyStyle::sizeFromContents(type, option, size, widget);
   }
-  const auto pivotItem = vopt->index.data(Qt::UserRole).value<NXPivotModel::PivotItem>();
+  auto const pivotItem = vopt->index.data(Qt::UserRole).value<NXPivotModel::PivotItem>();
   bool hasIcon         = !pivotItem.icon.isNull();
   bool hasText         = !pivotItem.text.isEmpty();
   if (!hasIcon && !hasText)
   {
     return QSize {};
   }
-  const QFontMetrics metrics(pivotView->font());
+  QFontMetrics const metrics(pivotView->font());
   QSize computedSize = _calculateItemSize(pivotItem, metrics, hasIcon, hasText);
   _alignHeight(pivotView, computedSize.height());
 
@@ -206,98 +206,96 @@ NXPivotStyle::sizeFromContents(ContentsType type,
 }
 
 void
-NXPivotStyle::_drawCenteredPixmap(QPainter *painter, const QRect &containerRect, const QPixmap &pixmap) const
+NXPivotStyle::_drawCenteredPixmap(QPainter *painter, QRect const &containerRect, QPixmap const &pixmap) const
 {
-  const QSize drawSize = LogicalPixmapSize(pixmap);
-  const int drawWidth  = drawSize.width();
-  const int drawHeight = drawSize.height();
-  const int x          = containerRect.x() + (containerRect.width() - drawWidth) / 2;
-  const int y          = containerRect.y() + (containerRect.height() - drawHeight) / 2;
+  QSize const drawSize = LogicalPixmapSize(pixmap);
+  int const drawWidth  = drawSize.width();
+  int const drawHeight = drawSize.height();
+  int const x          = containerRect.x() + (containerRect.width() - drawWidth) / 2;
+  int const y          = containerRect.y() + (containerRect.height() - drawHeight) / 2;
 
   painter->drawPixmap(QPoint { x, y }, pixmap);
 }
 
 void
-NXPivotStyle::_drawTextOnly(QPainter *painter, const QRect &contentRect, const QString &text) const
+NXPivotStyle::_drawTextOnly(QPainter *painter, QRect const &contentRect, QString const &text) const
 {
-  const QFontMetrics metrics(painter->font());
-  const QString drawText = metrics.elidedText(text, Qt::ElideRight, contentRect.width());
+  QFontMetrics const metrics(painter->font());
+  QString const drawText = metrics.elidedText(text, Qt::ElideRight, contentRect.width());
   painter->drawText(contentRect.toRectF().adjusted(0, 0, -3.5, -3.5), Qt::AlignCenter, drawText);
 }
 
 void
-NXPivotStyle::_drawIconOnly(QPainter *painter, const QRect &contentRect, const QPixmap &icon) const
-{
-  _drawCenteredPixmap(painter, contentRect, icon);
-}
+NXPivotStyle::_drawIconOnly(QPainter *painter, QRect const &contentRect, QPixmap const &icon) const
+{ _drawCenteredPixmap(painter, contentRect, icon); }
 
 void
 NXPivotStyle::_drawTextBesideIcon(QPainter *painter,
-                                  const QRect &contentRect,
-                                  const QPixmap &icon,
-                                  const QString &text) const
+                                  QRect const &contentRect,
+                                  QPixmap const &icon,
+                                  QString const &text) const
 {
-  const QFontMetrics metrics(painter->font());
-  const QSize iconDrawSize = LogicalPixmapSize(icon);
-  const int textMaxWidth   = qMax(0, contentRect.width() - iconDrawSize.width() - _pTextIconSpacing);
-  const QString drawText   = metrics.elidedText(text, Qt::ElideRight, textMaxWidth);
-  const int textWidth      = qMin(textMaxWidth, metrics.horizontalAdvance(drawText));
-  const int groupWidth     = iconDrawSize.width() + _pTextIconSpacing + textWidth;
-  const int startX         = contentRect.x() + qMax(0, (contentRect.width() - groupWidth) / 2);
+  QFontMetrics const metrics(painter->font());
+  QSize const iconDrawSize = LogicalPixmapSize(icon);
+  int const textMaxWidth   = qMax(0, contentRect.width() - iconDrawSize.width() - _pTextIconSpacing);
+  QString const drawText   = metrics.elidedText(text, Qt::ElideRight, textMaxWidth);
+  int const textWidth      = qMin(textMaxWidth, metrics.horizontalAdvance(drawText));
+  int const groupWidth     = iconDrawSize.width() + _pTextIconSpacing + textWidth;
+  int const startX         = contentRect.x() + qMax(0, (contentRect.width() - groupWidth) / 2);
 
-  const QRect iconRect(startX, contentRect.y() + (contentRect.height() - iconDrawSize.height()) / 2,
+  QRect const iconRect(startX, contentRect.y() + (contentRect.height() - iconDrawSize.height()) / 2,
                        iconDrawSize.width(), iconDrawSize.height());
   _drawCenteredPixmap(painter, iconRect, icon);
 
-  const int textStartX     = iconRect.right() + 1 + _pTextIconSpacing;
-  const int textWidthLimit = qMax(0, contentRect.right() - textStartX + 1);
-  const QRect textRect(textStartX, contentRect.y(), textWidthLimit, contentRect.height());
+  int const textStartX     = iconRect.right() + 1 + _pTextIconSpacing;
+  int const textWidthLimit = qMax(0, contentRect.right() - textStartX + 1);
+  QRect const textRect(textStartX, contentRect.y(), textWidthLimit, contentRect.height());
   painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, drawText);
 }
 
 void
 NXPivotStyle::_drawTextUnderIcon(QPainter *painter,
-                                 const QRect &contentRect,
-                                 const QPixmap &icon,
-                                 const QString &text) const
+                                 QRect const &contentRect,
+                                 QPixmap const &icon,
+                                 QString const &text) const
 {
-  const QFontMetrics metrics(painter->font());
-  const int textHeight     = metrics.height();
-  const QSize iconDrawSize = LogicalPixmapSize(icon);
-  const int totalHeight    = iconDrawSize.height() + _pTextIconSpacing + textHeight;
-  const int startY         = contentRect.y() + qMax(0, (contentRect.height() - totalHeight) / 2);
+  QFontMetrics const metrics(painter->font());
+  int const textHeight     = metrics.height();
+  QSize const iconDrawSize = LogicalPixmapSize(icon);
+  int const totalHeight    = iconDrawSize.height() + _pTextIconSpacing + textHeight;
+  int const startY         = contentRect.y() + qMax(0, (contentRect.height() - totalHeight) / 2);
 
-  const QRect iconRect(contentRect.x() + qMax(0, (contentRect.width() - iconDrawSize.width()) / 2), startY,
+  QRect const iconRect(contentRect.x() + qMax(0, (contentRect.width() - iconDrawSize.width()) / 2), startY,
                        iconDrawSize.width(), iconDrawSize.height());
   _drawCenteredPixmap(painter, iconRect, icon);
 
-  const QRect textRect(contentRect.x(), startY + iconDrawSize.height() + _pTextIconSpacing, contentRect.width(),
+  QRect const textRect(contentRect.x(), startY + iconDrawSize.height() + _pTextIconSpacing, contentRect.width(),
                        textHeight);
-  const QString drawText = metrics.elidedText(text, Qt::ElideRight, textRect.width());
+  QString const drawText = metrics.elidedText(text, Qt::ElideRight, textRect.width());
   painter->drawText(textRect, Qt::AlignHCenter | Qt::AlignVCenter, drawText);
 }
 
 void
 NXPivotStyle::_drawIconWithOverlayText(QPainter *painter,
-                                       const QRect &contentRect,
-                                       const QPixmap &icon,
-                                       const QString &text) const
+                                       QRect const &contentRect,
+                                       QPixmap const &icon,
+                                       QString const &text) const
 {
   _drawCenteredPixmap(painter, contentRect, icon);
 
-  const QFontMetrics metrics(painter->font());
-  const int textWidthLimit = qMax(1, contentRect.width());
-  const QString drawText   = metrics.elidedText(text, Qt::ElideRight, textWidthLimit);
-  const int textWidth      = qMax(1, qMin(textWidthLimit, metrics.horizontalAdvance(drawText)));
-  const int textHeight     = metrics.height();
+  QFontMetrics const metrics(painter->font());
+  int const textWidthLimit = qMax(1, contentRect.width());
+  QString const drawText   = metrics.elidedText(text, Qt::ElideRight, textWidthLimit);
+  int const textWidth      = qMax(1, qMin(textWidthLimit, metrics.horizontalAdvance(drawText)));
+  int const textHeight     = metrics.height();
 
   QPoint center = contentRect.center();
   center += _pOverlayTextOffsetFromCenterAnchor;
 
   QRect overlayRect(center.x() - textWidth / 2, center.y() - textHeight / 2, textWidth, textHeight);
 
-  const int maxX = contentRect.right() - overlayRect.width() + 1;
-  const int maxY = contentRect.bottom() - overlayRect.height() + 1;
+  int const maxX = contentRect.right() - overlayRect.width() + 1;
+  int const maxY = contentRect.bottom() - overlayRect.height() + 1;
   overlayRect.moveLeft(qBound(contentRect.left(), overlayRect.left(), maxX));
   overlayRect.moveTop(qBound(contentRect.top(), overlayRect.top(), maxY));
 
@@ -306,11 +304,11 @@ NXPivotStyle::_drawIconWithOverlayText(QPainter *painter,
 
 void
 NXPivotStyle::_drawDisplayContent(QPainter *painter,
-                                  const QRect &contentRect,
-                                  const NXPivotModel::PivotItem &pivotItem) const
+                                  QRect const &contentRect,
+                                  NXPivotModel::PivotItem const &pivotItem) const
 {
-  const bool hasText = !pivotItem.text.isEmpty();
-  const bool hasIcon = !pivotItem.icon.isNull();
+  bool const hasText = !pivotItem.text.isEmpty();
+  bool const hasIcon = !pivotItem.icon.isNull();
 
   switch (_pDisplayMode)
   {
@@ -379,7 +377,7 @@ NXPivotStyle::_drawDisplayContent(QPainter *painter,
 }
 
 void
-NXPivotStyle::_drawFocusRectBackground(QPainter *painter, const QRect &rect, const QColor &color) const
+NXPivotStyle::_drawFocusRectBackground(QPainter *painter, QRect const &rect, QColor const &color) const
 {
   painter->save();
 
@@ -400,11 +398,11 @@ NXPivotStyle::_drawFocusRectBackground(QPainter *painter, const QRect &rect, con
 }
 
 void
-NXPivotStyle::_drawIndicator(QPainter *painter, const QRect &rect, const QColor &color) const
+NXPivotStyle::_drawIndicator(QPainter *painter, QRect const &rect, QColor const &color) const
 {
   painter->save();
 
-  const int triangleSide = rect.width() / 16 * 5;
+  int const triangleSide = rect.width() / 16 * 5;
   painter->setBrush(color);
 
   QPainterPath path;
@@ -437,7 +435,7 @@ NXPivotStyle::_drawIndicator(QPainter *painter, const QRect &rect, const QColor 
 }
 
 void
-NXPivotStyle::_alignHeight(const NXPivotView *pivotView, int actualHeight) const
+NXPivotStyle::_alignHeight(NXPivotView const *pivotView, int actualHeight) const
 {
   if (_pIsAutoAdaptiveItemHeight && pivotView->height() != actualHeight)
   {
@@ -446,8 +444,8 @@ NXPivotStyle::_alignHeight(const NXPivotView *pivotView, int actualHeight) const
 }
 
 QSize
-NXPivotStyle::_calculateItemSize(const NXPivotModel::PivotItem &pivotItem,
-                                 const QFontMetrics &metrics,
+NXPivotStyle::_calculateItemSize(NXPivotModel::PivotItem const &pivotItem,
+                                 QFontMetrics const &metrics,
                                  bool hasIcon,
                                  bool hasText) const
 {
@@ -455,7 +453,7 @@ NXPivotStyle::_calculateItemSize(const NXPivotModel::PivotItem &pivotItem,
   {
   case NXPivotType::IconOnly :
   {
-    const QSize iconSize = hasIcon ? pivotItem.icon.size() : QSize {};
+    QSize const iconSize = hasIcon ? pivotItem.icon.size() : QSize {};
     int width            = iconSize.width() + _pItemHorizontalSpacing;
     int height           = iconSize.height() + _pItemVerticalSpacing;
     return { width, height };
@@ -468,7 +466,7 @@ NXPivotStyle::_calculateItemSize(const NXPivotModel::PivotItem &pivotItem,
   }
   case NXPivotType::TextBesideIcon :
   {
-    const QSize iconSize = hasIcon ? pivotItem.icon.size() : QSize {};
+    QSize const iconSize = hasIcon ? pivotItem.icon.size() : QSize {};
     int iconWidth        = iconSize.width() + _pItemHorizontalSpacing;
     int iconHeight       = iconSize.height() + _pItemVerticalSpacing;
     int textWidth        = (hasText ? metrics.horizontalAdvance(pivotItem.text) : 0) + _pItemHorizontalSpacing;
@@ -479,7 +477,7 @@ NXPivotStyle::_calculateItemSize(const NXPivotModel::PivotItem &pivotItem,
   }
   case NXPivotType::TextUnderIcon :
   {
-    const QSize iconSize = hasIcon ? pivotItem.icon.size() : QSize {};
+    QSize const iconSize = hasIcon ? pivotItem.icon.size() : QSize {};
     int iconWidth        = iconSize.width() + _pItemHorizontalSpacing;
     int iconHeight       = iconSize.height() + _pItemVerticalSpacing;
     int textWidth        = (hasText ? metrics.horizontalAdvance(pivotItem.text) : 0) + _pItemHorizontalSpacing;
@@ -490,7 +488,7 @@ NXPivotStyle::_calculateItemSize(const NXPivotModel::PivotItem &pivotItem,
   }
   case NXPivotType::IconWithOverlayText :
   {
-    const QSize iconSize = hasIcon ? pivotItem.icon.size() : QSize {};
+    QSize const iconSize = hasIcon ? pivotItem.icon.size() : QSize {};
     int width            = iconSize.width() + _pItemHorizontalSpacing;
     int height           = iconSize.height() + _pItemVerticalSpacing;
     return { width, height };

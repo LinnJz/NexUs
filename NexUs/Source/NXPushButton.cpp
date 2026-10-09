@@ -36,7 +36,7 @@ NXPushButton::NXPushButton(QWidget *parent)
   d->_pLightTextColor    = NXThemeColor(NXThemeType::Light, BasicText);
   d->_pDarkTextColor     = NXThemeColor(NXThemeType::Dark, BasicText);
   setMouseTracking(true);
-  setFixedHeight(38);
+  setFixedHeight(30);
   QFont font = this->font();
   font.setPixelSize(nxApp->getFontPixelSize() + 2);
   setFont(font);
@@ -194,13 +194,10 @@ NXPushButton::paintEvent(QPaintEvent *event)
   Q_D(NXPushButton);
   QPainter painter(this);
   painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-  // 高性能阴影
-  nxTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
 
   // 背景绘制
   painter.save();
-  QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * (d->_shadowBorderWidth),
-                       height() - 2 * d->_shadowBorderWidth);
+  QRect foregroundRect = rect().adjusted(1, 1, -1, -1);
   if (d->_themeMode == NXThemeType::Light)
   {
     painter.setPen(NXThemeColor(NXThemeType::Light, BasicBorder));
@@ -222,8 +219,8 @@ NXPushButton::paintEvent(QPaintEvent *event)
   if (!d->_isPressed)
   {
     painter.setPen(NXThemeColor(d->_themeMode, BasicBaseLine));
-    painter.drawLine(foregroundRect.x() + d->_pBorderRadius, height() - d->_shadowBorderWidth, foregroundRect.width(),
-                     height() - d->_shadowBorderWidth);
+    painter.drawLine(foregroundRect.x() + d->_pBorderRadius, height() - 1, foregroundRect.width() - d->_pBorderRadius,
+                     height() - 1);
   }
   painter.setPen(isEnabled() ? d->_themeMode == NXThemeType::Light ? d->_pLightTextColor : d->_pDarkTextColor
                              : NXThemeColor(d->_themeMode, BasicTextDisable));

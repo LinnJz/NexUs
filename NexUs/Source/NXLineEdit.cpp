@@ -37,7 +37,7 @@ NXLineEdit::NXLineEdit(QWidget *parent)
   setStyleSheet(QStringLiteral("#NXLineEdit{background-color:transparent;}"));
   d->onThemeChanged(nxTheme->getThemeMode());
   connect(nxTheme, &NXTheme::themeModeChanged, d, &NXLineEditPrivate::onThemeChanged);
-  setVisible(true);
+  QWidget::setVisible(true);
 }
 
 NXLineEdit::NXLineEdit(const QString &text, QWidget *parent)
@@ -118,7 +118,7 @@ NXLineEdit::focusInEvent(QFocusEvent *event)
 {
   Q_D(NXLineEdit);
   Q_EMIT focusIn(this->text());
-  if (event->reason() == Qt::MouseFocusReason)
+  if (event->reason() != Qt::PopupFocusReason)
   {
     if (d->_pIsClearButtonEnable)
     {

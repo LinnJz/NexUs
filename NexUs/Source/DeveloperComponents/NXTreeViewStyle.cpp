@@ -81,7 +81,7 @@ NXTreeViewStyle::drawPrimitive(PrimitiveElement element,
         QRect indicatorRect = option->rect;
         indicatorRect.adjust(0, 0, -2, 0);
         QFont iconFont = QFont(QStringLiteral("NXAwesome"));
-        iconFont.setPixelSize(nxApp->getFontPixelSize() + 4);
+        iconFont.setPixelSize(nxApp->getFontPixelSize() + 1);
         painter->setFont(iconFont);
         painter->setPen(NXThemeColor(_themeMode, BasicText));
         painter->drawText(indicatorRect, Qt::AlignVCenter | Qt::AlignRight,
@@ -288,7 +288,7 @@ NXTreeViewStyle::drawControl(ControlElement element,
       if (isFirst)
       {
         painter->drawRoundedRect(
-            QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
+            QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 1.5, 1.5);
       }
       painter->restore();
     }

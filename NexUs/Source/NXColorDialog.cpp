@@ -110,7 +110,7 @@ NXColorDialog::NXColorDialog(QWidget *parent)
   htmlEditLayout->addWidget(d->_htmlEdit);
   htmlEditLayout->addStretch();
   d->_modeComboBox = new NXComboBox(this);
-  d->_modeComboBox->setFixedSize(132, 33);
+  d->_modeComboBox->setFixedSize(120, 33);
   d->_modeComboBox->addItem(QStringLiteral("ARGB"));
   d->_modeComboBox->addItem(QStringLiteral("AHSV"));
   d->_modeComboBox->setCurrentIndex(0);
@@ -121,6 +121,11 @@ NXColorDialog::NXColorDialog(QWidget *parent)
     d->_modeComboBox->setItemText(0, QStringLiteral("RGBA"));
     d->_modeComboBox->setItemText(1, QStringLiteral("HSVA"));
   });
+  QHBoxLayout *modeLayout = new QHBoxLayout();
+  modeLayout->setContentsMargins(0, 0, 0, 0);
+  modeLayout->addSpacing(6);
+  modeLayout->addWidget(d->_modeComboBox);
+  modeLayout->addStretch();
 
   // R或H
   d->_firstEdit = new NXLineEdit(this);
@@ -187,7 +192,7 @@ NXColorDialog::NXColorDialog(QWidget *parent)
   paramControlLayout->setContentsMargins(0, 0, 0, 0);
   paramControlLayout->setSpacing(10);
   paramControlLayout->addLayout(htmlEditLayout);
-  paramControlLayout->addWidget(d->_modeComboBox);
+  paramControlLayout->addLayout(modeLayout);
   paramControlLayout->addLayout(fourthEditLayout);
   paramControlLayout->addLayout(firstEditLayout);
   paramControlLayout->addLayout(secondEditLayout);

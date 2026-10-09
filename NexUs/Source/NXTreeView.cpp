@@ -24,6 +24,7 @@ NXTreeView::NXTreeView(QWidget *parent)
     doItemsLayout();
   });
   setHorizontalScrollBar(hScrollBar);
+  setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
   setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
   NXScrollBar *vScrollBar = new NXScrollBar(this);
@@ -33,6 +34,7 @@ NXTreeView::NXTreeView(QWidget *parent)
     doItemsLayout();
   });
   setVerticalScrollBar(vScrollBar);
+  setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
   setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
   d->_treeViewStyle = new NXTreeViewStyle(style());

@@ -73,9 +73,9 @@ NXCustomTabWidget::~NXCustomTabWidget()
   {
     QWidget *closeWidget         = _customTabWidget->widget(0);
     NXTabWidget *originTabWidget = closeWidget->property("NXOriginTabWidget").value<NXTabWidget *>();
-    if (originTabWidget)
+    closeWidget->setProperty("CurrentCustomBar", QVariant::fromValue<NXTabBar *>(nullptr));
+    if (originTabWidget && originTabWidget != _customTabWidget)
     {
-      closeWidget->setProperty("CurrentCustomBar", QVariant::fromValue<NXTabBar *>(nullptr));
       originTabWidget->addTab(closeWidget, _customTabWidget->tabIcon(0), _customTabWidget->tabText(0));
       originTabWidget->setCurrentWidget(closeWidget);
     }

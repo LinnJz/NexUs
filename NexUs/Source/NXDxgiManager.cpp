@@ -80,10 +80,6 @@ QImage
 NXDxgiManager::grabScreenToImage() const
 {
   Q_D(const NXDxgiManager);
-  if (!d->_dxgi->getIsInitSuccess())
-  {
-    return QImage();
-  }
   return d->_dxgi->getGrabImage();
 }
 
@@ -123,7 +119,7 @@ NXDxgiManager::setDxDeviceID(int dxID)
     return false;
   }
   d->_dxgi->setIsGrabActive(false);
-  while (!d->_dxgi->getIsGrabStoped())
+  while (!d->_dxgi->getIsGrabStopped())
   {
     //等待任务结束
     QApplication::processEvents();
@@ -157,7 +153,7 @@ NXDxgiManager::setOutputDeviceID(int deviceID)
   }
 
   d->_dxgi->setIsGrabActive(false);
-  while (!d->_dxgi->getIsGrabStoped())
+  while (!d->_dxgi->getIsGrabStopped())
   {
     //等待任务结束
     QApplication::processEvents();

@@ -297,7 +297,7 @@ NXTableViewStyle::drawControl(ControlElement element,
           if (selectionBehavior == QAbstractItemView::SelectRows && vopt->index.column() == 0)
           {
             painter->drawRoundedRect(
-                QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
+                QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 1.5, 1.5);
           }
           else if (selectionBehavior == QAbstractItemView::SelectItems)
           {

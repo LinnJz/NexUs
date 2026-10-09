@@ -25,7 +25,7 @@ NXComboBox::NXComboBox(QWidget *parent)
   d->_pBorderRadius = 3;
   d->_themeMode     = nxTheme->getThemeMode();
   setObjectName("NXComboBox");
-  setFixedHeight(35);
+  setFixedHeight(30);
   d->_comboBoxStyle = new NXComboBoxStyle(style());
   setStyle(d->_comboBoxStyle);
 
@@ -105,21 +105,6 @@ NXComboBox::showPopup()
     QWidget *container = this->findChild<QFrame *>();
     if (container)
     {
-      QLayout *layout = container->layout();
-      while (layout->count())
-      {
-        layout->takeAt(0);
-      }
-      const auto children = container->findChildren<QWidget *>(QString(), Qt::FindDirectChildrenOnly);
-      for (auto child : children)
-      {
-        if (child != view())
-        {
-          child->setFixedSize(0, 0);
-        }
-      }
-      view()->setVisible(false);
-
       int containerHeight = 0;
       if (count() >= maxVisibleItems())
       {
@@ -129,29 +114,16 @@ NXComboBox::showPopup()
       {
         containerHeight = count() * 35 + 8;
       }
-
-      QPoint globalPos     = mapToGlobal(QPoint(0, 0));
-      QRect screenGeometry = QApplication::primaryScreen()->availableGeometry();
-
-      bool showAbove = (globalPos.y() + height() + containerHeight > screenGeometry.bottom()) &&
-                       (globalPos.y() - containerHeight >= screenGeometry.top());
-
-      QPoint containerPos;
-      if (showAbove)
+      // 容器实际宽度在组合框宽度基础上两侧各扩展阴影宽度
+      // 阴影绘制于外围 前景绘制宽度与组合框宽度保持一致
+      const int shadowBorderWidth = d->_comboBoxStyle->getShadowBorderWidth();
+      container->resize(width() + 2 * shadowBorderWidth, containerHeight);
+      container->move(container->x() - shadowBorderWidth, container->y() + 3);
+      view()->resize(width(), containerHeight - 8);
+      QLayout *layout = container->layout();
+      while (layout->count())
       {
-        containerPos = QPoint(globalPos.x(), globalPos.y() - containerHeight - 3);
-      }
-      else
-      {
-        containerPos = QPoint(globalPos.x(), globalPos.y() + height() + 3);
-      }
-      container->move(containerPos);
-
-      view()->resize(view()->width(), containerHeight - 8);
-      view()->setVisible(true);
-      if (currentIndex() >= 0)
-      {
-        view()->scrollTo(view()->model()->index(currentIndex(), 0), QAbstractItemView::PositionAtCenter);
+        layout->takeAt(0);
       }
       QPropertyAnimation *fixedSizeAnimation = new QPropertyAnimation(container, "maximumHeight");
       connect(fixedSizeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant &value)

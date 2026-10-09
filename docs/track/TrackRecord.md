@@ -910,7 +910,7 @@ NXWidgetToolsExample/ExamplePage/T_TableWidget.h
 
 13. **问题修复**：同步修复若干已知问题，提升整体稳定性。
 
-### Track Record 6：2026年08月14日提交
+### Track Record 6：2026年10月9日提交
 
 #### Modify Optize1
 
@@ -951,8 +951,13 @@ NXWidgetToolsExample/ExamplePage/T_TableWidget.h
 
 * NXContentDialog逻辑回退
 
-#### Modify Optize3
+#### Modify Optize3（2026/8/14）
 
 * 同步
 
 * NXRibbon*微调
+
+#### Modify Optize4 （2026/10/9）
+
+* 同步
+* NXPivot*优化调整

@@ -29,7 +29,6 @@ public:
 private:
   bool _isPressed { false };
   bool _hasIcon { false };
-  int _shadowBorderWidth { 3 };
   int _iconSize { 18 };
   NXThemeType::ThemeMode _themeMode;
   NXIconType::IconName _icon { NXIconType::None };

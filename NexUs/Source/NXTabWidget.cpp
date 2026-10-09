@@ -47,6 +47,13 @@ NXTabWidget::~NXTabWidget()
 }
 
 void
+NXTabWidget::locateCurrentTab()
+{
+  Q_D(NXTabWidget);
+  d->_tabBar->locateCurrentTab();
+}
+
+void
 NXTabWidget::setTabBarStyle(NXTabBarType::TabBarStyle style)
 {
   Q_D(NXTabWidget);
@@ -171,9 +178,10 @@ NXTabWidget::tabInserted(int index)
 {
   Q_D(NXTabWidget);
   QWidget *tabWidget = widget(index);
-  if (!tabWidget->property("IsMetaWidget").toBool() && !tabWidget->property("NXOriginTabWidget").isValid())
+  if (tabWidget && !tabWidget->property("IsMetaWidget").toBool() &&
+      !tabWidget->property("ElaOriginTabWidget").isValid())
   {
-    d->_allTabWidgetList.append(widget(index));
+    d->_addTabWidgetToList(tabWidget);
   }
   QTabWidget::tabInserted(index);
 }

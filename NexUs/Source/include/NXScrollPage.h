@@ -27,7 +27,7 @@ public:
   void addCentralWidget(QWidget *centralWidget,
                         bool isWidgetResizeable              = true,
                         bool isVerticalGrabGesture           = true,
-                        qreal mousePressEventDelay           = 0.5,
+                        qreal mousePressEventDelay           = 0.0,
                         Qt::ScrollBarPolicy vScrollBarPolicy = Qt::ScrollBarAsNeeded,
                         Qt::ScrollBarPolicy hScrollBarPolicy = Qt::ScrollBarAlwaysOff);
 

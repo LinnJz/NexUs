@@ -22,6 +22,8 @@ class NX_EXPORT NXTabWidget : public QTabWidget
 public:
   explicit NXTabWidget(QWidget *parent = nullptr);
   ~NXTabWidget();
+  void locateCurrentTab();
+
   void setTabPosition(TabPosition position);
 
   Q_SIGNAL void currentWidgetChanged(QWidget *widget);

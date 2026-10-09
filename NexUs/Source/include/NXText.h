@@ -17,6 +17,7 @@ class NX_EXPORT NXText : public QLabel
   Q_PROPERTY_CREATE_H(int, TextPointSize)
   Q_PROPERTY_CREATE_H(bool, IsClickEnable)
   Q_PROPERTY_CREATE_H(bool, IsWrapAnywhere)
+  Q_PROPERTY_CREATE_H(bool, IsBold)
 
 public:
   explicit NXText(QWidget *parent = nullptr);

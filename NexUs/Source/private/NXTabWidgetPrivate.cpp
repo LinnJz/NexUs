@@ -46,20 +46,22 @@ NXTabWidgetPrivate::onTabDragCreate(QMimeData *mimeData)
   QWidget *dragWidget = q->widget(index);
   dragWidget->setProperty("TabIcon", q->tabIcon(index));
   dragWidget->setProperty("TabText", q->tabText(index));
-  QWidget *originTabWidget = dragWidget->property("NXOriginTabWidget").value<NXTabWidget *>();
+  NXTabWidget *originTabWidget = dragWidget->property("NXOriginTabWidget").value<NXTabWidget *>();
+  QWidget *floatParentWidget   = originTabWidget;
   if (!originTabWidget && !dragWidget->property("IsMetaWidget").toBool())
   {
     dragWidget->setProperty("NXOriginTabWidget", QVariant::fromValue<NXTabWidget *>(q));
-    originTabWidget = q;
+    originTabWidget   = q;
+    floatParentWidget = q;
   }
   mimeData->setProperty("DragWidget", QVariant::fromValue(dragWidget));
   NXTabBar *tabBarObject = mimeData->property("NXTabBarObject").value<NXTabBar *>();
   QMouseEvent releaseEvent(QEvent::MouseButtonRelease, QPoint(-1, -1), QPoint(-1, -1), Qt::LeftButton, Qt::LeftButton,
                            Qt::NoModifier);
   QApplication::sendEvent(tabBarObject, &releaseEvent);
-  if (!originTabWidget)
+  if (!floatParentWidget)
   {
-    originTabWidget = dragWidget->property("NXFloatParentWidget").value<QWidget *>();
+    floatParentWidget = dragWidget->property("NXFloatParentWidget").value<QWidget *>();
   }
   bool isFloatWidget              = mimeData->property("IsFloatWidget").toBool();
   bool isSelectedIndicatorVisible = mimeData->property("IsSelectedIndicatorVisible").toBool();
@@ -78,7 +80,11 @@ NXTabWidgetPrivate::onTabDragCreate(QMimeData *mimeData)
   }
   else
   {
-    floatWidget = new NXCustomTabWidget(originTabWidget);
+    floatWidget = new NXCustomTabWidget(floatParentWidget);
+    if (originTabWidget)
+    {
+      originTabWidget->d_func()->_registerCustomTabWidget(floatWidget);
+    }
     q->removeTab(index);
     // 创建新窗口
     NXTabBar *originCustomTabBar = tabBarObject;
@@ -200,12 +206,17 @@ NXTabWidgetPrivate::onTabDragLeave(QMimeData *mimeData)
   {
     _customTabBar->removeTab(index);
   }
-  QWidget *originTabWidget = dragWidget->property("NXOriginTabWidget").value<NXTabWidget *>();
-  if (!originTabWidget)
+  NXTabWidget *originTabWidget = dragWidget->property("NXOriginTabWidget").value<NXTabWidget *>();
+  QWidget *floatParentWidget    = originTabWidget;
+  if (!floatParentWidget)
   {
-    originTabWidget = dragWidget->property("NXFloatParentWidget").value<QWidget *>();
+    floatParentWidget = dragWidget->property("NXFloatParentWidget").value<QWidget *>();
   }
-  NXCustomTabWidget *floatWidget  = new NXCustomTabWidget(originTabWidget);
+  NXCustomTabWidget *floatWidget = new NXCustomTabWidget(floatParentWidget);
+  if (originTabWidget)
+  {
+    originTabWidget->d_func()->_registerCustomTabWidget(floatWidget);
+  }
   bool isSelectedIndicatorVisible = mimeData->property("IsSelectedIndicatorVisible").toBool();
   int tabCornerRadius             = mimeData->property("TabCornerRadius").toInt();
   NXTabBarType::TabBarStyle tabBarStyle =
@@ -300,10 +311,7 @@ NXTabWidgetPrivate::onTabCloseRequested(int index)
       _customTabBar->removeTab(index);
     }
     q->removeTab(index);
-    if (_allTabWidgetList.contains(closeWidget))
-    {
-      _allTabWidgetList.removeOne(closeWidget);
-    }
+    _removeTabWidgetFromList(closeWidget);
     closeWidget->deleteLater();
   }
 }
@@ -314,6 +322,10 @@ NXTabWidgetPrivate::_clearAllTabWidgetList()
   Q_Q(NXTabWidget);
   for (auto widget : _allTabWidgetList)
   {
+    if (!widget)
+    {
+      continue;
+    }
     auto originTabWidgetVariant = widget->property("NXOriginTabWidget");
     if (originTabWidgetVariant.isValid() && originTabWidgetVariant.value<NXTabWidget *>() == q)
     {
@@ -321,4 +333,87 @@ NXTabWidgetPrivate::_clearAllTabWidgetList()
     }
   }
   _allTabWidgetList.clear();
+}
+
+void
+NXTabWidgetPrivate::_addTabWidgetToList(QWidget *widget)
+{
+  if (!widget)
+  {
+    return;
+  }
+  for (const auto &listWidget : _allTabWidgetList)
+  {
+    if (listWidget == widget)
+    {
+      return;
+    }
+  }
+  _allTabWidgetList.append(QPointer<QWidget>(widget));
+  connect(widget, &QObject::destroyed, this, [=]()
+  {
+    _removeTabWidgetFromList(widget);
+  });
+}
+
+void
+NXTabWidgetPrivate::_removeTabWidgetFromList(QWidget *widget)
+{
+  for (int i = _allTabWidgetList.size() - 1; i >= 0; --i)
+  {
+    QPointer<QWidget> listWidget = _allTabWidgetList.at(i);
+    if (listWidget.isNull() || listWidget == widget)
+    {
+      _allTabWidgetList.removeAt(i);
+    }
+  }
+}
+
+void
+NXTabWidgetPrivate::_registerCustomTabWidget(NXCustomTabWidget *customTabWidget)
+{
+  if (!customTabWidget)
+  {
+    return;
+  }
+  for (const auto &listCustomTabWidget : _customTabWidgetList)
+  {
+    if (listCustomTabWidget == customTabWidget)
+    {
+      return;
+    }
+  }
+  _customTabWidgetList.append(QPointer<NXCustomTabWidget>(customTabWidget));
+  NXTabBar *customTabBar = customTabWidget->getCustomTabBar();
+  connect(customTabWidget, &QObject::destroyed, this, [=]()
+  {
+    _unregisterCustomTabWidget(customTabWidget, customTabBar);
+  });
+}
+
+void
+NXTabWidgetPrivate::_unregisterCustomTabWidget(NXCustomTabWidget *customTabWidget, NXTabBar *customTabBar)
+{
+  if (customTabBar)
+  {
+    for (auto &widget : _allTabWidgetList)
+    {
+      if (!widget)
+      {
+        continue;
+      }
+      if (widget->property("CurrentCustomBar").value<NXTabBar *>() == customTabBar)
+      {
+        widget->setProperty("CurrentCustomBar", QVariant::fromValue<NXTabBar *>(nullptr));
+      }
+    }
+  }
+  for (int i = _customTabWidgetList.size() - 1; i >= 0; --i)
+  {
+    QPointer<NXCustomTabWidget> listCustomTabWidget = _customTabWidgetList.at(i);
+    if (listCustomTabWidget.isNull() || listCustomTabWidget == customTabWidget)
+    {
+      _customTabWidgetList.removeAt(i);
+    }
+  }
 }

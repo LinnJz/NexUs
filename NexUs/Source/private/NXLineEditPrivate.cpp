@@ -23,6 +23,10 @@ NXLineEditPrivate::onWMWindowClickedEvent(const QVariantMap &data)
       data.value(QStringLiteral("WMClickType")).value<NXAppBarType::WMMouseActionType>();
   if (actionType == NXAppBarType::WMLBUTTONDOWN)
   {
+    if (NXApplication::containsCursorToItem(q))
+    {
+      return;
+    }
     if (q->hasSelectedText() && q->hasFocus())
     {
       q->clearFocus();

@@ -85,7 +85,7 @@ NXThemePrivate::_initThemeColor()
 
   // 主题颜色
   _lightThemeColorList[NXThemeType::PrimaryNormal] = QColor(0x00, 0x67, 0xC0);
-  _darkThemeColorList[NXThemeType::PrimaryNormal]  = QColor(0x4C, 0xC2, 0xFF);
+  _darkThemeColorList[NXThemeType::PrimaryNormal]  = QColor(0x4A, 0xBC, 0xF7);
   _lightThemeColorList[NXThemeType::PrimaryHover]  = QColor(0x19, 0x75, 0xC5);
   _darkThemeColorList[NXThemeType::PrimaryHover]   = QColor(0x47, 0xB1, 0xE8);
   _lightThemeColorList[NXThemeType::PrimaryPress]  = QColor(0x31, 0x83, 0xCA);

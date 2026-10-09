@@ -16,8 +16,8 @@ NXScrollArea::NXScrollArea(QWidget *parent)
   setStyleSheet(QStringLiteral("#NXScrollArea{background-color:transparent;border:0px;}"));
   setHorizontalScrollBar(new NXScrollBar(this));
   setVerticalScrollBar(new NXScrollBar(this));
-  QScrollArea::setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  QScrollArea::setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  QScrollArea::setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+  QScrollArea::setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 }
 
 NXScrollArea::~NXScrollArea()

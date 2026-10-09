@@ -42,9 +42,15 @@ public:
 
 private:
   friend class NXCustomTabWidget;
-  QList<QWidget *> _allTabWidgetList;
   NXTabBar *_tabBar { nullptr };
   NXTabBar *_customTabBar { nullptr };
+  // 页面拖出后仍可能被 customwidget 归还，因此跟随页面生命周期而非 tab 成员关系
+  QList<QPointer<QWidget>> _allTabWidgetList;
+  QList<QPointer<NXCustomTabWidget>> _customTabWidgetList;
+  void _addTabWidgetToList(QWidget *widget);
+  void _removeTabWidgetFromList(QWidget *widget);
+  void _registerCustomTabWidget(NXCustomTabWidget *customTabWidget);
+  void _unregisterCustomTabWidget(NXCustomTabWidget *customTabWidget, NXTabBar *customTabBar);
   void _clearAllTabWidgetList();
 };
 

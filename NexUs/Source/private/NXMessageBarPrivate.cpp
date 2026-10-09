@@ -2,6 +2,7 @@
 
 #include <QDateTime>
 #include <QDebug>
+#include <QFontMetrics>
 #include <QGraphicsOpacityEffect>
 #include <QPainter>
 #include <QPainterPath>
@@ -21,7 +22,7 @@ NXMessageBarPrivate::NXMessageBarPrivate(QObject *parent)
   setProperty("MessageBarClosedY", 0);
   setProperty("MessageBarFinishY", 0);
   _pTimePercent = 100;
-  _createTime   = QDateTime::currentMSecsSinceEpoch();
+  _createSerial = _nextCreateSerial.fetch_add(1) + 1;
 }
 
 NXMessageBarPrivate::~NXMessageBarPrivate()
@@ -118,6 +119,7 @@ NXMessageBarPrivate::_messageBarCreate(int displayMsec)
   int fixedWidth = _closeButtonLeftRightMargin + _leftPadding + _titleLeftSpacing + _textLeftSpacing +
                    _closeButtonWidth + titleWidth + textWidth + 2 * _shadowBorderWidth;
   q->setFixedWidth(fixedWidth > 500 ? 500 : fixedWidth);
+  q->setFixedHeight(qMax(50, _getTextHeight()));
   int startX = 0;
   int startY = 0;
   int endX   = 0;
@@ -331,17 +333,7 @@ NXMessageBarPrivate::_calculateTargetPosY()
 
 bool
 NXMessageBarPrivate::_judgeCreateOrder(NXMessageBar *otherMessageBar)
-{
-  if (otherMessageBar->d_ptr->_createTime < _createTime)
-  {
-    //otherMessageBar先创建
-    return true;
-  }
-  else
-  {
-    return false;
-  }
-}
+{ return otherMessageBar->d_ptr->_createSerial < _createSerial; }
 
 void
 NXMessageBarPrivate::_updateActiveMap(bool isActive)
@@ -510,4 +502,27 @@ NXMessageBarPrivate::_drawError(QPainter *painter)
   painter->restore();
   // 文字颜色
   painter->setPen(_themeMode == NXThemeType::Light ? Qt::black : QColor(0xFF, 0xCD, 0xD2));
+}
+
+int
+NXMessageBarPrivate::_getTextHeight()
+{
+  Q_Q(NXMessageBar);
+  int fontPixelSize = nxApp->getFontPixelSize();
+  QFont font        = q->font();
+  font.setPixelSize(fontPixelSize);
+  font.setWeight(QFont::Bold);
+  QFontMetrics titleFontMetrics(font);
+  int titleTextWidth = titleFontMetrics.horizontalAdvance(_title) + 1;
+  if (titleTextWidth > 100)
+  {
+    titleTextWidth = 100;
+  }
+  font.setWeight(QFont::Light);
+  QFontMetrics textFontMetrics(font);
+  int textRectWidth = q->minimumWidth() - (_leftPadding + _titleLeftSpacing + titleTextWidth + _textLeftSpacing +
+                                           _closeButtonWidth + _closeButtonLeftRightMargin);
+  int textFlags     = Qt::AlignLeft | Qt::AlignVCenter | Qt::TextWordWrap | Qt::TextWrapAnywhere;
+  int textHeight    = textFontMetrics.boundingRect(QRect(0, 0, textRectWidth, 10000), textFlags, _text).height();
+  return textHeight + 20;
 }

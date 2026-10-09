@@ -21,6 +21,7 @@ NXPlainTextEdit::NXPlainTextEdit(QWidget *parent)
   d->q_ptr = this;
   setObjectName("NXPlainTextEdit");
   setStyleSheet(QStringLiteral("#NXPlainTextEdit{background-color:transparent;}"));
+  document()->setDocumentMargin(10);
   setHorizontalScrollBar(new NXScrollBar(this));
   setVerticalScrollBar(new NXScrollBar(this));
   setMouseTracking(true);
